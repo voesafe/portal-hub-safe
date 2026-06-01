@@ -347,7 +347,9 @@ function renderChartFat(dados) {
   const mesesComDados = [];
   const mesesLabels   = [];
   for (let m = 1; m <= 12; m++) {
-    if (dados[m]?.total > 0) {
+    const d = dados[m] || {};
+    const temQualquerValor = CANAIS.some(c => Number(d[c]) > 0);
+    if (temQualquerValor) {
       mesesComDados.push(m);
       mesesLabels.push(MESES_CURTOS[m]);
     }
