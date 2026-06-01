@@ -29,18 +29,18 @@ const CONFIG = {
   ],
 
   CURSOS: [
-    'Piloto Privado Teórico',
-    'Piloto Privado Prático',
+    'Adaptação de Instrutor Externo',
+    'Aperfeiçoamento Contínuo',
+    'Curriculo de Solo',
+    'INVA Prático',
+    'INVA Teórico',
+    'Piloto Comercial/IFR MLTE',
     'Piloto Comercial/IFR Prático',
     'Piloto Comercial Teórico',
-    'Piloto Comercial/IFR MLTE',
-    'INVA Teórico',
-    'INVA Prático',
-    'Aperfeiçoamento Contínuo',
-    'Adaptação de Instrutor Externo',
-    'SAFE Pilot Academy',
-    'Curriculo de Solo',
-    'PLA AZUL'
+    'Piloto Privado Prático',
+    'Piloto Privado Teórico',
+    'PLA AZUL',
+    'SAFE Pilot Academy'
   ],
 
   CANAIS_FATURAMENTO: [
