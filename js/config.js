@@ -39,7 +39,8 @@ const CONFIG = {
     'Aperfeiçoamento Contínuo',
     'Adaptação de Instrutor Externo',
     'SAFE Pilot Academy',
-    'Curriculo de Solo'
+    'Curriculo de Solo',
+    'PLA AZUL'
   ],
 
   CANAIS_FATURAMENTO: [
