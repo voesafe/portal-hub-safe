@@ -42,7 +42,8 @@ const Auth = {
 
   perfilEhAdmin(perfil) {
     const p = this.normalizarPerfil(perfil);
-    return p === 'master' || p === 'admin' || p === 'admin_readonly' || p === 'admin_visualizacao';
+    return p === 'master' || p === 'admin' || p === 'admin_readonly' ||
+      p === 'admin_visualizacao' || p === 'financeiro';
   },
 
   perfilEhMaster(perfil) {
@@ -51,11 +52,27 @@ const Auth = {
 
   perfilSomenteLeitura(perfil) {
     const p = this.normalizarPerfil(perfil);
-    return p === 'admin_readonly' || p === 'admin_visualizacao';
+    return p === 'admin_readonly' || p === 'admin_visualizacao' || p === 'financeiro';
+  },
+
+  perfilPodeAcessarFinanceiro(perfil, email) {
+    const p = this.normalizarPerfil(perfil);
+    if (p === 'master') return true;
+    return p === 'financeiro' &&
+      String(email || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
+  },
+
+  podeAcessarFinanceiro() {
+    return this.perfilPodeAcessarFinanceiro(this.getPerfil(), this.getEmail());
+  },
+
+  podeEditarFinanceiro() {
+    return this.estaLogado() && this.podeAcessarFinanceiro();
   },
 
   descricaoPerfil(perfil) {
     if (this.perfilEhMaster(perfil)) return 'Master TI';
+    if (this.normalizarPerfil(perfil) === 'financeiro') return 'Financeiro';
     if (this.perfilSomenteLeitura(perfil)) return 'Visualização';
     if (this.perfilEhAdmin(perfil))        return 'Administrador';
     return 'Consultor Comercial';
@@ -74,6 +91,15 @@ const Auth = {
   proteger(adminOnly = false) {
     if (!this.estaLogado()) { window.location.href = 'index.html'; return false; }
     if (adminOnly && !this.eAdmin()) { window.location.href = 'dashboard.html'; return false; }
+    return true;
+  },
+
+  protegerFinanceiro() {
+    if (!this.proteger()) return false;
+    if (!this.podeAcessarFinanceiro()) {
+      window.location.href = 'dashboard.html';
+      return false;
+    }
     return true;
   },
 
@@ -102,6 +128,7 @@ const Auth = {
       faturamento:  `<svg ${base}><rect x="3" y="6" width="18" height="14" rx="2"></rect><path d="M16 10h5"></path><path d="M7 6V4h10v2"></path><path d="M7 14h4"></path></svg>`,
       concorrencia: `<svg ${base}><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3"></path><path d="M12 19v3"></path><path d="M2 12h3"></path><path d="M19 12h3"></path></svg>`,
       usuarios:     `<svg ${base}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+      gastos:       `<svg ${base}><path d="M3 6h18"></path><path d="M7 3v6"></path><path d="M17 3v6"></path><rect x="3" y="6" width="18" height="15" rx="2"></rect><path d="M8 12h3"></path><path d="M8 16h5"></path><path d="M16 12v4"></path><path d="M14 14h4"></path></svg>`,
       logout:       `<svg ${base}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>`
     };
     return icons[nome] || '';
@@ -113,7 +140,8 @@ const Auth = {
       'vendas.html':      'vendas',
       'faturamento.html': 'faturamento',
       'concorrencia.html':'concorrencia',
-      'admin.html':       'usuarios'
+      'admin.html':       'usuarios',
+      'controle-gastos.html': 'gastos'
     };
     document.querySelectorAll('.nav-item').forEach(item => {
       const href = (item.getAttribute('href') || '').split('/').pop();
@@ -217,6 +245,10 @@ const Auth = {
     // Itens visíveis apenas para o perfil Master TI
     if (!this.perfilEhMaster(sessao.perfil)) {
       document.querySelectorAll('[data-master-only]').forEach(el => el.style.display = 'none');
+    }
+
+    if (!this.podeAcessarFinanceiro()) {
+      document.querySelectorAll('[data-finance-only]').forEach(el => el.style.display = 'none');
     }
 
     if (!this.podeEditar()) {

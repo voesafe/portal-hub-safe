@@ -15,6 +15,7 @@ safe-comercial/
 ├── faturamento.html    # Faturamento por canal (admin)
 ├── concorrencia.html   # Tabela de concorrência (admin)
 ├── admin.html          # Gestão de usuários (admin)
+├── controle-gastos.html # Controle financeiro por base
 ├── assets/img/logo.png # Logo SAFE
 ├── css/
 │   ├── safe-theme.css  # Design system (cores, tipografia, componentes)
@@ -48,6 +49,7 @@ safe-comercial/
 | `Auth.gs` | Copie o conteúdo de `apps-script/Auth.gs` |
 | `Vendas.gs` | Copie o conteúdo de `apps-script/Vendas.gs` |
 | `Faturamento.gs` | Copie o conteúdo de `apps-script/Faturamento.gs` |
+| `ControleGastos.gs` | Copie o conteúdo de `apps-script/ControleGastos.gs` |
 | `Utils.gs` | Copie o conteúdo de `apps-script/Utils.gs` |
 
 3. Em `Utils.gs`, substitua:
@@ -68,6 +70,24 @@ safe-comercial/
    - Executar como: **Eu**
    - Quem tem acesso: **Qualquer pessoa**
    - Clique em **Implantar** e copie a URL gerada
+
+### Inicializar o Controle de Gastos
+
+Depois de adicionar `ControleGastos.gs` e atualizar os demais arquivos:
+
+1. Execute `inicializarControleGastos()` uma vez no editor do Apps Script.
+2. A função cria as abas `CATEGORIAS_GASTOS`, `GASTOS_MENSAIS` e
+   `HORAS_VOADAS_BASE`.
+3. Ela importa os dados iniciais de janeiro a junho de 2026 e as horas
+   disponíveis de janeiro a abril.
+4. Se `elaine.souza@voesafe.com.br` existir em `USUARIOS`, o perfil será
+   atualizado para `financeiro`.
+5. Publique uma nova versão do App da Web e mantenha a URL em `js/config.js`.
+6. Peça para Elaine sair e entrar novamente, para receber o novo perfil e a
+   sessão segura do módulo financeiro.
+
+A inicialização é idempotente e pode ser executada novamente sem duplicar os
+lançamentos já importados.
 
 ### 3. Configurar o frontend
 
@@ -119,16 +139,15 @@ No GitHub:
 
 ## Perfis de acesso
 
-| Recurso | Consultor (PAC) | Admin (Thiago) |
-|---|---|---|
-| Ver próprias vendas | ✅ | ✅ |
-| Ver vendas de todos | ❌ | ✅ |
-| Criar venda | ✅ (própria) | ✅ |
-| Editar venda | ✅ (própria) | ✅ |
-| KPIs gerais | ❌ (só os próprios) | ✅ |
-| Faturamento por canal | ❌ | ✅ |
-| Concorrência | ❌ | ✅ |
-| Gestão de usuários | ❌ | ✅ |
+| Recurso | Consultor (PAC) | Admin | Financeiro | Master TI |
+|---|---|---|---|---|
+| Ver próprias vendas | Sim | Sim | Sim | Sim |
+| Ver vendas de todos | Não | Sim | Sim | Sim |
+| Criar e editar vendas | Sim (próprias) | Sim | Não | Sim |
+| Faturamento por canal | Não | Sim | Somente leitura | Sim |
+| Concorrência | Não | Sim | Somente leitura | Sim |
+| Gestão de usuários | Não | Sim | Somente leitura | Sim |
+| Controle de gastos | Não | Não | Edição completa | Edição completa |
 
 ---
 

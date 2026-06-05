@@ -43,7 +43,11 @@ const API = {
       }
 
       const base = { action };
-      if (sessao) { base.pac = sessao.pac; base.perfil = sessao.perfil; }
+      if (sessao) {
+        base.pac = sessao.pac;
+        base.perfil = sessao.perfil;
+        if (sessao.token) base.token = sessao.token;
+      }
 
       const query = new URLSearchParams({ ...base, ...params }).toString();
       const res   = await fetch(`${CONFIG.API_URL}?${query}`);
@@ -61,7 +65,11 @@ const API = {
     try {
       const sessao = Auth.getSessao();
       const body   = { action, dados };
-      if (sessao) { body.pac = sessao.pac; body.perfil = sessao.perfil; }
+      if (sessao) {
+        body.pac = sessao.pac;
+        body.perfil = sessao.perfil;
+        if (sessao.token) body.token = sessao.token;
+      }
 
       const res  = await fetch(CONFIG.API_URL, {
         method:  'POST',
@@ -127,6 +135,44 @@ const API = {
   async salvarPrecoSafe(dados) {
     const r = await this.post('salvar-preco-safe', dados);
     if (r.ok) Cache.invalidarConcorrencia();
+    return r;
+  },
+
+  // ── Controle de Gastos ─────────────────────────────────────
+  async getControleGastos(ano, mes, useCache = true) {
+    const sessao = Auth.getSessao();
+    const params = {
+      ano,
+      mes,
+      __pac: sessao?.pac || '',
+      __perfil: sessao?.perfil || ''
+    };
+    if (useCache) {
+      const cached = Cache.get('controle-gastos', params);
+      if (cached) return cached;
+    }
+    const r = await this.post('controle-gastos', { ano, mes });
+    if (r.ok && useCache) Cache.set('controle-gastos', params, r);
+    return r;
+  },
+  async salvarFechamentoGastos(dados) {
+    const r = await this.post('salvar-fechamento-gastos', dados);
+    if (r.ok) Cache.invalidar('controle-gastos|');
+    return r;
+  },
+  async criarCategoriaGasto(nome) {
+    const r = await this.post('criar-categoria-gasto', { nome });
+    if (r.ok) Cache.invalidar('controle-gastos|');
+    return r;
+  },
+  async editarCategoriaGasto(id, nome) {
+    const r = await this.post('editar-categoria-gasto', { id, nome });
+    if (r.ok) Cache.invalidar('controle-gastos|');
+    return r;
+  },
+  async alterarStatusCategoriaGasto(id, ativa) {
+    const r = await this.post('alterar-status-categoria-gasto', { id, ativa });
+    if (r.ok) Cache.invalidar('controle-gastos|');
     return r;
   }
 };

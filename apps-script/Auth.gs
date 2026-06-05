@@ -20,19 +20,112 @@ function login(email, senha) {
       var rowAtivo  = row[6];
 
       if (rowEmail === email.trim().toLowerCase() && rowHash === hash && valorBooleano(rowAtivo)) {
-        return {
+        var usuario = {
           id:     row[0],
           nome:   row[1],
           pac:    row[2],
           email:  row[3],
           perfil: row[5]
         };
+        usuario.token = criarTokenSessao(usuario);
+        return usuario;
       }
     }
     return null;
   } catch(e) {
     throw new Error('Erro no login: ' + e.message);
   }
+}
+
+/**
+ * Cria uma sessão assinada no servidor para operações sensíveis.
+ * A sessão expira em 12 horas e nunca confia no perfil enviado pelo navegador.
+ */
+function criarTokenSessao(usuario) {
+  var token = Utilities.getUuid() + Utilities.getUuid().replace(/-/g, '');
+  var agora = Date.now();
+  var props = PropertiesService.getScriptProperties();
+  var sessao = {
+    id: String(usuario.id || ''),
+    email: String(usuario.email || '').trim().toLowerCase(),
+    pac: String(usuario.pac || ''),
+    perfil: normalizarPerfil(usuario.perfil),
+    criadoEm: agora,
+    expiraEm: agora + (12 * 60 * 60 * 1000)
+  };
+
+  // Remove sessões vencidas para evitar crescimento indefinido das propriedades.
+  var propriedades = props.getProperties();
+  Object.keys(propriedades).forEach(function(chave) {
+    if (chave.indexOf('SAFE_SESSION_') !== 0) return;
+    try {
+      var anterior = JSON.parse(propriedades[chave]);
+      if (!anterior.expiraEm || Number(anterior.expiraEm) < agora) {
+        props.deleteProperty(chave);
+      }
+    } catch (e) {
+      props.deleteProperty(chave);
+    }
+  });
+
+  props.setProperty('SAFE_SESSION_' + token, JSON.stringify(sessao));
+
+  return token;
+}
+
+/**
+ * Valida token, expiração e o usuário atual na aba USUARIOS.
+ */
+function validarTokenSessao(token) {
+  if (!token) return null;
+
+  var props = PropertiesService.getScriptProperties();
+  var chave = 'SAFE_SESSION_' + String(token);
+  var raw = props.getProperty(chave);
+  if (!raw) return null;
+
+  var sessao;
+  try {
+    sessao = JSON.parse(raw);
+  } catch (e) {
+    props.deleteProperty(chave);
+    return null;
+  }
+
+  if (!sessao.expiraEm || Number(sessao.expiraEm) < Date.now()) {
+    props.deleteProperty(chave);
+    return null;
+  }
+
+  var sheet = getSheet(SHEETS.USUARIOS);
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    var mesmoId = String(row[0]) === String(sessao.id);
+    var mesmoEmail = String(row[3]).trim().toLowerCase() === String(sessao.email);
+    if (!mesmoId && !mesmoEmail) continue;
+    if (!valorBooleano(row[6])) return null;
+
+    return {
+      id: row[0],
+      nome: row[1],
+      pac: row[2],
+      email: row[3],
+      perfil: normalizarPerfil(row[5]),
+      token: token
+    };
+  }
+
+  return null;
+}
+
+function exigirAcessoFinanceiro(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (!perfilPodeAcessarFinanceiro(usuario.perfil, usuario.email)) {
+    throw new Error('Acesso financeiro não autorizado.');
+  }
+  return usuario;
 }
 
 /**

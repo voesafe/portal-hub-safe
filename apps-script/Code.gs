@@ -71,6 +71,7 @@ function doPost(e) {
     var dados   = body.dados   || {};
     var pac     = body.pac     || '';
     var perfil  = body.perfil  || 'pac';
+    var token   = body.token   || '';
 
     switch (action) {
 
@@ -148,6 +149,27 @@ function doPost(e) {
         if (!perfilEhAdminCompleto(perfil)) return jsonError('Acesso negado');
         if (!dados.curso) return jsonError('Curso obrigatório');
         return jsonSuccess(salvarPrecoSafe(dados));
+
+      // ── Controle de Gastos - sessão validada no servidor ───
+      case 'controle-gastos':
+        var usuarioConsultaFinanceiro = exigirAcessoFinanceiro(token);
+        return jsonSuccess(listarControleGastos(dados.ano, dados.mes));
+
+      case 'salvar-fechamento-gastos':
+        var usuarioFinanceiro = exigirAcessoFinanceiro(token);
+        return jsonSuccess(salvarFechamentoGastos(dados, usuarioFinanceiro));
+
+      case 'criar-categoria-gasto':
+        var usuarioCriaCategoria = exigirAcessoFinanceiro(token);
+        return jsonSuccess(criarCategoriaGasto(dados, usuarioCriaCategoria));
+
+      case 'editar-categoria-gasto':
+        var usuarioEditaCategoria = exigirAcessoFinanceiro(token);
+        return jsonSuccess(editarCategoriaGasto(dados, usuarioEditaCategoria));
+
+      case 'alterar-status-categoria-gasto':
+        var usuarioStatusCategoria = exigirAcessoFinanceiro(token);
+        return jsonSuccess(alterarStatusCategoriaGasto(dados, usuarioStatusCategoria));
 
       default:
         return jsonError('Ação desconhecida: ' + action);

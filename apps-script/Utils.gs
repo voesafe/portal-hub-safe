@@ -6,11 +6,14 @@
 var SHEET_ID = 'SEU_SPREADSHEET_ID_AQUI'; // ← substitua pelo ID do seu Sheets
 
 var SHEETS = {
-  USUARIOS:     'USUARIOS',
-  VENDAS:       'VENDAS',
-  FATURAMENTO:  'FATURAMENTO',
-  CONCORRENCIA: 'CONCORRENCIA',
-  PRECOS_SAFE:  'PRECOS_SAFE'
+  USUARIOS:          'USUARIOS',
+  VENDAS:            'VENDAS',
+  FATURAMENTO:       'FATURAMENTO',
+  CONCORRENCIA:      'CONCORRENCIA',
+  PRECOS_SAFE:       'PRECOS_SAFE',
+  GASTOS_MENSAIS:    'GASTOS_MENSAIS',
+  HORAS_VOADAS_BASE: 'HORAS_VOADAS_BASE',
+  CATEGORIAS_GASTOS: 'CATEGORIAS_GASTOS'
 };
 
 /**
@@ -47,7 +50,8 @@ function normalizarPerfil(perfil) {
 
 function perfilEhAdmin(perfil) {
   var p = normalizarPerfil(perfil);
-  return p === 'master' || p === 'admin' || p === 'admin_readonly' || p === 'admin_visualizacao';
+  return p === 'master' || p === 'admin' || p === 'admin_readonly' ||
+    p === 'admin_visualizacao' || p === 'financeiro';
 }
 
 function perfilEhMaster(perfil) {
@@ -61,7 +65,14 @@ function perfilEhAdminCompleto(perfil) {
 
 function perfilSomenteLeitura(perfil) {
   var p = normalizarPerfil(perfil);
-  return p === 'admin_readonly' || p === 'admin_visualizacao';
+  return p === 'admin_readonly' || p === 'admin_visualizacao' || p === 'financeiro';
+}
+
+function perfilPodeAcessarFinanceiro(perfil, email) {
+  var p = normalizarPerfil(perfil);
+  if (p === 'master') return true;
+  return p === 'financeiro' &&
+    String(email || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
 }
 
 function valorBooleano(valor) {

@@ -26,6 +26,7 @@ const Admin = {
 
   labelPerfil(perfil) {
     if (Auth.perfilEhMaster(perfil)) return 'Master TI';
+    if (Auth.normalizarPerfil(perfil) === 'financeiro') return 'Financeiro';
     if (Auth.perfilSomenteLeitura(perfil)) return 'Admin leitura';
     if (Auth.perfilEhAdmin(perfil)) return 'Admin';
     return 'Consultor';
@@ -33,6 +34,7 @@ const Admin = {
 
   badgePerfil(perfil) {
     if (Auth.perfilEhMaster(perfil)) return 'badge-blue';
+    if (Auth.normalizarPerfil(perfil) === 'financeiro') return 'badge-teal';
     if (Auth.perfilSomenteLeitura(perfil)) return 'badge-orange';
     return Auth.perfilEhAdmin(perfil) ? 'badge-navy' : 'badge-teal';
   },
