@@ -129,9 +129,159 @@ const Auth = {
       concorrencia: `<svg ${base}><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3"></path><path d="M12 19v3"></path><path d="M2 12h3"></path><path d="M19 12h3"></path></svg>`,
       usuarios:     `<svg ${base}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
       gastos:       `<svg ${base}><path d="M3 6h18"></path><path d="M7 3v6"></path><path d="M17 3v6"></path><rect x="3" y="6" width="18" height="15" rx="2"></rect><path d="M8 12h3"></path><path d="M8 16h5"></path><path d="M16 12v4"></path><path d="M14 14h4"></path></svg>`,
+      comercial:     `<svg ${base}><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>`,
+      administracao: `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 9h18"></path></svg>`,
+      financeiro:    `<svg ${base}><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h3"></path></svg>`,
+      ti:            `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 9h8"></path><path d="M8 13h5"></path><path d="M8 17h3"></path></svg>`,
+      planilha:      `<svg ${base}><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path></svg>`,
+      chevron:       `<svg ${base}><path d="m9 18 6-6-6-6"></path></svg>`,
+      fechar:        `<svg ${base}><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`,
       logout:       `<svg ${base}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>`
     };
     return icons[nome] || '';
+  },
+
+  montarMenuSidebar() {
+    const nav = document.querySelector('.sidebar-nav');
+    const brand = document.querySelector('.sidebar-brand');
+    const hamburger = document.getElementById('hamburger');
+    if (!nav || !brand) return;
+
+    const path = window.location.pathname.split('/').pop() || 'dashboard.html';
+    const item = (href, label, icone, opcoes = {}) => {
+      const ativo = path === href;
+      const externo = opcoes.externo ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return `
+        <a href="${href}" class="nav-item menu-child${ativo ? ' active' : ''}"${externo}>
+          <span class="nav-icon" aria-hidden="true">${this.iconSvg(icone)}</span>
+          <span class="nav-label">${label}</span>
+        </a>
+      `;
+    };
+
+    const secao = (id, label, icone, conteudo, paginas) => {
+      const aberta = paginas.includes(path);
+      return `
+        <div class="menu-section${aberta ? ' open current' : ''}" data-menu-section="${id}">
+          <button class="menu-section-trigger" type="button" aria-expanded="${aberta}">
+            <span class="nav-icon" aria-hidden="true">${this.iconSvg(icone)}</span>
+            <span class="menu-section-label">${label}</span>
+            <span class="menu-section-chevron" aria-hidden="true">${this.iconSvg('chevron')}</span>
+          </button>
+          <div class="menu-submenu">${conteudo}</div>
+        </div>
+      `;
+    };
+
+    const secoes = [
+      `<a href="dashboard.html" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}">
+        <span class="nav-icon" aria-hidden="true">${this.iconSvg('dashboard')}</span>
+        <span>Dashboard</span>
+      </a>`,
+      secao(
+        'comercial',
+        'Comercial',
+        'comercial',
+        item('vendas.html', 'Vendas', 'vendas'),
+        ['vendas.html']
+      )
+    ];
+
+    if (this.perfilEhMaster(this.getPerfil())) {
+      secoes.push(secao(
+        'administracao',
+        'Administração',
+        'administracao',
+        item(
+          'https://docs.google.com/spreadsheets/d/1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw/edit?gid=1905416248#gid=1905416248',
+          'Planilha',
+          'planilha',
+          { externo: true }
+        ),
+        []
+      ));
+    }
+
+    if (this.eAdmin()) {
+      let itensFinanceiros =
+        item('faturamento.html', 'Faturamento', 'faturamento') +
+        item('concorrencia.html', 'Concorrência', 'concorrencia');
+      const paginasFinanceiras = ['faturamento.html', 'concorrencia.html'];
+      if (this.podeAcessarFinanceiro()) {
+        itensFinanceiros += item('controle-gastos.html', 'Controle de Gastos', 'gastos');
+        paginasFinanceiras.push('controle-gastos.html');
+      }
+      secoes.push(secao(
+        'financeiro',
+        'Financeiro',
+        'financeiro',
+        itensFinanceiros,
+        paginasFinanceiras
+      ));
+
+      secoes.push(secao(
+        'ti',
+        'T.I.',
+        'ti',
+        item('admin.html', 'Usuários', 'usuarios'),
+        ['admin.html']
+      ));
+    }
+
+    nav.innerHTML = secoes.join('');
+
+    let fechar = brand.querySelector('.sidebar-close');
+    if (!fechar) {
+      fechar = document.createElement('button');
+      fechar.type = 'button';
+      fechar.className = 'sidebar-close';
+      fechar.setAttribute('aria-label', 'Fechar menu');
+      fechar.innerHTML = this.iconSvg('fechar');
+      brand.appendChild(fechar);
+    }
+
+    hamburger?.setAttribute('aria-label', 'Abrir menu');
+    hamburger?.setAttribute('aria-expanded', 'false');
+    this.inicializarMenuSidebar();
+  },
+
+  inicializarMenuSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger');
+    const fecharMenu = () => {
+      sidebar?.classList.remove('mobile-open');
+      overlay?.classList.remove('active');
+      hamburger?.setAttribute('aria-expanded', 'false');
+    };
+
+    document.querySelectorAll('.menu-section-trigger').forEach(botao => {
+      botao.addEventListener('click', () => {
+        const secao = botao.closest('.menu-section');
+        const vaiAbrir = !secao.classList.contains('open');
+        document.querySelectorAll('.menu-section.open').forEach(item => {
+          item.classList.remove('open');
+          item.querySelector('.menu-section-trigger')?.setAttribute('aria-expanded', 'false');
+        });
+        if (vaiAbrir) {
+          secao.classList.add('open');
+          botao.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    document.querySelector('.sidebar-close')?.addEventListener('click', fecharMenu);
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+      link.addEventListener('click', fecharMenu);
+    });
+    hamburger?.addEventListener('click', () => {
+      setTimeout(() => {
+        hamburger.setAttribute(
+          'aria-expanded',
+          sidebar?.classList.contains('mobile-open') ? 'true' : 'false'
+        );
+      });
+    });
   },
 
   renderizarIconesSidebar() {
@@ -223,7 +373,7 @@ const Auth = {
     const sessao = this.getSessao();
     if (!sessao) return;
 
-    this.renderizarIconesSidebar();
+    this.montarMenuSidebar();
     this.prepararLogoutSidebar();
 
     document.querySelectorAll('.sidebar-avatar').forEach(el => {
@@ -255,11 +405,5 @@ const Auth = {
       document.querySelectorAll('[data-write-only]').forEach(el => el.style.display = 'none');
     }
 
-    const path = window.location.pathname.split('/').pop();
-    document.querySelectorAll('.nav-item').forEach(el => {
-      const href = el.getAttribute('href');
-      if (href && href === path) el.classList.add('active');
-      else el.classList.remove('active');
-    });
   }
 };
