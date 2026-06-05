@@ -38,21 +38,28 @@ const Dashboard = {
   async carregar() {
     this.setLoading(true);
     try {
-      const [resKpi, resFat] = await Promise.all([
+      const [resKpi, resFat, resHistorico] = await Promise.all([
         this._comTimeout(
           API.getKPIs(this.mesFiltro, this.anoFiltro),
           'Tempo limite excedido ao carregar os dados.'
         ),
         Auth.eAdmin()
           ? API.getResumoFaturamento(this.anoFiltro || CONFIG.ANO_ATUAL)
-          : Promise.resolve(null)
+          : Promise.resolve(null),
+        this._comTimeout(
+          API.getKPIs(),
+          'Tempo limite excedido ao carregar o histórico.'
+        )
       ]);
 
       if (!resKpi.ok) { toast(resKpi.error || 'Erro ao carregar dados.', 'error'); return; }
 
       const k = resKpi.data;
+      const porMes = resHistorico?.ok
+        ? resHistorico.data?.porMes
+        : k.porMes;
       this.renderKPIs(k, resFat);
-      this.renderChartReceita(k.porMes);
+      this.renderChartReceita(porMes, this.mesFiltro, this.anoFiltro);
       this.renderChartOrigens(k.origens);
       if (Auth.eAdmin()) this.renderChartPac(k.porPac);
       this.renderRankingCursos(k.cursos);
@@ -181,10 +188,13 @@ const Dashboard = {
     }
   },
 
-  renderChartReceita(porMes) {
+  renderChartReceita(porMes, mesReferencia, anoReferencia) {
     const labels = [], dados = [];
+    const mesBase = Number(mesReferencia) || CONFIG.MES_ATUAL;
+    const anoBase = Number(anoReferencia) || CONFIG.ANO_ATUAL;
+
     for (let i = 5; i >= 0; i--) {
-      let mes = CONFIG.MES_ATUAL - i, ano = CONFIG.ANO_ATUAL;
+      let mes = mesBase - i, ano = anoBase;
       if (mes <= 0) { mes += 12; ano--; }
       const chave = `${ano}-${String(mes).padStart(2,'0')}`;
       labels.push(CONFIG.MESES[mes].substring(0,3));
