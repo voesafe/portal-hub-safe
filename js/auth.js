@@ -105,6 +105,15 @@ const Auth = {
     return true;
   },
 
+  protegerMaster() {
+    if (!this.proteger()) return false;
+    if (!this.perfilEhMaster(this.getPerfil())) {
+      window.location.href = 'dashboard.html';
+      return false;
+    }
+    return true;
+  },
+
   protegerFinanceiro() {
     if (!this.proteger()) return false;
     if (!this.podeAcessarFinanceiro()) {
@@ -150,6 +159,7 @@ const Auth = {
       usuarios:     `<svg ${base}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
       gastos:       `<svg ${base}><path d="M3 6h18"></path><path d="M7 3v6"></path><path d="M17 3v6"></path><rect x="3" y="6" width="18" height="15" rx="2"></rect><path d="M8 12h3"></path><path d="M8 16h5"></path><path d="M16 12v4"></path><path d="M14 14h4"></path></svg>`,
       horas:        `<svg ${base}><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path><path d="M5 3 2 6"></path><path d="m19 3 3 3"></path></svg>`,
+      minions:      `<svg ${base}><path d="M8 3h8"></path><path d="M9 3v3"></path><path d="M15 3v3"></path><rect x="5" y="6" width="14" height="15" rx="4"></rect><circle cx="10" cy="12" r="2"></circle><circle cx="14" cy="12" r="2"></circle><path d="M8 12h4"></path><path d="M12 12h4"></path><path d="M9 17h6"></path></svg>`,
       comercial:     `<svg ${base}><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>`,
       administracao: `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 9h18"></path></svg>`,
       financeiro:    `<svg ${base}><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h3"></path></svg>`,
@@ -213,13 +223,14 @@ const Auth = {
         'administracao',
         'Administração',
         'administracao',
-        item(
-          'https://docs.google.com/spreadsheets/d/1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw/edit?gid=1905416248#gid=1905416248',
-          'Planilha',
-          'planilha',
-          { externo: true }
-        ),
-        []
+        item('safe-minions.html', 'SAFE MINIONS', 'minions') +
+          item(
+            'https://docs.google.com/spreadsheets/d/1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw/edit?gid=1905416248#gid=1905416248',
+            'Planilha',
+            'planilha',
+            { externo: true }
+          ),
+        ['safe-minions.html']
       ));
     }
 
@@ -317,7 +328,8 @@ const Auth = {
       'concorrencia.html':'concorrencia',
       'admin.html':       'usuarios',
       'controle-gastos.html': 'gastos',
-      'fechamento-horas.html': 'horas'
+      'fechamento-horas.html': 'horas',
+      'safe-minions.html': 'minions'
     };
     document.querySelectorAll('.nav-item').forEach(item => {
       const href = (item.getAttribute('href') || '').split('/').pop();
