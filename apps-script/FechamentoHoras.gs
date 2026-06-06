@@ -512,3 +512,11 @@ function alterarStatusFechamentoHoras(dados, usuario) {
 
   return listarFechamentoHoras(competencia.ano, competencia.mes);
 }
+
+/**
+ * Teste manual no editor do Apps Script.
+ * Confirma a autorização e a leitura da planilha de fechamento.
+ */
+function testarFechamentoHoras() {
+  return listarFechamentoHoras(2026, 5);
+}
