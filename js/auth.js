@@ -70,6 +70,17 @@ const Auth = {
     return this.estaLogado() && this.podeAcessarFinanceiro();
   },
 
+  perfilPodeAcessarFechamentoHoras(perfil, email) {
+    const p = this.normalizarPerfil(perfil);
+    if (p === 'master' || p === 'admin') return true;
+    return p === 'financeiro' &&
+      String(email || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
+  },
+
+  podeAcessarFechamentoHoras() {
+    return this.perfilPodeAcessarFechamentoHoras(this.getPerfil(), this.getEmail());
+  },
+
   descricaoPerfil(perfil) {
     if (this.perfilEhMaster(perfil)) return 'Master TI';
     if (this.normalizarPerfil(perfil) === 'financeiro') return 'Financeiro';
@@ -103,6 +114,15 @@ const Auth = {
     return true;
   },
 
+  protegerFechamentoHoras() {
+    if (!this.proteger()) return false;
+    if (!this.podeAcessarFechamentoHoras()) {
+      window.location.href = 'dashboard.html';
+      return false;
+    }
+    return true;
+  },
+
   // Login por e-mail
   async login(email, senha) {
     const res = await API.post('login', { email, senha });
@@ -129,6 +149,7 @@ const Auth = {
       concorrencia: `<svg ${base}><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3"></path><path d="M12 19v3"></path><path d="M2 12h3"></path><path d="M19 12h3"></path></svg>`,
       usuarios:     `<svg ${base}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
       gastos:       `<svg ${base}><path d="M3 6h18"></path><path d="M7 3v6"></path><path d="M17 3v6"></path><rect x="3" y="6" width="18" height="15" rx="2"></rect><path d="M8 12h3"></path><path d="M8 16h5"></path><path d="M16 12v4"></path><path d="M14 14h4"></path></svg>`,
+      horas:        `<svg ${base}><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path><path d="M5 3 2 6"></path><path d="m19 3 3 3"></path></svg>`,
       comercial:     `<svg ${base}><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>`,
       administracao: `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 9h18"></path></svg>`,
       financeiro:    `<svg ${base}><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h3"></path></svg>`,
@@ -211,6 +232,10 @@ const Auth = {
         itensFinanceiros += item('controle-gastos.html', 'Controle de Gastos', 'gastos');
         paginasFinanceiras.push('controle-gastos.html');
       }
+      if (this.podeAcessarFechamentoHoras()) {
+        itensFinanceiros += item('fechamento-horas.html', 'Fechamento de Horas / Cotistas', 'horas');
+        paginasFinanceiras.push('fechamento-horas.html');
+      }
       secoes.push(secao(
         'financeiro',
         'Financeiro',
@@ -291,7 +316,8 @@ const Auth = {
       'faturamento.html': 'faturamento',
       'concorrencia.html':'concorrencia',
       'admin.html':       'usuarios',
-      'controle-gastos.html': 'gastos'
+      'controle-gastos.html': 'gastos',
+      'fechamento-horas.html': 'horas'
     };
     document.querySelectorAll('.nav-item').forEach(item => {
       const href = (item.getAttribute('href') || '').split('/').pop();

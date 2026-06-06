@@ -174,6 +174,39 @@ const API = {
     const r = await this.post('alterar-status-categoria-gasto', { id, ativa });
     if (r.ok) Cache.invalidar('controle-gastos|');
     return r;
+  },
+
+  // ── Fechamento de Horas / Cotistas ────────────────────────
+  async getFechamentoHoras(ano, mes, useCache = true) {
+    const sessao = Auth.getSessao();
+    const params = {
+      ano,
+      mes,
+      __pac: sessao?.pac || '',
+      __perfil: sessao?.perfil || ''
+    };
+    if (useCache) {
+      const cached = Cache.get('fechamento-horas', params);
+      if (cached) return cached;
+    }
+    const r = await this.post('fechamento-horas', { ano, mes });
+    if (r.ok && useCache) Cache.set('fechamento-horas', params, r);
+    return r;
+  },
+  async salvarFechamentoHoras(dados) {
+    const r = await this.post('salvar-fechamento-horas', dados);
+    if (r.ok) Cache.invalidar('fechamento-horas|');
+    return r;
+  },
+  async alterarStatusFechamentoHoras(ano, mes, fechado, versao) {
+    const r = await this.post('alterar-status-fechamento-horas', {
+      ano,
+      mes,
+      fechado,
+      versao
+    });
+    if (r.ok) Cache.invalidar('fechamento-horas|');
+    return r;
   }
 };
 

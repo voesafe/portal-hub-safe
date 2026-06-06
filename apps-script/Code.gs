@@ -171,6 +171,19 @@ function doPost(e) {
         var usuarioStatusCategoria = exigirAcessoFinanceiro(token);
         return jsonSuccess(alterarStatusCategoriaGasto(dados, usuarioStatusCategoria));
 
+      // ── Fechamento de Horas / Cotistas ────────────────────
+      case 'fechamento-horas':
+        var usuarioConsultaHoras = exigirAcessoFechamentoHoras(token);
+        return jsonSuccess(listarFechamentoHoras(dados.ano, dados.mes));
+
+      case 'salvar-fechamento-horas':
+        var usuarioSalvaHoras = exigirAcessoFechamentoHoras(token);
+        return jsonSuccess(salvarFechamentoHoras(dados, usuarioSalvaHoras));
+
+      case 'alterar-status-fechamento-horas':
+        var usuarioStatusHoras = exigirAcessoFechamentoHoras(token);
+        return jsonSuccess(alterarStatusFechamentoHoras(dados, usuarioStatusHoras));
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }
