@@ -76,8 +76,20 @@ const API = {
         headers: { 'Content-Type': 'text/plain' },
         body:    JSON.stringify(body)
       });
-      const data = await res.json();
-      return data;
+      const raw = await res.text();
+      try {
+        return JSON.parse(raw);
+      } catch (parseError) {
+        console.error('[API POST resposta inválida]', {
+          status: res.status,
+          contentType: res.headers.get('content-type'),
+          resposta: raw.slice(0, 500)
+        });
+        return {
+          ok: false,
+          error: `O servidor respondeu em formato inválido (HTTP ${res.status}).`
+        };
+      }
     } catch (err) {
       console.error('[API POST]', err);
       return { ok: false, error: 'Erro de conexão com o servidor.' };

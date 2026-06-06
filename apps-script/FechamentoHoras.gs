@@ -104,6 +104,7 @@ function garantirEstruturaFechamentoHoras_() {
     ]);
     historico.hideSheet();
   }
+  return ss;
 }
 
 function criarAbaFechamentoHoras_(ano, mes) {
@@ -132,13 +133,13 @@ function criarAbaFechamentoHoras_(ano, mes) {
   return sheet;
 }
 
-function obterStatusFechamentoHoras_(ano, mes) {
-  garantirEstruturaFechamentoHoras_();
-  var sheet = planilhaFechamentoHoras_().getSheetByName(FECHAMENTO_HORAS_CONTROLE);
+function mapaStatusFechamentoHoras_(ss) {
+  var sheet = ss.getSheetByName(FECHAMENTO_HORAS_CONTROLE);
   var data = sheet.getDataRange().getValues();
+  var mapa = {};
   for (var i = 1; i < data.length; i++) {
-    if (Number(data[i][0]) !== Number(ano) || Number(data[i][1]) !== Number(mes)) continue;
-    return {
+    var chave = [Number(data[i][0]), Number(data[i][1])].join('|');
+    mapa[chave] = {
       linha: i + 1,
       fechado: valorBooleano(data[i][2]),
       versao: Number(data[i][3]) || 0,
@@ -146,6 +147,10 @@ function obterStatusFechamentoHoras_(ano, mes) {
       atualizadoEm: data[i][5] || ''
     };
   }
+  return mapa;
+}
+
+function statusVazioFechamentoHoras_() {
   return {
     linha: 0,
     fechado: false,
@@ -155,9 +160,17 @@ function obterStatusFechamentoHoras_(ano, mes) {
   };
 }
 
-function salvarStatusFechamentoHoras_(ano, mes, fechado, versao, usuario, agora) {
-  var sheet = planilhaFechamentoHoras_().getSheetByName(FECHAMENTO_HORAS_CONTROLE);
-  var status = obterStatusFechamentoHoras_(ano, mes);
+function obterStatusFechamentoHoras_(ano, mes, ss, mapaStatus) {
+  ss = ss || garantirEstruturaFechamentoHoras_();
+  mapaStatus = mapaStatus || mapaStatusFechamentoHoras_(ss);
+  return mapaStatus[[Number(ano), Number(mes)].join('|')] ||
+    statusVazioFechamentoHoras_();
+}
+
+function salvarStatusFechamentoHoras_(ano, mes, fechado, versao, usuario, agora, ss, mapaStatus) {
+  ss = ss || garantirEstruturaFechamentoHoras_();
+  var sheet = ss.getSheetByName(FECHAMENTO_HORAS_CONTROLE);
+  var status = obterStatusFechamentoHoras_(ano, mes, ss, mapaStatus);
   var valores = [
     ano, mes, fechado, versao,
     String(usuario.email || usuario.pac || ''), agora
@@ -169,8 +182,8 @@ function salvarStatusFechamentoHoras_(ano, mes, fechado, versao, usuario, agora)
   }
 }
 
-function lerMesFechamentoHoras_(ano, mes) {
-  var ss = planilhaFechamentoHoras_();
+function lerMesFechamentoHoras_(ano, mes, ss, mapaStatus) {
+  ss = ss || garantirEstruturaFechamentoHoras_();
   var sheet = ss.getSheetByName(nomeAbaFechamentoHoras_(ano, mes));
   var horas = [];
   var metricas = [];
@@ -222,7 +235,7 @@ function lerMesFechamentoHoras_(ano, mes) {
     });
   }
 
-  var status = obterStatusFechamentoHoras_(ano, mes);
+  var status = obterStatusFechamentoHoras_(ano, mes, ss, mapaStatus);
   return {
     ano: Number(ano),
     mes: Number(mes),
@@ -277,8 +290,9 @@ function resumirMesFechamentoHoras_(item) {
   };
 }
 
-function listarHistoricoFechamentoHoras_(ano, mes) {
-  var sheet = planilhaFechamentoHoras_().getSheetByName(FECHAMENTO_HORAS_HISTORICO);
+function listarHistoricoFechamentoHoras_(ano, mes, ss) {
+  ss = ss || garantirEstruturaFechamentoHoras_();
+  var sheet = ss.getSheetByName(FECHAMENTO_HORAS_HISTORICO);
   var data = sheet.getDataRange().getValues();
   var lista = [];
   for (var i = data.length - 1; i >= 1 && lista.length < 12; i--) {
@@ -298,21 +312,31 @@ function listarHistoricoFechamentoHoras_(ano, mes) {
 
 function listarFechamentoHoras(ano, mes) {
   var competencia = validarCompetenciaFechamentoHoras_(ano, mes);
-  garantirEstruturaFechamentoHoras_();
+  var ss = garantirEstruturaFechamentoHoras_();
+  var mapaStatus = mapaStatusFechamentoHoras_(ss);
   var meses = {};
   for (var m = 1; m <= 12; m++) {
     meses[m] = resumirMesFechamentoHoras_(
-      lerMesFechamentoHoras_(competencia.ano, m)
+      lerMesFechamentoHoras_(competencia.ano, m, ss, mapaStatus)
     );
   }
-  var selecionado = lerMesFechamentoHoras_(competencia.ano, competencia.mes);
+  var selecionado = lerMesFechamentoHoras_(
+    competencia.ano,
+    competencia.mes,
+    ss,
+    mapaStatus
+  );
   selecionado.resumo = resumirMesFechamentoHoras_(selecionado);
   return {
     ano: competencia.ano,
     mes: competencia.mes,
     meses: meses,
     selecionado: selecionado,
-    historico: listarHistoricoFechamentoHoras_(competencia.ano, competencia.mes)
+    historico: listarHistoricoFechamentoHoras_(
+      competencia.ano,
+      competencia.mes,
+      ss
+    )
   };
 }
 
