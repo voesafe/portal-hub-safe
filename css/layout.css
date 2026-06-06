@@ -222,6 +222,27 @@ html, body {
   border-left: 3px solid var(--teal);
   padding-left: 9px;
 }
+.nav-item.restricted {
+  color: rgba(255,255,255,.43);
+}
+.nav-item.restricted:hover {
+  color: rgba(255,255,255,.8);
+}
+.nav-item .nav-label {
+  min-width: 0;
+  flex: 1;
+}
+.nav-lock {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: rgba(255,255,255,.35);
+}
+.nav-lock svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
 .nav-item .nav-icon {
   font-size: 1.1rem;
   width: 20px;

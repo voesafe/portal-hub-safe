@@ -99,17 +99,36 @@ const Auth = {
     window.location.href = 'index.html';
   },
 
+  urlAcessoNegado(recurso, destino = '') {
+    const params = new URLSearchParams();
+    if (recurso) params.set('recurso', recurso);
+    if (destino) params.set('destino', destino);
+    return `acesso-negado.html?${params.toString()}`;
+  },
+
+  negarAcesso(recurso, destino = '') {
+    window.location.replace(this.urlAcessoNegado(recurso, destino));
+    return false;
+  },
+
   proteger(adminOnly = false) {
     if (!this.estaLogado()) { window.location.href = 'index.html'; return false; }
-    if (adminOnly && !this.eAdmin()) { window.location.href = 'dashboard.html'; return false; }
+    if (adminOnly && !this.eAdmin()) {
+      const destino = window.location.pathname.split('/').pop();
+      const recursos = {
+        'admin.html': 'Usuários',
+        'faturamento.html': 'Faturamento',
+        'concorrencia.html': 'Concorrência'
+      };
+      return this.negarAcesso(recursos[destino] || 'Administração', destino);
+    }
     return true;
   },
 
   protegerMaster() {
     if (!this.proteger()) return false;
     if (!this.perfilEhMaster(this.getPerfil())) {
-      window.location.href = 'dashboard.html';
-      return false;
+      return this.negarAcesso('SAFE MINIONS', 'safe-minions.html');
     }
     return true;
   },
@@ -117,8 +136,7 @@ const Auth = {
   protegerFinanceiro() {
     if (!this.proteger()) return false;
     if (!this.podeAcessarFinanceiro()) {
-      window.location.href = 'dashboard.html';
-      return false;
+      return this.negarAcesso('Controle de Gastos', 'controle-gastos.html');
     }
     return true;
   },
@@ -126,8 +144,10 @@ const Auth = {
   protegerFechamentoHoras() {
     if (!this.proteger()) return false;
     if (!this.podeAcessarFechamentoHoras()) {
-      window.location.href = 'dashboard.html';
-      return false;
+      return this.negarAcesso(
+        'Fechamento de Horas / Cotistas',
+        'fechamento-horas.html'
+      );
     }
     return true;
   },
@@ -167,6 +187,7 @@ const Auth = {
       planilha:      `<svg ${base}><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path></svg>`,
       chevron:       `<svg ${base}><path d="m9 18 6-6-6-6"></path></svg>`,
       fechar:        `<svg ${base}><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`,
+      lock:          `<svg ${base}><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>`,
       logout:       `<svg ${base}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>`
     };
     return icons[nome] || '';
@@ -181,11 +202,21 @@ const Auth = {
     const path = window.location.pathname.split('/').pop() || 'dashboard.html';
     const item = (href, label, icone, opcoes = {}) => {
       const ativo = path === href;
-      const externo = opcoes.externo ? ' target="_blank" rel="noopener noreferrer"' : '';
+      const permitido = opcoes.permitido !== false;
+      const destino = permitido
+        ? href
+        : this.urlAcessoNegado(label, opcoes.destino || href);
+      const externo = opcoes.externo && permitido
+        ? ' target="_blank" rel="noopener noreferrer"'
+        : '';
+      const restrito = permitido
+        ? ''
+        : `<span class="nav-lock" aria-label="Acesso restrito" title="Acesso restrito">${this.iconSvg('lock')}</span>`;
       return `
-        <a href="${href}" class="nav-item menu-child${ativo ? ' active' : ''}"${externo}>
+        <a href="${destino}" class="nav-item menu-child${ativo ? ' active' : ''}${permitido ? '' : ' restricted'}"${externo}>
           <span class="nav-icon" aria-hidden="true">${this.iconSvg(icone)}</span>
           <span class="nav-label">${label}</span>
+          ${restrito}
         </a>
       `;
     };
@@ -218,51 +249,64 @@ const Auth = {
       )
     ];
 
-    if (this.perfilEhMaster(this.getPerfil())) {
-      secoes.push(secao(
-        'administracao',
-        'Administração',
-        'administracao',
-        item('safe-minions.html', 'SAFE MINIONS', 'minions') +
-          item(
-            'https://docs.google.com/spreadsheets/d/1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw/edit?gid=1905416248#gid=1905416248',
-            'Planilha',
-            'planilha',
-            { externo: true }
-          ),
-        ['safe-minions.html']
-      ));
-    }
+    const acessoMaster = this.perfilEhMaster(this.getPerfil());
+    const acessoAdmin = this.eAdmin();
+    const acessoFinanceiro = this.podeAcessarFinanceiro();
+    const acessoFechamento = this.podeAcessarFechamentoHoras();
 
-    if (this.eAdmin()) {
-      let itensFinanceiros =
-        item('faturamento.html', 'Faturamento', 'faturamento') +
-        item('concorrencia.html', 'Concorrência', 'concorrencia');
-      const paginasFinanceiras = ['faturamento.html', 'concorrencia.html'];
-      if (this.podeAcessarFinanceiro()) {
-        itensFinanceiros += item('controle-gastos.html', 'Controle de Gastos', 'gastos');
-        paginasFinanceiras.push('controle-gastos.html');
-      }
-      if (this.podeAcessarFechamentoHoras()) {
-        itensFinanceiros += item('fechamento-horas.html', 'Fechamento de Horas / Cotistas', 'horas');
-        paginasFinanceiras.push('fechamento-horas.html');
-      }
-      secoes.push(secao(
-        'financeiro',
-        'Financeiro',
-        'financeiro',
-        itensFinanceiros,
-        paginasFinanceiras
-      ));
+    secoes.push(secao(
+      'administracao',
+      'Administração',
+      'administracao',
+      item('safe-minions.html', 'SAFE MINIONS', 'minions', {
+        permitido: acessoMaster
+      }) +
+        item(
+          'https://docs.google.com/spreadsheets/d/1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw/edit?gid=1905416248#gid=1905416248',
+          'Planilha',
+          'planilha',
+          {
+            externo: true,
+            permitido: acessoMaster,
+            destino: 'planilha-administrativa'
+          }
+        ),
+      ['safe-minions.html']
+    ));
 
-      secoes.push(secao(
-        'ti',
-        'T.I.',
-        'ti',
-        item('admin.html', 'Usuários', 'usuarios'),
-        ['admin.html']
-      ));
-    }
+    secoes.push(secao(
+      'financeiro',
+      'Financeiro',
+      'financeiro',
+      item('faturamento.html', 'Faturamento', 'faturamento', {
+        permitido: acessoAdmin
+      }) +
+        item('concorrencia.html', 'Concorrência', 'concorrencia', {
+          permitido: acessoAdmin
+        }) +
+        item('controle-gastos.html', 'Controle de Gastos', 'gastos', {
+          permitido: acessoFinanceiro
+        }) +
+        item('fechamento-horas.html', 'Fechamento de Horas / Cotistas', 'horas', {
+          permitido: acessoFechamento
+        }),
+      [
+        'faturamento.html',
+        'concorrencia.html',
+        'controle-gastos.html',
+        'fechamento-horas.html'
+      ]
+    ));
+
+    secoes.push(secao(
+      'ti',
+      'T.I.',
+      'ti',
+      item('admin.html', 'Usuários', 'usuarios', {
+        permitido: acessoAdmin
+      }),
+      ['admin.html']
+    ));
 
     nav.innerHTML = secoes.join('');
 

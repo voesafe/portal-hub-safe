@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso restrito — SAFE</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/safe-theme.css">
+  <link rel="stylesheet" href="css/layout.css?v=20260606-access">
+  <style>
+    .access-page {
+      min-height: calc(100vh - var(--topbar-h));
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+    }
+
+    .access-card {
+      width: min(100%, 620px);
+      padding: 44px;
+      text-align: center;
+      border: 1px solid var(--gray-100);
+    }
+
+    .access-icon {
+      width: 72px;
+      height: 72px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      border-radius: 50%;
+      color: var(--blue-dark);
+      background: rgba(91,174,226,.12);
+    }
+
+    .access-icon svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    .access-card h1 {
+      margin-bottom: 10px;
+      font-size: 1.65rem;
+    }
+
+    .access-resource {
+      margin-bottom: 18px;
+      color: var(--blue-dark);
+      font-weight: 700;
+    }
+
+    .access-copy {
+      max-width: 470px;
+      margin: 0 auto 28px;
+      color: var(--gray-500);
+      font-size: .92rem;
+    }
+
+    .access-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      .access-card { padding: 34px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Portal Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Acesso restrito</div>
+          <div class="topbar-subtitle">Permissões do Portal Hub SAFE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="access-page">
+      <section class="card access-card">
+        <div class="access-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+          </svg>
+        </div>
+        <h1>Você não possui acesso a este módulo</h1>
+        <div class="access-resource" id="access-resource">Área restrita</div>
+        <p class="access-copy">
+          Este recurso faz parte do portal, mas exige uma permissão diferente
+          da disponível no seu perfil. Caso precise utilizá-lo, solicite a
+          liberação ao responsável pelo sistema.
+        </p>
+        <div class="access-actions">
+          <button class="btn btn-ghost" id="access-back" type="button">Voltar</button>
+          <a class="btn btn-primary" href="dashboard.html">Ir para o Dashboard</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js?v=20260606-access"></script>
+<script>
+  if (Auth.proteger()) {
+    Auth.preencherUI();
+
+    const params = new URLSearchParams(window.location.search);
+    const recurso = params.get('recurso');
+    if (recurso) {
+      document.getElementById('access-resource').textContent = recurso;
+      document.title = `${recurso} — Acesso restrito`;
+    }
+
+    document.getElementById('access-back').addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  }
+</script>
+</body>
+</html>

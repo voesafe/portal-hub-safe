@@ -1,32 +1,44 @@
-# SAFE Comercial — Dashboard de Vendas
+# Portal Hub SAFE
 
-Dashboard comercial da SAFE Escola de Aviação.
-Google Sheets como backend · GitHub Pages como frontend.
+Portal interno da SAFE Escola de Aviação para operação comercial,
+financeira e administrativa.
+
+Google Sheets como backend · Google Apps Script como API · GitHub Pages como frontend.
 
 ---
 
 ## Estrutura do projeto
 
-```
-safe-comercial/
-├── index.html          # Login
-├── dashboard.html      # Dashboard principal (KPIs + gráficos)
-├── vendas.html         # Listagem e cadastro de vendas
-├── faturamento.html    # Faturamento por canal (admin)
-├── concorrencia.html   # Tabela de concorrência (admin)
-├── admin.html          # Gestão de usuários (admin)
-├── controle-gastos.html # Controle financeiro por base
-├── assets/img/logo.png # Logo SAFE
+```text
+portal-hub-safe/
+├── index.html             # Login
+├── dashboard.html         # Dashboard principal (KPIs + gráficos)
+├── vendas.html            # Listagem e cadastro de vendas
+├── faturamento.html       # Faturamento por canal
+├── concorrencia.html      # Tabela de concorrência
+├── admin.html             # Gestão de usuários
+├── controle-gastos.html   # Controle financeiro por base
+├── fechamento-horas.html  # Fechamento mensal de horas e cotistas
+├── safe-minions.html      # Análise local de extratos SACI (Master TI)
+├── acesso-negado.html     # Aviso padronizado para módulos restritos
+├── assets/
+│   ├── img/logo.png
+│   └── safe-minions/      # Imagem, áudio e biblioteca XLSX local
 ├── css/
-│   ├── safe-theme.css  # Design system (cores, tipografia, componentes)
-│   └── layout.css      # Sidebar, topbar, grid
+│   ├── safe-theme.css
+│   ├── layout.css
+│   ├── controle-gastos.css
+│   └── fechamento-horas.css
 └── js/
-    ├── config.js       # Configuração central (URL do Apps Script)
-    ├── auth.js         # Autenticação e sessão
-    ├── api.js          # Comunicação com o backend
-    ├── dashboard.js    # Lógica do dashboard
-    ├── vendas.js       # CRUD de vendas
-    └── admin.js        # Gestão de usuários
+    ├── config.js          # Configuração central (URL do Apps Script)
+    ├── auth.js            # Autenticação, sessão, permissões e menu
+    ├── api.js             # Comunicação com o backend e cache
+    ├── dashboard.js
+    ├── vendas.js
+    ├── concorrencia.js
+    ├── admin.js
+    ├── controle-gastos.js
+    └── fechamento-horas.js
 ```
 
 ---
@@ -49,7 +61,9 @@ safe-comercial/
 | `Auth.gs` | Copie o conteúdo de `apps-script/Auth.gs` |
 | `Vendas.gs` | Copie o conteúdo de `apps-script/Vendas.gs` |
 | `Faturamento.gs` | Copie o conteúdo de `apps-script/Faturamento.gs` |
+| `Concorrencia.gs` | Copie o conteúdo de `apps-script/Concorrencia.gs` |
 | `ControleGastos.gs` | Copie o conteúdo de `apps-script/ControleGastos.gs` |
+| `FechamentoHoras.gs` | Copie o conteúdo de `apps-script/FechamentoHoras.gs` |
 | `Utils.gs` | Copie o conteúdo de `apps-script/Utils.gs` |
 
 3. Em `Utils.gs`, substitua:
@@ -62,7 +76,8 @@ safe-comercial/
    - No Apps Script, selecione a função `inicializarPlanilha` no dropdown
    - Clique em **Executar**
    - Autorize as permissões solicitadas
-   - Isso cria as abas `USUARIOS`, `VENDAS`, `FATURAMENTO`, `CONCORRENCIA`
+   - Isso cria as abas comerciais necessárias, incluindo `USUARIOS`,
+     `VENDAS`, `FATURAMENTO` e `CONCORRENCIA`
 
 5. **Deploy do Apps Script:**
    - Clique em **Implantar → Novo deploy**
@@ -88,6 +103,30 @@ Depois de adicionar `ControleGastos.gs` e atualizar os demais arquivos:
 
 A inicialização é idempotente e pode ser executada novamente sem duplicar os
 lançamentos já importados.
+
+### Configurar o Fechamento de Horas
+
+O fechamento usa uma planilha operacional separada da base comercial.
+
+1. Em `apps-script/FechamentoHoras.gs`, configure
+   `FECHAMENTO_HORAS_SHEET_ID` com o ID da planilha operacional.
+2. Garanta que a conta proprietária do deploy tenha permissão de edição nessa
+   planilha.
+3. Execute `testarFechamentoHoras()` no editor do Apps Script para validar o
+   acesso e autorizar as permissões.
+4. Publique uma nova versão do App da Web.
+
+As abas ocultas `CONTROLE_FECHAMENTO` e `HISTORICO_FECHAMENTO` são criadas
+automaticamente. As abas mensais são criadas no primeiro salvamento do período.
+
+O módulo permite acesso a `master`, `admin` e ao usuário financeiro autorizado
+`elaine.souza@voesafe.com.br`.
+
+### SAFE MINIONS
+
+O SAFE MINIONS processa arquivos `.xlt`, `.xltx` e `.xlsx` diretamente no
+navegador. Os arquivos não são enviados ao Apps Script. O acesso à página é
+restrito ao perfil `master`.
 
 ### 3. Configurar o frontend
 
@@ -139,6 +178,9 @@ No GitHub:
 
 ## Perfis de acesso
 
+Todos os módulos aparecem no menu lateral. Opções indisponíveis para o perfil
+recebem um cadeado e direcionam para a página de acesso restrito.
+
 | Recurso | Consultor (PAC) | Admin | Financeiro | Master TI |
 |---|---|---|---|---|
 | Ver próprias vendas | Sim | Sim | Sim | Sim |
@@ -148,6 +190,8 @@ No GitHub:
 | Concorrência | Não | Sim | Somente leitura | Sim |
 | Gestão de usuários | Não | Sim | Somente leitura | Sim |
 | Controle de gastos | Não | Não | Edição completa | Edição completa |
+| Fechamento de horas e cotistas | Não | Edição completa | Elaine autorizada | Edição completa |
+| SAFE MINIONS | Não | Não | Não | Sim |
 
 ---
 

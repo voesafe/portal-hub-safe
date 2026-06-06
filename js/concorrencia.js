@@ -11,7 +11,7 @@ const Concorrencia = {
   editandoPrecoSafe: false,
 
   async init() {
-    Auth.proteger();
+    if (!Auth.proteger(true)) return;
     Auth.preencherUI();
     this.initFiltros();
     this.initForm();

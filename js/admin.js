@@ -9,7 +9,7 @@ const Admin = {
   editandoId: null,
 
   async init() {
-    Auth.proteger(true); // só admin
+    if (!Auth.proteger(true)) return;
     Auth.preencherUI();
     this.initSidebar();
     this.initForm();
