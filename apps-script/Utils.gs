@@ -3,7 +3,7 @@
 // SAFE Escola de Aviação | Dashboard Comercial
 // ============================================================
 
-var SHEET_ID = 'SEU_SPREADSHEET_ID_AQUI'; // ← substitua pelo ID do seu Sheets
+var SHEET_ID = '1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw';
 
 var SHEETS = {
   USUARIOS:          'USUARIOS',
@@ -66,6 +66,11 @@ function perfilEhAdminCompleto(perfil) {
 function perfilSomenteLeitura(perfil) {
   var p = normalizarPerfil(perfil);
   return p === 'admin_readonly' || p === 'admin_visualizacao' || p === 'financeiro';
+}
+
+function perfilPodeAcessarEscalaCco(perfil) {
+  var p = normalizarPerfil(perfil);
+  return p === 'admin' || p === 'master' || p.indexOf('cco_') === 0;
 }
 
 function perfilPodeAcessarFinanceiro(perfil, email) {

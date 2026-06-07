@@ -29,6 +29,27 @@ const Auth = {
     return s && (p === 'admin' || p === 'master');
   },
 
+  perfilEhCco(perfil) {
+    return this.normalizarPerfil(perfil).startsWith('cco_');
+  },
+
+  perfilPodeAcessarEscalaCco(perfil) {
+    const p = this.normalizarPerfil(perfil);
+    return p === 'admin' || p === 'master' || this.perfilEhCco(p);
+  },
+
+  podeAcessarEscalaCco() {
+    return this.perfilPodeAcessarEscalaCco(this.getPerfil());
+  },
+
+  eUsuarioExclusivoCco() {
+    return this.perfilEhCco(this.getPerfil());
+  },
+
+  paginaInicial() {
+    return this.eUsuarioExclusivoCco() ? 'escala-cco.html' : 'dashboard.html';
+  },
+
   eSomenteLeitura() {
     const s = this.getSessao();
     return s && this.perfilSomenteLeitura(s.perfil);
@@ -82,8 +103,12 @@ const Auth = {
   },
 
   descricaoPerfil(perfil) {
+    const p = this.normalizarPerfil(perfil);
+    if (p === 'cco_admin') return 'Administrador CCO';
+    if (p === 'cco_financeiro') return 'Financeiro CCO';
+    if (p === 'cco_user') return 'Operador CCO';
     if (this.perfilEhMaster(perfil)) return 'Master TI';
-    if (this.normalizarPerfil(perfil) === 'financeiro') return 'Financeiro';
+    if (p === 'financeiro') return 'Financeiro';
     if (this.perfilSomenteLeitura(perfil)) return 'Visualização';
     if (this.perfilEhAdmin(perfil))        return 'Administrador';
     return 'Consultor Comercial';
@@ -96,6 +121,7 @@ const Auth = {
 
   logout() {
     sessionStorage.removeItem(CONFIG.SESSION_KEY);
+    sessionStorage.removeItem('cco_session');
     window.location.href = 'index.html';
   },
 
@@ -113,14 +139,29 @@ const Auth = {
 
   proteger(adminOnly = false) {
     if (!this.estaLogado()) { window.location.href = 'index.html'; return false; }
+    const destino = window.location.pathname.split('/').pop();
+    if (this.eUsuarioExclusivoCco() && destino !== 'escala-cco.html') {
+      window.location.replace('escala-cco.html');
+      return false;
+    }
     if (adminOnly && !this.eAdmin()) {
-      const destino = window.location.pathname.split('/').pop();
       const recursos = {
         'admin.html': 'Usuários',
         'faturamento.html': 'Faturamento',
         'concorrencia.html': 'Concorrência'
       };
       return this.negarAcesso(recursos[destino] || 'Administração', destino);
+    }
+    return true;
+  },
+
+  protegerEscalaCco() {
+    if (!this.estaLogado()) {
+      window.location.replace('index.html');
+      return false;
+    }
+    if (!this.podeAcessarEscalaCco()) {
+      return this.negarAcesso('Escala CCO', 'escala-cco.html');
     }
     return true;
   },
@@ -179,6 +220,7 @@ const Auth = {
       usuarios:     `<svg ${base}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
       gastos:       `<svg ${base}><path d="M3 6h18"></path><path d="M7 3v6"></path><path d="M17 3v6"></path><rect x="3" y="6" width="18" height="15" rx="2"></rect><path d="M8 12h3"></path><path d="M8 16h5"></path><path d="M16 12v4"></path><path d="M14 14h4"></path></svg>`,
       horas:        `<svg ${base}><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path><path d="M5 3 2 6"></path><path d="m19 3 3 3"></path></svg>`,
+      escala:       `<svg ${base}><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M3 10h18"></path><path d="m8 15 2 2 4-4"></path></svg>`,
       minions:      `<svg ${base}><path d="M8 3h8"></path><path d="M9 3v3"></path><path d="M15 3v3"></path><rect x="5" y="6" width="14" height="15" rx="4"></rect><circle cx="10" cy="12" r="2"></circle><circle cx="14" cy="12" r="2"></circle><path d="M8 12h4"></path><path d="M12 12h4"></path><path d="M9 17h6"></path></svg>`,
       comercial:     `<svg ${base}><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>`,
       administracao: `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 9h18"></path></svg>`,
@@ -235,6 +277,23 @@ const Auth = {
       `;
     };
 
+    const acessoEscalaCco = this.podeAcessarEscalaCco();
+    const secaoEscala = secao(
+      'escala',
+      'Escala',
+      'escala',
+      item('escala-cco.html', 'Escala CCO', 'escala', {
+        permitido: acessoEscalaCco
+      }),
+      ['escala-cco.html']
+    );
+
+    if (this.eUsuarioExclusivoCco()) {
+      nav.innerHTML = secaoEscala;
+      this.inicializarMenuSidebar();
+      return;
+    }
+
     const secoes = [
       `<a href="dashboard.html" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}">
         <span class="nav-icon" aria-hidden="true">${this.iconSvg('dashboard')}</span>
@@ -246,7 +305,8 @@ const Auth = {
         'comercial',
         item('vendas.html', 'Vendas', 'vendas'),
         ['vendas.html']
-      )
+      ),
+      secaoEscala
     ];
 
     const acessoMaster = this.perfilEhMaster(this.getPerfil());
@@ -373,6 +433,7 @@ const Auth = {
       'admin.html':       'usuarios',
       'controle-gastos.html': 'gastos',
       'fechamento-horas.html': 'horas',
+      'escala-cco.html': 'escala',
       'safe-minions.html': 'minions'
     };
     document.querySelectorAll('.nav-item').forEach(item => {

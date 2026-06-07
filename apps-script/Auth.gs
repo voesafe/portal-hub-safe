@@ -12,14 +12,17 @@ function login(email, senha) {
     var sheet = getSheet(SHEETS.USUARIOS);
     var data = sheet.getDataRange().getValues();
     var hash = hashSenha(senha);
+    var identificador = String(email || '').trim().toLowerCase();
 
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
       var rowEmail  = String(row[3]).trim().toLowerCase();
+      var rowPac    = String(row[2]).trim().toLowerCase();
       var rowHash   = String(row[4]).trim();
       var rowAtivo  = row[6];
 
-      if (rowEmail === email.trim().toLowerCase() && rowHash === hash && valorBooleano(rowAtivo)) {
+      if ((rowEmail === identificador || rowPac === identificador) &&
+          rowHash === hash && valorBooleano(rowAtivo)) {
         var usuario = {
           id:     row[0],
           nome:   row[1],
@@ -31,7 +34,11 @@ function login(email, senha) {
         return usuario;
       }
     }
-    return null;
+
+    var usuarioCco = autenticarUsuarioCco(identificador, senha);
+    if (!usuarioCco) return null;
+    usuarioCco.token = criarTokenSessao(usuarioCco);
+    return usuarioCco;
   } catch(e) {
     throw new Error('Erro no login: ' + e.message);
   }
@@ -95,6 +102,13 @@ function validarTokenSessao(token) {
   if (!sessao.expiraEm || Number(sessao.expiraEm) < Date.now()) {
     props.deleteProperty(chave);
     return null;
+  }
+
+  if (normalizarPerfil(sessao.perfil).indexOf('cco_') === 0) {
+    var usuarioCco = buscarUsuarioCco(sessao.pac);
+    if (!usuarioCco) return null;
+    usuarioCco.token = token;
+    return usuarioCco;
   }
 
   var sheet = getSheet(SHEETS.USUARIOS);

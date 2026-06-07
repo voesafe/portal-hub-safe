@@ -19,6 +19,7 @@ portal-hub-safe/
 ├── admin.html             # Gestão de usuários
 ├── controle-gastos.html   # Controle financeiro por base
 ├── fechamento-horas.html  # Fechamento mensal de horas e cotistas
+├── escala-cco.html         # Escala do Centro de Controle de Operações
 ├── safe-minions.html      # Análise local de extratos SACI (Master TI)
 ├── acesso-negado.html     # Aviso padronizado para módulos restritos
 ├── assets/
@@ -64,6 +65,7 @@ portal-hub-safe/
 | `Concorrencia.gs` | Copie o conteúdo de `apps-script/Concorrencia.gs` |
 | `ControleGastos.gs` | Copie o conteúdo de `apps-script/ControleGastos.gs` |
 | `FechamentoHoras.gs` | Copie o conteúdo de `apps-script/FechamentoHoras.gs` |
+| `Cco.gs` | Copie o conteúdo de `apps-script/Cco.gs` |
 | `Utils.gs` | Copie o conteúdo de `apps-script/Utils.gs` |
 
 3. Em `Utils.gs`, substitua:
@@ -121,6 +123,23 @@ automaticamente. As abas mensais são criadas no primeiro salvamento do período
 
 O módulo permite acesso a `master`, `admin` e ao usuário financeiro autorizado
 `elaine.souza@voesafe.com.br`.
+
+### Configurar a Escala CCO
+
+1. Adicione `apps-script/Cco.gs` ao Apps Script do SAFE Hub.
+2. Confirme que `CCO_API_URL` aponta para o deploy atual do backend da Escala.
+3. Publique uma nova versão do App da Web do SAFE Hub.
+
+Os usuários da CCO não são duplicados na planilha comercial. O Hub valida
+usuário e senha diretamente no backend da Escala e recebe o papel vigente:
+
+- `admin` vira `cco_admin`;
+- `financeiro` vira `cco_financeiro`;
+- `user` vira `cco_user`.
+
+Esses perfis entram diretamente em `escala-cco.html` e não podem acessar os
+demais módulos do Hub. Administradores e Master do Hub também podem abrir a
+Escala pelo menu `Escala > Escala CCO`.
 
 ### SAFE MINIONS
 
@@ -191,7 +210,11 @@ recebem um cadeado e direcionam para a página de acesso restrito.
 | Gestão de usuários | Não | Sim | Somente leitura | Sim |
 | Controle de gastos | Não | Não | Edição completa | Edição completa |
 | Fechamento de horas e cotistas | Não | Edição completa | Elaine autorizada | Edição completa |
+| Escala CCO | Não | Edição completa | Não | Edição completa |
 | SAFE MINIONS | Não | Não | Não | Sim |
+
+Os perfis exclusivos `cco_user`, `cco_financeiro` e `cco_admin` acessam somente
+a Escala CCO e mantêm as permissões definidas no sistema de origem.
 
 ---
 

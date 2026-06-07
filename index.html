@@ -182,10 +182,10 @@
       <div class="login-logo-sub">Escola de Aviação</div>
     </div>
 
-    <div class="login-title">Acesso ao Dashboard</div>
-    <div class="login-sub">Entre com seu e-mail e senha</div>
+    <div class="login-title">Acesso ao SAFE Hub</div>
+    <div class="login-sub">Entre com seu e-mail ou usuário e senha</div>
 
-    <label class="login-label" for="inp-email">E-mail</label>
+    <label class="login-label" for="inp-email">E-mail ou usuário</label>
     <div class="input-wrap">
       <span class="input-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -194,12 +194,11 @@
         </svg>
       </span>
       <input
-        type="email"
+        type="text"
         class="login-input"
         id="inp-email"
-        placeholder="seu@email.com.br"
-        autocomplete="email"
-        inputmode="email"
+        placeholder="seu@email.com.br ou usuário CCO"
+        autocomplete="username"
       >
     </div>
 
@@ -236,7 +235,7 @@
         <polyline points="10 17 15 12 10 7"></polyline>
         <line x1="15" y1="12" x2="3" y2="12"></line>
       </svg>
-      <span id="btn-login-label">Entrar no Dashboard</span>
+      <span id="btn-login-label">Entrar no SAFE Hub</span>
     </button>
 
     <div class="login-error" id="login-error">
@@ -249,7 +248,7 @@
     </div>
 
     <div class="login-footer">
-      SAFE Escola de Aviação &copy; 2025 &mdash; Dashboard Comercial
+      SAFE Escola de Aviação &copy; 2026 &mdash; SAFE Hub
     </div>
   </div>
 
@@ -257,7 +256,15 @@
   <script>
     // Redireciona se já estiver logado
     const sessao = sessionStorage.getItem(CONFIG.SESSION_KEY);
-    if (sessao) window.location.href = 'dashboard.html';
+    if (sessao) {
+      try {
+        const usuario = JSON.parse(sessao);
+        const perfil = String(usuario?.perfil || '').trim().toLowerCase().replace(/-/g, '_');
+        window.location.href = perfil.startsWith('cco_') ? 'escala-cco.html' : 'dashboard.html';
+      } catch {
+        sessionStorage.removeItem(CONFIG.SESSION_KEY);
+      }
+    }
   </script>
   <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
@@ -297,7 +304,7 @@
         btnLabel.textContent = 'Entrando...';
         btnLogin.insertAdjacentHTML('afterbegin', '<span class="spinner" style="margin-right:8px"></span>');
       } else {
-        btnLabel.textContent = 'Entrar no Dashboard';
+        btnLabel.textContent = 'Entrar no SAFE Hub';
         const sp = btnLogin.querySelector('.spinner');
         if (sp) sp.remove();
       }
@@ -307,8 +314,7 @@
       const email = inpEmail.value.trim();
       const senha = inpSenha.value;
 
-      if (!email) { mostrarErro('Digite seu e-mail.'); inpEmail.focus(); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { mostrarErro('E-mail inválido.'); inpEmail.focus(); return; }
+      if (!email) { mostrarErro('Digite seu e-mail ou usuário.'); inpEmail.focus(); return; }
       if (!senha)  { mostrarErro('Digite sua senha.'); inpSenha.focus(); return; }
 
       limparErro();
@@ -318,7 +324,7 @@
       setLoading(false);
 
       if (res.ok) {
-        window.location.href = 'dashboard.html';
+        window.location.href = Auth.paginaInicial();
       } else {
         mostrarErro(res.error || 'E-mail ou senha incorretos.');
         inpSenha.value = '';
