@@ -125,6 +125,18 @@ html, body {
   padding-left: 9px;
 }
 
+.menu-dashboard.restricted {
+  color: rgba(255,255,255,.43);
+}
+
+.menu-dashboard.restricted:hover {
+  color: rgba(255,255,255,.8);
+}
+
+.menu-dashboard .nav-lock {
+  margin-left: auto;
+}
+
 .menu-section {
   margin-bottom: 5px;
 }

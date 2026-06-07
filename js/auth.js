@@ -140,7 +140,9 @@ const Auth = {
   proteger(adminOnly = false) {
     if (!this.estaLogado()) { window.location.href = 'index.html'; return false; }
     const destino = window.location.pathname.split('/').pop();
-    if (this.eUsuarioExclusivoCco() && destino !== 'escala-cco.html') {
+    if (this.eUsuarioExclusivoCco() &&
+        destino !== 'escala-cco.html' &&
+        destino !== 'acesso-negado.html') {
       window.location.replace('escala-cco.html');
       return false;
     }
@@ -288,22 +290,25 @@ const Auth = {
       ['escala-cco.html']
     );
 
-    if (this.eUsuarioExclusivoCco()) {
-      nav.innerHTML = secaoEscala;
-      this.inicializarMenuSidebar();
-      return;
-    }
+    const acessoHubPrincipal = !this.eUsuarioExclusivoCco();
+    const dashboardPermitido = acessoHubPrincipal;
+    const dashboardDestino = dashboardPermitido
+      ? 'dashboard.html'
+      : this.urlAcessoNegado('Dashboard', 'dashboard.html');
 
     const secoes = [
-      `<a href="dashboard.html" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}">
+      `<a href="${dashboardDestino}" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}${dashboardPermitido ? '' : ' restricted'}">
         <span class="nav-icon" aria-hidden="true">${this.iconSvg('dashboard')}</span>
         <span>Dashboard</span>
+        ${dashboardPermitido ? '' : `<span class="nav-lock" aria-label="Acesso restrito" title="Acesso restrito">${this.iconSvg('lock')}</span>`}
       </a>`,
       secao(
         'comercial',
         'Comercial',
         'comercial',
-        item('vendas.html', 'Vendas', 'vendas'),
+        item('vendas.html', 'Vendas', 'vendas', {
+          permitido: acessoHubPrincipal
+        }),
         ['vendas.html']
       ),
       secaoEscala

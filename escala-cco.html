@@ -38,7 +38,9 @@ body.dark {
 }
 body.dark #loginScreen{background:linear-gradient(135deg,#0F1729 0%,#1A2440 50%,#16352A 100%)}
 body.dark .login-title{color:var(--text)}
-body.dark .cco-nav{background:#0A1020;border-bottom:1px solid var(--border)}
+body.dark .topbar{background:#0A1020;border-bottom-color:var(--border)}
+body.dark .topbar-title{color:var(--text)}
+body.dark .topbar-subtitle{color:var(--muted)}
 body.dark .day-card{background:var(--surface)}
 body.dark .day-header{background:#22304F;border-bottom-color:var(--border)}
 body.dark .day-num{color:var(--text)}
@@ -238,17 +240,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* APP */
 #appScreen{display:none;flex-direction:column;min-height:calc(100vh - var(--topbar-h))}
 
-/* NAV */
-.cco-nav{display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:var(--navy);position:sticky;top:var(--topbar-h);z-index:50}
-.nav-brand{display:flex;align-items:center;gap:12px}
-.nav-logo{height:32px;width:auto;display:block}
-.nav-brand-text{font-family:'Raleway',sans-serif;font-weight:800;font-size:14px;color:#fff;letter-spacing:1px}
-.nav-brand-sub{font-size:9px;color:var(--teal);letter-spacing:2.5px;text-transform:uppercase;font-weight:600}
-.nav-right{display:flex;align-items:center;gap:14px}
-#userBadge{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.7);font-weight:500}
+/* AÇÕES DO MÓDULO NA TOPBAR DO HUB */
+.cco-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
 .nav-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.2)}
-.logout-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s}
-.logout-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 .nav-ifood-btn{display:none;align-items:center;gap:6px;background:rgba(234,29,44,.15);border:1px solid rgba(234,29,44,.4);color:#ff8a8a;padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
 .nav-ifood-btn:hover{background:rgba(234,29,44,.3);border-color:#EA1D2C;color:#fff}
 .nav-export-btn{display:none;align-items:center;gap:6px;background:rgba(96,192,191,.12);border:1px solid rgba(96,192,191,.35);color:var(--teal);padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s}
@@ -317,6 +311,34 @@ body.dark .user-card-info{color:var(--text2)}
 .cco-hub-main .hamburger span{background:#1D2951}
 .cco-hub-main .sidebar{font-family:'Montserrat',sans-serif}
 .cco-hub-main .sidebar button{font-family:'Montserrat',sans-serif}
+.cco-hub-main .topbar .nav-export-btn,
+.cco-hub-main .topbar .nav-dash-btn,
+.cco-hub-main .topbar .nav-func-btn{
+  color:#1D2951;
+  background:#fff;
+  border-color:#D7E0EC;
+}
+.cco-hub-main .topbar .nav-export-btn:hover,
+.cco-hub-main .topbar .nav-dash-btn:hover,
+.cco-hub-main .topbar .nav-func-btn:hover{
+  color:#1D2951;
+  background:#EDF4FA;
+  border-color:#5BAEE2;
+}
+.cco-hub-main .topbar .nav-ifood-btn{color:#D5202F;background:#FFF5F6}
+.cco-hub-main .topbar .theme-btn{color:#1D2951;background:#F4F7FB;border-color:#D7E0EC}
+.cco-hub-main .topbar .hamburger-btn{background:#F4F7FB;border:1px solid #D7E0EC}
+.cco-hub-main .topbar .hamburger-btn .bar{background:#1D2951}
+body.dark .cco-hub-main .topbar .nav-export-btn,
+body.dark .cco-hub-main .topbar .nav-dash-btn,
+body.dark .cco-hub-main .topbar .nav-func-btn,
+body.dark .cco-hub-main .topbar .theme-btn,
+body.dark .cco-hub-main .topbar .hamburger-btn{
+  color:var(--text);
+  background:var(--surface);
+  border-color:var(--border);
+}
+body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 
 /* ADMIN */
 .admin-panel{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--radius);padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow)}
@@ -565,12 +587,20 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 
 /* ── MOBILE & RESPONSIVE ─────────────────────────────────── */
 @media(max-width:768px){
-  /* NAV MOBILE */
-  .cco-nav{padding:0 16px;height:56px;top:var(--topbar-h)}
-  .nav-brand-text{font-size:13px}
-  .nav-brand-sub{display:none}
-  .nav-logo{height:28px}
-  .nav-right{display:none!important}
+  /* AÇÕES INTERNAS DA CCO NO MOBILE */
+  .cco-hub-main>.topbar{flex-wrap:nowrap}
+  .cco-actions{
+    width:auto;
+    margin-left:auto;
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-end;
+  }
+  .cco-actions>.nav-export-btn,
+  .cco-actions>.nav-ifood-btn,
+  .cco-actions>.nav-dash-btn,
+  .cco-actions>.nav-func-btn,
+  .cco-actions>.theme-btn{display:none!important}
   .hamburger-btn{display:flex}
 
   /* MAIN */
@@ -655,7 +685,7 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 
 /* PDF PRINT */
 @media print{
-  .cco-nav,.admin-panel,.month-nav-right,.legend,#toastContainer{display:none!important}
+  .topbar,.sidebar,.sidebar-overlay,.admin-panel,.month-nav-right,.legend,#toastContainer{display:none!important}
   body{background:#fff}
   .cco-main{padding:16px}
   #calendarGrid{grid-template-columns:repeat(7,1fr);gap:6px}
@@ -701,6 +731,29 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
           <div class="topbar-subtitle">Centro de Controle de Operações</div>
         </div>
       </div>
+      <div class="topbar-right cco-actions">
+        <button class="nav-export-btn" id="navExportBtn" onclick="gerarXlsxIfood(window._lastUsersToShow, window._lastTotals)" title="Exportar planilha iFood">
+          Exportar iFood
+        </button>
+        <a class="nav-ifood-btn" id="navIfoodBtn" href="https://empresas-app.ifood.com.br/auth/login" target="_blank" rel="noopener" title="Acessar iFood Benefícios">
+          iFood Benefícios
+        </a>
+        <button class="nav-dash-btn" id="navDashBtn" onclick="toggleDashView()" title="Dashboard CCO">
+          Dashboard CCO
+        </button>
+        <button class="nav-func-btn" id="navFuncBtn" onclick="toggleFuncView()" title="Gerenciar funcionários">
+          Funcionários
+        </button>
+        <button class="nav-func-btn" id="navCalBtn" onclick="voltarCalendario()" title="Voltar ao calendário" style="display:none">
+          Calendário
+        </button>
+        <button class="theme-btn" id="btnTheme" onclick="toggleTheme()" title="Alternar tema">☀️</button>
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu da Escala CCO">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
     </div>
 
     <div id="loadingBar"></div>
@@ -722,44 +775,6 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 
 <!-- APP -->
 <div id="appScreen">
-  <nav class="cco-nav">
-    <div class="nav-brand">
-      <img class="nav-logo" src="assets/img/logo.png" alt="SAFE">
-      <div>
-        <div class="nav-brand-text">SAFE</div>
-        <div class="nav-brand-sub">Escala CCO</div>
-      </div>
-    </div>
-    <div class="nav-right">
-      <div id="userBadge"></div>
-      <button class="nav-export-btn" id="navExportBtn" onclick="gerarXlsxIfood(window._lastUsersToShow, window._lastTotals)" title="Exportar planilha iFood">
-        📥 Exportar iFood
-      </button>
-      <a class="nav-ifood-btn" id="navIfoodBtn" href="https://empresas-app.ifood.com.br/auth/login" target="_blank" rel="noopener" title="Acessar iFood Benefícios">
-        🍔 iFood Benefícios
-      </a>
-      <button class="nav-dash-btn" id="navDashBtn" onclick="toggleDashView()" title="Dashboard">
-        📊 Dashboard
-      </button>
-      <button class="nav-func-btn" id="navFuncBtn" onclick="toggleFuncView()" title="Gerenciar funcionários">
-        👥 Funcionários
-      </button>
-      <button class="nav-func-btn" id="navCalBtn" onclick="voltarCalendario()" title="Voltar ao calendário" style="display:none">
-        📅 Calendário
-      </button>
-      <button class="nav-func-btn" id="navHubBtn" onclick="window.location.href='dashboard.html'" title="Voltar ao SAFE Hub" style="display:none">
-        SAFE Hub
-      </button>
-      <button class="theme-btn" id="btnTheme" onclick="toggleTheme()" title="Alternar tema">☀️</button>
-      <button class="logout-btn" onclick="doLogout()">Sair</button>
-    </div>
-    <!-- Hamburger (mobile) -->
-    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
-  </nav>
 
   <!-- Drawer overlay -->
   <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
@@ -1295,7 +1310,7 @@ async function exportPDF(){
     const main = document.querySelector("main");
 
     // Esconde temporariamente nav e elementos desnecessários
-    const hide = [...document.querySelectorAll(".cco-nav, .admin-panel, .month-nav-right, .legend, #toastContainer, .month-nav .meus-dias-btn")];
+    const hide = [...document.querySelectorAll(".admin-panel, .month-nav-right, .legend, #toastContainer, .month-nav .meus-dias-btn")];
     const prevDisplay = hide.map(el => el.style.display);
     hide.forEach(el => el.style.display = "none");
 
@@ -1415,8 +1430,6 @@ async function doLogin(e){
 
 function iniciarApp(u){
   limparApp(); // Limpa tudo antes de montar a nova sessão
-  const navHub = document.getElementById("navHubBtn");
-  if(navHub) navHub.style.display = Auth.eUsuarioExclusivoCco() ? "none" : "inline-flex";
   // Mostrar botões iFood no nav para financeiro e admin (após limparApp)
   const navExport = document.getElementById("navExportBtn");
   const navIfood  = document.getElementById("navIfoodBtn");
@@ -1438,7 +1451,6 @@ function iniciarApp(u){
   if(navUsers) navUsers.style.display = u.role==="admin" ? "inline-flex" : "none";
   document.getElementById("loginScreen").style.display="none";
   document.getElementById("appScreen").style.display="flex";
-  document.getElementById("userBadge").innerHTML=`<div class="nav-avatar" style="background:${u.color}">${u.initials}</div><span>${u.name}</span>`;
   if(u.role==="admin") document.getElementById("adminPanel").style.display="flex";
   if(u.role==="financeiro"){
     document.getElementById("calendarGrid").style.display="none";
@@ -1463,11 +1475,9 @@ function limparApp(){
   const navExport = document.getElementById("navExportBtn");
   const navIfood  = document.getElementById("navIfoodBtn");
   const navFunc   = document.getElementById("navFuncBtn");
-  const navHub    = document.getElementById("navHubBtn");
   if(navExport) navExport.style.display="none";
   if(navIfood)  navIfood.style.display="none";
   if(navFunc)   navFunc.style.display="none";
-  if(navHub)    navHub.style.display="none";
   const navCal  = document.getElementById("navCalBtn");
   const navDash2 = document.getElementById("navDashBtn");
   if(navCal)   navCal.style.display="none";
