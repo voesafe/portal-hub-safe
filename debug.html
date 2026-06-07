@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Debug — SAFE Comercial</title>
+  <title>Diagnóstico — SAFE Hub</title>
   <link rel="stylesheet" href="css/safe-theme.css">
   <style>
     body { font-family: 'Montserrat', sans-serif; padding: 32px; background: #f4f6fa; }
@@ -21,10 +21,23 @@
     .alert-box { background: #fff8e1; border: 2px solid #f39c12; border-radius: 8px; padding: 16px; margin-top: 12px; font-size: 13px; }
     .ok-box { background: #eafaf1; border: 2px solid #27ae60; border-radius: 8px; padding: 16px; margin-top: 12px; }
     .sum-box { background: #eaf4ff; border: 2px solid #5BAEE2; border-radius: 8px; padding: 16px; margin-top: 12px; }
+    .debug-header { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+    .debug-logo { display: inline-flex; padding: 8px 12px; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .debug-logo img { display: block; width: 180px; height: auto; }
+    .debug-header h1 { margin: 0; color: #1D2951; }
+    @media (max-width: 640px) {
+      .debug-header { align-items: flex-start; flex-direction: column; }
+      .debug-logo img { width: 150px; }
+    }
   </style>
 </head>
 <body>
-<h1 style="color:#1D2951">Diagnóstico SAFE Comercial</h1>
+<header class="debug-header">
+  <a class="debug-logo" href="dashboard.html" aria-label="Ir para a página inicial">
+    <img src="assets/img/safe-logo-horizontal.png" alt="SAFE Escola de Aviação">
+  </a>
+  <h1>Diagnóstico SAFE Hub</h1>
+</header>
 <p style="color:#666">Abrir dashboard.html primeiro para estar logado.</p>
 
 <div class="card">

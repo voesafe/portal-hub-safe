@@ -1,6 +1,6 @@
 // ============================================================
 // Faturamento.gs - Faturamento por canal (so admin)
-// SAFE Escola de Aviacao | Dashboard Comercial
+// SAFE Escola de Aviacao | SAFE Hub
 // ============================================================
 
 var CANAIS = ['Lojinha', 'Safe Academy', 'Azul Pontos', 'Lito Academy', 'Vendas Comercial'];

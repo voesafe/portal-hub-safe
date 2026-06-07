@@ -1,6 +1,6 @@
 // ============================================================
 // Code.gs — Roteador principal (doGet / doPost)
-// SAFE Escola de Aviação | Dashboard Comercial
+// SAFE Escola de Aviação | SAFE Hub
 //
 // DEPLOY: Extensões → Apps Script → Implantar → Novo deploy
 //         Tipo: App da Web | Executar como: Eu | Acesso: Qualquer pessoa

@@ -1,6 +1,6 @@
 // ============================================================
 // dashboard.js — KPIs + Gráficos + UX melhorada
-// SAFE Dashboard Comercial
+// SAFE Hub
 // ============================================================
 
 let chartReceita = null;

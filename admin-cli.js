@@ -1,6 +1,6 @@
 // ============================================================
 // admin-cli.js — Administração de usuários pelo terminal
-// SAFE Dashboard Comercial
+// SAFE Hub
 //
 // USO:
 //   node admin-cli.js listar
@@ -317,7 +317,7 @@ async function cmdRemover(pac) {
 }
 
 function ajuda() {
-  titulo('SAFE Comercial — Admin CLI');
+  titulo('SAFE Hub — Admin CLI');
   console.log(`${c.bold}Comandos disponíveis:${c.reset}\n`);
   console.log(`  ${c.cyan}node admin-cli.js listar${c.reset}`);
   console.log(`  ${c.gray}  Lista todos os usuários cadastrados${c.reset}\n`);

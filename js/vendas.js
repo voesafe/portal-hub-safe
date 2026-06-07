@@ -1,6 +1,6 @@
 // ============================================================
 // vendas.js — Listagem, cadastro e edição de vendas
-// SAFE Dashboard Comercial
+// SAFE Hub
 // ============================================================
 
 const Vendas = {

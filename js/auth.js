@@ -1,6 +1,6 @@
 // ============================================================
 // auth.js — Autenticação, sessão e proteção de rotas
-// SAFE Dashboard Comercial — login por e-mail
+// SAFE Hub — login por e-mail
 // ============================================================
 
 const Auth = {
@@ -517,10 +517,42 @@ const Auth = {
     overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });
   },
 
+  aplicarMarcaHub() {
+    const paginaInicial = this.paginaInicial();
+
+    document.querySelectorAll('.topbar-left').forEach(topbarLeft => {
+      if (topbarLeft.querySelector('.topbar-brand-link')) return;
+
+      const contexto = Array.from(topbarLeft.children).find(
+        el => !el.classList.contains('hamburger')
+      );
+      if (contexto) contexto.classList.add('topbar-context');
+
+      const link = document.createElement('a');
+      link.className = 'topbar-brand-link';
+      link.href = paginaInicial;
+      link.setAttribute('aria-label', 'Ir para a página inicial');
+      link.innerHTML = '<img src="assets/img/safe-logo-horizontal.png" alt="SAFE Escola de Aviação">';
+
+      const divisor = document.createElement('span');
+      divisor.className = 'topbar-brand-divider';
+      divisor.setAttribute('aria-hidden', 'true');
+
+      const hamburger = topbarLeft.querySelector('.hamburger');
+      if (hamburger) {
+        hamburger.insertAdjacentElement('afterend', link);
+      } else {
+        topbarLeft.prepend(link);
+      }
+      if (contexto) link.insertAdjacentElement('afterend', divisor);
+    });
+  },
+
   preencherUI() {
     const sessao = this.getSessao();
     if (!sessao) return;
 
+    this.aplicarMarcaHub();
     this.montarMenuSidebar();
     this.prepararLogoutSidebar();
 

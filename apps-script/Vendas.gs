@@ -1,6 +1,6 @@
 // ============================================================
 // Vendas.gs — CRUD completo de vendas
-// SAFE Escola de Aviação | Dashboard Comercial
+// SAFE Escola de Aviação | SAFE Hub
 // ============================================================
 
 function listarVendas(pac, mes, ano) {

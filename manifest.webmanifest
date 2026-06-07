@@ -1,7 +1,7 @@
 {
-  "name": "SAFE Comercial Vendas",
-  "short_name": "SAFE Vendas",
-  "description": "Dashboard comercial da SAFE Escola de Aviacao.",
+  "name": "SAFE",
+  "short_name": "SAFE",
+  "description": "Portal integrado da SAFE Escola de Aviacao.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

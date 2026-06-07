@@ -1,12 +1,12 @@
 // ============================================================
 // config.js — Configuração central
-// SAFE Dashboard Comercial
+// SAFE Hub
 // ============================================================
 
 const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbzmaCBkPawFNplB5bmeroYC2DrvsOumnzfKvt7zk3IjSrzp5jBlgFP-p2TU4EW29QmE/exec',
 
-  APP_NAME:    'SAFE Comercial',
+  APP_NAME:    'SAFE Hub',
   APP_VERSION: '1.0.0',
   API_TIMEOUT_MS: 30000,
 

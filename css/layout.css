@@ -1,6 +1,6 @@
 /* ============================================================
    layout.css — Sidebar, Topbar e Grid
-   SAFE Dashboard Comercial
+   SAFE Hub
    ============================================================ */
 
 /* ── Anti scroll horizontal global ────────────────────────── */
@@ -415,6 +415,37 @@ html, body {
   gap: 16px;
   min-width: 0;
 }
+.topbar-brand-link {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  padding: 3px 5px;
+  transition: background-color .2s ease, transform .2s ease;
+}
+.topbar-brand-link:hover {
+  background: var(--gray-100);
+  transform: translateY(-1px);
+}
+.topbar-brand-link:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+.topbar-brand-link img {
+  display: block;
+  width: 150px;
+  height: 44px;
+  object-fit: contain;
+}
+.topbar-brand-divider {
+  width: 1px;
+  height: 34px;
+  flex-shrink: 0;
+  background: var(--gray-100);
+}
+.topbar-context {
+  min-width: 0;
+}
 .topbar-title {
   font-family: var(--font-title);
   font-size: 1.1rem;
@@ -686,10 +717,16 @@ html, body {
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .page-header { flex-direction: column; }
   .topbar { padding: 12px 16px; }
+  .topbar-left { gap: 10px; }
+  .topbar-brand-link img { width: 116px; height: 36px; }
+  .topbar-brand-divider { height: 28px; }
   .topbar-right { width: 100%; justify-content: flex-end; }
 }
 
 @media (max-width: 480px) {
+  .topbar-context { display: none; }
+  .topbar-brand-divider { display: none; }
+  .topbar-brand-link img { width: 124px; }
   .grid-kpis { grid-template-columns: 1fr; }
   .topbar-right { flex-direction: column; align-items: flex-start; }
   .topbar-period { width: 100%; }

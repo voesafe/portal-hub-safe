@@ -1,6 +1,6 @@
 // ============================================================
 // api.js — Comunicação com Apps Script + cache
-// SAFE Dashboard Comercial
+// SAFE Hub
 // ============================================================
 
 const Cache = {

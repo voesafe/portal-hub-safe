@@ -1,6 +1,6 @@
 // ============================================================
 // Utils.gs — Funções auxiliares compartilhadas
-// SAFE Escola de Aviação | Dashboard Comercial
+// SAFE Escola de Aviação | SAFE Hub
 // ============================================================
 
 var SHEET_ID = '1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw';

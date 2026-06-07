@@ -1,4 +1,4 @@
-# Portal Hub SAFE
+# SAFE Hub
 
 Portal interno da SAFE Escola de Aviação para operação comercial,
 financeira e administrativa.
@@ -171,7 +171,7 @@ Para importar as vendas antigas da planilha Excel para a aba `VENDAS`:
 # Na pasta do projeto
 git init
 git add .
-git commit -m "feat: SAFE Comercial Dashboard v1.0"
+git commit -m "feat: SAFE Hub v1.0"
 git remote add origin https://github.com/SEU_USUARIO/safe-comercial.git
 git push -u origin main
 ```

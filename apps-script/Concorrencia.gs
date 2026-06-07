@@ -1,6 +1,6 @@
 // ============================================================
 // Concorrencia.gs — CRUD de concorrentes e Preços SAFE
-// SAFE Escola de Aviação | Dashboard Comercial
+// SAFE Escola de Aviação | SAFE Hub
 // ============================================================
 
 // ── Concorrentes ─────────────────────────────────────────────
