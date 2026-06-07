@@ -15,6 +15,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Escala CCO — SAFE Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Raleway:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/safe-theme.css">
+<link rel="stylesheet" href="css/layout.css?v=20260607-cco-shell">
 <style>
 :root {
   --navy:#1D2951;--blue:#5BAEE2;--teal:#60C0BF;
@@ -36,7 +38,7 @@ body.dark {
 }
 body.dark #loginScreen{background:linear-gradient(135deg,#0F1729 0%,#1A2440 50%,#16352A 100%)}
 body.dark .login-title{color:var(--text)}
-body.dark nav{background:#0A1020;border-bottom:1px solid var(--border)}
+body.dark .cco-nav{background:#0A1020;border-bottom:1px solid var(--border)}
 body.dark .day-card{background:var(--surface)}
 body.dark .day-header{background:#22304F;border-bottom-color:var(--border)}
 body.dark .day-num{color:var(--text)}
@@ -234,10 +236,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .login-error{font-size:12px;color:#e05555;margin-top:10px;min-height:16px;font-weight:500}
 
 /* APP */
-#appScreen{display:none;flex-direction:column;min-height:100vh}
+#appScreen{display:none;flex-direction:column;min-height:calc(100vh - var(--topbar-h))}
 
 /* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:var(--navy);position:sticky;top:0;z-index:50}
+.cco-nav{display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:var(--navy);position:sticky;top:var(--topbar-h);z-index:50}
 .nav-brand{display:flex;align-items:center;gap:12px}
 .nav-logo{height:32px;width:auto;display:block}
 .nav-brand-text{font-family:'Raleway',sans-serif;font-weight:800;font-size:14px;color:#fff;letter-spacing:1px}
@@ -306,7 +308,15 @@ body.dark .user-card-info{color:var(--text2)}
 #loadingBar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--blue),var(--teal));z-index:999;transition:width .3s ease}
 
 /* MAIN */
-main{flex:1;padding:28px 32px;max-width:1440px;margin:0 auto;width:100%}
+.cco-main{flex:1;padding:28px 32px;max-width:1440px;margin:0 auto;width:100%}
+
+.cco-hub-main{background:var(--bg);min-height:100vh}
+.cco-hub-main>.topbar{z-index:90}
+.cco-hub-main .topbar-title{color:#1D2951}
+.cco-hub-main .topbar-subtitle{color:#8A9BBB}
+.cco-hub-main .hamburger span{background:#1D2951}
+.cco-hub-main .sidebar{font-family:'Montserrat',sans-serif}
+.cco-hub-main .sidebar button{font-family:'Montserrat',sans-serif}
 
 /* ADMIN */
 .admin-panel{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--radius);padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow)}
@@ -556,7 +566,7 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 /* ── MOBILE & RESPONSIVE ─────────────────────────────────── */
 @media(max-width:768px){
   /* NAV MOBILE */
-  nav{padding:0 16px;height:56px}
+  .cco-nav{padding:0 16px;height:56px;top:var(--topbar-h)}
   .nav-brand-text{font-size:13px}
   .nav-brand-sub{display:none}
   .nav-logo{height:28px}
@@ -564,7 +574,7 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
   .hamburger-btn{display:flex}
 
   /* MAIN */
-  main{padding:14px}
+  .cco-main{padding:14px}
 
   /* ADMIN PANEL */
   .admin-panel{padding:10px 14px;gap:10px}
@@ -645,9 +655,9 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 
 /* PDF PRINT */
 @media print{
-  nav,.admin-panel,.month-nav-right,.legend,#toastContainer{display:none!important}
+  .cco-nav,.admin-panel,.month-nav-right,.legend,#toastContainer{display:none!important}
   body{background:#fff}
-  main{padding:16px}
+  .cco-main{padding:16px}
   #calendarGrid{grid-template-columns:repeat(7,1fr);gap:6px}
   .day-card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
   #financials{grid-template-columns:repeat(3,1fr)}
@@ -656,12 +666,49 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 </style>
 </head>
 <body>
-<div id="loadingBar"></div>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="main cco-hub-main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Escala CCO</div>
+          <div class="topbar-subtitle">Centro de Controle de Operações</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="loadingBar"></div>
 
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <img class="login-logo" src="https://i.imgur.com/dtf2Ycf.png" alt="SAFE">
+    <img class="login-logo" src="assets/img/logo.png" alt="SAFE">
     <div class="login-title">CCO SAFE</div>
     <div class="login-sub">Centro de Controle de Operações</div>
     <form id="loginForm" onsubmit="doLogin(event)" autocomplete="on">
@@ -675,9 +722,9 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 
 <!-- APP -->
 <div id="appScreen">
-  <nav>
+  <nav class="cco-nav">
     <div class="nav-brand">
-      <img class="nav-logo" src="https://i.imgur.com/dtf2Ycf.png" alt="SAFE">
+      <img class="nav-logo" src="assets/img/logo.png" alt="SAFE">
       <div>
         <div class="nav-brand-text">SAFE</div>
         <div class="nav-brand-sub">Escala CCO</div>
@@ -794,7 +841,7 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
     </div>
   </div>
 
-  <main>
+  <main class="cco-main">
     <div id="adminPanel" style="display:none" class="admin-panel">
       <span class="admin-tag">⚙ Admin</span>
       <div class="admin-control">
@@ -1026,6 +1073,9 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
   </div>
 </div>
 
+  </div>
+</div>
+
 <script src="js/config.js"></script>
 <script src="js/auth.js"></script>
 <script>
@@ -1245,7 +1295,7 @@ async function exportPDF(){
     const main = document.querySelector("main");
 
     // Esconde temporariamente nav e elementos desnecessários
-    const hide = [...document.querySelectorAll("nav, .admin-panel, .month-nav-right, .legend, #toastContainer, .month-nav .meus-dias-btn")];
+    const hide = [...document.querySelectorAll(".cco-nav, .admin-panel, .month-nav-right, .legend, #toastContainer, .month-nav .meus-dias-btn")];
     const prevDisplay = hide.map(el => el.style.display);
     hide.forEach(el => el.style.display = "none");
 
@@ -1449,9 +1499,26 @@ function doLogout(){
   Auth.logout();
 }
 
+function iniciarShellHub(){
+  Auth.preencherUI();
+  const sidebar=document.getElementById("sidebar");
+  const overlay=document.getElementById("sidebar-overlay");
+  const hamburger=document.getElementById("hamburger");
+
+  hamburger?.addEventListener("click",()=>{
+    sidebar?.classList.toggle("mobile-open");
+    overlay?.classList.toggle("active");
+  });
+  overlay?.addEventListener("click",()=>{
+    sidebar?.classList.remove("mobile-open");
+    overlay.classList.remove("active");
+  });
+}
+
 window.addEventListener("DOMContentLoaded",async ()=>{
   if(!Auth.protegerEscalaCco()) return;
 
+  iniciarShellHub();
   document.getElementById("loginScreen").style.display="none";
   try{
     const sessao=Auth.getSessao();
