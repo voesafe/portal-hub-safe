@@ -47,7 +47,7 @@ const Auth = {
   },
 
   paginaInicial() {
-    return this.eUsuarioExclusivoCco() ? 'escala-cco.html' : 'dashboard.html';
+    return 'inicio.html';
   },
 
   eSomenteLeitura() {
@@ -141,9 +141,10 @@ const Auth = {
     if (!this.estaLogado()) { window.location.href = 'index.html'; return false; }
     const destino = window.location.pathname.split('/').pop();
     if (this.eUsuarioExclusivoCco() &&
+        destino !== 'inicio.html' &&
         destino !== 'escala-cco.html' &&
         destino !== 'acesso-negado.html') {
-      window.location.replace('escala-cco.html');
+      window.location.replace('inicio.html');
       return false;
     }
     if (adminOnly && !this.eAdmin()) {
@@ -215,6 +216,7 @@ const Auth = {
   iconSvg(nome) {
     const base = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
     const icons = {
+      inicio:       `<svg ${base}><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>`,
       dashboard:    `<svg ${base}><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>`,
       vendas:       `<svg ${base}><path d="M4 3v18l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V3l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M8 8h8"></path><path d="M8 12h8"></path><path d="M8 16h5"></path></svg>`,
       faturamento:  `<svg ${base}><rect x="3" y="6" width="18" height="14" rx="2"></rect><path d="M16 10h5"></path><path d="M7 6V4h10v2"></path><path d="M7 14h4"></path></svg>`,
@@ -243,7 +245,7 @@ const Auth = {
     const hamburger = document.getElementById('hamburger');
     if (!nav || !brand) return;
 
-    const path = window.location.pathname.split('/').pop() || 'dashboard.html';
+    const path = window.location.pathname.split('/').pop() || 'inicio.html';
     const item = (href, label, icone, opcoes = {}) => {
       const ativo = path === href;
       const permitido = opcoes.permitido !== false;
@@ -297,9 +299,13 @@ const Auth = {
       : this.urlAcessoNegado('Dashboard', 'dashboard.html');
 
     const secoes = [
+      `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
+        <span class="nav-icon" aria-hidden="true">${this.iconSvg('inicio')}</span>
+        <span>Início</span>
+      </a>`,
       `<a href="${dashboardDestino}" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}${dashboardPermitido ? '' : ' restricted'}">
         <span class="nav-icon" aria-hidden="true">${this.iconSvg('dashboard')}</span>
-        <span>Dashboard</span>
+        <span>Dashboard de Vendas</span>
         ${dashboardPermitido ? '' : `<span class="nav-lock" aria-label="Acesso restrito" title="Acesso restrito">${this.iconSvg('lock')}</span>`}
       </a>`,
       secao(
@@ -431,6 +437,7 @@ const Auth = {
 
   renderizarIconesSidebar() {
     const porHref = {
+      'inicio.html':      'inicio',
       'dashboard.html':   'dashboard',
       'vendas.html':      'vendas',
       'faturamento.html': 'faturamento',
@@ -493,7 +500,7 @@ const Auth = {
     overlay.innerHTML = `
       <div class="modal" style="max-width:360px">
         <div class="modal-header">
-          <h3 style="font-size:1rem">Sair do dashboard?</h3>
+          <h3 style="font-size:1rem">Sair do SAFE Hub?</h3>
           <button class="modal-close" id="ml-fechar">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>

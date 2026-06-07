@@ -12,7 +12,8 @@ Google Sheets como backend · Google Apps Script como API · GitHub Pages como f
 ```text
 portal-hub-safe/
 ├── index.html             # Login
-├── dashboard.html         # Dashboard principal (KPIs + gráficos)
+├── inicio.html            # Página inicial e catálogo de módulos
+├── dashboard.html         # Dashboard de vendas (KPIs + gráficos)
 ├── vendas.html            # Listagem e cadastro de vendas
 ├── faturamento.html       # Faturamento por canal
 ├── concorrencia.html      # Tabela de concorrência
@@ -28,12 +29,14 @@ portal-hub-safe/
 ├── css/
 │   ├── safe-theme.css
 │   ├── layout.css
+│   ├── inicio.css
 │   ├── controle-gastos.css
 │   └── fechamento-horas.css
 └── js/
     ├── config.js          # Configuração central (URL do Apps Script)
     ├── auth.js            # Autenticação, sessão, permissões e menu
     ├── api.js             # Comunicação com o backend e cache
+    ├── inicio.js
     ├── dashboard.js
     ├── vendas.js
     ├── concorrencia.js

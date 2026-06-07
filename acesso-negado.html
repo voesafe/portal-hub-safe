@@ -127,7 +127,7 @@
         </p>
         <div class="access-actions">
           <button class="btn btn-ghost" id="access-back" type="button">Voltar</button>
-          <a class="btn btn-primary" href="dashboard.html">Ir para o Dashboard</a>
+          <a class="btn btn-primary" href="inicio.html">Ir para o Início</a>
         </div>
       </section>
     </div>
@@ -136,7 +136,7 @@
 
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
-<script src="js/auth.js?v=20260607-brand"></script>
+<script src="js/auth.js?v=20260607-home"></script>
 <script>
   if (Auth.proteger()) {
     Auth.preencherUI();
@@ -152,7 +152,7 @@
       if (window.history.length > 1) {
         window.history.back();
       } else {
-        window.location.href = 'dashboard.html';
+        window.location.href = 'inicio.html';
       }
     });
   }

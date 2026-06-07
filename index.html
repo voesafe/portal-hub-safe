@@ -252,16 +252,15 @@
     const sessao = sessionStorage.getItem(CONFIG.SESSION_KEY);
     if (sessao) {
       try {
-        const usuario = JSON.parse(sessao);
-        const perfil = String(usuario?.perfil || '').trim().toLowerCase().replace(/-/g, '_');
-        window.location.href = perfil.startsWith('cco_') ? 'escala-cco.html' : 'dashboard.html';
+        JSON.parse(sessao);
+        window.location.href = 'inicio.html';
       } catch {
         sessionStorage.removeItem(CONFIG.SESSION_KEY);
       }
     }
   </script>
   <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/auth.js?v=20260607-home"></script>
   <script>
     const btnLogin  = document.getElementById('btn-login');
     const btnLabel  = document.getElementById('btn-login-label');
