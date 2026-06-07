@@ -154,7 +154,7 @@ const Inicio = {
       month: 'long'
     }).format(new Date());
     document.getElementById('home-modules').innerHTML = this.modulos()
-      .sort((a, b) => Number(b.permitido) - Number(a.permitido))
+      .filter(modulo => modulo.permitido)
       .map(modulo => this.renderizarModulo(modulo))
       .join('');
   }
