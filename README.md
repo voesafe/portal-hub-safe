@@ -18,6 +18,7 @@ portal-hub-safe/
 ├── faturamento.html       # Faturamento por canal
 ├── concorrencia.html      # Tabela de concorrência
 ├── admin.html             # Gestão de usuários
+├── bases.html             # Endereços e contatos das bases SAFE
 ├── controle-gastos.html   # Controle financeiro por base
 ├── fechamento-horas.html  # Fechamento mensal de horas e cotistas
 ├── escala-cco.html         # Escala do Centro de Controle de Operações
@@ -66,6 +67,7 @@ portal-hub-safe/
 | `Vendas.gs` | Copie o conteúdo de `apps-script/Vendas.gs` |
 | `Faturamento.gs` | Copie o conteúdo de `apps-script/Faturamento.gs` |
 | `Concorrencia.gs` | Copie o conteúdo de `apps-script/Concorrencia.gs` |
+| `Bases.gs` | Copie o conteúdo de `apps-script/Bases.gs` |
 | `ControleGastos.gs` | Copie o conteúdo de `apps-script/ControleGastos.gs` |
 | `FechamentoHoras.gs` | Copie o conteúdo de `apps-script/FechamentoHoras.gs` |
 | `Cco.gs` | Copie o conteúdo de `apps-script/Cco.gs` |
@@ -82,7 +84,7 @@ portal-hub-safe/
    - Clique em **Executar**
    - Autorize as permissões solicitadas
    - Isso cria as abas comerciais necessárias, incluindo `USUARIOS`,
-     `VENDAS`, `FATURAMENTO` e `CONCORRENCIA`
+     `VENDAS`, `FATURAMENTO`, `CONCORRENCIA` e `BASES`
 
 5. **Deploy do Apps Script:**
    - Clique em **Implantar → Novo deploy**
@@ -223,6 +225,8 @@ recebem um cadeado e direcionam para a página de acesso restrito.
 | Fechamento de horas e cotistas | Não | Edição completa | Elaine autorizada | Edição completa |
 | Escala CCO | Não | Edição completa | Não | Edição completa |
 | SAFE MINIONS | Não | Não | Não | Sim |
+| Consultar bases e endereços | Sim | Sim | Sim | Sim |
+| Editar bases e endereços | Não | Sim | Não | Sim |
 
 Os perfis exclusivos `cco_user`, `cco_financeiro` e `cco_admin` acessam somente
 a Escala CCO e mantêm as permissões definidas no sistema de origem.

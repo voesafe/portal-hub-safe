@@ -3,6 +3,29 @@
 // ============================================================
 
 const Inicio = {
+  basesPadrao: [
+    {
+      nome: 'SAFE Campinas',
+      endereco: 'Rua Sylvia da Silva Braga, 415',
+      complemento: 'Terminal de Passageiros',
+      cidade: 'Campinas',
+      uf: 'SP',
+      cep: '13082-105',
+      email: 'contato@voesafe.com.br',
+      telefone: '(12) 99706-9562'
+    },
+    {
+      nome: 'SAFE Escola de Aviação',
+      endereco: 'Rodovia dos Tamoios, Km 6,5',
+      complemento: '',
+      cidade: 'São José dos Campos',
+      uf: 'SP',
+      cep: '12228-845',
+      email: 'contato@voesafe.com.br',
+      telefone: '(12) 99706-9562'
+    }
+  ],
+
   inicializarMenu() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
@@ -157,7 +180,65 @@ const Inicio = {
     `;
   },
 
-  iniciar() {
+  escape(valor) {
+    const el = document.createElement('div');
+    el.textContent = String(valor ?? '');
+    return el.innerHTML;
+  },
+
+  linkMapa(base) {
+    if (/^https?:\/\//i.test(String(base.linkMapa || ''))) return base.linkMapa;
+    const endereco = [
+      base.endereco,
+      base.complemento,
+      base.cidade,
+      base.uf,
+      base.cep
+    ].filter(Boolean).join(', ');
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(endereco)}`;
+  },
+
+  renderizarBases(bases) {
+    const container = document.getElementById('home-bases');
+    if (!container) return;
+
+    if (!bases.length) {
+      container.innerHTML = '<div class="home-bases-loading">Nenhuma base cadastrada.</div>';
+      return;
+    }
+
+    container.innerHTML = bases.map(base => {
+      const complemento = base.complemento
+        ? `<span>${this.escape(base.complemento)}</span>`
+        : '';
+      const contato = [base.email, base.telefone].filter(Boolean)
+        .map(item => this.escape(item)).join(' <span aria-hidden="true">|</span> ');
+      return `
+        <article class="home-base">
+          <div class="home-base-content">
+            <h3>${this.escape(base.nome)}</h3>
+            <address>
+              <span>${this.escape(base.endereco)}</span>
+              ${complemento}
+              <span>${this.escape(base.cidade)} - ${this.escape(base.uf)}${base.cep ? ` · CEP ${this.escape(base.cep)}` : ''}</span>
+            </address>
+            ${contato ? `<p>${contato}</p>` : ''}
+          </div>
+          <a class="home-base-map" href="${this.escape(this.linkMapa(base))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${this.escape(base.nome)} no mapa">
+            ${Auth.iconSvg('bases')}
+          </a>
+        </article>
+      `;
+    }).join('');
+  },
+
+  async carregarBases() {
+    const res = await API.getBases();
+    const bases = res.ok ? (res.data || []).filter(base => base.ativa !== false) : this.basesPadrao;
+    this.renderizarBases(bases);
+  },
+
+  async iniciar() {
     if (!Auth.proteger()) return;
 
     Auth.preencherUI();
@@ -176,6 +257,7 @@ const Inicio = {
       .filter(modulo => modulo.permitido)
       .map(modulo => this.renderizarModulo(modulo))
       .join('');
+    await this.carregarBases();
   }
 };
 

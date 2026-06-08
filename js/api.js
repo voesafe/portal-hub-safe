@@ -125,6 +125,14 @@ const API = {
   async criarUsuario(dados)  { return this.post('criar-usuario',  dados); },
   async editarUsuario(dados) { return this.post('editar-usuario', dados); },
 
+  // ── Bases ──────────────────────────────────────────────────
+  async getBases(useCache = true) { return this.get('bases', {}, useCache); },
+  async salvarBase(dados) {
+    const r = await this.post('salvar-base', dados);
+    if (r.ok) Cache.invalidar('bases|');
+    return r;
+  },
+
   // ── Concorrência ───────────────────────────────────────────
   async getConcorrencia()  { return this.get('listar-concorrencia', {}, true); },
   async getPrecosSafe()    { return this.get('listar-precos-safe',  {}, true); },

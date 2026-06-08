@@ -149,6 +149,15 @@ function exigirGestaoUsuarios(token) {
   return usuario;
 }
 
+function exigirGestaoBases(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessao expirada. Entre novamente.');
+  if (!perfilEhAdminCompleto(usuario.perfil)) {
+    throw new Error('A edicao das bases e restrita a administradores.');
+  }
+  return usuario;
+}
+
 /**
  * Lista usuários ativos para preencher seletor de PAC nos formulários
  */

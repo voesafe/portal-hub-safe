@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bases — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/safe-theme.css">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/bases.css?v=20260608">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Bases SAFE</div>
+          <div class="topbar-subtitle">Endereços e contatos das unidades</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary" id="btn-nova-base" hidden>+ Nova base</button>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="bases-intro">
+        <span class="bases-intro-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18"></path>
+            <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"></path>
+            <path d="M9 8h2M13 8h2M9 12h2M13 12h2M9 16h2M13 16h2"></path>
+          </svg>
+        </span>
+        <div>
+          <strong>Informações exibidas na página inicial</strong>
+          <p>As alterações salvas aqui ficam disponíveis para todos os usuários do SAFE Hub.</p>
+        </div>
+      </div>
+      <div class="bases-grid" id="bases-grid">
+        <div class="bases-empty">Carregando bases...</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal-base">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-base-titulo">Nova base</h3>
+      <button class="modal-close" type="button" onclick="fecharModal('modal-base')" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="base-nome">Nome da base</label>
+        <input class="form-control" id="base-nome" type="text" placeholder="Ex.: SAFE Campinas">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="base-endereco">Endereço</label>
+        <input class="form-control" id="base-endereco" type="text" placeholder="Rua, avenida ou rodovia e número">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="base-complemento">Complemento</label>
+        <input class="form-control" id="base-complemento" type="text" placeholder="Terminal, hangar, sala...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="base-cidade">Cidade</label>
+          <input class="form-control" id="base-cidade" type="text">
+        </div>
+        <div class="form-group base-uf">
+          <label class="form-label" for="base-uf">UF</label>
+          <input class="form-control" id="base-uf" type="text" maxlength="2">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="base-cep">CEP</label>
+          <input class="form-control" id="base-cep" type="text" placeholder="00000-000">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="base-email">E-mail</label>
+          <input class="form-control" id="base-email" type="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="base-telefone">Telefone</label>
+          <input class="form-control" id="base-telefone" type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="base-mapa">Link do Google Maps</label>
+        <input class="form-control" id="base-mapa" type="url" placeholder="Opcional: o endereço será usado automaticamente">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="base-ordem">Ordem de exibição</label>
+          <input class="form-control" id="base-ordem" type="number" min="0" value="0">
+        </div>
+        <label class="base-checkbox">
+          <input id="base-ativa" type="checkbox" checked>
+          <span>Exibir esta base na página inicial</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" type="button" onclick="fecharModal('modal-base')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-base" type="button">Salvar base</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js?v=20260608-bases"></script>
+<script src="js/bases.js?v=20260608"></script>
+</body>
+</html>

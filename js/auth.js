@@ -57,6 +57,10 @@ const Auth = {
 
   podeEditar() { return this.estaLogado() && !this.eSomenteLeitura(); },
 
+  podeGerenciarBases() {
+    return this.estaLogado() && this.eAdminCompleto();
+  },
+
   normalizarPerfil(perfil) {
     return String(perfil || '').trim().toLowerCase().replace(/-/g, '_');
   },
@@ -143,6 +147,7 @@ const Auth = {
     if (this.eUsuarioExclusivoCco() &&
         destino !== 'inicio.html' &&
         destino !== 'escala-cco.html' &&
+        destino !== 'bases.html' &&
         destino !== 'acesso-negado.html') {
       window.location.replace('inicio.html');
       return false;
@@ -239,6 +244,8 @@ const Auth = {
       financeiro:    `<svg ${base}><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h3"></path></svg>`,
       ti:            `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 9h8"></path><path d="M8 13h5"></path><path d="M8 17h3"></path></svg>`,
       planilha:      `<svg ${base}><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path></svg>`,
+      bases:         `<svg ${base}><path d="M3 21h18"></path><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"></path><path d="M9 7h2"></path><path d="M13 7h2"></path><path d="M9 11h2"></path><path d="M13 11h2"></path><path d="M9 15h2"></path><path d="M13 15h2"></path></svg>`,
+      suporte:       `<svg ${base}><circle cx="12" cy="12" r="9"></circle><path d="M9.1 9a3 3 0 1 1 5.7 1.3c-.8 1.1-2.8 1.4-2.8 3.2"></path><path d="M12 17h.01"></path></svg>`,
       chevron:       `<svg ${base}><path d="m9 18 6-6-6-6"></path></svg>`,
       fechar:        `<svg ${base}><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`,
       lock:          `<svg ${base}><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>`,
@@ -378,6 +385,14 @@ const Auth = {
     ));
 
     secoes.push(secao(
+      'suporte',
+      'Suporte',
+      'suporte',
+      item('bases.html', 'Bases', 'bases'),
+      ['bases.html']
+    ));
+
+    secoes.push(secao(
       'ti',
       'T.I.',
       'ti',
@@ -454,7 +469,8 @@ const Auth = {
       'controle-gastos.html': 'gastos',
       'fechamento-horas.html': 'horas',
       'escala-cco.html': 'escala',
-      'safe-minions.html': 'minions'
+      'safe-minions.html': 'minions',
+      'bases.html': 'bases'
     };
     document.querySelectorAll('.nav-item').forEach(item => {
       const href = (item.getAttribute('href') || '').split('/').pop();

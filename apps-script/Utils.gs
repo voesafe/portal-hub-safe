@@ -11,6 +11,7 @@ var SHEETS = {
   FATURAMENTO:       'FATURAMENTO',
   CONCORRENCIA:      'CONCORRENCIA',
   PRECOS_SAFE:       'PRECOS_SAFE',
+  BASES:             'BASES',
   GASTOS_MENSAIS:    'GASTOS_MENSAIS',
   HORAS_VOADAS_BASE: 'HORAS_VOADAS_BASE',
   CATEGORIAS_GASTOS: 'CATEGORIAS_GASTOS'
@@ -204,6 +205,8 @@ function inicializarPlanilha() {
       'PARCELAS', 'ATUALIZADO_EM'
     ]);
   }
+
+  inicializarBases();
 
   return 'Planilha inicializada com sucesso!';
 }

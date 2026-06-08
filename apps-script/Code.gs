@@ -45,6 +45,11 @@ function doGet(e) {
       case 'login-usuarios':
         return jsonSuccess(listarUsuariosLogin());
 
+      case 'bases':
+        var usuarioBases = validarTokenSessao(token);
+        if (!usuarioBases) return jsonError('Sessão expirada. Entre novamente.');
+        return jsonSuccess(listarBases(perfilEhAdminCompleto(usuarioBases.perfil)));
+
       case 'canais':
         return jsonSuccess(CANAIS);
 
@@ -126,6 +131,11 @@ function doPost(e) {
         var editado = atualizarUsuarioCentralizado(dados.id, dados);
         if (!editado) return jsonError('Usuário não encontrado');
         return jsonSuccess({ mensagem: 'Usuário atualizado' });
+
+      // ── Bases ──────────────────────────────────────────────
+      case 'salvar-base':
+        exigirGestaoBases(token);
+        return jsonSuccess(salvarBase(dados));
 
       // ── Concorrência — PAC pode criar/editar, só admin pode excluir ──
       case 'criar-concorrente':
