@@ -92,22 +92,25 @@
 
       <div class="card">
         <div class="card-header usuarios-card-header">
-          <div>
+          <div class="usuarios-card-heading">
             <div class="card-title">Diretório de acessos</div>
             <div class="usuarios-subtitle">Cadastros do Hub e dos sistemas integrados</div>
           </div>
           <span class="usuarios-count" id="usuarios-contagem">0 de 0</span>
+          <div class="usuarios-tabs" role="tablist" aria-label="Situação dos usuários">
+            <button class="usuarios-tab active" id="tab-ativos" type="button" role="tab" aria-selected="true" data-tab="ativos">
+              Ativos <span id="tab-ativos-count">0</span>
+            </button>
+            <button class="usuarios-tab" id="tab-inativos" type="button" role="tab" aria-selected="false" data-tab="inativos">
+              Inativos <span id="tab-inativos-count">0</span>
+            </button>
+          </div>
           <div class="usuarios-filtros">
             <input class="form-control" id="filtro-busca" type="search" placeholder="Buscar por nome ou e-mail">
             <select class="form-control" id="filtro-origem">
               <option value="">Todos os sistemas</option>
               <option value="hub">Hub / Comercial</option>
               <option value="cco">Escala CCO</option>
-            </select>
-            <select class="form-control" id="filtro-status">
-              <option value="">Todos os status</option>
-              <option value="true">Ativos</option>
-              <option value="false">Inativos</option>
             </select>
             <select class="form-control" id="filtro-cadastro">
               <option value="">Todos os cadastros</option>
@@ -123,13 +126,12 @@
                 <th class="col-nome">Usuário</th>
                 <th>Sistema</th>
                 <th class="col-perfil">Perfil</th>
-                <th class="col-status">Status</th>
                 <th>Cadastro</th>
-                <th style="width:100px"></th>
+                <th style="width:190px"></th>
               </tr>
             </thead>
             <tbody id="tabela-usuarios">
-              <tr><td colspan="6" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
+              <tr><td colspan="5" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
             </tbody>
           </table>
         </div>

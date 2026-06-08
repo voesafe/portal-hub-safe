@@ -6,6 +6,7 @@
 const Admin = {
   usuarios: [],
   editandoId: null,
+  abaAtual: 'ativos',
 
   async init() {
     if (!Auth.protegerGestaoUsuarios()) return;
@@ -13,6 +14,7 @@ const Admin = {
     this.initSidebar();
     this.initForm();
     this.initFiltros();
+    this.initTabs();
     this.initAlterarSenha();
     await this.carregar();
   },
@@ -64,10 +66,10 @@ const Admin = {
   usuariosFiltrados() {
     const busca = document.getElementById('filtro-busca')?.value.trim().toLowerCase() || '';
     const origem = document.getElementById('filtro-origem')?.value || '';
-    const status = document.getElementById('filtro-status')?.value || '';
     const cadastro = document.getElementById('filtro-cadastro')?.value || '';
 
     return this.usuarios.filter(usuario => {
+      const ativo = this.estaAtivo(usuario.ativo);
       const texto = [
         usuario.nome,
         usuario.email,
@@ -77,7 +79,8 @@ const Admin = {
 
       if (busca && !texto.includes(busca)) return false;
       if (origem && this.normalizarOrigem(usuario.origem) !== origem) return false;
-      if (status && String(this.estaAtivo(usuario.ativo)) !== status) return false;
+      if (this.abaAtual === 'ativos' && !ativo) return false;
+      if (this.abaAtual === 'inativos' && ativo) return false;
       if (cadastro === 'completo' && !this.cadastroCompleto(usuario)) return false;
       if (cadastro === 'pendente' && this.cadastroCompleto(usuario)) return false;
       return true;
@@ -94,6 +97,8 @@ const Admin = {
     document.getElementById('kpi-ativos').textContent = ativos;
     document.getElementById('kpi-sistemas').textContent = sistemas;
     document.getElementById('kpi-pendentes').textContent = pendentes;
+    document.getElementById('tab-ativos-count').textContent = ativos;
+    document.getElementById('tab-inativos-count').textContent = total - ativos;
   },
 
   cadastroCompleto(usuario) {
@@ -113,7 +118,10 @@ const Admin = {
     if (contador) contador.textContent = `${usuarios.length} de ${this.usuarios.length}`;
 
     if (!usuarios.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:32px">Nenhum usuário encontrado</td></tr>';
+      const mensagem = this.abaAtual === 'ativos'
+        ? 'Nenhum usuário ativo encontrado'
+        : 'Nenhum usuário inativo encontrado';
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted" style="padding:32px">${mensagem}</td></tr>`;
       return;
     }
 
@@ -137,10 +145,14 @@ const Admin = {
             <small class="usuario-modulo">${this.escape(usuario.modulo || 'SAFE Hub')}</small>
           </td>
           <td class="col-perfil" data-label="Perfil"><span class="badge ${this.badgePerfil(usuario.perfil)}">${this.labelPerfil(usuario)}</span></td>
-          <td class="col-status" data-label="Status"><span class="badge ${ativo ? 'badge-green' : 'badge-red'}">${ativo ? 'Ativo' : 'Inativo'}</span></td>
           <td data-label="Cadastro"><span class="cadastro-status ${completo ? 'completo' : 'pendente'}">${completo ? 'Completo' : 'Ação necessária'}</span></td>
           <td data-label="Ação">
-            <button class="btn btn-ghost btn-sm" onclick="Admin.editar('${this.escapeAtributo(usuario.id)}')">Editar</button>
+            <div class="usuario-actions">
+              <button class="btn btn-ghost btn-sm" onclick="Admin.editar('${this.escapeAtributo(usuario.id)}')">Editar</button>
+              <button class="btn btn-sm ${ativo ? 'btn-status-danger' : 'btn-status-success'}" onclick="Admin.alternarStatus('${this.escapeAtributo(usuario.id)}')">
+                ${ativo ? 'Desativar' : 'Reativar'}
+              </button>
+            </div>
           </td>
         </tr>
       `;
@@ -168,8 +180,22 @@ const Admin = {
   },
 
   initFiltros() {
-    ['filtro-busca', 'filtro-origem', 'filtro-status', 'filtro-cadastro'].forEach(id => {
+    ['filtro-busca', 'filtro-origem', 'filtro-cadastro'].forEach(id => {
       document.getElementById(id)?.addEventListener(id === 'filtro-busca' ? 'input' : 'change', () => {
+        this.renderTabela();
+      });
+    });
+  },
+
+  initTabs() {
+    document.querySelectorAll('.usuarios-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        this.abaAtual = tab.dataset.tab;
+        document.querySelectorAll('.usuarios-tab').forEach(item => {
+          const ativa = item === tab;
+          item.classList.toggle('active', ativa);
+          item.setAttribute('aria-selected', String(ativa));
+        });
         this.renderTabela();
       });
     });
@@ -224,6 +250,34 @@ const Admin = {
   editar(id) {
     const usuario = this.usuarios.find(item => String(item.id) === String(id));
     if (usuario) this.abrirForm(usuario);
+  },
+
+  async alternarStatus(id) {
+    const usuario = this.usuarios.find(item => String(item.id) === String(id));
+    if (!usuario) return;
+
+    const ativo = this.estaAtivo(usuario.ativo);
+    const verbo = ativo ? 'desativar' : 'reativar';
+    const explicacao = ativo
+      ? 'O usuário perderá o acesso, mas vendas, escalas e históricos serão preservados.'
+      : 'O usuário voltará a conseguir entrar nos sistemas vinculados.';
+
+    if (!window.confirm(`Deseja ${verbo} o acesso de ${usuario.nome}?\n\n${explicacao}`)) return;
+
+    const res = await API.editarUsuario({
+      ...usuario,
+      id: usuario.id,
+      origem: this.normalizarOrigem(usuario.origem),
+      ativo: !ativo
+    });
+
+    if (!res.ok) {
+      toast(res.error || `Não foi possível ${verbo} o acesso.`, 'error');
+      return;
+    }
+
+    toast(ativo ? 'Acesso desativado.' : 'Acesso reativado.', 'success');
+    await this.carregar();
   },
 
   async salvar() {

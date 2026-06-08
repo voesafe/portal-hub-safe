@@ -149,6 +149,8 @@ do Hub e do CCO. Inclusões e alterações feitas nessa tela são encaminhadas a
 backend de origem, mantendo senhas e regras operacionais em seus sistemas atuais.
 O e-mail é a identidade única informada no login. PAC e username permanecem
 somente como identificadores internos para vendas e escalas históricas.
+Usuários desativados ficam separados na aba `Inativos`; a desativação bloqueia
+o acesso sem remover registros comerciais, escalas ou dados de auditoria.
 
 ### SAFE MINIONS
 
