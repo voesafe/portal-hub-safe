@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260607-brand-compact">
-  <link rel="stylesheet" href="css/admin.css?v=20260608-central-users">
+  <link rel="stylesheet" href="css/admin.css?v=20260608-email-identity">
 </head>
 <body>
 
@@ -70,16 +70,24 @@
         </div>
       </div>
       <div class="topbar-right">
-        <button class="btn btn-primary" id="btn-novo-usuario" data-write-only>+ Novo Usuário</button>
+        <button class="btn btn-primary" id="btn-novo-usuario" data-write-only>+ Novo acesso</button>
       </div>
     </div>
 
     <div class="page">
+      <div class="usuarios-policy">
+        <div class="usuarios-policy-icon" aria-hidden="true">@</div>
+        <div>
+          <strong>Identidade única por e-mail</strong>
+          <p>Todos os colaboradores entram no SAFE Hub com seu e-mail. Identificadores antigos continuam apenas como referências internas dos sistemas.</p>
+        </div>
+      </div>
+
       <div class="usuarios-kpis">
         <div class="usuarios-kpi"><span>Total de identidades</span><strong id="kpi-total">—</strong></div>
         <div class="usuarios-kpi"><span>Acessos ativos</span><strong id="kpi-ativos">—</strong></div>
-        <div class="usuarios-kpi"><span>Hub / Comercial</span><strong id="kpi-hub">—</strong></div>
-        <div class="usuarios-kpi"><span>Escala CCO</span><strong id="kpi-cco">—</strong></div>
+        <div class="usuarios-kpi"><span>Sistemas integrados</span><strong id="kpi-sistemas">—</strong></div>
+        <div class="usuarios-kpi usuarios-kpi-alerta"><span>Ação necessária</span><strong id="kpi-pendentes">—</strong></div>
       </div>
 
       <div class="card">
@@ -90,7 +98,7 @@
           </div>
           <span class="usuarios-count" id="usuarios-contagem">0 de 0</span>
           <div class="usuarios-filtros">
-            <input class="form-control" id="filtro-busca" type="search" placeholder="Buscar nome, login ou e-mail">
+            <input class="form-control" id="filtro-busca" type="search" placeholder="Buscar por nome ou e-mail">
             <select class="form-control" id="filtro-origem">
               <option value="">Todos os sistemas</option>
               <option value="hub">Hub / Comercial</option>
@@ -101,6 +109,11 @@
               <option value="true">Ativos</option>
               <option value="false">Inativos</option>
             </select>
+            <select class="form-control" id="filtro-cadastro">
+              <option value="">Todos os cadastros</option>
+              <option value="completo">Cadastros completos</option>
+              <option value="pendente">Ação necessária</option>
+            </select>
           </div>
         </div>
         <div class="table-wrapper">
@@ -108,16 +121,15 @@
             <thead>
               <tr>
                 <th class="col-nome">Usuário</th>
-                <th class="col-pac">Login</th>
                 <th>Sistema</th>
                 <th class="col-perfil">Perfil</th>
                 <th class="col-status">Status</th>
-                <th>Criado em</th>
+                <th>Cadastro</th>
                 <th style="width:100px"></th>
               </tr>
             </thead>
             <tbody id="tabela-usuarios">
-              <tr><td colspan="7" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
+              <tr><td colspan="6" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
             </tbody>
           </table>
         </div>
@@ -156,6 +168,9 @@
       <button class="modal-close" onclick="fecharModal('modal-usuario')">✕</button>
     </div>
     <div class="modal-body">
+      <div class="usuario-form-section">
+        <div class="usuario-form-section-title">Identidade</div>
+        <div class="usuario-form-section-desc">Dados usados para identificar e autenticar o colaborador.</div>
       <div class="form-group">
         <label class="form-label">Sistema de origem</label>
         <select class="form-control" id="u-origem">
@@ -165,17 +180,20 @@
         <small class="form-help">Define onde a identidade e a senha serão armazenadas.</small>
       </div>
       <div class="form-group">
-        <label class="form-label">Nome Completo</label>
+        <label class="form-label">Nome completo</label>
         <input type="text" class="form-control" id="u-nome" placeholder="Nome completo">
       </div>
       <div class="form-group">
-        <label class="form-label" id="u-identificador-label">PAC (identificador de login)</label>
-        <input type="text" class="form-control" id="u-pac" placeholder="Ex: nome.sobrenome">
+        <label class="form-label">E-mail de acesso</label>
+        <input type="email" class="form-control" id="u-email" placeholder="nome@voesafe.com.br" autocomplete="off">
+        <small class="form-help">Este será o único identificador informado na tela de login.</small>
       </div>
-      <div class="form-group">
-        <label class="form-label">E-mail</label>
-        <input type="email" class="form-control" id="u-email" placeholder="email@voesafe.com.br">
+      <input type="hidden" id="u-pac">
       </div>
+
+      <div class="usuario-form-section">
+        <div class="usuario-form-section-title">Acesso e permissões</div>
+        <div class="usuario-form-section-desc">Defina o nível de acesso e a situação do cadastro.</div>
       <div class="form-row">
         <div class="form-group" id="grupo-perfil-hub">
           <label class="form-label">Perfil</label>
@@ -203,7 +221,10 @@
           </select>
         </div>
       </div>
+      </div>
       <div id="campos-cco" class="campos-cco" hidden>
+        <div class="usuario-form-section-title">Dados operacionais do CCO</div>
+        <div class="usuario-form-section-desc">Informações necessárias para escala e rotinas da operação.</div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Iniciais</label>
@@ -235,9 +256,12 @@
           </label>
         </div>
       </div>
+      <div class="usuario-form-section usuario-form-security">
       <div class="form-group" id="grupo-senha">
         <label class="form-label" id="u-senha-label">Senha inicial</label>
-        <input type="password" class="form-control" id="u-senha" placeholder="Deixe vazio para usar: safe@2024">
+        <input type="password" class="form-control" id="u-senha" placeholder="Mínimo de 8 caracteres" autocomplete="new-password">
+        <small class="form-help" id="u-senha-ajuda">Defina uma senha temporária individual e envie ao colaborador por um canal seguro.</small>
+      </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -252,6 +276,6 @@
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth.js?v=20260607-home"></script>
-<script src="js/admin.js"></script>
+<script src="js/admin.js?v=20260608-email-identity"></script>
 </body>
 </html>

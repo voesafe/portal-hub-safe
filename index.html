@@ -177,9 +177,9 @@
     </div>
 
     <div class="login-title">Acesso ao SAFE Hub</div>
-    <div class="login-sub">Entre com seu e-mail ou usuário e senha</div>
+    <div class="login-sub">Use seu e-mail corporativo e sua senha</div>
 
-    <label class="login-label" for="inp-email">E-mail ou usuário</label>
+    <label class="login-label" for="inp-email">E-mail</label>
     <div class="input-wrap">
       <span class="input-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -188,10 +188,10 @@
         </svg>
       </span>
       <input
-        type="text"
+        type="email"
         class="login-input"
         id="inp-email"
-        placeholder="seu@email.com.br ou usuário CCO"
+        placeholder="nome@voesafe.com.br"
         autocomplete="username"
       >
     </div>
@@ -307,7 +307,8 @@
       const email = inpEmail.value.trim();
       const senha = inpSenha.value;
 
-      if (!email) { mostrarErro('Digite seu e-mail ou usuário.'); inpEmail.focus(); return; }
+      if (!email) { mostrarErro('Digite seu e-mail.'); inpEmail.focus(); return; }
+      if (!inpEmail.validity.valid) { mostrarErro('Digite um e-mail válido.'); inpEmail.focus(); return; }
       if (!senha)  { mostrarErro('Digite sua senha.'); inpSenha.focus(); return; }
 
       limparErro();

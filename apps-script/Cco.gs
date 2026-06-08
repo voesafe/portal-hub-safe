@@ -55,6 +55,19 @@ function buscarUsuarioCco(username) {
   }
 }
 
+function buscarUsuarioCcoPorEmail(email) {
+  var emailNormalizado = String(email || '').trim().toLowerCase();
+  if (!emailNormalizado) return null;
+
+  var usuarios = listarUsuariosCco();
+  for (var i = 0; i < usuarios.length; i++) {
+    if (String(usuarios[i].email || '').trim().toLowerCase() === emailNormalizado) {
+      return usuarios[i];
+    }
+  }
+  return null;
+}
+
 function listarUsuariosCco() {
   var resposta = requisitarCco_('getUsers', {});
   var usuarios = resposta.users || {};
@@ -84,7 +97,11 @@ function listarUsuariosCco() {
 }
 
 function salvarUsuarioCco(dados) {
-  var username = String(dados.pac || dados.username || '').trim().toLowerCase();
+  dados.email = validarEmailUsuario_(dados.email);
+  var identificadorInformado = dados.pac || dados.username;
+  var username = String(
+    identificadorInformado || gerarIdentificadorCco_(dados.email)
+  ).trim().toLowerCase();
   if (!username) throw new Error('Usuário CCO obrigatório.');
 
   var existente = null;
@@ -99,6 +116,10 @@ function salvarUsuarioCco(dados) {
   }
 
   var isNew = !existente;
+  if (isNew && !identificadorInformado) {
+    username = gerarIdentificadorCcoUnico_(todosUsuarios, dados.email);
+  }
+  validarSenhaUsuario_(dados.senha, isNew);
   if (isNew) {
     for (var j = 0; j < todosUsuarios.length; j++) {
       if (String(todosUsuarios[j].pac).toLowerCase() === username) {
@@ -153,17 +174,44 @@ function salvarUsuarioCco(dados) {
   return { id: 'cco:' + username, nome: params.name, origem: 'cco' };
 }
 
-function autenticarUsuarioCco(username, senha) {
-  var chave = String(username || '').trim().toLowerCase();
-  if (!chave || !senha) return null;
+function gerarIdentificadorCco_(email) {
+  var base = String(email || '').trim().toLowerCase().split('@')[0];
+  return base.replace(/[^a-z0-9._-]/g, '');
+}
+
+function gerarIdentificadorCcoUnico_(usuarios, email) {
+  var base = gerarIdentificadorCco_(email);
+  var candidato = base;
+  var usados = {};
+
+  usuarios.forEach(function(usuario) {
+    usados[String(usuario.pac || '').trim().toLowerCase()] = true;
+  });
+
+  var sufixo = 2;
+  while (usados[candidato.toLowerCase()]) {
+    candidato = base + sufixo;
+    sufixo++;
+  }
+  return candidato;
+}
+
+function autenticarUsuarioCcoPorEmail(email, senha) {
+  var usuario = buscarUsuarioCcoPorEmail(email);
+  if (!usuario || !senha) return null;
 
   try {
     var login = requisitarCco_('login', {
-      username: chave,
+      username: usuario.pac,
       password: senha
     });
     if (!login.ok) return null;
-    return buscarUsuarioCco(chave);
+    return montarUsuarioHubCco_(usuario.pac, {
+      name: usuario.nome,
+      email: usuario.email,
+      role: usuario.roleOrigem,
+      active: usuario.ativo
+    });
   } catch (e) {
     return null;
   }

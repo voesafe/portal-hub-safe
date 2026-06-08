@@ -30,6 +30,10 @@
   line-height: 1;
 }
 
+.usuarios-kpi-alerta strong {
+  color: #c47b12;
+}
+
 .usuarios-card-header {
   align-items: center;
 }
@@ -56,7 +60,7 @@
 
 .usuarios-filtros {
   display: grid;
-  grid-template-columns: minmax(240px, 1.5fr) minmax(160px, 1fr) minmax(140px, .8fr);
+  grid-template-columns: minmax(220px, 1.5fr) repeat(3, minmax(140px, 1fr));
   gap: 8px;
   width: 100%;
   margin-top: 4px;
@@ -90,9 +94,9 @@
   background: var(--teal-dark);
 }
 
-.usuario-login {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: .8rem;
+.usuario-email-pendente {
+  color: #b56c08 !important;
+  font-weight: 700 !important;
 }
 
 .origem-badge.origem-cco {
@@ -111,6 +115,60 @@
   border: 1px solid var(--gray-100);
   border-radius: var(--radius-sm);
   background: var(--off-white);
+}
+
+.usuario-form-section {
+  margin-bottom: 20px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.usuario-form-section-title {
+  color: var(--navy);
+  font-family: var(--font-title);
+  font-size: .88rem;
+  font-weight: 800;
+}
+
+.usuario-form-section-desc {
+  margin: 3px 0 14px;
+  color: var(--gray-400);
+  font-size: .75rem;
+  line-height: 1.4;
+}
+
+.usuario-form-security {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.cadastro-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cadastro-status::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
+
+.cadastro-status.completo {
+  color: #27865a;
+}
+
+.cadastro-status.pendente {
+  color: #b56c08;
+}
+
+.modal {
+  max-width: 640px;
 }
 
 .usuario-color {
@@ -152,4 +210,39 @@
   .usuarios-filtros #filtro-busca {
     grid-column: auto;
   }
+}
+.usuarios-policy {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 16px 18px;
+  border: 1px solid rgba(91, 174, 226, .24);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(91, 174, 226, .09), rgba(96, 192, 191, .07));
+}
+
+.usuarios-policy-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: white;
+  font-weight: 800;
+}
+
+.usuarios-policy strong {
+  color: var(--navy);
+  font-size: .9rem;
+}
+
+.usuarios-policy p {
+  margin: 3px 0 0;
+  color: var(--gray-500);
+  font-size: .8rem;
+  line-height: 1.5;
 }

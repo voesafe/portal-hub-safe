@@ -65,11 +65,11 @@ const Admin = {
     const busca = document.getElementById('filtro-busca')?.value.trim().toLowerCase() || '';
     const origem = document.getElementById('filtro-origem')?.value || '';
     const status = document.getElementById('filtro-status')?.value || '';
+    const cadastro = document.getElementById('filtro-cadastro')?.value || '';
 
     return this.usuarios.filter(usuario => {
       const texto = [
         usuario.nome,
-        usuario.pac,
         usuario.email,
         usuario.modulo,
         this.labelPerfil(usuario)
@@ -78,6 +78,8 @@ const Admin = {
       if (busca && !texto.includes(busca)) return false;
       if (origem && this.normalizarOrigem(usuario.origem) !== origem) return false;
       if (status && String(this.estaAtivo(usuario.ativo)) !== status) return false;
+      if (cadastro === 'completo' && !this.cadastroCompleto(usuario)) return false;
+      if (cadastro === 'pendente' && this.cadastroCompleto(usuario)) return false;
       return true;
     });
   },
@@ -85,13 +87,21 @@ const Admin = {
   renderResumo() {
     const total = this.usuarios.length;
     const ativos = this.usuarios.filter(u => this.estaAtivo(u.ativo)).length;
-    const hub = this.usuarios.filter(u => this.normalizarOrigem(u.origem) === 'hub').length;
-    const cco = this.usuarios.filter(u => this.normalizarOrigem(u.origem) === 'cco').length;
+    const sistemas = new Set(this.usuarios.map(u => this.normalizarOrigem(u.origem))).size;
+    const pendentes = this.usuarios.filter(u => !this.cadastroCompleto(u)).length;
 
     document.getElementById('kpi-total').textContent = total;
     document.getElementById('kpi-ativos').textContent = ativos;
-    document.getElementById('kpi-hub').textContent = hub;
-    document.getElementById('kpi-cco').textContent = cco;
+    document.getElementById('kpi-sistemas').textContent = sistemas;
+    document.getElementById('kpi-pendentes').textContent = pendentes;
+  },
+
+  cadastroCompleto(usuario) {
+    const email = String(usuario.email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
+    return this.usuarios.filter(item =>
+      String(item.email || '').trim().toLowerCase() === email
+    ).length === 1;
   },
 
   renderTabela() {
@@ -103,13 +113,14 @@ const Admin = {
     if (contador) contador.textContent = `${usuarios.length} de ${this.usuarios.length}`;
 
     if (!usuarios.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted" style="padding:32px">Nenhum usuário encontrado</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:32px">Nenhum usuário encontrado</td></tr>';
       return;
     }
 
     tbody.innerHTML = usuarios.map(usuario => {
       const ativo = this.estaAtivo(usuario.ativo);
       const origem = this.normalizarOrigem(usuario.origem);
+      const completo = this.cadastroCompleto(usuario);
       return `
         <tr>
           <td class="col-nome" data-label="Usuário">
@@ -117,18 +128,17 @@ const Admin = {
               <span class="usuario-avatar origem-${origem}">${this.iniciais(usuario.nome)}</span>
               <span>
                 <strong>${this.escape(usuario.nome || usuario.pac)}</strong>
-                <small>${this.escape(usuario.email || 'E-mail não informado')}</small>
+                <small class="${completo ? '' : 'usuario-email-pendente'}">${this.escape(usuario.email || 'E-mail de acesso não informado')}</small>
               </span>
             </div>
           </td>
-          <td class="col-pac" data-label="Login"><span class="usuario-login">${this.escape(usuario.pac)}</span></td>
           <td data-label="Sistema">
             <span class="badge origem-badge origem-${origem}">${this.labelOrigem(origem)}</span>
             <small class="usuario-modulo">${this.escape(usuario.modulo || 'SAFE Hub')}</small>
           </td>
           <td class="col-perfil" data-label="Perfil"><span class="badge ${this.badgePerfil(usuario.perfil)}">${this.labelPerfil(usuario)}</span></td>
           <td class="col-status" data-label="Status"><span class="badge ${ativo ? 'badge-green' : 'badge-red'}">${ativo ? 'Ativo' : 'Inativo'}</span></td>
-          <td data-label="Criado em">${origem === 'hub' ? this.formatarData(usuario.criadoEm) : 'Sistema externo'}</td>
+          <td data-label="Cadastro"><span class="cadastro-status ${completo ? 'completo' : 'pendente'}">${completo ? 'Completo' : 'Ação necessária'}</span></td>
           <td data-label="Ação">
             <button class="btn btn-ghost btn-sm" onclick="Admin.editar('${this.escapeAtributo(usuario.id)}')">Editar</button>
           </td>
@@ -158,7 +168,7 @@ const Admin = {
   },
 
   initFiltros() {
-    ['filtro-busca', 'filtro-origem', 'filtro-status'].forEach(id => {
+    ['filtro-busca', 'filtro-origem', 'filtro-status', 'filtro-cadastro'].forEach(id => {
       document.getElementById(id)?.addEventListener(id === 'filtro-busca' ? 'input' : 'change', () => {
         this.renderTabela();
       });
@@ -177,12 +187,12 @@ const Admin = {
     document.getElementById('campos-cco').hidden = !cco;
     document.getElementById('grupo-perfil-hub').hidden = cco;
     document.getElementById('grupo-perfil-cco').hidden = !cco;
-    document.getElementById('u-identificador-label').textContent = cco
-      ? 'Usuário de login'
-      : 'PAC (identificador de login)';
     document.getElementById('u-senha-label').textContent = this.editandoId
       ? 'Nova senha (opcional)'
-      : (cco ? 'Senha inicial' : 'Senha inicial (opcional)');
+      : 'Senha inicial';
+    document.getElementById('u-senha-ajuda').textContent = this.editandoId
+      ? 'Preencha somente para redefinir a senha deste acesso.'
+      : 'Defina uma senha temporária individual e envie ao colaborador por um canal seguro.';
   },
 
   abrirForm(usuario = null) {
@@ -237,16 +247,24 @@ const Admin = {
       scheduleVisible: document.getElementById('u-visivel-escala').checked
     };
 
-    if (!dados.nome || !dados.pac) {
-      toast('Nome e identificador de login são obrigatórios.', 'warning');
+    if (!dados.nome) {
+      toast('Informe o nome completo.', 'warning');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email)) {
+      toast('Informe um e-mail de acesso válido.', 'warning');
       return;
     }
     if (origem === 'cco' && (!dados.cpf || !dados.birthdate || !dados.initials)) {
       toast('Para o CCO, informe iniciais, CPF e data de nascimento.', 'warning');
       return;
     }
-    if (origem === 'cco' && !this.editandoId && !dados.senha) {
-      toast('Informe a senha inicial do usuário CCO.', 'warning');
+    if (!this.editandoId && dados.senha.length < 8) {
+      toast('A senha inicial deve ter pelo menos 8 caracteres.', 'warning');
+      return;
+    }
+    if (this.editandoId && dados.senha && dados.senha.length < 8) {
+      toast('A nova senha deve ter pelo menos 8 caracteres.', 'warning');
       return;
     }
 

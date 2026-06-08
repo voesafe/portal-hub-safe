@@ -765,7 +765,7 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
     <div class="login-title">CCO SAFE</div>
     <div class="login-sub">Centro de Controle de Operações</div>
     <form id="loginForm" onsubmit="doLogin(event)" autocomplete="on">
-      <input class="login-field" type="text" id="loginUser" name="username" placeholder="Usuário" autocomplete="username">
+      <input class="login-field" type="email" id="loginUser" name="username" placeholder="E-mail" autocomplete="username">
       <input class="login-field" type="password" id="loginPass" name="password" placeholder="Senha" autocomplete="current-password">
       <button class="login-btn" type="submit">Entrar</button>
     </form>
@@ -1403,26 +1403,30 @@ function formatPhone(v){
 // ── Auth ──────────────────────────────────────────────────
 async function doLogin(e){
   if(e) e.preventDefault();
-  const uname=document.getElementById("loginUser").value.trim().toLowerCase();
+  const email=document.getElementById("loginUser").value.trim().toLowerCase();
   const pass=document.getElementById("loginPass").value;
   const err=document.getElementById("loginError");
   const btn=document.querySelector(".login-btn");
-  if(!uname||!pass){err.textContent="Preencha usuário e senha.";return}
+  if(!email||!pass){err.textContent="Preencha e-mail e senha.";return}
   err.textContent="";
   btn.disabled=true;btn.textContent="Entrando...";
   document.querySelector(".login-logo").classList.add("logo-loading");
   try{
     // 1. Verifica credenciais
-    const r=await gasRequest("login",{username:uname,password:pass});
-    if(!r.ok){err.textContent=r.error||"Usuário ou senha incorretos.";btn.disabled=false;btn.textContent="Entrar";document.querySelector(".login-logo").classList.remove("logo-loading");return}
-    // 2. Carrega todos os usuários para renderizar a escala
     const usersRes=await gasRequest("getUsers");
+    const users=usersRes.users||{};
+    const uname=Object.keys(users).find(key=>String(users[key].email||"").trim().toLowerCase()===email);
+    if(!uname){err.textContent="E-mail ou senha incorretos.";btn.disabled=false;btn.textContent="Entrar";document.querySelector(".login-logo").classList.remove("logo-loading");return}
+    const r=await gasRequest("login",{username:uname,password:pass});
+    if(!r.ok){err.textContent=r.error||"E-mail ou senha incorretos.";btn.disabled=false;btn.textContent="Entrar";document.querySelector(".login-logo").classList.remove("logo-loading");return}
+    // 2. Carrega todos os usuários para renderizar a escala
     if(usersRes.users){USERS=usersRes.users;SCHEDULE_USERS=Object.keys(USERS).filter(k=>USERS[k].scheduleVisible && USERS[k].active!==false);}
   }catch(ex){err.textContent="Erro de conexão. Tente novamente.";btn.disabled=false;btn.textContent="Entrar";document.querySelector(".login-logo").classList.remove("logo-loading");return}
   btn.disabled=false;btn.textContent="Entrar";
   document.querySelector(".login-logo").classList.remove("logo-loading");
   // 3. Monta currentUser com dados frescos do USERS
-  currentUser={username:uname,...USERS[uname]};
+  const username=Object.keys(USERS).find(key=>String(USERS[key].email||"").trim().toLowerCase()===email);
+  currentUser={username,...USERS[username]};
   sessionStorage.setItem("cco_session",JSON.stringify(currentUser));
   iniciarApp(currentUser);
   loadMonth();startPolling();

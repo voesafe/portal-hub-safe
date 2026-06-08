@@ -78,9 +78,7 @@ function doPost(e) {
 
       // ── Auth ───────────────────────────────────────────────
       case 'login':
-        // Aceita email ou pac para compatibilidade
-        var identificador = dados.email || dados.pac;
-        var usuario = login(identificador, dados.senha);
+        var usuario = login(dados.email, dados.senha);
         if (!usuario) return jsonError('E-mail ou senha incorretos');
         return jsonSuccess(usuario);
 

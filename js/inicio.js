@@ -57,7 +57,7 @@ const Inicio = {
         href: 'faturamento.html',
         icone: 'faturamento',
         tom: 'amber',
-        permitido: acessoAdmin
+        permitido: acessoMaster
       },
       {
         titulo: 'Concorrência',

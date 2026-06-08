@@ -17,12 +17,10 @@ function login(email, senha) {
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
       var rowEmail  = String(row[3]).trim().toLowerCase();
-      var rowPac    = String(row[2]).trim().toLowerCase();
       var rowHash   = String(row[4]).trim();
       var rowAtivo  = row[6];
 
-      if ((rowEmail === identificador || rowPac === identificador) &&
-          rowHash === hash && valorBooleano(rowAtivo)) {
+      if (rowEmail === identificador && rowHash === hash && valorBooleano(rowAtivo)) {
         var usuario = {
           id:     row[0],
           nome:   row[1],
@@ -35,7 +33,7 @@ function login(email, senha) {
       }
     }
 
-    var usuarioCco = autenticarUsuarioCco(identificador, senha);
+    var usuarioCco = autenticarUsuarioCcoPorEmail(identificador, senha);
     if (!usuarioCco) return null;
     usuarioCco.token = criarTokenSessao(usuarioCco);
     return usuarioCco;
@@ -225,8 +223,11 @@ function listarUsuariosCentralizados() {
  */
 function criarUsuario(dados) {
   var sheet = getSheet(SHEETS.USUARIOS);
+  dados.email = validarEmailUsuario_(dados.email);
+  dados.pac = dados.pac || gerarIdentificadorHubUnico_(sheet, dados.email);
+  validarSenhaUsuario_(dados.senha, true);
   validarUnicidadeUsuarioHub_(sheet, null, dados.pac, dados.email);
-  var senhaHash = hashSenha(dados.senha || 'safe@2024');
+  var senhaHash = hashSenha(dados.senha);
   var id = gerarId();
 
   sheet.appendRow([
@@ -244,6 +245,8 @@ function criarUsuario(dados) {
 }
 
 function criarUsuarioCentralizado(dados) {
+  dados.email = validarEmailUsuario_(dados.email);
+  validarUnicidadeEmailCentral_(null, dados.email);
   if (String(dados.origem || 'hub').toLowerCase() === 'cco') {
     return salvarUsuarioCco(dados);
   }
@@ -256,6 +259,8 @@ function criarUsuarioCentralizado(dados) {
 function atualizarUsuario(id, dados) {
   var sheet = getSheet(SHEETS.USUARIOS);
   var data = sheet.getDataRange().getValues();
+  dados.email = validarEmailUsuario_(dados.email);
+  validarSenhaUsuario_(dados.senha, false);
   validarUnicidadeUsuarioHub_(sheet, id, dados.pac, dados.email);
 
   for (var i = 1; i < data.length; i++) {
@@ -271,6 +276,45 @@ function atualizarUsuario(id, dados) {
     }
   }
   return false;
+}
+
+function validarEmailUsuario_(email) {
+  var normalizado = String(email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizado)) {
+    throw new Error('Informe um e-mail válido para o acesso.');
+  }
+  return normalizado;
+}
+
+function validarSenhaUsuario_(senha, obrigatoria) {
+  var valor = String(senha || '');
+  if (!valor && !obrigatoria) return;
+  if (valor.length < 8) {
+    throw new Error('A senha deve ter pelo menos 8 caracteres.');
+  }
+}
+
+function gerarIdentificadorHub_(email) {
+  var base = String(email || '').trim().toLowerCase().split('@')[0];
+  return base.replace(/[^a-z0-9._-]/g, '') || gerarId();
+}
+
+function gerarIdentificadorHubUnico_(sheet, email) {
+  var base = gerarIdentificadorHub_(email);
+  var candidato = base;
+  var usados = {};
+  var data = sheet.getDataRange().getValues();
+
+  for (var i = 1; i < data.length; i++) {
+    usados[String(data[i][2] || '').trim().toLowerCase()] = true;
+  }
+
+  var sufixo = 2;
+  while (usados[candidato.toLowerCase()]) {
+    candidato = base + sufixo;
+    sufixo++;
+  }
+  return candidato;
 }
 
 function validarUnicidadeUsuarioHub_(sheet, idIgnorado, pac, email) {
@@ -293,12 +337,32 @@ function validarUnicidadeUsuarioHub_(sheet, idIgnorado, pac, email) {
 }
 
 function atualizarUsuarioCentralizado(id, dados) {
+  dados.email = validarEmailUsuario_(dados.email);
+  validarUnicidadeEmailCentral_(id, dados.email);
   if (String(dados.origem || '').toLowerCase() === 'cco' ||
       String(id || '').indexOf('cco:') === 0) {
     dados.id = id;
     return salvarUsuarioCco(dados);
   }
   return atualizarUsuario(id, dados);
+}
+
+function validarUnicidadeEmailCentral_(idIgnorado, email) {
+  var emailNormalizado = String(email || '').trim().toLowerCase();
+  var usuarios = listarUsuarios();
+
+  try {
+    usuarios = usuarios.concat(listarUsuariosCco());
+  } catch (e) {
+    throw new Error('Não foi possível validar o e-mail no CCO. Tente novamente.');
+  }
+
+  for (var i = 0; i < usuarios.length; i++) {
+    if (String(usuarios[i].id) === String(idIgnorado || '')) continue;
+    if (String(usuarios[i].email || '').trim().toLowerCase() === emailNormalizado) {
+      throw new Error('Este e-mail já pertence a outro acesso.');
+    }
+  }
 }
 
 /**
