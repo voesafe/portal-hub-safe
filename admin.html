@@ -10,6 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260607-brand-compact">
+  <link rel="stylesheet" href="css/admin.css?v=20260608-central-users">
 </head>
 <body>
 
@@ -64,8 +65,8 @@
       <div class="topbar-left">
         <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
         <div>
-          <div class="topbar-title">Usuários</div>
-          <div class="topbar-subtitle">Gestão de acessos ao dashboard</div>
+          <div class="topbar-title">Gestão de Usuários</div>
+          <div class="topbar-subtitle">Diretório central de acessos do SAFE Hub</div>
         </div>
       </div>
       <div class="topbar-right">
@@ -74,24 +75,49 @@
     </div>
 
     <div class="page">
+      <div class="usuarios-kpis">
+        <div class="usuarios-kpi"><span>Total de identidades</span><strong id="kpi-total">—</strong></div>
+        <div class="usuarios-kpi"><span>Acessos ativos</span><strong id="kpi-ativos">—</strong></div>
+        <div class="usuarios-kpi"><span>Hub / Comercial</span><strong id="kpi-hub">—</strong></div>
+        <div class="usuarios-kpi"><span>Escala CCO</span><strong id="kpi-cco">—</strong></div>
+      </div>
+
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Consultores e Acessos</div>
+        <div class="card-header usuarios-card-header">
+          <div>
+            <div class="card-title">Diretório de acessos</div>
+            <div class="usuarios-subtitle">Cadastros do Hub e dos sistemas integrados</div>
+          </div>
+          <span class="usuarios-count" id="usuarios-contagem">0 de 0</span>
+          <div class="usuarios-filtros">
+            <input class="form-control" id="filtro-busca" type="search" placeholder="Buscar nome, login ou e-mail">
+            <select class="form-control" id="filtro-origem">
+              <option value="">Todos os sistemas</option>
+              <option value="hub">Hub / Comercial</option>
+              <option value="cco">Escala CCO</option>
+            </select>
+            <select class="form-control" id="filtro-status">
+              <option value="">Todos os status</option>
+              <option value="true">Ativos</option>
+              <option value="false">Inativos</option>
+            </select>
+          </div>
         </div>
         <div class="table-wrapper">
           <table class="table table-usuarios">
             <thead>
               <tr>
-                <th class="col-nome">Nome</th>
-                <th class="col-pac">PAC</th>
-                <th class="col-email">E-mail</th>
+                <th class="col-nome">Usuário</th>
+                <th class="col-pac">Login</th>
+                <th>Sistema</th>
                 <th class="col-perfil">Perfil</th>
                 <th class="col-status">Status</th>
+                <th>Criado em</th>
                 <th style="width:100px"></th>
               </tr>
             </thead>
             <tbody id="tabela-usuarios">
-              <tr><td colspan="6" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
+              <tr><td colspan="7" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
             </tbody>
           </table>
         </div>
@@ -131,19 +157,27 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label class="form-label">Nome Completo</label>
-        <input type="text" class="form-control" id="u-nome" placeholder="Nome do consultor">
+        <label class="form-label">Sistema de origem</label>
+        <select class="form-control" id="u-origem">
+          <option value="hub">Hub / Comercial</option>
+          <option value="cco">Escala CCO</option>
+        </select>
+        <small class="form-help">Define onde a identidade e a senha serão armazenadas.</small>
       </div>
       <div class="form-group">
-        <label class="form-label">PAC (identificador de login)</label>
-        <input type="text" class="form-control" id="u-pac" placeholder="Ex: Joao">
+        <label class="form-label">Nome Completo</label>
+        <input type="text" class="form-control" id="u-nome" placeholder="Nome completo">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="u-identificador-label">PAC (identificador de login)</label>
+        <input type="text" class="form-control" id="u-pac" placeholder="Ex: nome.sobrenome">
       </div>
       <div class="form-group">
         <label class="form-label">E-mail</label>
         <input type="email" class="form-control" id="u-email" placeholder="email@voesafe.com.br">
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-group" id="grupo-perfil-hub">
           <label class="form-label">Perfil</label>
           <select class="form-control" id="u-perfil">
             <option value="pac">Consultor (PAC)</option>
@@ -151,6 +185,14 @@
             <option value="master">Master TI</option>
             <option value="admin_readonly">Administrador somente visualização</option>
             <option value="financeiro">Financeiro</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupo-perfil-cco" hidden>
+          <label class="form-label">Perfil no CCO</label>
+          <select class="form-control" id="u-role-cco">
+            <option value="user">Operador CCO</option>
+            <option value="financeiro">Financeiro CCO</option>
+            <option value="admin">Administrador CCO</option>
           </select>
         </div>
         <div class="form-group">
@@ -161,8 +203,40 @@
           </select>
         </div>
       </div>
+      <div id="campos-cco" class="campos-cco" hidden>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Iniciais</label>
+            <input type="text" class="form-control" id="u-iniciais" maxlength="2" placeholder="TS">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CPF</label>
+            <input type="text" class="form-control" id="u-cpf" placeholder="Somente números">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nascimento</label>
+            <input type="text" class="form-control" id="u-nascimento" placeholder="dd/mm/aaaa">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefone</label>
+            <input type="text" class="form-control" id="u-telefone" placeholder="Somente números">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Cor na escala</label>
+            <input type="color" class="form-control usuario-color" id="u-cor" value="#5BAEE2">
+          </div>
+          <label class="usuario-checkbox">
+            <input type="checkbox" id="u-visivel-escala" checked>
+            <span>Disponível para inclusão na escala</span>
+          </label>
+        </div>
+      </div>
       <div class="form-group" id="grupo-senha">
-        <label class="form-label">Senha inicial</label>
+        <label class="form-label" id="u-senha-label">Senha inicial</label>
         <input type="password" class="form-control" id="u-senha" placeholder="Deixe vazio para usar: safe@2024">
       </div>
     </div>

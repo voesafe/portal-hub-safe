@@ -144,6 +144,10 @@ Esses perfis entram diretamente em `escala-cco.html` e não podem acessar os
 demais módulos do Hub. Administradores e Master do Hub também podem abrir a
 Escala pelo menu `Escala > Escala CCO`.
 
+O diretório `TI > Usuários`, exclusivo do perfil `master`, agrega os cadastros
+do Hub e do CCO. Inclusões e alterações feitas nessa tela são encaminhadas ao
+backend de origem, mantendo senhas e regras operacionais em seus sistemas atuais.
+
 ### SAFE MINIONS
 
 O SAFE MINIONS processa arquivos `.xlt`, `.xltx` e `.xlsx` diretamente no

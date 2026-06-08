@@ -142,6 +142,15 @@ function exigirAcessoFinanceiro(token) {
   return usuario;
 }
 
+function exigirGestaoUsuarios(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (normalizarPerfil(usuario.perfil) !== 'master') {
+    throw new Error('A gestão central de usuários é exclusiva do Master TI.');
+  }
+  return usuario;
+}
+
 /**
  * Lista usuários ativos para preencher seletor de PAC nos formulários
  */
@@ -186,10 +195,29 @@ function listarUsuarios() {
       email:    row[3],
       perfil:   row[5],
       ativo:    row[6],
-      criadoEm: row[7]
+      criadoEm: row[7],
+      origem:   'hub',
+      modulo:   'Hub / Comercial'
     });
   }
   return usuarios;
+}
+
+function listarUsuariosCentralizados() {
+  var usuarios = listarUsuarios();
+  var aviso = '';
+
+  try {
+    usuarios = usuarios.concat(listarUsuariosCco());
+  } catch (e) {
+    aviso = 'Não foi possível consultar os usuários do CCO: ' + e.message;
+  }
+
+  usuarios.sort(function(a, b) {
+    return String(a.nome || a.pac).localeCompare(String(b.nome || b.pac), 'pt-BR');
+  });
+
+  return { usuarios: usuarios, aviso: aviso };
 }
 
 /**
@@ -197,6 +225,7 @@ function listarUsuarios() {
  */
 function criarUsuario(dados) {
   var sheet = getSheet(SHEETS.USUARIOS);
+  validarUnicidadeUsuarioHub_(sheet, null, dados.pac, dados.email);
   var senhaHash = hashSenha(dados.senha || 'safe@2024');
   var id = gerarId();
 
@@ -214,12 +243,20 @@ function criarUsuario(dados) {
   return { id: id, nome: dados.nome };
 }
 
+function criarUsuarioCentralizado(dados) {
+  if (String(dados.origem || 'hub').toLowerCase() === 'cco') {
+    return salvarUsuarioCco(dados);
+  }
+  return criarUsuario(dados);
+}
+
 /**
  * Atualiza usuário (só admin)
  */
 function atualizarUsuario(id, dados) {
   var sheet = getSheet(SHEETS.USUARIOS);
   var data = sheet.getDataRange().getValues();
+  validarUnicidadeUsuarioHub_(sheet, id, dados.pac, dados.email);
 
   for (var i = 1; i < data.length; i++) {
     if (String(data[i][0]) === String(id)) {
@@ -234,6 +271,34 @@ function atualizarUsuario(id, dados) {
     }
   }
   return false;
+}
+
+function validarUnicidadeUsuarioHub_(sheet, idIgnorado, pac, email) {
+  var data = sheet.getDataRange().getValues();
+  var pacNormalizado = String(pac || '').trim().toLowerCase();
+  var emailNormalizado = String(email || '').trim().toLowerCase();
+
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(idIgnorado || '')) continue;
+
+    var pacExistente = String(data[i][2] || '').trim().toLowerCase();
+    var emailExistente = String(data[i][3] || '').trim().toLowerCase();
+    if (pacNormalizado && pacExistente === pacNormalizado) {
+      throw new Error('Este identificador de login já está cadastrado no Hub.');
+    }
+    if (emailNormalizado && emailExistente === emailNormalizado) {
+      throw new Error('Este e-mail já está cadastrado no Hub.');
+    }
+  }
+}
+
+function atualizarUsuarioCentralizado(id, dados) {
+  if (String(dados.origem || '').toLowerCase() === 'cco' ||
+      String(id || '').indexOf('cco:') === 0) {
+    dados.id = id;
+    return salvarUsuarioCco(dados);
+  }
+  return atualizarUsuario(id, dados);
 }
 
 /**
@@ -255,4 +320,13 @@ function alterarSenha(email, senhaAtual, novaSenha) {
     }
   }
   return false;
+}
+
+function alterarMinhaSenha(token, senhaAtual, novaSenha) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (normalizarPerfil(usuario.perfil).indexOf('cco_') === 0) {
+    throw new Error('A senha de usuários CCO deve ser alterada pelo administrador no diretório central.');
+  }
+  return alterarSenha(usuario.email, senhaAtual, novaSenha);
 }

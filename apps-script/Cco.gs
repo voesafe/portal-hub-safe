@@ -55,6 +55,104 @@ function buscarUsuarioCco(username) {
   }
 }
 
+function listarUsuariosCco() {
+  var resposta = requisitarCco_('getUsers', {});
+  var usuarios = resposta.users || {};
+
+  return Object.keys(usuarios).map(function(username) {
+    var dados = usuarios[username] || {};
+    return {
+      id: 'cco:' + username,
+      nome: dados.name || username,
+      pac: username,
+      email: dados.email || '',
+      perfil: perfilHubCco_(dados.role),
+      ativo: dados.active !== false,
+      origem: 'cco',
+      modulo: 'Escala CCO',
+      roleOrigem: dados.role || 'user',
+      initials: dados.initials || '',
+      cpf: dados.cpf || '',
+      birthdate: dados.birthdate || '',
+      phone: dados.phone || '',
+      color: dados.color || '#5BAEE2',
+      scheduleVisible: dados.scheduleVisible !== false,
+      financeiroExclude: dados.financeiroExclude === true,
+      ifoodExclude: dados.ifoodExclude === true
+    };
+  });
+}
+
+function salvarUsuarioCco(dados) {
+  var username = String(dados.pac || dados.username || '').trim().toLowerCase();
+  if (!username) throw new Error('Usuário CCO obrigatório.');
+
+  var existente = null;
+  var todosUsuarios = listarUsuariosCco();
+  if (dados.id) {
+    for (var i = 0; i < todosUsuarios.length; i++) {
+      if (todosUsuarios[i].id === dados.id) {
+        existente = todosUsuarios[i];
+        break;
+      }
+    }
+  }
+
+  var isNew = !existente;
+  if (isNew) {
+    for (var j = 0; j < todosUsuarios.length; j++) {
+      if (String(todosUsuarios[j].pac).toLowerCase() === username) {
+        throw new Error('Este usuário já está cadastrado no CCO.');
+      }
+      if (dados.email && String(todosUsuarios[j].email).trim().toLowerCase() ===
+          String(dados.email).trim().toLowerCase()) {
+        throw new Error('Este e-mail já está cadastrado no CCO.');
+      }
+    }
+  }
+
+  var params = {
+    isNew: isNew ? 'true' : 'false',
+    username: username,
+    name: dados.nome || (existente && existente.nome) || username,
+    initials: dados.initials || (existente && existente.initials) || '',
+    cpf: dados.cpf || (existente && existente.cpf) || '',
+    birthdate: dados.birthdate || (existente && existente.birthdate) || '',
+    phone: dados.phone || (existente && existente.phone) || '',
+    email: dados.email || (existente && existente.email) || '',
+    color: dados.color || (existente && existente.color) || '#5BAEE2',
+    role: dados.roleOrigem || (existente && existente.roleOrigem) || 'user',
+    scheduleVisible: String(dados.hasOwnProperty('scheduleVisible')
+      ? valorBooleano(dados.scheduleVisible)
+      : (!existente || existente.scheduleVisible)),
+    financeiroExclude: String(dados.hasOwnProperty('financeiroExclude')
+      ? valorBooleano(dados.financeiroExclude)
+      : !!(existente && existente.financeiroExclude)),
+    ifoodExclude: String(dados.hasOwnProperty('ifoodExclude')
+      ? valorBooleano(dados.ifoodExclude)
+      : !!(existente && existente.ifoodExclude)),
+    active: String(dados.hasOwnProperty('ativo')
+      ? valorBooleano(dados.ativo)
+      : (!existente || existente.ativo))
+  };
+
+  if (dados.senha) params.password = dados.senha;
+
+  var resposta = requisitarCco_('saveUser', params);
+  if (!resposta.ok && resposta.error) throw new Error(resposta.error);
+
+  if (!isNew && dados.hasOwnProperty('ativo') &&
+      valorBooleano(dados.ativo) !== existente.ativo) {
+    var status = requisitarCco_('toggleUserActive', {
+      username: username,
+      active: String(valorBooleano(dados.ativo))
+    });
+    if (!status.ok && status.error) throw new Error(status.error);
+  }
+
+  return { id: 'cco:' + username, nome: params.name, origem: 'cco' };
+}
+
 function autenticarUsuarioCco(username, senha) {
   var chave = String(username || '').trim().toLowerCase();
   if (!chave || !senha) return null;

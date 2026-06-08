@@ -177,6 +177,14 @@ const Auth = {
     return true;
   },
 
+  protegerGestaoUsuarios() {
+    if (!this.proteger()) return false;
+    if (!this.perfilEhMaster(this.getPerfil())) {
+      return this.negarAcesso('Gestão central de usuários', 'admin.html');
+    }
+    return true;
+  },
+
   protegerFinanceiro() {
     if (!this.proteger()) return false;
     if (!this.podeAcessarFinanceiro()) {
@@ -374,7 +382,7 @@ const Auth = {
       'T.I.',
       'ti',
       item('admin.html', 'Usuários', 'usuarios', {
-        permitido: acessoAdmin
+        permitido: acessoMaster
       }),
       ['admin.html']
     ));

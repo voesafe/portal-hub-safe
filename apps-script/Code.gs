@@ -15,6 +15,7 @@ function doGet(e) {
     var mes     = p.mes     ? Number(p.mes)  : null;
     var ano     = p.ano     ? Number(p.ano)  : null;
     var id      = p.id      || null;
+    var token   = p.token   || '';
 
     switch (action) {
 
@@ -38,8 +39,8 @@ function doGet(e) {
         return jsonSuccess(resumoFaturamento(ano));
 
       case 'usuarios':
-        if (!perfilEhAdmin(perfil)) return jsonError('Acesso negado');
-        return jsonSuccess(listarUsuarios());
+        exigirGestaoUsuarios(token);
+        return jsonSuccess(listarUsuariosCentralizados());
 
       case 'login-usuarios':
         return jsonSuccess(listarUsuariosLogin());
@@ -84,8 +85,7 @@ function doPost(e) {
         return jsonSuccess(usuario);
 
       case 'alterar-senha':
-        var sessao = pac; // usa o email da sessão
-        var ok = alterarSenha(dados.email || pac, dados.senhaAtual, dados.novaSenha);
+        var ok = alterarMinhaSenha(token, dados.senhaAtual, dados.novaSenha);
         if (!ok) return jsonError('Senha atual incorreta');
         return jsonSuccess({ mensagem: 'Senha alterada com sucesso' });
 
@@ -119,13 +119,13 @@ function doPost(e) {
 
       // ── Usuários ───────────────────────────────────────────
       case 'criar-usuario':
-        if (!perfilEhAdminCompleto(perfil)) return jsonError('Acesso negado');
-        return jsonSuccess(criarUsuario(dados));
+        exigirGestaoUsuarios(token);
+        return jsonSuccess(criarUsuarioCentralizado(dados));
 
       case 'editar-usuario':
-        if (!perfilEhAdminCompleto(perfil)) return jsonError('Acesso negado');
+        exigirGestaoUsuarios(token);
         if (!dados.id) return jsonError('ID obrigatório');
-        var editado = atualizarUsuario(dados.id, dados);
+        var editado = atualizarUsuarioCentralizado(dados.id, dados);
         if (!editado) return jsonError('Usuário não encontrado');
         return jsonSuccess({ mensagem: 'Usuário atualizado' });
 
