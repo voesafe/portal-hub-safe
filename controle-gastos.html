@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-  <link rel="stylesheet" href="css/controle-gastos.css">
+  <link rel="stylesheet" href="css/controle-gastos.css?v=20260608-receitas">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -93,6 +93,7 @@
       <div class="gastos-tabs" role="tablist" aria-label="Áreas do controle de gastos">
         <button class="gastos-tab active" data-tab="visao" role="tab">Visão Geral</button>
         <button class="gastos-tab" data-tab="fechamento" role="tab">Fechamento Mensal</button>
+        <button class="gastos-tab" data-tab="receitas" role="tab">Receita Total por Base</button>
         <button class="gastos-tab" data-tab="categorias" role="tab">Categorias</button>
       </div>
 
@@ -114,14 +115,14 @@
             <span class="kpi-sub" id="cg-kpi-custo-sub">Consolidado</span>
           </div>
           <div class="kpi-card">
-            <span class="kpi-label">Base SJK</span>
+            <span class="kpi-label">Receita total SJK</span>
             <strong class="kpi-value" id="cg-kpi-sjk">—</strong>
-            <span class="kpi-sub" id="cg-kpi-sjk-sub">—</span>
+            <span class="kpi-sub" id="cg-kpi-sjk-sub">No mês selecionado</span>
           </div>
           <div class="kpi-card">
-            <span class="kpi-label">Base CPN</span>
+            <span class="kpi-label">Receita total CPN</span>
             <strong class="kpi-value" id="cg-kpi-cpn">—</strong>
-            <span class="kpi-sub" id="cg-kpi-cpn-sub">—</span>
+            <span class="kpi-sub" id="cg-kpi-cpn-sub">No mês selecionado</span>
           </div>
         </div>
 
@@ -217,6 +218,40 @@
         </div>
       </section>
 
+      <section class="gastos-view" id="view-receitas">
+        <div class="gastos-section-heading">
+          <div>
+            <h2>Receita total por base</h2>
+            <p id="cg-receitas-competencia">Informe a receita geral de cada base no mês selecionado.</p>
+          </div>
+          <button class="btn btn-primary" id="cg-btn-salvar-receitas">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+            Salvar receitas
+          </button>
+        </div>
+
+        <div class="card gastos-receitas-card">
+          <div class="gastos-receitas-grid">
+            <div class="gastos-receita-field">
+              <label for="cg-receita-sjk">Receita total da Base SJK</label>
+              <p>São José dos Campos</p>
+              <label class="gastos-money-field gastos-receita-input-wrap">
+                <span>R$</span>
+                <input class="form-control gastos-money-input" id="cg-receita-sjk" inputmode="decimal" autocomplete="off" placeholder="0,00">
+              </label>
+            </div>
+            <div class="gastos-receita-field">
+              <label for="cg-receita-cpn">Receita total da Base CPN</label>
+              <p>Campinas</p>
+              <label class="gastos-money-field gastos-receita-input-wrap">
+                <span>R$</span>
+                <input class="form-control gastos-money-input" id="cg-receita-cpn" inputmode="decimal" autocomplete="off" placeholder="0,00">
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="gastos-view" id="view-categorias">
         <div class="gastos-section-heading">
           <div>
@@ -279,6 +314,6 @@
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth.js?v=20260608-bases"></script>
-<script src="js/controle-gastos.js"></script>
+<script src="js/controle-gastos.js?v=20260608-receitas"></script>
 </body>
 </html>

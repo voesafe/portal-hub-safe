@@ -75,6 +75,7 @@ const ControleGastos = {
     document.getElementById('cg-mes').addEventListener('change', () => this.carregar());
     document.getElementById('cg-ano').addEventListener('change', () => this.carregar());
     document.getElementById('cg-btn-salvar').addEventListener('click', () => this.salvarFechamento());
+    document.getElementById('cg-btn-salvar-receitas').addEventListener('click', () => this.salvarReceitas());
     document.getElementById('cg-btn-nova-categoria').addEventListener('click', () => this.abrirCategoria());
     document.getElementById('cg-modal-categoria-salvar').addEventListener('click', () => this.salvarCategoria());
     document.getElementById('cg-modal-categoria-close').addEventListener('click', () => fecharModal('cg-modal-categoria'));
@@ -84,6 +85,13 @@ const ControleGastos = {
     });
     document.getElementById('cg-categoria-nome').addEventListener('keydown', event => {
       if (event.key === 'Enter') this.salvarCategoria();
+    });
+    ['cg-receita-sjk', 'cg-receita-cpn'].forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener('focus', () => input.select());
+      input.addEventListener('blur', () => {
+        input.value = this.formatarCampoDinheiro(this.parseDinheiro(input.value));
+      });
     });
   },
 
@@ -125,6 +133,7 @@ const ControleGastos = {
     this.renderizarKpis();
     this.renderizarGraficos();
     this.renderizarEditor();
+    this.renderizarReceitas();
     this.renderizarCategorias();
   },
 
@@ -162,12 +171,13 @@ const ControleGastos = {
       item.custoHora === null ? 'Pendente' : formatBRL(item.custoHora);
     document.getElementById('cg-kpi-custo-sub').textContent =
       item.custoHora === null ? 'Aguardando horas das bases' : 'Gasto total ÷ horas totais';
-    document.getElementById('cg-kpi-sjk').textContent = formatBRL(item.SJK.total);
-    document.getElementById('cg-kpi-sjk-sub').textContent =
-      item.SJK.custoHora === null ? 'Horas pendentes' : `${formatBRL(item.SJK.custoHora)} / hora`;
-    document.getElementById('cg-kpi-cpn').textContent = formatBRL(item.CPN.total);
-    document.getElementById('cg-kpi-cpn-sub').textContent =
-      item.CPN.custoHora === null ? 'Horas pendentes' : `${formatBRL(item.CPN.custoHora)} / hora`;
+    const receitas = this.dados.receitas || {};
+    document.getElementById('cg-kpi-sjk').textContent =
+      receitas.SJK === null || receitas.SJK === undefined ? 'Não informada' : formatBRL(receitas.SJK);
+    document.getElementById('cg-kpi-sjk-sub').textContent = `${nome} de ${this.dados.ano}`;
+    document.getElementById('cg-kpi-cpn').textContent =
+      receitas.CPN === null || receitas.CPN === undefined ? 'Não informada' : formatBRL(receitas.CPN);
+    document.getElementById('cg-kpi-cpn-sub').textContent = `${nome} de ${this.dados.ano}`;
 
     document.getElementById('cg-alert-horas').hidden =
       !(item.total > 0 && !horasCompletas);
@@ -438,6 +448,42 @@ const ControleGastos = {
       document.getElementById(`cg-editor-custo-${base.toLowerCase()}`).textContent =
         horas > 0 ? `${formatBRL(total[base] / horas)} / hora` : 'Horas pendentes';
     });
+  },
+
+  renderizarReceitas() {
+    const receitas = this.dados.receitas || {};
+    document.getElementById('cg-receita-sjk').value =
+      this.formatarCampoDinheiro(receitas.SJK || 0);
+    document.getElementById('cg-receita-cpn').value =
+      this.formatarCampoDinheiro(receitas.CPN || 0);
+    document.getElementById('cg-receitas-competencia').textContent =
+      `Informe a receita geral de cada base em ${CONFIG.MESES[this.dados.mes]} de ${this.dados.ano}.`;
+  },
+
+  async salvarReceitas() {
+    const botao = document.getElementById('cg-btn-salvar-receitas');
+    const { ano, mes } = this.periodo();
+    const dados = {
+      ano,
+      mes,
+      receitas: {
+        SJK: this.parseDinheiro(document.getElementById('cg-receita-sjk').value),
+        CPN: this.parseDinheiro(document.getElementById('cg-receita-cpn').value)
+      }
+    };
+
+    btnLoading(botao, true);
+    const resposta = await API.salvarReceitasBase(dados);
+    btnLoading(botao, false);
+
+    if (!resposta.ok) {
+      this.tratarErro(resposta.error);
+      return;
+    }
+
+    this.dados = resposta.data;
+    this.renderizar();
+    toast('Receitas por base salvas com sucesso.', 'success');
   },
 
   async salvarFechamento() {

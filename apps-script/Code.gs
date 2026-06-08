@@ -167,6 +167,10 @@ function doPost(e) {
         var usuarioFinanceiro = exigirAcessoFinanceiro(token);
         return jsonSuccess(salvarFechamentoGastos(dados, usuarioFinanceiro));
 
+      case 'salvar-receitas-base':
+        var usuarioReceitasBase = exigirAcessoFinanceiro(token);
+        return jsonSuccess(salvarReceitasBase(dados, usuarioReceitasBase));
+
       case 'criar-categoria-gasto':
         var usuarioCriaCategoria = exigirAcessoFinanceiro(token);
         return jsonSuccess(criarCategoriaGasto(dados, usuarioCriaCategoria));

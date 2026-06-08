@@ -180,6 +180,11 @@ const API = {
     if (r.ok) Cache.invalidar('controle-gastos|');
     return r;
   },
+  async salvarReceitasBase(dados) {
+    const r = await this.post('salvar-receitas-base', dados);
+    if (r.ok) Cache.invalidar('controle-gastos|');
+    return r;
+  },
   async criarCategoriaGasto(nome) {
     const r = await this.post('criar-categoria-gasto', { nome });
     if (r.ok) Cache.invalidar('controle-gastos|');

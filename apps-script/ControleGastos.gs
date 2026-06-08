@@ -35,6 +35,15 @@ function garantirEstruturaControleGastos_() {
       'ATUALIZADO_POR', 'ATUALIZADO_EM'
     ]);
   }
+
+  var receitas = ss.getSheetByName(SHEETS.RECEITAS_BASE);
+  if (!receitas) {
+    receitas = ss.insertSheet(SHEETS.RECEITAS_BASE);
+    receitas.appendRow([
+      'ID', 'ANO', 'MES', 'BASE', 'RECEITA_TOTAL',
+      'ATUALIZADO_POR', 'ATUALIZADO_EM'
+    ]);
+  }
 }
 
 function normalizarCategoriaGasto_(valor) {
@@ -167,6 +176,20 @@ function listarControleGastos(ano, mes) {
     if (mesHora === mes) horasMes[baseHora] = horas;
   }
 
+  var receitasMes = { SJK: null, CPN: null };
+  var receitasSheet = getSheet(SHEETS.RECEITAS_BASE);
+  var receitasData = receitasSheet.getDataRange().getValues();
+  for (var r = 1; r < receitasData.length; r++) {
+    var receitaRow = receitasData[r];
+    if (!receitaRow[0] ||
+        Number(receitaRow[1]) !== ano ||
+        Number(receitaRow[2]) !== mes) continue;
+
+    var baseReceita = String(receitaRow[3] || '').toUpperCase();
+    if (BASES_GASTOS.indexOf(baseReceita) === -1) continue;
+    receitasMes[baseReceita] = numeroGasto_(receitaRow[4]);
+  }
+
   Object.keys(meses).forEach(function(chaveMes) {
     var item = meses[chaveMes];
     var horasTotais = 0;
@@ -214,9 +237,53 @@ function listarControleGastos(ano, mes) {
     todasCategorias: categorias,
     valores: valoresMes,
     horas: horasMes,
+    receitas: receitasMes,
     meses: meses,
     categoriasResumo: categoriasResumo
   };
+}
+
+function salvarReceitasBase(dados, usuario) {
+  garantirEstruturaControleGastos_();
+  var competencia = validarCompetenciaGasto_(dados.ano, dados.mes);
+  var receitas = dados.receitas || {};
+  var sheet = getSheet(SHEETS.RECEITAS_BASE);
+  var data = sheet.getDataRange().getValues();
+  var email = String(usuario.email || usuario.pac || '');
+  var agora = new Date();
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    BASES_GASTOS.forEach(function(base) {
+      var valor = Math.max(0, numeroGasto_(receitas[base]));
+      var rowIndex = 0;
+
+      for (var i = 1; i < data.length; i++) {
+        if (Number(data[i][1]) === competencia.ano &&
+            Number(data[i][2]) === competencia.mes &&
+            String(data[i][3]).toUpperCase() === base) {
+          rowIndex = i + 1;
+          break;
+        }
+      }
+
+      if (rowIndex) {
+        sheet.getRange(rowIndex, 5).setValue(valor);
+        sheet.getRange(rowIndex, 6).setValue(email);
+        sheet.getRange(rowIndex, 7).setValue(agora);
+      } else {
+        sheet.appendRow([
+          gerarId(), competencia.ano, competencia.mes, base,
+          valor, email, agora
+        ]);
+      }
+    });
+  } finally {
+    lock.releaseLock();
+  }
+
+  return listarControleGastos(competencia.ano, competencia.mes);
 }
 
 function salvarFechamentoGastos(dados, usuario) {
