@@ -45,7 +45,8 @@ const Inicio = {
   },
 
   modulos() {
-    const acessoHubPrincipal = !Auth.eUsuarioExclusivoCco();
+    const acessoHubPrincipal =
+      !Auth.eUsuarioExclusivoCco() && !Auth.eUsuarioExclusivoControleGastos();
     const acessoAdmin = Auth.eAdmin();
     const acessoMaster = Auth.perfilEhMaster(Auth.getPerfil());
 
@@ -257,7 +258,12 @@ const Inicio = {
       .filter(modulo => modulo.permitido)
       .map(modulo => this.renderizarModulo(modulo))
       .join('');
-    await this.carregarBases();
+    const secaoBases = document.getElementById('home-bases')?.closest('.home-section');
+    if (Auth.eUsuarioExclusivoControleGastos()) {
+      if (secaoBases) secaoBases.hidden = true;
+    } else {
+      await this.carregarBases();
+    }
   }
 };
 

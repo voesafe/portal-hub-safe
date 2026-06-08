@@ -10,6 +10,7 @@ const ControleGastos = {
   async init() {
     if (!Auth.protegerFinanceiro()) return;
     Auth.preencherUI();
+    this.aplicarPermissoes();
     this.inicializarSidebar();
     this.inicializarFiltros();
     this.inicializarTabs();
@@ -36,6 +37,14 @@ const ControleGastos = {
     overlay?.addEventListener('click', () => {
       sidebar.classList.remove('mobile-open');
       overlay.classList.remove('active');
+    });
+  },
+
+  aplicarPermissoes() {
+    if (Auth.podeEditarFinanceiro()) return;
+    document.getElementById('cg-readonly-note').hidden = false;
+    document.querySelectorAll('.gastos-tab').forEach(tab => {
+      if (tab.dataset.tab !== 'visao') tab.hidden = true;
     });
   },
 

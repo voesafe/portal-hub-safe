@@ -140,6 +140,36 @@ function exigirAcessoFinanceiro(token) {
   return usuario;
 }
 
+function exigirEdicaoControleGastos(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (!perfilPodeEditarControleGastos(usuario.perfil, usuario.email)) {
+    throw new Error('Este acesso permite somente visualizar o Controle de Gastos.');
+  }
+  return usuario;
+}
+
+function validarAcaoPerfilExclusivo_(token, action) {
+  if (!token) return;
+  var raw = PropertiesService.getScriptProperties()
+    .getProperty('SAFE_SESSION_' + String(token));
+  if (!raw) return;
+
+  var sessao;
+  try {
+    sessao = JSON.parse(raw);
+  } catch (e) {
+    return;
+  }
+  if (!sessao.expiraEm || Number(sessao.expiraEm) < Date.now()) return;
+  if (normalizarPerfil(sessao.perfil) !== 'controle_gastos_visualizacao') return;
+
+  var permitidas = ['controle-gastos', 'alterar-senha'];
+  if (permitidas.indexOf(String(action || '')) === -1) {
+    throw new Error('Este acesso é exclusivo para visualização do Controle de Gastos.');
+  }
+}
+
 function exigirGestaoUsuarios(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
@@ -236,6 +266,7 @@ function criarUsuario(dados) {
   dados.pac = dados.pac || gerarIdentificadorHubUnico_(sheet, dados.email);
   validarSenhaUsuario_(dados.senha, true);
   validarUnicidadeUsuarioHub_(sheet, null, dados.pac, dados.email);
+  dados.perfil = validarPerfilHub_(dados.perfil || 'pac');
   var senhaHash = hashSenha(dados.senha);
   var id = gerarId();
 
@@ -271,6 +302,7 @@ function atualizarUsuario(id, dados) {
   dados.email = validarEmailUsuario_(dados.email);
   validarSenhaUsuario_(dados.senha, false);
   validarUnicidadeUsuarioHub_(sheet, id, dados.pac, dados.email);
+  if (dados.perfil) dados.perfil = validarPerfilHub_(dados.perfil);
 
   for (var i = 1; i < data.length; i++) {
     if (String(data[i][0]) === String(id)) {
@@ -285,6 +317,18 @@ function atualizarUsuario(id, dados) {
     }
   }
   return false;
+}
+
+function validarPerfilHub_(perfil) {
+  var normalizado = normalizarPerfil(perfil || 'pac');
+  var permitidos = [
+    'pac', 'admin', 'master', 'admin_readonly',
+    'admin_visualizacao', 'financeiro', 'controle_gastos_visualizacao'
+  ];
+  if (permitidos.indexOf(normalizado) === -1) {
+    throw new Error('Tipo de acesso inválido.');
+  }
+  return normalizado;
 }
 
 function validarEmailUsuario_(email) {

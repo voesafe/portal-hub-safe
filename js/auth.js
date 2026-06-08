@@ -46,6 +46,10 @@ const Auth = {
     return this.perfilEhCco(this.getPerfil());
   },
 
+  eUsuarioExclusivoControleGastos() {
+    return this.normalizarPerfil(this.getPerfil()) === 'controle_gastos_visualizacao';
+  },
+
   paginaInicial() {
     return 'inicio.html';
   },
@@ -77,12 +81,14 @@ const Auth = {
 
   perfilSomenteLeitura(perfil) {
     const p = this.normalizarPerfil(perfil);
-    return p === 'admin_readonly' || p === 'admin_visualizacao' || p === 'financeiro';
+    return p === 'admin_readonly' || p === 'admin_visualizacao' ||
+      p === 'financeiro' || p === 'controle_gastos_visualizacao';
   },
 
   perfilPodeAcessarFinanceiro(perfil, email) {
     const p = this.normalizarPerfil(perfil);
     if (p === 'master') return true;
+    if (p === 'controle_gastos_visualizacao') return true;
     return p === 'financeiro' &&
       String(email || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
   },
@@ -92,7 +98,10 @@ const Auth = {
   },
 
   podeEditarFinanceiro() {
-    return this.estaLogado() && this.podeAcessarFinanceiro();
+    const p = this.normalizarPerfil(this.getPerfil());
+    if (p === 'master') return true;
+    return p === 'financeiro' &&
+      String(this.getEmail() || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
   },
 
   perfilPodeAcessarFechamentoHoras(perfil, email) {
@@ -113,6 +122,7 @@ const Auth = {
     if (p === 'cco_user') return 'Operador CCO';
     if (this.perfilEhMaster(perfil)) return 'Master TI';
     if (p === 'financeiro') return 'Financeiro';
+    if (p === 'controle_gastos_visualizacao') return 'Controle de Gastos · Visualização';
     if (this.perfilSomenteLeitura(perfil)) return 'Visualização';
     if (this.perfilEhAdmin(perfil))        return 'Administrador';
     return 'Consultor Comercial';
@@ -148,6 +158,13 @@ const Auth = {
         destino !== 'inicio.html' &&
         destino !== 'escala-cco.html' &&
         destino !== 'bases.html' &&
+        destino !== 'acesso-negado.html') {
+      window.location.replace('inicio.html');
+      return false;
+    }
+    if (this.eUsuarioExclusivoControleGastos() &&
+        destino !== 'inicio.html' &&
+        destino !== 'controle-gastos.html' &&
         destino !== 'acesso-negado.html') {
       window.location.replace('inicio.html');
       return false;
@@ -307,13 +324,26 @@ const Auth = {
       ['escala-cco.html']
     );
 
-    const acessoHubPrincipal = !this.eUsuarioExclusivoCco();
+    const acessoExclusivoGastos = this.eUsuarioExclusivoControleGastos();
+    const acessoHubPrincipal = !this.eUsuarioExclusivoCco() && !acessoExclusivoGastos;
     const dashboardPermitido = acessoHubPrincipal;
     const dashboardDestino = dashboardPermitido
       ? 'dashboard.html'
       : this.urlAcessoNegado('Dashboard', 'dashboard.html');
 
-    const secoes = [
+    const secoes = acessoExclusivoGastos ? [
+      `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
+        <span class="nav-icon" aria-hidden="true">${this.iconSvg('inicio')}</span>
+        <span>Início</span>
+      </a>`,
+      secao(
+        'financeiro',
+        'Financeiro',
+        'financeiro',
+        item('controle-gastos.html', 'Controle de Gastos', 'gastos'),
+        ['controle-gastos.html']
+      )
+    ] : [
       `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
         <span class="nav-icon" aria-hidden="true">${this.iconSvg('inicio')}</span>
         <span>Início</span>
@@ -340,7 +370,7 @@ const Auth = {
     const acessoFinanceiro = this.podeAcessarFinanceiro();
     const acessoFechamento = this.podeAcessarFechamentoHoras();
 
-    secoes.push(secao(
+    if (!acessoExclusivoGastos) secoes.push(secao(
       'administracao',
       'Administração',
       'administracao',
@@ -360,7 +390,7 @@ const Auth = {
       ['safe-minions.html']
     ));
 
-    secoes.push(secao(
+    if (!acessoExclusivoGastos) secoes.push(secao(
       'financeiro',
       'Financeiro',
       'financeiro',
@@ -384,7 +414,7 @@ const Auth = {
       ]
     ));
 
-    secoes.push(secao(
+    if (!acessoExclusivoGastos) secoes.push(secao(
       'suporte',
       'Suporte',
       'suporte',
@@ -392,7 +422,7 @@ const Auth = {
       ['bases.html']
     ));
 
-    secoes.push(secao(
+    if (!acessoExclusivoGastos) secoes.push(secao(
       'ti',
       'T.I.',
       'ti',

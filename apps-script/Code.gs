@@ -17,6 +17,8 @@ function doGet(e) {
     var id      = p.id      || null;
     var token   = p.token   || '';
 
+    validarAcaoPerfilExclusivo_(token, action);
+
     switch (action) {
 
       case 'kpis':
@@ -78,6 +80,8 @@ function doPost(e) {
     var pac     = body.pac     || '';
     var perfil  = body.perfil  || 'pac';
     var token   = body.token   || '';
+
+    if (action !== 'login') validarAcaoPerfilExclusivo_(token, action);
 
     switch (action) {
 
@@ -164,23 +168,23 @@ function doPost(e) {
         return jsonSuccess(listarControleGastos(dados.ano, dados.mes));
 
       case 'salvar-fechamento-gastos':
-        var usuarioFinanceiro = exigirAcessoFinanceiro(token);
+        var usuarioFinanceiro = exigirEdicaoControleGastos(token);
         return jsonSuccess(salvarFechamentoGastos(dados, usuarioFinanceiro));
 
       case 'salvar-receitas-base':
-        var usuarioReceitasBase = exigirAcessoFinanceiro(token);
+        var usuarioReceitasBase = exigirEdicaoControleGastos(token);
         return jsonSuccess(salvarReceitasBase(dados, usuarioReceitasBase));
 
       case 'criar-categoria-gasto':
-        var usuarioCriaCategoria = exigirAcessoFinanceiro(token);
+        var usuarioCriaCategoria = exigirEdicaoControleGastos(token);
         return jsonSuccess(criarCategoriaGasto(dados, usuarioCriaCategoria));
 
       case 'editar-categoria-gasto':
-        var usuarioEditaCategoria = exigirAcessoFinanceiro(token);
+        var usuarioEditaCategoria = exigirEdicaoControleGastos(token);
         return jsonSuccess(editarCategoriaGasto(dados, usuarioEditaCategoria));
 
       case 'alterar-status-categoria-gasto':
-        var usuarioStatusCategoria = exigirAcessoFinanceiro(token);
+        var usuarioStatusCategoria = exigirEdicaoControleGastos(token);
         return jsonSuccess(alterarStatusCategoriaGasto(dados, usuarioStatusCategoria));
 
       // ── Fechamento de Horas / Cotistas ────────────────────

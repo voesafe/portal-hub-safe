@@ -188,6 +188,74 @@
   border-bottom: 0;
 }
 
+.usuario-access-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: -4px 0 18px;
+  padding: 15px;
+  border: 1px solid rgba(91, 174, 226, .24);
+  border-radius: var(--radius-sm);
+  background: rgba(91, 174, 226, .07);
+}
+
+.form-group[hidden],
+.campos-cco[hidden] {
+  display: none !important;
+}
+
+.usuario-access-summary[hidden] {
+  display: none;
+}
+
+.usuario-access-summary-icon {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 0 5px rgba(91, 174, 226, .13);
+}
+
+.usuario-access-summary.restricted {
+  border-color: rgba(96, 192, 191, .35);
+  background: rgba(96, 192, 191, .08);
+}
+
+.usuario-access-summary.restricted .usuario-access-summary-icon {
+  background: var(--teal-dark);
+  box-shadow: 0 0 0 5px rgba(96, 192, 191, .14);
+}
+
+.usuario-access-summary strong {
+  color: var(--navy);
+  font-size: .82rem;
+}
+
+.usuario-access-summary p {
+  margin-top: 3px;
+  color: var(--gray-500);
+  font-size: .74rem;
+  line-height: 1.45;
+}
+
+.usuario-access-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.usuario-access-tags span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--gray-600);
+  font-size: .64rem;
+  font-weight: 700;
+}
+
 .cadastro-status {
   display: inline-flex;
   align-items: center;

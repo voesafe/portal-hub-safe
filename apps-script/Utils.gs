@@ -67,7 +67,8 @@ function perfilEhAdminCompleto(perfil) {
 
 function perfilSomenteLeitura(perfil) {
   var p = normalizarPerfil(perfil);
-  return p === 'admin_readonly' || p === 'admin_visualizacao' || p === 'financeiro';
+  return p === 'admin_readonly' || p === 'admin_visualizacao' ||
+    p === 'financeiro' || p === 'controle_gastos_visualizacao';
 }
 
 function perfilPodeAcessarEscalaCco(perfil) {
@@ -76,6 +77,14 @@ function perfilPodeAcessarEscalaCco(perfil) {
 }
 
 function perfilPodeAcessarFinanceiro(perfil, email) {
+  var p = normalizarPerfil(perfil);
+  if (p === 'master') return true;
+  if (p === 'controle_gastos_visualizacao') return true;
+  return p === 'financeiro' &&
+    String(email || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
+}
+
+function perfilPodeEditarControleGastos(perfil, email) {
   var p = normalizarPerfil(perfil);
   if (p === 'master') return true;
   return p === 'financeiro' &&

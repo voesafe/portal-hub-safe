@@ -44,6 +44,9 @@ const Admin = {
     const perfil = usuario.perfil;
     if (Auth.perfilEhMaster(perfil)) return 'Master TI';
     if (Auth.normalizarPerfil(perfil) === 'financeiro') return 'Financeiro';
+    if (Auth.normalizarPerfil(perfil) === 'controle_gastos_visualizacao') {
+      return 'Controle de Gastos · Leitura';
+    }
     if (Auth.perfilSomenteLeitura(perfil)) return 'Admin leitura';
     if (Auth.perfilEhAdmin(perfil)) return 'Administrador';
     if (Auth.normalizarPerfil(perfil) === 'cco_admin') return 'Administrador CCO';
@@ -205,6 +208,59 @@ const Admin = {
     document.getElementById('btn-novo-usuario')?.addEventListener('click', () => this.abrirForm());
     document.getElementById('btn-salvar-usuario')?.addEventListener('click', () => this.salvar());
     document.getElementById('u-origem')?.addEventListener('change', () => this.atualizarCamposOrigem());
+    document.getElementById('u-perfil')?.addEventListener('change', () => this.atualizarResumoAcesso());
+  },
+
+  perfisAcesso() {
+    return {
+      pac: {
+        titulo: 'Consultor comercial',
+        descricao: 'Acesso às rotinas comerciais vinculadas ao próprio usuário.',
+        tags: ['Dashboard', 'Vendas próprias', 'Consulta de bases']
+      },
+      admin: {
+        titulo: 'Administrador completo',
+        descricao: 'Acesso administrativo amplo aos módulos operacionais e comerciais.',
+        tags: ['Vendas', 'Faturamento', 'Concorrência', 'Escala CCO']
+      },
+      master: {
+        titulo: 'Master TI',
+        descricao: 'Controle integral do SAFE Hub, incluindo usuários e configurações.',
+        tags: ['Todos os módulos', 'Gestão de usuários', 'Configurações']
+      },
+      admin_readonly: {
+        titulo: 'Administrador somente visualização',
+        descricao: 'Consulta administrativa sem permissão para criar, editar ou excluir registros.',
+        tags: ['Dashboard', 'Vendas', 'Faturamento', 'Concorrência', 'Somente leitura']
+      },
+      financeiro: {
+        titulo: 'Financeiro operacional',
+        descricao: 'Perfil financeiro autorizado para lançamentos e fechamentos.',
+        tags: ['Controle de Gastos', 'Fechamento de Horas', 'Edição']
+      },
+      controle_gastos_visualizacao: {
+        titulo: 'Controle de Gastos · Somente visualização',
+        descricao: 'Acesso exclusivo aos indicadores do Controle de Gastos, sem alterar valores, receitas ou categorias.',
+        tags: ['Apenas Controle de Gastos', 'Visão Geral', 'Sem edição']
+      }
+    };
+  },
+
+  atualizarResumoAcesso() {
+    const origem = document.getElementById('u-origem').value;
+    const resumo = document.getElementById('u-access-summary');
+    if (!resumo) return;
+    resumo.hidden = origem === 'cco';
+    if (origem === 'cco') return;
+
+    const perfil = document.getElementById('u-perfil').value;
+    const dados = this.perfisAcesso()[perfil] || this.perfisAcesso().pac;
+    document.getElementById('u-access-summary-title').textContent = dados.titulo;
+    document.getElementById('u-access-summary-description').textContent = dados.descricao;
+    document.getElementById('u-access-summary-tags').innerHTML = dados.tags
+      .map(tag => `<span>${this.escape(tag)}</span>`)
+      .join('');
+    resumo.classList.toggle('restricted', perfil === 'controle_gastos_visualizacao');
   },
 
   atualizarCamposOrigem() {
@@ -219,6 +275,7 @@ const Admin = {
     document.getElementById('u-senha-ajuda').textContent = this.editandoId
       ? 'Preencha somente para redefinir a senha deste acesso.'
       : 'Defina uma senha temporária individual e envie ao colaborador por um canal seguro.';
+    this.atualizarResumoAcesso();
   },
 
   abrirForm(usuario = null) {

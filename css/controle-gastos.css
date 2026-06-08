@@ -74,6 +74,47 @@
   font-weight: 600;
 }
 
+.gastos-readonly-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 15px 17px;
+  border: 1px solid rgba(96, 192, 191, .32);
+  border-radius: var(--radius-sm);
+  background: rgba(96, 192, 191, .08);
+}
+
+.gastos-readonly-note[hidden] {
+  display: none;
+}
+
+.gastos-readonly-icon {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 26px;
+  border-radius: 50%;
+  background: var(--teal-dark);
+  color: var(--white);
+  font-size: .75rem;
+  font-weight: 800;
+}
+
+.gastos-readonly-note strong {
+  color: var(--navy);
+  font-size: .8rem;
+}
+
+.gastos-readonly-note p {
+  margin-top: 3px;
+  color: var(--gray-500);
+  font-size: .74rem;
+  line-height: 1.45;
+}
+
 .gastos-alert[hidden] {
   display: none;
 }

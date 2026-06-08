@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-  <link rel="stylesheet" href="css/admin.css?v=20260608-email-identity">
+  <link rel="stylesheet" href="css/admin.css?v=20260608-module-access">
 </head>
 <body>
 
@@ -198,13 +198,14 @@
         <div class="usuario-form-section-desc">Defina o nível de acesso e a situação do cadastro.</div>
       <div class="form-row">
         <div class="form-group" id="grupo-perfil-hub">
-          <label class="form-label">Perfil</label>
+          <label class="form-label">Tipo de acesso</label>
           <select class="form-control" id="u-perfil">
             <option value="pac">Consultor (PAC)</option>
             <option value="admin">Administrador completo</option>
             <option value="master">Master TI</option>
             <option value="admin_readonly">Administrador somente visualização</option>
             <option value="financeiro">Financeiro</option>
+            <option value="controle_gastos_visualizacao">Controle de Gastos — somente visualização</option>
           </select>
         </div>
         <div class="form-group" id="grupo-perfil-cco" hidden>
@@ -221,6 +222,14 @@
             <option value="true">Ativo</option>
             <option value="false">Inativo</option>
           </select>
+        </div>
+      </div>
+      <div class="usuario-access-summary" id="u-access-summary">
+        <div class="usuario-access-summary-icon" aria-hidden="true"></div>
+        <div>
+          <strong id="u-access-summary-title">Consultor comercial</strong>
+          <p id="u-access-summary-description">Acesso às rotinas comerciais vinculadas ao próprio usuário.</p>
+          <div class="usuario-access-tags" id="u-access-summary-tags"></div>
         </div>
       </div>
       </div>
@@ -277,7 +286,7 @@
 
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
-<script src="js/auth.js?v=20260608-bases"></script>
-<script src="js/admin.js?v=20260608-email-identity"></script>
+<script src="js/auth.js?v=20260608-module-access"></script>
+<script src="js/admin.js?v=20260608-module-access"></script>
 </body>
 </html>
