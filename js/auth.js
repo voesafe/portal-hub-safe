@@ -563,11 +563,34 @@ const Auth = {
     });
   },
 
+  fixarTopbar() {
+    const topbar = document.querySelector('.main > .topbar');
+    if (!topbar || topbar.dataset.fixedReady === 'true') return;
+
+    topbar.dataset.fixedReady = 'true';
+    const atualizarAltura = () => {
+      document.documentElement.style.setProperty(
+        '--topbar-current-h',
+        `${Math.ceil(topbar.getBoundingClientRect().height)}px`
+      );
+    };
+
+    atualizarAltura();
+    if ('ResizeObserver' in window) {
+      const observer = new ResizeObserver(atualizarAltura);
+      observer.observe(topbar);
+      topbar._safeResizeObserver = observer;
+    } else {
+      window.addEventListener('resize', atualizarAltura);
+    }
+  },
+
   preencherUI() {
     const sessao = this.getSessao();
     if (!sessao) return;
 
     this.aplicarMarcaHub();
+    this.fixarTopbar();
     this.montarMenuSidebar();
     this.prepararLogoutSidebar();
 
