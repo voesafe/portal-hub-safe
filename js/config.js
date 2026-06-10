@@ -6,6 +6,7 @@
 const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbzmaCBkPawFNplB5bmeroYC2DrvsOumnzfKvt7zk3IjSrzp5jBlgFP-p2TU4EW29QmE/exec',
   HORAS_VOADAS_INVA_API_URL: 'https://script.google.com/macros/s/AKfycbxnHgXqi4Q0zcFPULMdSNmoOT8Ro4KkIeEFZefTpaXNH3CDG2bND220MlKDTNDBGHucyA/exec',
+  CAVOK_FECHAMENTO_API_ENABLED: false,
 
   APP_NAME:    'SAFE Hub',
   APP_VERSION: '1.0.0',

@@ -200,6 +200,10 @@ function doPost(e) {
         var usuarioStatusHoras = exigirAcessoFechamentoHoras(token);
         return jsonSuccess(alterarStatusFechamentoHoras(dados, usuarioStatusHoras));
 
+      case 'importar-fechamento-cavok':
+        var usuarioImportaCavok = exigirAcessoFechamentoHoras(token);
+        return jsonSuccess(importarFechamentoHorasCavok(dados, usuarioImportaCavok));
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }

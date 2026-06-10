@@ -523,3 +523,10 @@
     grid-template-columns: minmax(0, 1fr) 96px;
   }
 }
+.fechamento-import-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}

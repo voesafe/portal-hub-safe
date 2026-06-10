@@ -232,6 +232,9 @@ const API = {
     });
     if (r.ok) Cache.invalidar('fechamento-horas|');
     return r;
+  },
+  async importarFechamentoCavok(ano, mes) {
+    return this.post('importar-fechamento-cavok', { ano, mes });
   }
 };
 

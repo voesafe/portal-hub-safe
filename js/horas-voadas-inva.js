@@ -235,6 +235,20 @@ const HorasVoadasInva = {
   },
 
   vincularEventos() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger');
+    hamburger?.addEventListener('click', () => {
+      const aberto = sidebar?.classList.toggle('mobile-open');
+      overlay?.classList.toggle('active', aberto);
+      hamburger.setAttribute('aria-expanded', String(!!aberto));
+    });
+    overlay?.addEventListener('click', () => {
+      sidebar?.classList.remove('mobile-open');
+      overlay.classList.remove('active');
+      hamburger?.setAttribute('aria-expanded', 'false');
+    });
+
     document.querySelectorAll('.horas-inva-tab').forEach(tab => {
       tab.addEventListener('click', () => this.mudarView(tab.dataset.view));
     });

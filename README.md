@@ -70,6 +70,7 @@ portal-hub-safe/
 | `Bases.gs` | Copie o conteúdo de `apps-script/Bases.gs` |
 | `ControleGastos.gs` | Copie o conteúdo de `apps-script/ControleGastos.gs` |
 | `FechamentoHoras.gs` | Copie o conteúdo de `apps-script/FechamentoHoras.gs` |
+| `Cavok.gs` | Copie o conteúdo de `apps-script/Cavok.gs` |
 | `Cco.gs` | Copie o conteúdo de `apps-script/Cco.gs` |
 | `Utils.gs` | Copie o conteúdo de `apps-script/Utils.gs` |
 
@@ -122,6 +123,18 @@ O fechamento usa uma planilha operacional separada da base comercial.
 3. Execute `testarFechamentoHoras()` no editor do Apps Script para validar o
    acesso e autorizar as permissões.
 4. Publique uma nova versão do App da Web.
+
+#### Integração direta com a API CAVOK
+
+1. Adicione `apps-script/Cavok.gs` ao projeto do Apps Script.
+2. Nas propriedades do script, configure `CAVOK_API_USUARIO` e
+   `CAVOK_API_SENHA`.
+3. Publique uma nova versão do App da Web.
+4. Em `js/config.js`, altere `CAVOK_FECHAMENTO_API_ENABLED` para `true`.
+
+A importação consulta todos os dias da competência, consolida as horas por
+aeronave e aplica as mesmas exclusões de cotistas do arquivo XLS. Os valores
+entram somente no rascunho e ainda precisam ser revisados e salvos pelo usuário.
 
 As abas ocultas `CONTROLE_FECHAMENTO` e `HISTORICO_FECHAMENTO` são criadas
 automaticamente. As abas mensais são criadas no primeiro salvamento do período.

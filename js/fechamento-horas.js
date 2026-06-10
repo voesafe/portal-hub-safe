@@ -84,6 +84,10 @@ const FechamentoHoras = {
     document.getElementById('fh-btn-salvar').addEventListener('click', () => this.abrirRevisao());
     document.getElementById('fh-save-confirm').addEventListener('click', () => this.salvar());
     document.getElementById('fh-btn-upload').addEventListener('click', () => this.abrirUpload());
+    document.getElementById('fh-btn-cavok-api').addEventListener(
+      'click',
+      () => this.importarCavokApi()
+    );
     document.getElementById('fh-upload-input').addEventListener('change', event => {
       if (event.target.files[0]) this.processarUpload(event.target.files[0]);
     });
@@ -432,6 +436,7 @@ const FechamentoHoras = {
     const btnCancelar = document.getElementById('fh-btn-cancelar');
     const btnSalvar = document.getElementById('fh-btn-salvar');
     const btnUpload = document.getElementById('fh-btn-upload');
+    const btnCavokApi = document.getElementById('fh-btn-cavok-api');
 
     status.className = 'fechamento-status';
     if (this.editando) {
@@ -456,6 +461,8 @@ const FechamentoHoras = {
     btnCancelar.hidden = !this.editando;
     btnSalvar.hidden = !this.editando;
     btnUpload.hidden = !this.editando;
+    btnCavokApi.hidden =
+      !this.editando || CONFIG.CAVOK_FECHAMENTO_API_ENABLED !== true;
   },
 
   formatarDataHora(valor) {
@@ -695,6 +702,39 @@ const FechamentoHoras = {
     document.getElementById('fh-upload-result').textContent = '';
     document.getElementById('fh-upload-aplicar').disabled = true;
     abrirModal('fh-modal-upload');
+  },
+
+  async importarCavokApi() {
+    const botao = document.getElementById('fh-btn-cavok-api');
+    const { ano, mes } = this.periodo();
+    btnLoading(botao, true);
+    this.setLoading(true, `Consultando o CAVOK para ${CONFIG.MESES[mes]} de ${ano}`);
+    const resposta = await API.importarFechamentoCavok(ano, mes);
+    this.setLoading(false);
+    btnLoading(botao, false);
+
+    if (!resposta.ok) {
+      this.tratarErro(resposta.error || 'Não foi possível consultar a API CAVOK.');
+      return;
+    }
+
+    const importacao = resposta.data || {};
+    if (!Array.isArray(importacao.horas)) {
+      this.tratarErro('A API CAVOK retornou dados incompletos.');
+      return;
+    }
+
+    this.rascunho.horas = this.clonar(importacao.horas);
+    this.marcarAlterado();
+    this.renderizarTabelaHoras();
+    this.renderizarGraficoAeronaves();
+
+    const resumo = importacao.resumoImportacao || {};
+    toast(
+      `${resumo.voosConsiderados || 0} voos importados do CAVOK. Revise antes de salvar.`,
+      'success',
+      5500
+    );
   },
 
   processarUpload(file) {
