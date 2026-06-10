@@ -260,9 +260,9 @@ exibe apenas a página inicial e a Visão Geral do Controle de Gastos. O usuári
 não pode acessar outros módulos nem alterar gastos, receitas ou categorias.
 
 Os perfis exclusivos `cco_user`, `cco_financeiro` e `cco_admin` acessam a
-Escala CCO, Horas Voadas INVA, SAFE MINIONS e Bases. As configurações
-individuais de privacidade e visibilidade da escala continuam sendo definidas
-no sistema de origem.
+Escala CCO, SAFE MINIONS e Bases. O painel Horas Voadas INVA não é exibido nem
+liberado para funcionários do CCO. As configurações individuais de privacidade
+e visibilidade da escala continuam sendo definidas no sistema de origem.
 
 ---
 

@@ -42,8 +42,13 @@ const Auth = {
     return this.perfilPodeAcessarEscalaCco(this.getPerfil());
   },
 
+  perfilPodeAcessarHorasVoadasInva(perfil) {
+    const p = this.normalizarPerfil(perfil);
+    return p === 'admin' || p === 'master';
+  },
+
   podeAcessarHorasVoadasInva() {
-    return this.perfilPodeAcessarEscalaCco(this.getPerfil());
+    return this.perfilPodeAcessarHorasVoadasInva(this.getPerfil());
   },
 
   perfilPodeAcessarSafeMinions(perfil) {
@@ -169,7 +174,6 @@ const Auth = {
     if (this.eUsuarioExclusivoCco() &&
         destino !== 'inicio.html' &&
         destino !== 'escala-cco.html' &&
-        destino !== 'horas-voadas-inva.html' &&
         destino !== 'safe-minions.html' &&
         destino !== 'bases.html' &&
         destino !== 'acesso-negado.html') {
@@ -355,9 +359,11 @@ const Auth = {
       item('escala-cco.html', 'Escala CCO', 'escala', {
         permitido: acessoEscalaCco
       }) +
-      item('horas-voadas-inva.html', 'Horas Voadas INVA Mês', 'horas', {
-        permitido: acessoHorasVoadasInva
-      }),
+      (this.eUsuarioExclusivoCco()
+        ? ''
+        : item('horas-voadas-inva.html', 'Horas Voadas INVA Mês', 'horas', {
+            permitido: acessoHorasVoadasInva
+          })),
       ['escala-cco.html', 'horas-voadas-inva.html']
     );
 
