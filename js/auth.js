@@ -42,6 +42,10 @@ const Auth = {
     return this.perfilPodeAcessarEscalaCco(this.getPerfil());
   },
 
+  podeAcessarHorasVoadasInva() {
+    return this.perfilPodeAcessarEscalaCco(this.getPerfil());
+  },
+
   eUsuarioExclusivoCco() {
     return this.perfilEhCco(this.getPerfil());
   },
@@ -157,6 +161,7 @@ const Auth = {
     if (this.eUsuarioExclusivoCco() &&
         destino !== 'inicio.html' &&
         destino !== 'escala-cco.html' &&
+        destino !== 'horas-voadas-inva.html' &&
         destino !== 'bases.html' &&
         destino !== 'acesso-negado.html') {
       window.location.replace('inicio.html');
@@ -187,6 +192,17 @@ const Auth = {
     }
     if (!this.podeAcessarEscalaCco()) {
       return this.negarAcesso('Escala CCO', 'escala-cco.html');
+    }
+    return true;
+  },
+
+  protegerHorasVoadasInva() {
+    if (!this.estaLogado()) {
+      window.location.replace('index.html');
+      return false;
+    }
+    if (!this.podeAcessarHorasVoadasInva()) {
+      return this.negarAcesso('Horas Voadas INVA Mês', 'horas-voadas-inva.html');
     }
     return true;
   },
@@ -314,14 +330,18 @@ const Auth = {
     };
 
     const acessoEscalaCco = this.podeAcessarEscalaCco();
+    const acessoHorasVoadasInva = this.podeAcessarHorasVoadasInva();
     const secaoEscala = secao(
       'escala',
       'Escala',
       'escala',
       item('escala-cco.html', 'Escala CCO', 'escala', {
         permitido: acessoEscalaCco
+      }) +
+      item('horas-voadas-inva.html', 'Horas Voadas INVA Mês', 'horas', {
+        permitido: acessoHorasVoadasInva
       }),
-      ['escala-cco.html']
+      ['escala-cco.html', 'horas-voadas-inva.html']
     );
 
     const acessoExclusivoGastos = this.eUsuarioExclusivoControleGastos();
@@ -499,6 +519,7 @@ const Auth = {
       'controle-gastos.html': 'gastos',
       'fechamento-horas.html': 'horas',
       'escala-cco.html': 'escala',
+      'horas-voadas-inva.html': 'horas',
       'safe-minions.html': 'minions',
       'bases.html': 'bases'
     };

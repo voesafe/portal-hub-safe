@@ -76,6 +76,14 @@ const Inicio = {
         permitido: Auth.podeAcessarEscalaCco()
       },
       {
+        titulo: 'Horas Voadas INVA Mês',
+        descricao: 'Acompanhamento de instrutores e horas sincronizadas com o CAVOK.',
+        href: 'horas-voadas-inva.html',
+        icone: 'horas',
+        tom: 'blue',
+        permitido: Auth.podeAcessarHorasVoadasInva()
+      },
+      {
         titulo: 'Faturamento',
         descricao: 'Consolidação mensal dos canais e receitas da SAFE.',
         href: 'faturamento.html',
