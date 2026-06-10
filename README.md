@@ -259,8 +259,10 @@ O tipo de acesso `Controle de Gastos — somente visualização` é exclusivo:
 exibe apenas a página inicial e a Visão Geral do Controle de Gastos. O usuário
 não pode acessar outros módulos nem alterar gastos, receitas ou categorias.
 
-Os perfis exclusivos `cco_user`, `cco_financeiro` e `cco_admin` acessam somente
-a Escala CCO e mantêm as permissões definidas no sistema de origem.
+Os perfis exclusivos `cco_user`, `cco_financeiro` e `cco_admin` acessam a
+Escala CCO, Horas Voadas INVA, SAFE MINIONS e Bases. As configurações
+individuais de privacidade e visibilidade da escala continuam sendo definidas
+no sistema de origem.
 
 ---
 

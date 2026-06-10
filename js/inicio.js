@@ -49,6 +49,7 @@ const Inicio = {
       !Auth.eUsuarioExclusivoCco() && !Auth.eUsuarioExclusivoControleGastos();
     const acessoAdmin = Auth.eAdmin();
     const acessoMaster = Auth.perfilEhMaster(Auth.getPerfil());
+    const acessoSafeMinions = Auth.podeAcessarSafeMinions();
 
     return [
       {
@@ -121,7 +122,7 @@ const Inicio = {
         href: 'safe-minions.html',
         icone: 'minions',
         tom: 'navy',
-        permitido: acessoMaster
+        permitido: acessoSafeMinions
       },
       {
         titulo: 'Usuários',

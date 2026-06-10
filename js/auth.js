@@ -46,6 +46,14 @@ const Auth = {
     return this.perfilPodeAcessarEscalaCco(this.getPerfil());
   },
 
+  perfilPodeAcessarSafeMinions(perfil) {
+    return this.perfilEhMaster(perfil) || this.perfilEhCco(perfil);
+  },
+
+  podeAcessarSafeMinions() {
+    return this.perfilPodeAcessarSafeMinions(this.getPerfil());
+  },
+
   eUsuarioExclusivoCco() {
     return this.perfilEhCco(this.getPerfil());
   },
@@ -162,6 +170,7 @@ const Auth = {
         destino !== 'inicio.html' &&
         destino !== 'escala-cco.html' &&
         destino !== 'horas-voadas-inva.html' &&
+        destino !== 'safe-minions.html' &&
         destino !== 'bases.html' &&
         destino !== 'acesso-negado.html') {
       window.location.replace('inicio.html');
@@ -210,6 +219,14 @@ const Auth = {
   protegerMaster() {
     if (!this.proteger()) return false;
     if (!this.perfilEhMaster(this.getPerfil())) {
+      return this.negarAcesso('SAFE MINIONS', 'safe-minions.html');
+    }
+    return true;
+  },
+
+  protegerSafeMinions() {
+    if (!this.proteger()) return false;
+    if (!this.podeAcessarSafeMinions()) {
       return this.negarAcesso('SAFE MINIONS', 'safe-minions.html');
     }
     return true;
@@ -386,6 +403,7 @@ const Auth = {
     ];
 
     const acessoMaster = this.perfilEhMaster(this.getPerfil());
+    const acessoSafeMinions = this.podeAcessarSafeMinions();
     const acessoAdmin = this.eAdmin();
     const acessoFinanceiro = this.podeAcessarFinanceiro();
     const acessoFechamento = this.podeAcessarFechamentoHoras();
@@ -395,7 +413,7 @@ const Auth = {
       'Administração',
       'administracao',
       item('safe-minions.html', 'SAFE MINIONS', 'minions', {
-        permitido: acessoMaster
+        permitido: acessoSafeMinions
       }) +
         item(
           'https://docs.google.com/spreadsheets/d/1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw/edit?gid=1905416248#gid=1905416248',
