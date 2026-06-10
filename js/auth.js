@@ -359,11 +359,9 @@ const Auth = {
       item('escala-cco.html', 'Escala CCO', 'escala', {
         permitido: acessoEscalaCco
       }) +
-      (this.eUsuarioExclusivoCco()
-        ? ''
-        : item('horas-voadas-inva.html', 'Horas Voadas INVA Mês', 'horas', {
-            permitido: acessoHorasVoadasInva
-          })),
+      item('horas-voadas-inva.html', 'Horas Voadas INVA Mês', 'horas', {
+        permitido: acessoHorasVoadasInva
+      }),
       ['escala-cco.html', 'horas-voadas-inva.html']
     );
 
