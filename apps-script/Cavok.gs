@@ -104,6 +104,7 @@ function instalarAtualizacaoDiariaFechamentoCavok() {
   var trigger = ScriptApp.newTrigger(handler)
     .timeBased()
     .atHour(5)
+    .nearMinute(0)
     .everyDays(1)
     .inTimezone('America/Sao_Paulo')
     .create();
