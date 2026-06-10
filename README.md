@@ -126,11 +126,11 @@ O fechamento usa uma planilha operacional separada da base comercial.
 
 #### Integração direta com a API CAVOK
 
-1. Adicione `apps-script/Cavok.gs` ao projeto do Apps Script.
-2. Nas propriedades do script, configure `CAVOK_API_USUARIO` e
-   `CAVOK_API_SENHA`.
-3. Publique uma nova versão do App da Web.
-4. Em `js/config.js`, altere `CAVOK_FECHAMENTO_API_ENABLED` para `true`.
+1. Adicione `apps-script/Cavok.gs` ao projeto do Apps Script do Hub.
+2. Confirme que `CAVOK_HORAS_SERVICE_URL` aponta para a implantação do serviço
+   de Horas Voadas INVA mantido pelo TI.
+3. Publique uma nova versão do App da Web do Hub.
+4. Em `js/config.js`, mantenha `CAVOK_FECHAMENTO_API_ENABLED` como `true`.
 
 A importação consulta todos os dias da competência, consolida as horas por
 aeronave e aplica as mesmas exclusões de cotistas do arquivo XLS. Os valores
