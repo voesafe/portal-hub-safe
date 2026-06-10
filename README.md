@@ -136,6 +136,20 @@ A importação consulta todos os dias da competência, consolida as horas por
 aeronave e aplica as mesmas exclusões de cotistas do arquivo XLS. Os valores
 entram somente no rascunho e ainda precisam ser revisados e salvos pelo usuário.
 
+### Atualizações automáticas CAVOK
+
+Os dois projetos Apps Script possuem gatilhos diários para execução por volta
+das 05:00 no fuso `America/Sao_Paulo`:
+
+- `atualizarHorasVoadasInvaDiario`: importa os voos do dia anterior para a
+  planilha de instrutores;
+- `atualizarFechamentoCavokDiario`: recalcula a competência do dia anterior,
+  preserva as métricas manuais e não altera meses já fechados.
+
+Execute uma vez `instalarAtualizacaoDiariaInva` no projeto Horas INVA e
+`instalarAtualizacaoDiariaFechamentoCavok` no projeto principal do Hub. As
+funções removem gatilhos anteriores do mesmo tipo antes de criar o novo.
+
 As abas ocultas `CONTROLE_FECHAMENTO` e `HISTORICO_FECHAMENTO` são criadas
 automaticamente. As abas mensais são criadas no primeiro salvamento do período.
 
