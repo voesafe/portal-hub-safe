@@ -446,14 +446,14 @@ function processarArquivo(file) {
   reader.onload = function(e) {
     try {
       let rows = [];
-      const nome = file.name.toLowerCase();
+      const conteudo = e.target.result;
 
-      if (nome.endsWith('.xlt') && !nome.endsWith('.xltx')) {
-        // HTML disfarçado (formato SACI antigo)
-        rows = parseXLTHtml(e.target.result);
+      if (arquivoEhHtmlSaci(conteudo)) {
+        // O SACI exporta alguns .xls/.xlt como HTML, apesar da extensão.
+        rows = parseXLTHtml(decodificarHtmlSaci(conteudo));
       } else {
         // Excel real (.xltx / .xlsx)
-        const wb = XLSX.read(e.target.result, { type: 'array', cellDates: false });
+        const wb = XLSX.read(conteudo, { type: 'array', cellDates: false });
         const ws = wb.Sheets[wb.SheetNames[0]];
         const data = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true });
         rows = data.slice(1)
@@ -475,7 +475,7 @@ function processarArquivo(file) {
             inst: parseTime(r[13]),
             capota: parseTime(r[14]),
             simulador: parseTime(r[15]),
-            milhas: parseFloat(String(r[16] || '0').replace(',', '.')) || 0,
+            milhas: parseNumeroDecimal(r[16]),
             status: String(r[19] || '').trim().toUpperCase()
           }));
       }
@@ -494,14 +494,20 @@ function processarArquivo(file) {
     }
   };
 
-  if (file.name.toLowerCase().endsWith('.xlt') && !file.name.toLowerCase().endsWith('.xltx')) {
-    reader.readAsText(file, 'ISO-8859-1');
-  } else {
-    reader.readAsArrayBuffer(file);
-  }
+  reader.readAsArrayBuffer(file);
 }
 
 // ─── PARSER XLT (HTML) ────────────────────────────────────────
+function arquivoEhHtmlSaci(buffer) {
+  const inicio = new Uint8Array(buffer, 0, Math.min(buffer.byteLength, 4096));
+  const amostra = new TextDecoder('windows-1252').decode(inicio);
+  return /<table[\s>]/i.test(amostra) && /<tr[\s>]/i.test(amostra);
+}
+
+function decodificarHtmlSaci(buffer) {
+  return new TextDecoder('windows-1252').decode(new Uint8Array(buffer));
+}
+
 function parseXLTHtml(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
@@ -521,7 +527,7 @@ function parseXLTHtml(html) {
       diurno: parseTime(get(10)), noturno: parseTime(get(11)),
       naveg: parseTime(get(12)), inst: parseTime(get(13)),
       capota: parseTime(get(14)), simulador: parseTime(get(15)),
-      milhas: parseFloat(get(16).replace(',', '.')) || 0,
+      milhas: parseNumeroDecimal(get(16)),
       status: get(19).toUpperCase()
     });
   });
@@ -567,6 +573,28 @@ function parseTime(val) {
   const n = parseFloat(s);
   if (!isNaN(n) && n > 0 && n < 5) return Math.round(n * 24 * 60);
   return 0;
+}
+
+function parseNumeroDecimal(val) {
+  if (typeof val === 'number') return Number.isFinite(val) ? val : 0;
+  let s = String(val || '').trim().replace(/\s/g, '');
+  if (!s) return 0;
+  if (s.includes(',') && s.includes('.')) {
+    s = s.lastIndexOf(',') > s.lastIndexOf('.')
+      ? s.replace(/\./g, '').replace(',', '.')
+      : s.replace(/,/g, '');
+  } else if (s.includes(',')) {
+    s = s.replace(',', '.');
+  }
+  const numero = Number(s);
+  return Number.isFinite(numero) ? numero : 0;
+}
+
+function normalizarTextoComparacao(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase();
 }
 
 function fmt(min) {
@@ -624,18 +652,19 @@ function analisarPC(rows) {
   const pic  = rows.filter(r => r.funcao === 'PIC');
   const pi   = rows.filter(r => r.funcao === 'PI');
 
-  const picTotal   = sum(pic, r => r.diurno + r.noturno);
-  const picNaveg   = sum(pic, r => r.naveg);
+  const picDiurno  = sum(pic, r => r.diurno);
   const picNoturno = sum(pic, r => r.noturno);
+  const picTotal   = picDiurno + picNoturno;
+  const picNaveg   = sum(pic, r => r.naveg);
   const totalGeral = sum(rows, r => r.diurno + r.noturno);
 
-  // IFR: PI com inst em aeronave + simulador (máx 20h = 1200min)
-  const ifrAeronave = sum(pi.filter(r => r.simulador === 0), r => r.inst);
+  // IFR em aeronave inclui instrumento real e capota; simulador tem crédito separado.
+  const ifrAeronave = sum(pi.filter(r => r.simulador === 0), r => r.inst + r.capota);
   const fstd        = sum(rows, r => r.simulador);
   const fstdCred    = Math.min(fstd, 1200); // até 20h
   const totalIFR    = ifrAeronave + fstdCred;
 
-  // Nav 300nm: trechos PIC no mesmo dia com obs semelhante, somam >= 300nm, 2 aeródromos além da partida
+  // Nav 300nm: considera somente os trechos identificados como a missão de 300nm.
   const nav300 = verificarNav300(pic);
 
   const minimos = [
@@ -648,7 +677,7 @@ function analisarPC(rows) {
     { nome: 'Navegação 300nm', atual: nav300.milhas, min: 300, unit: 'nm', nav: nav300 },
   ];
 
-  return { tipo: 'PC/IFR', label: 'Piloto Comercial + Voo por Instrumento', minimos, totais: { picTotal, picNaveg, picNoturno, totalIFR, ifrAeronave, fstdCred, totalGeral } };
+  return { tipo: 'PC/IFR', label: 'Piloto Comercial + Voo por Instrumento', minimos, totais: { picTotal, picDiurno, picNaveg, picNoturno, totalIFR, ifrAeronave, fstdCred, totalGeral } };
 }
 
 // ─── VERIFICAR NAVEGAÇÃO ──────────────────────────────────────
@@ -721,9 +750,18 @@ function verificarNav150(rows) {
 }
 
 function verificarNav300(rows) {
-  // Agrupa trechos do mesmo dia com observação semelhante (mesma missão em múltiplos trechos)
+  const trechosMissao = rows.filter(r => {
+    const obs = normalizarTextoComparacao(r.observacao);
+    return /NAVEGA.*300\s*NM/.test(obs);
+  });
+
+  if (!trechosMissao.length) {
+    return { ok: false, milhas: 0, aerodromos: 0, detalhe: 'Nenhuma missão de navegação 300nm identificada' };
+  }
+
+  // Uma missão pode possuir várias etapas, registradas separadamente no mesmo dia.
   const porDia = {};
-  rows.forEach(r => {
+  trechosMissao.forEach(r => {
     const dKey = r.data;
     if (!porDia[dKey]) porDia[dKey] = [];
     porDia[dKey].push(r);
@@ -733,15 +771,15 @@ function verificarNav300(rows) {
 
   for (const [dia, voos] of Object.entries(porDia)) {
     const totalNm = voos.reduce((a, v) => a + v.milhas, 0);
-    // Coletar todos os aeródromos visitados
-    const todos_icaos = [];
+    const todosIcaos = [];
     voos.forEach(v => {
-      todos_icaos.push(v.origem);
-      todos_icaos.push(v.destino);
-      extrairICAOs(v.observacao).forEach(i => todos_icaos.push(i));
+      todosIcaos.push(v.origem);
+      todosIcaos.push(v.destino);
+      extrairICAOs(v.observacao).forEach(i => todosIcaos.push(i));
     });
-    const partida = voos[0].origem;
-    const aeroAlem = [...new Set(todos_icaos.filter(i => i && i !== partida && i.length === 4))];
+    const primeiraEtapa = voos.find(v => /ETAPA\s*1/.test(normalizarTextoComparacao(v.observacao)));
+    const partida = primeiraEtapa?.origem || voos[0].origem;
+    const aeroAlem = [...new Set(todosIcaos.filter(i => i && i !== partida && i.length === 4))];
     const esteOk = totalNm >= 300 && aeroAlem.length >= 2;
     const melhorOkAtual = melhorInfo && melhorInfo.totalNm >= 300 && melhorInfo.aeroAlem.length >= 2;
     if (!melhorInfo ||
@@ -766,7 +804,7 @@ function verificarNav300(rows) {
 
 function extrairICAOs(obs) {
   if (!obs) return [];
-  return [...new Set((obs.match(/\b(S[BD][A-Z]{2}|SD[A-Z]{2})\b/g) || []))];
+  return [...new Set((normalizarTextoComparacao(obs).match(/\bS[A-Z]{3}\b/g) || []))];
 }
 
 // ─── RENDER ───────────────────────────────────────────────────
