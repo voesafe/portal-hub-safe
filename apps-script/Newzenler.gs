@@ -121,24 +121,46 @@ function newzenlerBuscarAlunos(query) {
   });
 }
 
-// ── Progresso de um aluno em todos os cursos (fetchAll paralelo) ──
+// ── Progresso de um aluno em todos os cursos ──────────────────
 function newzenlerProgressoAluno(email) {
-  var cursos  = newzenlerListarCursos();
-  var headers = newzenlerHeaders_();
-
+  var headers   = newzenlerHeaders_();
   var emailNorm = String(email).trim().toLowerCase();
 
-  // Monta uma request por curso em paralelo
-  // limit=50 para que, mesmo que email_is[] não filtre, o aluno esteja nos resultados
+  // === Tentativa 1: single-call com email_is[] sem course_id ===
+  // af_v=1 ativa filtros avançados de usuário; se suportado, retorna
+  // apenas as matrículas deste aluno em todos os cursos de uma vez.
+  try {
+    var qs1  = 'email_is[]=' + encodeURIComponent(email) + '&af_v=1&limit=100&page=1';
+    var res1 = UrlFetchApp.fetch(
+      NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs1,
+      { method: 'get', headers: headers, muteHttpExceptions: true }
+    );
+    if (res1.getResponseCode() === 200) {
+      var j1   = JSON.parse(res1.getContentText());
+      var raw1 = (j1.data && j1.data.items) ? j1.data.items : {};
+      var hits1 = Object.keys(raw1).filter(function(k) {
+        return String(raw1[k].email || '').trim().toLowerCase() === emailNorm;
+      });
+      if (hits1.length > 0) {
+        return _ordenarProgressoAluno_(hits1.map(function(k) {
+          var p = raw1[k];
+          return _montarItemProgresso_(p, p.course_id || '', p.course_name || p.course_title || '');
+        }));
+      }
+    }
+  } catch(e) {}
+
+  // === Tentativa 2: por curso com email_is[]+af_v=1 (deve filtrar no servidor) ===
+  // Com af_v=1, o filtro email_is[] deve retornar só o aluno em questão,
+  // tornando desnecessária a paginação (0 ou 1 resultado por curso).
+  var cursos   = newzenlerListarCursos();
   var requests = cursos.map(function(curso) {
     var qs = 'course_id[]=' + encodeURIComponent(curso.id) +
              '&email_is[]=' + encodeURIComponent(email) +
-             '&limit=50&page=1';
+             '&af_v=1&limit=10&page=1';
     return {
-      url:              NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs,
-      method:           'get',
-      headers:          headers,
-      muteHttpExceptions: true
+      url: NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs,
+      method: 'get', headers: headers, muteHttpExceptions: true
     };
   });
 
@@ -150,41 +172,46 @@ function newzenlerProgressoAluno(email) {
     try {
       var json  = JSON.parse(res.getContentText());
       if (!json.data || !json.data.items) return;
-      var keys  = Object.keys(json.data.items);
+      var items = json.data.items;
+      var keys  = Object.keys(items);
       if (keys.length === 0) return;
 
-      // Busca o aluno pelo email exato entre os resultados retornados
+      // Com af_v=1 o filtro deve ter funcionado; verifica o email só por segurança
       var prog = null;
       for (var k = 0; k < keys.length; k++) {
-        var item = json.data.items[keys[k]];
+        var item = items[keys[k]];
         if (String(item.email || '').trim().toLowerCase() === emailNorm) {
-          prog = item;
-          break;
+          prog = item; break;
         }
       }
-      if (!prog) return; // aluno não está matriculado neste curso
+      if (!prog) return;
 
       var curso = cursos[i];
-      resultado.push({
-        courseId:       curso.id,
-        courseName:     curso.name,
-        thumbnail:      curso.thumbnail || '',
-        status:         prog.status               || 'Not Started',
-        completion:     Number(prog.completion_percentage || 0),
-        enrollmentDate: prog.enrollment_date      || '-',
-        startDate:      prog.start_date           || '-',
-        lastAttended:   prog.last_attended        || '-',
-        completedDate:  prog.completed_date       || '-'
-      });
+      resultado.push(_montarItemProgresso_(prog, curso.id, curso.name, curso.thumbnail));
     } catch(e) {}
   });
 
-  // Ordena: Em andamento → Não iniciado → Concluído
+  return _ordenarProgressoAluno_(resultado);
+}
+
+function _montarItemProgresso_(prog, courseId, courseName, thumbnail) {
+  return {
+    courseId:       courseId,
+    courseName:     courseName,
+    thumbnail:      thumbnail || '',
+    status:         prog.status              || 'Not Started',
+    completion:     Number(prog.completion_percentage || 0),
+    enrollmentDate: prog.enrollment_date     || '-',
+    startDate:      prog.start_date          || '-',
+    lastAttended:   prog.last_attended       || '-',
+    completedDate:  prog.completed_date      || '-'
+  };
+}
+
+function _ordenarProgressoAluno_(lista) {
   var ordem = { 'In Progress': 0, 'Not Started': 1, 'Completed': 2 };
-  resultado.sort(function(a, b) {
+  return lista.sort(function(a, b) {
     return (ordem[a.status] !== undefined ? ordem[a.status] : 1) -
            (ordem[b.status] !== undefined ? ordem[b.status] : 1);
   });
-
-  return resultado;
 }
