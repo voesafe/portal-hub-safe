@@ -126,11 +126,14 @@ function newzenlerProgressoAluno(email) {
   var cursos  = newzenlerListarCursos();
   var headers = newzenlerHeaders_();
 
+  var emailNorm = String(email).trim().toLowerCase();
+
   // Monta uma request por curso em paralelo
+  // limit=50 para que, mesmo que email_is[] não filtre, o aluno esteja nos resultados
   var requests = cursos.map(function(curso) {
     var qs = 'course_id[]=' + encodeURIComponent(curso.id) +
              '&email_is[]=' + encodeURIComponent(email) +
-             '&limit=1&page=1';
+             '&limit=50&page=1';
     return {
       url:              NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs,
       method:           'get',
@@ -148,8 +151,19 @@ function newzenlerProgressoAluno(email) {
       var json  = JSON.parse(res.getContentText());
       if (!json.data || !json.data.items) return;
       var keys  = Object.keys(json.data.items);
-      if (keys.length === 0) return; // aluno não está neste curso
-      var prog  = json.data.items[keys[0]];
+      if (keys.length === 0) return;
+
+      // Busca o aluno pelo email exato entre os resultados retornados
+      var prog = null;
+      for (var k = 0; k < keys.length; k++) {
+        var item = json.data.items[keys[k]];
+        if (String(item.email || '').trim().toLowerCase() === emailNorm) {
+          prog = item;
+          break;
+        }
+      }
+      if (!prog) return; // aluno não está matriculado neste curso
+
       var curso = cursos[i];
       resultado.push({
         courseId:       curso.id,
