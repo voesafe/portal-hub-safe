@@ -63,6 +63,10 @@
               PC / IFR
               <span class="tipo-label">Piloto Comercial + Instrumentos</span>
             </button>
+            <button class="tipo-btn" type="button" data-tipo="inva" onclick="selecionarTipo('inva')">
+              INVA
+              <span class="tipo-label">Instrutor de Voo de Avião</span>
+            </button>
           </div>
 
           <label class="upload-section" id="drop-area">
@@ -177,7 +181,9 @@ function processarArquivo(file) {
       document.getElementById('loading').classList.remove('ativo');
 
       const ativos = rows.filter(r => r.status !== 'EXCLUSÃO SOLICITADA' && r.status !== 'EXCLUSAO SOLICITADA');
-      const resultado = tipoAtual === 'ppa' ? analisarPPA(ativos) : analisarPC(ativos);
+      const resultado = tipoAtual === 'ppa'  ? analisarPPA(ativos)
+                      : tipoAtual === 'inva' ? analisarINVA(ativos)
+                      : analisarPC(ativos);
       renderizarResultado(resultado, ativos, rows);
 
     } catch(err) {
@@ -374,6 +380,20 @@ function analisarPC(rows) {
   return { tipo: 'PC/IFR', label: 'Piloto Comercial + Voo por Instrumento', minimos, totais: { picTotal, picDiurno, picNaveg, picNoturno, totalIFR, ifrAeronave, fstdCred, totalGeral } };
 }
 
+// ─── ANÁLISE INVA ─────────────────────────────────────────────
+function analisarINVA(rows) {
+  const dc = rows.filter(r => r.funcao === 'PI'); // duplo comando = instrução recebida
+
+  const totalDC    = sum(dc,   r => r.diurno + r.noturno);
+  const totalGeral = sum(rows, r => r.diurno + r.noturno);
+
+  const minimos = [
+    { nome: 'Duplo comando (total)', atual: totalDC, min: 1800, unit: 'h', full: true }, // 30h
+  ];
+
+  return { tipo: 'INVA', label: 'Instrutor de Voo de Avião', minimos, totais: { totalGeral, totalDC } };
+}
+
 // ─── VERIFICAR NAVEGAÇÃO ──────────────────────────────────────
 function verificarNav(rows, minNm) {
   // Voos com milhas suficientes
@@ -520,6 +540,13 @@ function renderizarResultado(analise, ativos, todos) {
       <div class="resumo-item"><span class="val">${fmt(t.totalSolo)}</span><span class="label">Solo</span></div>
       <div class="resumo-item"><span class="val">${ativos.length}</span><span class="label">Registros</span></div>
     `;
+  } else if (analise.tipo === 'INVA') {
+    resumoItems = `
+      <div class="resumo-item"><span class="val">${fmt(t.totalGeral)}</span><span class="label">Total Horas</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.totalDC)}</span><span class="label">Duplo Comando</span></div>
+      <div class="resumo-item"><span class="val">${fmt(1800)}</span><span class="label">Mínimo Exigido</span></div>
+      <div class="resumo-item"><span class="val">${ativos.length}</span><span class="label">Registros</span></div>
+    `;
   } else {
     resumoItems = `
       <div class="resumo-item"><span class="val">${fmt(t.totalGeral)}</span><span class="label">Total Horas</span></div>
@@ -584,7 +611,7 @@ function renderizarResultado(analise, ativos, todos) {
     const pct = Math.min(100, (m.atual / m.min) * 100);
     const deficit = m.min - m.atual;
     cardsHtml += `
-      <div class="minimo-card ${cls}">
+      <div class="minimo-card ${cls}${m.full ? ' full' : ''}">
         <div class="mc-header">
           <span class="mc-nome">${escapeHtml(m.nome)}</span>
           <span class="mc-badge">${badge}</span>
