@@ -172,21 +172,13 @@ const ProgressoAlunos = {
     }
 
     tbody.innerHTML = filtrados.map(a => {
-      const status   = this._normStatus(a.status);
-      const pct      = status === 'done' ? 100 : Number(a.completion_percentage || 0);
-      const barClass = status === 'done' ? 'progresso-bar-fill--done' : (pct === 0 ? 'progresso-bar-fill--zero' : '');
       return `<tr>
         <td>
           <div class="progresso-nome">${this._esc(a.name || '—')}</div>
           <div class="progresso-email">${this._esc(a.email || '')}</div>
         </td>
         <td>${this._badgeStatus(a.status)}</td>
-        <td>
-          <div class="progresso-bar-wrap">
-            <div class="progresso-bar-track"><div class="progresso-bar-fill ${barClass}" style="width:${pct}%"></div></div>
-            <span class="progresso-bar-pct">${pct}%</span>
-          </div>
-        </td>
+        <td>${this._celulaProgresso(a.status)}</td>
         <td><span class="progresso-date">${this._fmtData(a.enrollment_date)}</span></td>
         <td><span class="progresso-date">${this._fmtData(a.last_attended)}</span></td>
         <td><span class="progresso-date">${this._fmtData(a.completed_date)}</span></td>
@@ -368,18 +360,10 @@ const ProgressoAlunos = {
     }
 
     tbody.innerHTML = cursos.map(c => {
-      const status   = this._normStatus(c.status);
-      const pct      = status === 'done' ? 100 : Number(c.completion || 0);
-      const barClass = status === 'done' ? 'progresso-bar-fill--done' : (pct === 0 ? 'progresso-bar-fill--zero' : '');
       return `<tr>
         <td><div class="progresso-nome">${this._esc(c.courseName)}</div></td>
         <td>${this._badgeStatus(c.status)}</td>
-        <td>
-          <div class="progresso-bar-wrap">
-            <div class="progresso-bar-track"><div class="progresso-bar-fill ${barClass}" style="width:${pct}%"></div></div>
-            <span class="progresso-bar-pct">${pct}%</span>
-          </div>
-        </td>
+        <td>${this._celulaProgresso(c.status)}</td>
         <td><span class="progresso-date">${this._fmtData(c.enrollmentDate)}</span></td>
         <td><span class="progresso-date">${this._fmtData(c.lastAttended)}</span></td>
         <td><span class="progresso-date">${this._fmtData(c.completedDate)}</span></td>
@@ -393,6 +377,30 @@ const ProgressoAlunos = {
     if (!s || s === 'Not Started' || s === '-') return 'ns';
     if (s === 'Completed') return 'done';
     return 'prog';
+  },
+
+  // Coluna de progresso baseada no status confiável da API.
+  // A % exata de cursos "Em andamento" não é exposta pela API do
+  // Newzenler, então mostramos "—" em vez de um número incorreto.
+  _celulaProgresso(statusRaw) {
+    const status = this._normStatus(statusRaw);
+    if (status === 'done') {
+      return `<div class="progresso-bar-wrap">
+        <div class="progresso-bar-track"><div class="progresso-bar-fill progresso-bar-fill--done" style="width:100%"></div></div>
+        <span class="progresso-bar-pct">100%</span>
+      </div>`;
+    }
+    if (status === 'ns') {
+      return `<div class="progresso-bar-wrap">
+        <div class="progresso-bar-track"><div class="progresso-bar-fill progresso-bar-fill--zero" style="width:0%"></div></div>
+        <span class="progresso-bar-pct">0%</span>
+      </div>`;
+    }
+    // Em andamento — % real indisponível na API
+    return `<div class="progresso-bar-wrap" title="A % exata de cursos em andamento não é disponibilizada pela API do Newzenler">
+      <div class="progresso-bar-track"><div class="progresso-bar-fill progresso-bar-fill--indet"></div></div>
+      <span class="progresso-bar-pct">—</span>
+    </div>`;
   },
 
   _badgeStatus(s) {

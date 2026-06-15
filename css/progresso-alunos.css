@@ -297,6 +297,24 @@
 .progresso-bar-fill--done  { background: var(--success); }
 .progresso-bar-fill--zero  { background: var(--gray-200); }
 
+/* Em andamento — % real indisponível: barra listrada animada */
+.progresso-bar-fill--indet {
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--blue) 0, var(--blue) 8px,
+    #bcd6f5 8px, #bcd6f5 16px
+  );
+  background-size: 22px 100%;
+  animation: progresso-indet 1s linear infinite;
+  opacity: .65;
+}
+
+@keyframes progresso-indet {
+  from { background-position: 0 0; }
+  to   { background-position: 22px 0; }
+}
+
 .progresso-bar-pct {
   font-size: .78rem;
   font-weight: 700;
