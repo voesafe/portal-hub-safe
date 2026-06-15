@@ -63,6 +63,27 @@ function doGet(e) {
       case 'listar-precos-safe':
         return jsonSuccess(listarPrecosSafe());
 
+      // ── Newzenler / Progresso de Alunos ───────────────────
+      case 'newzenler-cursos': {
+        var uNzCursos = validarTokenSessao(token);
+        if (!uNzCursos) return jsonError('Sessão expirada. Entre novamente.');
+        if (!perfilEhAdminCompleto(uNzCursos.perfil)) return jsonError('Acesso negado.');
+        return jsonSuccess(newzenlerListarCursos());
+      }
+
+      case 'newzenler-progresso': {
+        var uNzProg = validarTokenSessao(token);
+        if (!uNzProg) return jsonError('Sessão expirada. Entre novamente.');
+        if (!perfilEhAdminCompleto(uNzProg.perfil)) return jsonError('Acesso negado.');
+        return jsonSuccess(newzenlerProgressoDetalhado({
+          courseId:  p.courseId  || '',
+          nameLike:  p.nameLike  || '',
+          emailLike: p.emailLike || '',
+          page:      p.page  ? Number(p.page)  : 1,
+          limit:     p.limit ? Number(p.limit) : 50
+        }));
+      }
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }

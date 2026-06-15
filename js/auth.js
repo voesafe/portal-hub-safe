@@ -59,6 +59,10 @@ const Auth = {
     return this.perfilPodeAcessarSafeMinions(this.getPerfil());
   },
 
+  podeAcessarProgressoAlunos() {
+    return this.perfilEhAdminCompleto(this.getPerfil());
+  },
+
   eUsuarioExclusivoCco() {
     return this.perfilEhCco(this.getPerfil());
   },
@@ -236,6 +240,14 @@ const Auth = {
     return true;
   },
 
+  protegerProgressoAlunos() {
+    if (!this.proteger()) return false;
+    if (!this.podeAcessarProgressoAlunos()) {
+      return this.negarAcesso('Progresso de Alunos', 'progresso-alunos.html');
+    }
+    return true;
+  },
+
   protegerGestaoUsuarios() {
     if (!this.proteger()) return false;
     if (!this.perfilEhMaster(this.getPerfil())) {
@@ -293,6 +305,7 @@ const Auth = {
       horas:        `<svg ${base}><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path><path d="M5 3 2 6"></path><path d="m19 3 3 3"></path></svg>`,
       escala:       `<svg ${base}><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M3 10h18"></path><path d="m8 15 2 2 4-4"></path></svg>`,
       minions:      `<svg ${base}><path d="M8 3h8"></path><path d="M9 3v3"></path><path d="M15 3v3"></path><rect x="5" y="6" width="14" height="15" rx="4"></rect><circle cx="10" cy="12" r="2"></circle><circle cx="14" cy="12" r="2"></circle><path d="M8 12h4"></path><path d="M12 12h4"></path><path d="M9 17h6"></path></svg>`,
+      academico:    `<svg ${base}><path d="m12 3-9 4.5 9 4.5 9-4.5L12 3Z"></path><path d="M6 8v5c0 2.5 2.7 4 6 4s6-1.5 6-4V8"></path><path d="M21 12v5"></path></svg>`,
       comercial:     `<svg ${base}><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>`,
       administracao: `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 9h18"></path></svg>`,
       financeiro:    `<svg ${base}><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h3"></path></svg>`,
@@ -411,6 +424,17 @@ const Auth = {
     const acessoAdmin = this.eAdmin();
     const acessoFinanceiro = this.podeAcessarFinanceiro();
     const acessoFechamento = this.podeAcessarFechamentoHoras();
+    const acessoProgressoAlunos = this.podeAcessarProgressoAlunos();
+
+    if (!acessoExclusivoGastos) secoes.push(secao(
+      'academico',
+      'Acadêmico',
+      'academico',
+      item('progresso-alunos.html', 'Progresso de Alunos', 'academico', {
+        permitido: acessoProgressoAlunos
+      }),
+      ['progresso-alunos.html']
+    ));
 
     if (!acessoExclusivoGastos) secoes.push(secao(
       'administracao',
@@ -543,7 +567,8 @@ const Auth = {
       'escala-cco.html': 'escala',
       'horas-voadas-inva.html': 'horas',
       'safe-minions.html': 'minions',
-      'bases.html': 'bases'
+      'bases.html': 'bases',
+      'progresso-alunos.html': 'academico'
     };
     document.querySelectorAll('.nav-item').forEach(item => {
       const href = (item.getAttribute('href') || '').split('/').pop();
