@@ -15,10 +15,27 @@ const ProgressoAlunos = {
   async init() {
     if (!Auth.protegerProgressoAlunos()) return;
     Auth.preencherUI();
+    this._bindHamburger();
     this._bindTabs();
     this._bindCurso();
     this._bindAluno();
     await this._carregarCursos();
+  },
+
+  _bindHamburger() {
+    const sidebar   = document.getElementById('sidebar');
+    const overlay   = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger');
+    hamburger?.addEventListener('click', () => {
+      const aberto = sidebar?.classList.toggle('mobile-open');
+      overlay?.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', String(!!aberto));
+    });
+    overlay?.addEventListener('click', () => {
+      sidebar?.classList.remove('mobile-open');
+      overlay?.classList.remove('active');
+      hamburger?.setAttribute('aria-expanded', 'false');
+    });
   },
 
   // ── Abas ──────────────────────────────────────────────────
