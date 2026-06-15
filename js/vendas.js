@@ -573,15 +573,9 @@ const Vendas = {
   },
 
   initSidebar() {
-    const toggle  = document.getElementById('sidebar-toggle');
     const sidebar = document.getElementById('sidebar');
-    const main    = document.getElementById('main');
     const overlay = document.getElementById('sidebar-overlay');
     const hamb    = document.getElementById('hamburger');
-    toggle?.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed'); main.classList.toggle('sidebar-collapsed');
-      toggle.innerHTML = sidebar.classList.contains('collapsed') ? '›' : '‹';
-    });
     hamb?.addEventListener('click', () => { sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active'); });
     overlay?.addEventListener('click', () => { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); });
   }
