@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 <link rel="stylesheet" href="css/safe-theme.css">
 <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-<link rel="stylesheet" href="css/safe-minions.css?v=20260615-unify">
+<link rel="stylesheet" href="css/safe-minions.css?v=20260615-inva">
 <title>SAFE MINIONS — SAFE Hub</title>
 </head>
 <body>
@@ -381,17 +381,44 @@ function analisarPC(rows) {
 }
 
 // ─── ANÁLISE INVA ─────────────────────────────────────────────
+// Conta o duplo comando (instrução) somente APÓS o último voo de
+// cheque, identificado pela palavra "CHEQUE" na observação.
 function analisarINVA(rows) {
-  const dc = rows.filter(r => r.funcao === 'PI'); // duplo comando = instrução recebida
+  const parseDataBR = s => {
+    const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(String(s || '').trim());
+    return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null;
+  };
 
-  const totalDC    = sum(dc,   r => r.diurno + r.noturno);
+  // Último voo de cheque = linha mais recente com "CHEQUE" na observação
+  let cheque = null; // { data, dataObj, observacao }
+  rows.forEach(r => {
+    if (!/cheque/i.test(r.observacao || '')) return;
+    const dt = parseDataBR(r.data);
+    if (!dt) return;
+    if (!cheque || dt > cheque.dataObj) cheque = { data: r.data, dataObj: dt, observacao: r.observacao };
+  });
+
+  // Duplo comando (instrução) estritamente APÓS a data do cheque
+  const apos = rows.filter(r => {
+    if (r.funcao !== 'PI') return false;
+    const dt = parseDataBR(r.data);
+    return cheque && dt && dt > cheque.dataObj;
+  });
+
+  const totalDC    = sum(apos, r => r.diurno + r.noturno);
   const totalGeral = sum(rows, r => r.diurno + r.noturno);
 
   const minimos = [
-    { nome: 'Duplo comando (total)', atual: totalDC, min: 1800, unit: 'h', full: true }, // 30h
+    { nome: 'Duplo comando após o último cheque', atual: totalDC, min: 1800, unit: 'h', full: true }, // 30h
   ];
 
-  return { tipo: 'INVA', label: 'Instrutor de Voo de Avião', minimos, totais: { totalGeral, totalDC } };
+  return {
+    tipo: 'INVA',
+    label: 'Instrutor de Voo de Avião',
+    minimos,
+    cheque,
+    totais: { totalGeral, totalDC, voosApos: apos.length }
+  };
 }
 
 // ─── VERIFICAR NAVEGAÇÃO ──────────────────────────────────────
@@ -543,9 +570,9 @@ function renderizarResultado(analise, ativos, todos) {
   } else if (analise.tipo === 'INVA') {
     resumoItems = `
       <div class="resumo-item"><span class="val">${fmt(t.totalGeral)}</span><span class="label">Total Horas</span></div>
-      <div class="resumo-item"><span class="val">${fmt(t.totalDC)}</span><span class="label">Duplo Comando</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.totalDC)}</span><span class="label">DC após cheque</span></div>
       <div class="resumo-item"><span class="val">${fmt(1800)}</span><span class="label">Mínimo Exigido</span></div>
-      <div class="resumo-item"><span class="val">${ativos.length}</span><span class="label">Registros</span></div>
+      <div class="resumo-item"><span class="val">${t.voosApos != null ? t.voosApos : ativos.length}</span><span class="label">Voos após cheque</span></div>
     `;
   } else {
     resumoItems = `
@@ -645,6 +672,25 @@ function renderizarResultado(analise, ativos, todos) {
     </tr>`;
   }).join('');
 
+  // Nota de auditoria do corte (apenas INVA)
+  let chequeInfo = '';
+  if (analise.tipo === 'INVA') {
+    if (analise.cheque) {
+      chequeInfo = `
+        <div class="inva-cheque-info">
+          <div class="ici-titulo">✂️ Corte: último voo de cheque em <strong>${escapeHtml(analise.cheque.data)}</strong></div>
+          <div class="ici-obs">${escapeHtml(analise.cheque.observacao)}</div>
+          <div class="ici-nota">Contabilizando duplo comando (instrução) apenas <strong>após</strong> esta data.</div>
+        </div>`;
+    } else {
+      chequeInfo = `
+        <div class="inva-cheque-info inva-cheque-alerta">
+          <div class="ici-titulo">⚠️ Nenhum voo de cheque encontrado no extrato</div>
+          <div class="ici-nota">Não foi possível determinar o corte. Verifique se a observação do cheque contém a palavra "CHEQUE".</div>
+        </div>`;
+    }
+  }
+
   el.innerHTML = `
     <div class="resultado-header">
       <h2>Resultado da Análise</h2>
@@ -656,6 +702,7 @@ function renderizarResultado(analise, ativos, todos) {
         <span class="status-icon">${aprovado ? '✅' : '❌'}</span>
         ${aprovado ? 'Aluno cumpre todos os mínimos ANAC para ' + escapeHtml(analise.label) : 'Aluno NÃO cumpre todos os mínimos ANAC para ' + escapeHtml(analise.label)}
       </div>
+      ${chequeInfo}
       <div class="minimos-grid">${cardsHtml}</div>
       <div class="registros-section">
         <div class="registros-toggle" id="toggle-tabela" onclick="toggleTabela()">

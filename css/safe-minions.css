@@ -122,6 +122,23 @@
 .status-geral.reprovado { background: #fef2f2; color: #991b1b; }
 .status-geral .status-icon { font-size: 20px; }
 
+/* CORTE INVA — nota de auditoria do voo de cheque */
+.inva-cheque-info {
+  margin: 16px 32px 0;
+  padding: 14px 18px;
+  border-left: 4px solid var(--azul-claro);
+  background: var(--off-white);
+  border-radius: var(--radius-sm);
+}
+.inva-cheque-info .ici-titulo { font-size: 14px; font-weight: 700; color: var(--azul); }
+.inva-cheque-info .ici-obs    { font-size: 12px; color: var(--texto-leve); margin-top: 6px; line-height: 1.5; }
+.inva-cheque-info .ici-nota   { font-size: 12px; color: var(--texto-leve); margin-top: 6px; }
+.inva-cheque-info.inva-cheque-alerta {
+  border-left-color: var(--amarelo);
+  background: #fffbeb;
+}
+.inva-cheque-info.inva-cheque-alerta .ici-titulo { color: #92400e; }
+
 /* GRID DE MÍNIMOS */
 .minimos-grid {
   padding: 24px 32px;
