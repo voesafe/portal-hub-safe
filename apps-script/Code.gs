@@ -84,6 +84,22 @@ function doGet(e) {
         }));
       }
 
+      case 'newzenler-buscar-alunos': {
+        var uNzBusca = validarTokenSessao(token);
+        if (!uNzBusca) return jsonError('Sessão expirada. Entre novamente.');
+        if (!perfilEhAdminCompleto(uNzBusca.perfil)) return jsonError('Acesso negado.');
+        if (!p.query) return jsonError('Informe um nome ou e-mail para buscar.');
+        return jsonSuccess(newzenlerBuscarAlunos(p.query));
+      }
+
+      case 'newzenler-progresso-aluno': {
+        var uNzPa = validarTokenSessao(token);
+        if (!uNzPa) return jsonError('Sessão expirada. Entre novamente.');
+        if (!perfilEhAdminCompleto(uNzPa.perfil)) return jsonError('Acesso negado.');
+        if (!p.email) return jsonError('E-mail do aluno obrigatório.');
+        return jsonSuccess(newzenlerProgressoAluno(p.email));
+      }
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }

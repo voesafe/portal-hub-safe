@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-  <link rel="stylesheet" href="css/progresso-alunos.css">
+  <link rel="stylesheet" href="css/progresso-alunos.css?v=20260615-2">
 </head>
 <body>
 
@@ -52,113 +52,169 @@
 
     <div class="page progresso-page">
 
-      <!-- Filtros -->
-      <div class="card" style="padding:20px">
-        <div class="progresso-filters">
-          <div class="progresso-filter-group progresso-filter-group--curso">
-            <label for="pa-curso">Curso</label>
-            <select id="pa-curso">
-              <option value="">Selecione um curso...</option>
-            </select>
-          </div>
-          <div class="progresso-filter-group">
-            <label for="pa-nome">Buscar por nome</label>
-            <input type="text" id="pa-nome" placeholder="Nome do aluno">
-          </div>
-          <div class="progresso-filter-group">
-            <label for="pa-email">Buscar por e-mail</label>
-            <input type="text" id="pa-email" placeholder="email@exemplo.com">
-          </div>
-          <div class="progresso-filter-actions">
-            <button class="btn btn-primary" id="pa-btn-buscar">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-              Buscar
-            </button>
-            <button class="btn btn-ghost btn-sm" id="pa-btn-limpar" title="Limpar filtros">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </button>
-          </div>
-        </div>
+      <!-- Abas -->
+      <div class="progresso-tabs" role="tablist">
+        <button class="progresso-tab active" data-tab="curso" role="tab">Por Curso</button>
+        <button class="progresso-tab" data-tab="aluno" role="tab">Por Aluno</button>
       </div>
 
-      <!-- KPIs -->
-      <div class="progresso-kpis" id="pa-kpis">
-        <div class="progresso-kpi progresso-kpi--total">
-          <div class="progresso-kpi-label">Total carregado</div>
-          <div class="progresso-kpi-value" id="pa-kpi-total">—</div>
-        </div>
-        <div class="progresso-kpi progresso-kpi--ns">
-          <div class="progresso-kpi-label">Não iniciado</div>
-          <div class="progresso-kpi-value" id="pa-kpi-ns">—</div>
-        </div>
-        <div class="progresso-kpi progresso-kpi--prog">
-          <div class="progresso-kpi-label">Em andamento</div>
-          <div class="progresso-kpi-value" id="pa-kpi-prog">—</div>
-        </div>
-        <div class="progresso-kpi progresso-kpi--done">
-          <div class="progresso-kpi-label">Concluído</div>
-          <div class="progresso-kpi-value" id="pa-kpi-done">—</div>
-        </div>
-      </div>
+      <!-- ═══════════════════════════════════════════════════════
+           ABA: POR CURSO
+           ═══════════════════════════════════════════════════ -->
+      <div class="progresso-view active" id="pa-view-curso">
 
-      <!-- Tabela -->
-      <div class="progresso-table-card">
-        <div class="progresso-table-header">
-          <div>
-            <div class="progresso-table-title" id="pa-table-title">Alunos</div>
-            <div class="progresso-table-sub" id="pa-table-sub">Selecione um curso para carregar os alunos</div>
-          </div>
-          <div class="progresso-table-status-filter" id="pa-status-filter">
-            <button class="progresso-status-btn active" data-status="">Todos</button>
-            <button class="progresso-status-btn" data-status="Not Started">Não iniciado</button>
-            <button class="progresso-status-btn" data-status="In Progress">Em andamento</button>
-            <button class="progresso-status-btn" data-status="Completed">Concluído</button>
+        <div class="card" style="padding:20px">
+          <div class="progresso-filters">
+            <div class="progresso-filter-group progresso-filter-group--curso">
+              <label for="pa-curso">Curso</label>
+              <select id="pa-curso">
+                <option value="">Selecione um curso...</option>
+              </select>
+            </div>
+            <div class="progresso-filter-group">
+              <label for="pa-nome">Buscar por nome</label>
+              <input type="text" id="pa-nome" placeholder="Nome do aluno">
+            </div>
+            <div class="progresso-filter-group">
+              <label for="pa-email">Buscar por e-mail</label>
+              <input type="text" id="pa-email" placeholder="email@exemplo.com">
+            </div>
+            <div class="progresso-filter-actions">
+              <button class="btn btn-primary" id="pa-btn-buscar">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+                Buscar
+              </button>
+              <button class="btn btn-ghost btn-sm" id="pa-btn-limpar" title="Limpar filtros">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="progresso-table-wrap">
-          <table class="progresso-table">
-            <thead>
-              <tr>
-                <th>Aluno</th>
-                <th>Status</th>
-                <th>Progresso</th>
-                <th>Matrícula</th>
-                <th>Último acesso</th>
-                <th>Conclusão</th>
-              </tr>
-            </thead>
-            <tbody id="pa-tbody">
-              <tr>
-                <td colspan="6">
+        <div class="progresso-kpis" id="pa-kpis">
+          <div class="progresso-kpi progresso-kpi--total">
+            <div class="progresso-kpi-label">Total carregado</div>
+            <div class="progresso-kpi-value" id="pa-kpi-total">—</div>
+          </div>
+          <div class="progresso-kpi progresso-kpi--ns">
+            <div class="progresso-kpi-label">Não iniciado</div>
+            <div class="progresso-kpi-value" id="pa-kpi-ns">—</div>
+          </div>
+          <div class="progresso-kpi progresso-kpi--prog">
+            <div class="progresso-kpi-label">Em andamento</div>
+            <div class="progresso-kpi-value" id="pa-kpi-prog">—</div>
+          </div>
+          <div class="progresso-kpi progresso-kpi--done">
+            <div class="progresso-kpi-label">Concluído</div>
+            <div class="progresso-kpi-value" id="pa-kpi-done">—</div>
+          </div>
+        </div>
+
+        <div class="progresso-table-card">
+          <div class="progresso-table-header">
+            <div>
+              <div class="progresso-table-title" id="pa-table-title">Alunos</div>
+              <div class="progresso-table-sub" id="pa-table-sub">Selecione um curso para carregar os alunos</div>
+            </div>
+            <div class="progresso-table-status-filter" id="pa-status-filter">
+              <button class="progresso-status-btn active" data-status="">Todos</button>
+              <button class="progresso-status-btn" data-status="Not Started">Não iniciado</button>
+              <button class="progresso-status-btn" data-status="In Progress">Em andamento</button>
+              <button class="progresso-status-btn" data-status="Completed">Concluído</button>
+            </div>
+          </div>
+          <div class="progresso-table-wrap">
+            <table class="progresso-table">
+              <thead>
+                <tr>
+                  <th>Aluno</th>
+                  <th>Status</th>
+                  <th>Progresso</th>
+                  <th>Matrícula</th>
+                  <th>Último acesso</th>
+                  <th>Conclusão</th>
+                </tr>
+              </thead>
+              <tbody id="pa-tbody">
+                <tr><td colspan="6">
                   <div class="progresso-placeholder">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                      <path d="m12 3-9 4.5 9 4.5 9-4.5L12 3Z"/>
-                      <path d="M6 8v5c0 2.5 2.7 4 6 4s6-1.5 6-4V8"/>
-                      <path d="M21 12v5"/>
-                    </svg>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="m12 3-9 4.5 9 4.5 9-4.5L12 3Z"/><path d="M6 8v5c0 2.5 2.7 4 6 4s6-1.5 6-4V8"/><path d="M21 12v5"/></svg>
                     <p>Selecione um curso acima para ver o progresso dos alunos</p>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="progresso-paginacao" id="pa-paginacao" style="display:none">
-          <div class="progresso-paginacao-info" id="pa-pag-info"></div>
-          <div class="progresso-paginacao-btns">
-            <button class="btn btn-ghost btn-sm" id="pa-btn-prev" disabled>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
-              Anterior
-            </button>
-            <button class="btn btn-ghost btn-sm" id="pa-btn-next" disabled>
-              Próxima
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="progresso-paginacao" id="pa-paginacao" style="display:none">
+            <div class="progresso-paginacao-info" id="pa-pag-info"></div>
+            <div class="progresso-paginacao-btns">
+              <button class="btn btn-ghost btn-sm" id="pa-btn-prev" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                Anterior
+              </button>
+              <button class="btn btn-ghost btn-sm" id="pa-btn-next" disabled>
+                Próxima
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+
+      </div><!-- /view-curso -->
+
+      <!-- ═══════════════════════════════════════════════════════
+           ABA: POR ALUNO
+           ═══════════════════════════════════════════════════ -->
+      <div class="progresso-view" id="pa-view-aluno">
+
+        <!-- Busca -->
+        <div class="card" style="padding:20px">
+          <div class="progresso-filters">
+            <div class="progresso-filter-group" style="flex:2">
+              <label for="pa-aluno-query">Nome ou e-mail do aluno</label>
+              <input type="text" id="pa-aluno-query" placeholder="Ex: Thiago, Maria, aluno@email.com...">
+            </div>
+            <div class="progresso-filter-actions">
+              <button class="btn btn-primary" id="pa-btn-buscar-aluno">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+                Buscar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de alunos encontrados -->
+        <div id="pa-alunos-lista"></div>
+
+        <!-- Detalhe do aluno selecionado -->
+        <div id="pa-aluno-detalhe" style="display:none">
+          <div class="pa-detalhe-header" id="pa-detalhe-header"></div>
+          <div class="progresso-table-card">
+            <div class="progresso-table-header">
+              <div>
+                <div class="progresso-table-title">Cursos matriculados</div>
+                <div class="progresso-table-sub" id="pa-detalhe-sub">Carregando...</div>
+              </div>
+            </div>
+            <div class="progresso-table-wrap">
+              <table class="progresso-table">
+                <thead>
+                  <tr>
+                    <th>Curso</th>
+                    <th>Status</th>
+                    <th>Progresso</th>
+                    <th>Matrícula</th>
+                    <th>Último acesso</th>
+                    <th>Conclusão</th>
+                  </tr>
+                </thead>
+                <tbody id="pa-detalhe-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /view-aluno -->
 
     </div><!-- /page -->
   </main>
@@ -169,6 +225,6 @@
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth.js?v=20260615-newzenler"></script>
-<script src="js/progresso-alunos.js"></script>
+<script src="js/progresso-alunos.js?v=20260615-2"></script>
 </body>
 </html>

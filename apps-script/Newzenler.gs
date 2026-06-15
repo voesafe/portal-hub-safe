@@ -16,6 +16,13 @@ function newzenlerApiKey_() {
   return key;
 }
 
+function newzenlerHeaders_() {
+  return {
+    'X-API-Key':      newzenlerApiKey_(),
+    'X-Account-Name': NEWZENLER_ACCOUNT
+  };
+}
+
 function newzenlerRequest_(path, params) {
   var url = NEWZENLER_BASE_URL + path;
   var parts = [];
@@ -32,10 +39,7 @@ function newzenlerRequest_(path, params) {
 
   var res = UrlFetchApp.fetch(url, {
     method: 'get',
-    headers: {
-      'X-API-Key':      newzenlerApiKey_(),
-      'X-Account-Name': NEWZENLER_ACCOUNT
-    },
+    headers: newzenlerHeaders_(),
     muteHttpExceptions: true
   });
 
@@ -92,4 +96,81 @@ function newzenlerProgressoDetalhado(params) {
     items:      items,
     pagination: (r.data && r.data.pagination) ? r.data.pagination : {}
   };
+}
+
+// ── Busca alunos por nome ou e-mail ──────────────────────────
+function newzenlerBuscarAlunos(query) {
+  var r = newzenlerRequest_('/users', {
+    search: query,
+    role:   4,    // 4 = Student
+    limit:  30,
+    page:   1
+  });
+
+  var items = (r.data && r.data.items) ? r.data.items : [];
+
+  return items.map(function(u) {
+    return {
+      id:         u.id,
+      firstName:  u.first_name  || '',
+      lastName:   u.last_name   || '',
+      name:       ((u.first_name || '') + ' ' + (u.last_name || '')).trim(),
+      email:      u.email       || '',
+      phone:      u.phone       || ''
+    };
+  });
+}
+
+// ── Progresso de um aluno em todos os cursos (fetchAll paralelo) ──
+function newzenlerProgressoAluno(email) {
+  var cursos  = newzenlerListarCursos();
+  var headers = newzenlerHeaders_();
+
+  // Monta uma request por curso em paralelo
+  var requests = cursos.map(function(curso) {
+    var qs = 'course_id[]=' + encodeURIComponent(curso.id) +
+             '&email_is[]=' + encodeURIComponent(email) +
+             '&limit=1&page=1';
+    return {
+      url:              NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs,
+      method:           'get',
+      headers:          headers,
+      muteHttpExceptions: true
+    };
+  });
+
+  var responses = UrlFetchApp.fetchAll(requests);
+  var resultado = [];
+
+  responses.forEach(function(res, i) {
+    if (res.getResponseCode() !== 200) return;
+    try {
+      var json  = JSON.parse(res.getContentText());
+      if (!json.data || !json.data.items) return;
+      var keys  = Object.keys(json.data.items);
+      if (keys.length === 0) return; // aluno não está neste curso
+      var prog  = json.data.items[keys[0]];
+      var curso = cursos[i];
+      resultado.push({
+        courseId:       curso.id,
+        courseName:     curso.name,
+        thumbnail:      curso.thumbnail || '',
+        status:         prog.status               || 'Not Started',
+        completion:     Number(prog.completion_percentage || 0),
+        enrollmentDate: prog.enrollment_date      || '-',
+        startDate:      prog.start_date           || '-',
+        lastAttended:   prog.last_attended        || '-',
+        completedDate:  prog.completed_date       || '-'
+      });
+    } catch(e) {}
+  });
+
+  // Ordena: Em andamento → Não iniciado → Concluído
+  var ordem = { 'In Progress': 0, 'Not Started': 1, 'Completed': 2 };
+  resultado.sort(function(a, b) {
+    return (ordem[a.status] !== undefined ? ordem[a.status] : 1) -
+           (ordem[b.status] !== undefined ? ordem[b.status] : 1);
+  });
+
+  return resultado;
 }
