@@ -24,7 +24,8 @@ function newzenlerRequest_(path, params) {
   Object.keys(params).forEach(function(k) {
     var v = params[k];
     if (v === null || v === undefined || v === '') return;
-    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+    // não encoda a chave para preservar colchetes ex: name_like[]
+    parts.push(k + '=' + encodeURIComponent(v));
   });
 
   if (parts.length) url += '?' + parts.join('&');
@@ -75,9 +76,9 @@ function newzenlerProgressoDetalhado(params) {
     limit: params.limit || 50,
     page:  params.page  || 1
   };
-  if (params.courseId)  p['course_id[]']   = params.courseId;
-  if (params.nameLike)  p['name_like[]']   = params.nameLike;
-  if (params.emailLike) p['email_like[]']  = params.emailLike;
+  if (params.courseId)  p['course_id[]']  = params.courseId;
+  if (params.nameLike)  { p['name_like[]']  = params.nameLike;  p['af_v'] = 1; }
+  if (params.emailLike) { p['email_like[]'] = params.emailLike; p['af_v'] = 1; }
 
   var r = newzenlerRequest_('/reports/course-progress/detailed', p);
 

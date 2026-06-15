@@ -91,7 +91,8 @@ const ProgressoAlunos = {
     this._setLoading(false);
 
     if (!res.ok) {
-      this._toast('Erro ao buscar progresso: ' + (res.error || 'falha desconhecida'), 'danger');
+      this._toast('Erro ao buscar progresso: ' + (res.error || res.message || 'falha desconhecida'), 'danger');
+      console.error('[Progresso] erro API:', res);
       return;
     }
 
@@ -148,8 +149,8 @@ const ProgressoAlunos = {
     }
 
     tbody.innerHTML = filtrados.map(a => {
-      const pct     = Number(a.completion_percentage || 0);
       const status  = this._normStatus(a.status);
+      const pct     = status === 'done' ? 100 : Number(a.completion_percentage || 0);
       const barClass = status === 'done' ? 'progresso-bar-fill--done' : (pct === 0 ? 'progresso-bar-fill--zero' : '');
 
       return `
