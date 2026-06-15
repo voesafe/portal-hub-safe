@@ -6,12 +6,15 @@
 const Auth = {
 
   salvarSessao(usuario) {
-    sessionStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(usuario));
+    // localStorage: sessão persiste em refresh, fechar aba e reabrir o app
+    localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(usuario));
   },
 
   getSessao() {
     try {
-      const raw = sessionStorage.getItem(CONFIG.SESSION_KEY);
+      // migração: sessões antigas ainda podem estar em sessionStorage
+      const raw = localStorage.getItem(CONFIG.SESSION_KEY)
+               || sessionStorage.getItem(CONFIG.SESSION_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch { return null; }
   },
@@ -155,9 +158,33 @@ const Auth = {
   getEmail()  { return this.getSessao()?.email  || null; },
 
   logout() {
+    localStorage.removeItem(CONFIG.SESSION_KEY);
+    localStorage.removeItem('safe_return_to');
     sessionStorage.removeItem(CONFIG.SESSION_KEY);
     sessionStorage.removeItem('cco_session');
     window.location.href = 'index.html';
+  },
+
+  // Guarda a página atual e manda para o login; após autenticar,
+  // paginaAposLogin() devolve o usuário para onde ele estava.
+  irParaLogin() {
+    try {
+      const atual = window.location.pathname.split('/').pop();
+      if (atual && atual !== 'index.html') {
+        localStorage.setItem('safe_return_to', atual + window.location.search);
+      }
+    } catch {}
+    window.location.href = 'index.html';
+    return false;
+  },
+
+  paginaAposLogin() {
+    try {
+      const alvo = localStorage.getItem('safe_return_to');
+      localStorage.removeItem('safe_return_to');
+      if (alvo) return alvo;
+    } catch {}
+    return this.paginaInicial();
   },
 
   urlAcessoNegado(recurso, destino = '') {
@@ -173,7 +200,7 @@ const Auth = {
   },
 
   proteger(adminOnly = false) {
-    if (!this.estaLogado()) { window.location.href = 'index.html'; return false; }
+    if (!this.estaLogado()) return this.irParaLogin();
     const destino = window.location.pathname.split('/').pop();
     if (this.eUsuarioExclusivoCco() &&
         destino !== 'inicio.html' &&
@@ -203,10 +230,7 @@ const Auth = {
   },
 
   protegerEscalaCco() {
-    if (!this.estaLogado()) {
-      window.location.replace('index.html');
-      return false;
-    }
+    if (!this.estaLogado()) return this.irParaLogin();
     if (!this.podeAcessarEscalaCco()) {
       return this.negarAcesso('Escala CCO', 'escala-cco.html');
     }
@@ -214,10 +238,7 @@ const Auth = {
   },
 
   protegerHorasVoadasInva() {
-    if (!this.estaLogado()) {
-      window.location.replace('index.html');
-      return false;
-    }
+    if (!this.estaLogado()) return this.irParaLogin();
     if (!this.podeAcessarHorasVoadasInva()) {
       return this.negarAcesso('Horas Voadas INVA Mês', 'horas-voadas-inva.html');
     }
@@ -427,8 +448,8 @@ const Auth = {
     const acessoProgressoAlunos = this.podeAcessarProgressoAlunos();
 
     if (!acessoExclusivoGastos) secoes.push(secao(
-      'academico',
-      'Acadêmico',
+      'portal-aluno',
+      'Portal do Aluno',
       'academico',
       item('progresso-alunos.html', 'Progresso de Alunos', 'academico', {
         permitido: acessoProgressoAlunos
