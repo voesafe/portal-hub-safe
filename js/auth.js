@@ -60,7 +60,7 @@ const Auth = {
   },
 
   podeAcessarProgressoAlunos() {
-    return this.perfilEhAdminCompleto(this.getPerfil());
+    return this.eAdminCompleto();
   },
 
   eUsuarioExclusivoCco() {
