@@ -150,45 +150,61 @@ function newzenlerProgressoAluno(email) {
     }
   } catch(e) {}
 
-  // === Tentativa 2: por curso com email_is[]+af_v=1 (deve filtrar no servidor) ===
-  // Com af_v=1, o filtro email_is[] deve retornar só o aluno em questão,
-  // tornando desnecessária a paginação (0 ou 1 resultado por curso).
-  var cursos   = newzenlerListarCursos();
-  var requests = cursos.map(function(curso) {
-    var qs = 'course_id[]=' + encodeURIComponent(curso.id) +
-             '&email_is[]=' + encodeURIComponent(email) +
-             '&af_v=1&limit=10&page=1';
-    return {
-      url: NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs,
-      method: 'get', headers: headers, muteHttpExceptions: true
-    };
-  });
+  // === Tentativa 2: paginação iterativa por curso ===
+  // Busca página 1 de todos os cursos em paralelo.
+  // Se a página veio cheia (LIMIT resultados) e o aluno não foi encontrado,
+  // adiciona à fila da próxima iteração — evita requests desnecessários.
+  var cursos  = newzenlerListarCursos();
+  var LIMIT   = 100;
+  var MAX_IT  = 8; // até 800 alunos por curso
 
-  var responses = UrlFetchApp.fetchAll(requests);
-  var resultado = [];
+  // pendente: lista de { ci (índice do curso), page }
+  var pendente = cursos.map(function(_, ci) { return { ci: ci, page: 1 }; });
+  var encontrados = {}; // ci -> objeto de progresso do aluno
 
-  responses.forEach(function(res, i) {
-    if (res.getResponseCode() !== 200) return;
-    try {
-      var json  = JSON.parse(res.getContentText());
-      if (!json.data || !json.data.items) return;
-      var items = json.data.items;
-      var keys  = Object.keys(items);
-      if (keys.length === 0) return;
+  for (var it = 0; it < MAX_IT && pendente.length > 0; it++) {
+    var reqs = pendente.map(function(p) {
+      var qs = 'course_id[]=' + encodeURIComponent(cursos[p.ci].id) +
+               '&limit=' + LIMIT + '&page=' + p.page;
+      return { url: NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs,
+               method: 'get', headers: headers, muteHttpExceptions: true };
+    });
 
-      // Com af_v=1 o filtro deve ter funcionado; verifica o email só por segurança
-      var prog = null;
-      for (var k = 0; k < keys.length; k++) {
-        var item = items[keys[k]];
-        if (String(item.email || '').trim().toLowerCase() === emailNorm) {
-          prog = item; break;
+    var resps    = UrlFetchApp.fetchAll(reqs);
+    var proxima  = [];
+
+    resps.forEach(function(res, ri) {
+      var meta = pendente[ri];
+      if (res.getResponseCode() !== 200) return;
+      try {
+        var json  = JSON.parse(res.getContentText());
+        var items = (json.data && json.data.items) ? json.data.items : {};
+        var keys  = Object.keys(items);
+
+        // Procura o email exato nesta página
+        for (var k = 0; k < keys.length; k++) {
+          var item = items[keys[k]];
+          if (String(item.email || '').trim().toLowerCase() === emailNorm) {
+            encontrados[meta.ci] = item;
+            return; // achou — não precisa de mais páginas para este curso
+          }
         }
-      }
-      if (!prog) return;
 
-      var curso = cursos[i];
-      resultado.push(_montarItemProgresso_(prog, curso.id, curso.name, curso.thumbnail));
-    } catch(e) {}
+        // Não achou — se a página veio cheia, pode haver mais alunos
+        if (keys.length === LIMIT) {
+          proxima.push({ ci: meta.ci, page: meta.page + 1 });
+        }
+      } catch(e) {}
+    });
+
+    pendente = proxima;
+  }
+
+  var resultado = [];
+  Object.keys(encontrados).forEach(function(ci) {
+    var prog  = encontrados[Number(ci)];
+    var curso = cursos[Number(ci)];
+    resultado.push(_montarItemProgresso_(prog, curso.id, curso.name, curso.thumbnail));
   });
 
   return _ordenarProgressoAluno_(resultado);
