@@ -1196,12 +1196,12 @@ const MONTHS = [
 
 const SHIFT_LABELS = {t1:"T1 · 08h–14h",t2:"T2 · 12h–18h",ho:"NOT · 18h–20h"};
 const DOW = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
-const SCHEDULE_FIXES = {
-  "2026-06": {"2026-06-29": {t1:["ruan.pablo"]}},
-  "2026-07": {"2026-07-28": {t1:["ruan.pablo"]}}
-};
+// Sem ajustes pontuais: o backend (agora com LockService) é a única fonte da verdade.
+// Estes overrides eram um band-aid da época em que o backend perdia gravações e
+// IMPEDIAM remover quem fosse fixado (ex.: ruan.pablo em 29/06 e 28/07 voltava a cada load).
+const SCHEDULE_FIXES = {};
 const SCHEDULE_OVERRIDE_KEY = "cco-schedule-overrides-v1";
-const SCHEDULE_OVERRIDE_DATES = new Set(["2026-06-29","2026-07-28"]);
+const SCHEDULE_OVERRIDE_DATES = new Set();
 
 const now=new Date();
 const currentMonthMatch=MONTHS.findIndex(({y,m})=>y===now.getFullYear()&&m===now.getMonth());
