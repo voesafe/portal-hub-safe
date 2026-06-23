@@ -1381,10 +1381,21 @@ async function gasRequest(action,payload={}){
   const url=new URL(GAS_URL);
   url.searchParams.set("action",action);
   Object.entries(payload).forEach(([k,v])=>url.searchParams.set(k,typeof v==="object"?JSON.stringify(v):v));
-  const res=await fetch(url.toString());
+  url.searchParams.set("_",Date.now());            // cache-busting: impede resposta GET cacheada/coalescida
+  const res=await fetch(url.toString(),{cache:"no-store"});
   const data=await res.json();
   if(data.error) throw new Error(data.error);
   return data;
+}
+
+// Fila de gravação: garante UMA escrita por vez, evitando requisições
+// sobrepostas que disputavam a planilha no backend (causa da perda de escala).
+let gasWriteChain=Promise.resolve();
+function gasWrite(action,payload={}){
+  const run=()=>gasRequest(action,payload);
+  const next=gasWriteChain.then(run,run);          // a falha de uma não trava a fila
+  gasWriteChain=next.catch(()=>{});
+  return next;
 }
 
 // ── Formatadores ──────────────────────────────────────────
@@ -1653,7 +1664,8 @@ function nextMonth(){if(currentMonthIdx<MONTHS.length-1){currentMonthIdx++;loadM
 
 // ── Toggle shift ──────────────────────────────────────────
 async function toggleShift(dk,shift,targetUser){
-  const arr=[...(scheduleData[dk]?.[shift]||[])];
+  const prev=[...(scheduleData[dk]?.[shift]||[])]; // estado anterior, para rollback preciso em caso de falha
+  const arr=[...prev];
   const idx=arr.indexOf(targetUser);
   const maxCap=1; // todos os turnos (T1, T2, NOT) = máximo 1 pessoa
   if(idx>=0){arr.splice(idx,1)}
@@ -1665,9 +1677,17 @@ async function toggleShift(dk,shift,targetUser){
   isSaving=true;setLoading(40);
   try{
     const{y,m}=MONTHS[currentMonthIdx];
-    await gasRequest("setShift",{month:`${y}-${String(m+1).padStart(2,"0")}`,date:dk,shift,users:arr});
+    await gasWrite("setShift",{month:`${y}-${String(m+1).padStart(2,"0")}`,date:dk,shift,users:arr});
     setLoading(100);
-  }catch(e){setLoading(100);showToast("Erro ao salvar.","error");loadMonth()}
+  }catch(e){
+    // Desfaz só este turno (sem recarregar o mês todo) e avisa de forma clara.
+    setLoading(100);
+    if(!scheduleData[dk]) scheduleData[dk]={t1:[],t2:[],ho:[]};
+    scheduleData[dk][shift]=prev;
+    saveScheduleOverride(dk,scheduleData[dk]);
+    renderCalendar();renderFinancials();
+    showToast("Não foi possível salvar. Verifique a conexão e tente de novo.","error");
+  }
   finally{isSaving=false}
 }
 
@@ -1676,7 +1696,7 @@ async function saveShiftValue(){
   if(isNaN(val)||val<0){showToast("Valor inválido.","error");return}
   shiftValue=val;
   document.getElementById("shiftValueDisplay").textContent=`R$ ${val.toFixed(2).replace(".",",")}`;
-  try{await gasRequest("setConfig",{shiftValue:val});showToast("Valor atualizado!","success");renderFinancials()}
+  try{await gasWrite("setConfig",{shiftValue:val});showToast("Valor atualizado!","success");renderFinancials()}
   catch(e){showToast("Erro ao salvar valor.","error")}
 }
 
