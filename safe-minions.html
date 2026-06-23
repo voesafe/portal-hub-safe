@@ -493,7 +493,9 @@ function verificarNav150(rows) {
 function verificarNav300(rows) {
   const trechosMissao = rows.filter(r => {
     const obs = normalizarTextoComparacao(r.observacao);
-    return /NAVEGA.*300\s*NM/.test(obs);
+    // O SACI exporta a missão ora como "NAV 300NM", ora como "NAVEGACAO 300 NM".
+    // Aceita o radical "NAV" seguido (com letras/ponto/espaco opcionais) de "300 NM".
+    return /NAV[A-Z]*\.?\s*300\s*NM/.test(obs);
   });
 
   if (!trechosMissao.length) {
