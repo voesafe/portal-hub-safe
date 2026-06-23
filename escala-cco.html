@@ -1648,6 +1648,7 @@ async function loadMonth(){
   setSyncState("syncing");setLoading(30);
   try{
     const mk=`${y}-${String(m+1).padStart(2,"0")}`;
+    await gasWriteChain;  // espera as gravações pendentes commitarem antes de ler (evita "remover -> Atualizar -> volta")
     const r=await gasRequest("getMonth",{month:mk});
     scheduleData=applyScheduleOverrides(applyScheduleFixes(mk,r.data));
     if(r.shiftValue!==undefined){shiftValue=parseFloat(r.shiftValue)||50;const inp=document.getElementById("shiftValueInput");if(inp)inp.value=shiftValue;document.getElementById("shiftValueDisplay").textContent=`R$ ${shiftValue.toFixed(2).replace(".",",")}`}
