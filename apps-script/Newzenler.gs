@@ -231,3 +231,62 @@ function _ordenarProgressoAluno_(lista) {
            (ordem[b.status] !== undefined ? ordem[b.status] : 1);
   });
 }
+
+// ── Diagnóstico para o suporte Newzenler ─────────────────────
+// Captura o item CRU de progresso de um aluno num curso específico,
+// para colar no ticket (eles pediram "sample student details / API
+// response examples"). Mostra a request (chave redigida), o HTTP code
+// e o objeto exato retornado — onde completion_percentage vem 0 mesmo
+// com o Course Player exibindo outra %.
+//
+// Uso: editar EMAIL e COURSE_ID abaixo e rodar newzenlerDiagnosticoAluno().
+// O resultado sai em Apps Script → Execuções → Logs (Logger.log).
+function newzenlerDiagnosticoAluno() {
+  var EMAIL     = 'aluno@exemplo.com';   // <-- e-mail do aluno "In Progress"
+  var COURSE_ID = '';                    // <-- id do curso (newzenlerListarCursos)
+  var LIMIT     = 100;
+  var MAX_PAGES = 8;
+
+  var emailNorm = String(EMAIL).trim().toLowerCase();
+  var headers   = newzenlerHeaders_();
+  var achado    = null;
+  var reqUrlRedigida = '';
+
+  for (var page = 1; page <= MAX_PAGES && !achado; page++) {
+    var qs  = 'course_id[]=' + encodeURIComponent(COURSE_ID) +
+              '&limit=' + LIMIT + '&page=' + page;
+    var url = NEWZENLER_BASE_URL + '/reports/course-progress/detailed?' + qs;
+    reqUrlRedigida = url;
+
+    var res  = UrlFetchApp.fetch(url, { method: 'get', headers: headers, muteHttpExceptions: true });
+    var code = res.getResponseCode();
+    if (code !== 200) {
+      Logger.log('HTTP ' + code + ' — ' + res.getContentText());
+      return;
+    }
+
+    var json  = JSON.parse(res.getContentText());
+    var items = (json.data && json.data.items) ? json.data.items : {};
+    var keys  = Object.keys(items);
+
+    for (var k = 0; k < keys.length; k++) {
+      if (String(items[keys[k]].email || '').trim().toLowerCase() === emailNorm) {
+        achado = items[keys[k]];
+        break;
+      }
+    }
+    if (keys.length < LIMIT) break; // última página
+  }
+
+  Logger.log('=== DIAGNÓSTICO NEWZENLER (para suporte) ===');
+  Logger.log('Request : GET ' + reqUrlRedigida);
+  Logger.log('Headers : X-API-Key: <redigida>, X-Account-Name: ' + NEWZENLER_ACCOUNT);
+  if (!achado) {
+    Logger.log('Aluno NAO encontrado nas primeiras ' + (MAX_PAGES * LIMIT) + ' linhas do curso.');
+    return;
+  }
+  Logger.log('Item cru do aluno:');
+  Logger.log(JSON.stringify(achado, null, 2));
+  Logger.log('--> completion_percentage retornado = ' + achado.completion_percentage +
+             ' (status: ' + achado.status + ')');
+}
