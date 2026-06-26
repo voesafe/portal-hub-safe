@@ -2662,15 +2662,6 @@ function gerarXlsxIfood(usersToShow, totals) {
       "CPF\n(obrigatório)",
       "Data de nascimento\n(obrigatório)",
       "Email\n(opcional)",
-      "Celular\n(opcional)",
-      "Centro de custo\n(opcional)",
-      "Convenção Coletiva\n(opcional)",
-      "Grupo de entrega\n(opcional)",
-      "Matricula\n(opcional)",
-      "Filtro para relatorio de recarga\n(opcional)",
-      "Refeição (Aderente ao PAT)\n(opcional)",
-      "Alimentação (Aderente ao PAT)\n(opcional)",
-      "Mobilidade\n(opcional)",
       "Livre\n(opcional)"
     ];
 
@@ -2685,19 +2676,14 @@ function gerarXlsxIfood(usersToShow, totals) {
         u.cpf  || "",
         u.birthdate || "",
         u.email || "",
-        "", // Telefone omitido na exportação iFood (campo opcional que causa erro)
-        "", "", "", "", "",
-        "",    // Refeição (vazio)
-        "", "", total  // Livre = valor do mês
+        total  // Livre = valor do mês
       ];
     }).filter(Boolean);
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet([headers, ...dataRows]);
     ws["!cols"] = [
-      {wch:22},{wch:35},{wch:16},{wch:20},{wch:30},
-      {wch:18},{wch:18},{wch:18},{wch:18},{wch:14},
-      {wch:24},{wch:20},{wch:20},{wch:14},{wch:14}
+      {wch:22},{wch:35},{wch:16},{wch:20},{wch:30},{wch:14}
     ];
     headers.forEach((_,i)=>{
       const cell=ws[XLSX.utils.encode_cell({r:0,c:i})];
