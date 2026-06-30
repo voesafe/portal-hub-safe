@@ -3,7 +3,7 @@
 // ============================================================
 
 var CAVOK_HORAS_SERVICE_URL =
-  'https://script.google.com/macros/s/AKfycbzHBglsjy1a-NRfaq2nU-RQngeLEdGBsmjUWDhzo4kShguV1zI8_qJjYRwcRAwAE13v/exec';
+  'https://script.google.com/macros/s/AKfycbyThE1-1S77CJFfrSsWVVYak4tu-V37xsXH1VZFckKf1CJulgueWhqpKx70NWg9ifA9/exec';
 
 function importarFechamentoHorasCavok(dados) {
   var competencia = validarCompetenciaFechamentoHoras_(dados.ano, dados.mes);

@@ -4,8 +4,8 @@
 // ============================================================
 
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbzmaCBkPawFNplB5bmeroYC2DrvsOumnzfKvt7zk3IjSrzp5jBlgFP-p2TU4EW29QmE/exec',
-  HORAS_VOADAS_INVA_API_URL: 'https://script.google.com/macros/s/AKfycbzHBglsjy1a-NRfaq2nU-RQngeLEdGBsmjUWDhzo4kShguV1zI8_qJjYRwcRAwAE13v/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbxpOGXgEJ5qBl46iy0JIoli9Ugl8O5-cS-iSxeeLEjsnnB0Pl50fGxSV3H2_DVNie6FsQ/exec',
+  HORAS_VOADAS_INVA_API_URL: 'https://script.google.com/macros/s/AKfycbyThE1-1S77CJFfrSsWVVYak4tu-V37xsXH1VZFckKf1CJulgueWhqpKx70NWg9ifA9/exec',
   CAVOK_FECHAMENTO_API_ENABLED: true,
 
   APP_NAME:    'SAFE Hub',

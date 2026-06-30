@@ -3,7 +3,7 @@
 // Usa uma planilha operacional separada da base comercial.
 // ============================================================
 
-var FECHAMENTO_HORAS_SHEET_ID = '1aQTkJPULrrPaHIEX7PtDyKnPlw6k7-Rw0ogoeXEZj_g';
+var FECHAMENTO_HORAS_SHEET_ID = '15DVSSNFnVZ18GTObI5Lbhc9qtvWIUmFT2--2gC9m1mY';
 var FECHAMENTO_HORAS_MESES = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
