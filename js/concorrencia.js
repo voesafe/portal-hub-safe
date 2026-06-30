@@ -157,8 +157,8 @@ const Concorrencia = {
       ? concorrentes.map(c => `
         <div class="conc-row">
           <div class="conc-escola">
-            <div class="conc-escola-nome">${c.concorrente || '—'}</div>
-            ${c.cadastradoPor ? `<div class="conc-by">por ${c.cadastradoPor}</div>` : ''}
+            <div class="conc-escola-nome">${escapeHtml(c.concorrente || '—')}</div>
+            ${c.cadastradoPor ? `<div class="conc-by">por ${escapeHtml(c.cadastradoPor)}</div>` : ''}
           </div>
           <div class="conc-valor avista">
             ${c.valorAvista ? formatBRL(c.valorAvista) : '<span class="text-muted">—</span>'}
@@ -167,15 +167,15 @@ const Concorrencia = {
           <div class="conc-valor parcelado">
             ${c.valorParcelado ? `${formatBRL(c.valorParcelado)}<span class="conc-label">${c.parcelas ? c.parcelas + 'x' : ''}</span>` : '<span class="text-muted">—</span>'}
           </div>
-          <div class="conc-aeronave-col">${c.aeronave || '—'}</div>
-          <div class="conc-obs" title="${c.obs || ''}">${c.obs ? `<span class="conc-obs-text">${c.obs}</span>` : '—'}</div>
+          <div class="conc-aeronave-col">${escapeHtml(c.aeronave || '—')}</div>
+          <div class="conc-obs" title="${escapeHtml(c.obs || '')}">${c.obs ? `<span class="conc-obs-text">${escapeHtml(c.obs)}</span>` : '—'}</div>
           <div class="conc-acoes">
             ${podeEditar ? `
               <button class="btn btn-ghost btn-sm btn-icon" data-editar-concorrente="${c.id}" title="Editar">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </button>` : ''}
             ${Auth.eAdminCompleto() ? `
-              <button class="btn btn-ghost btn-sm btn-icon" style="color:var(--danger)" data-excluir-concorrente="${c.id}" data-nome="${c.concorrente}" title="Excluir">
+              <button class="btn btn-ghost btn-sm btn-icon" style="color:var(--danger)" data-excluir-concorrente="${c.id}" data-nome="${escapeHtml(c.concorrente)}" title="Excluir">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
               </button>` : ''}
           </div>

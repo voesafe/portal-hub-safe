@@ -131,6 +131,12 @@ function validarTokenSessao(token) {
   return null;
 }
 
+function exigirSessao(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  return usuario;
+}
+
 function exigirAcessoFinanceiro(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessão expirada. Entre novamente.');

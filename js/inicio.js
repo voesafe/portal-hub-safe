@@ -135,7 +135,7 @@ const Inicio = {
       {
         titulo: 'Planilha Administrativa',
         descricao: 'Acesso à base administrativa integrada do SAFE Hub.',
-        href: 'https://docs.google.com/spreadsheets/d/1LZ2z3yLZvIdw2h0FohhwoiYLEGwy9zz7CYL40_j2AVw/edit?gid=1905416248#gid=1905416248',
+        href: 'https://docs.google.com/spreadsheets/d/1zUHGTAC8TUhD6v1k-7OLeDQRlj99J0BMbimScZD2SoI/edit?gid=1905416248#gid=1905416248',
         destinoRestrito: 'planilha-administrativa',
         icone: 'planilha',
         tom: 'teal',

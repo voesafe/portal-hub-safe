@@ -2,7 +2,7 @@
 // Cco.gs - Integração de autenticação com a Escala CCO
 // ============================================================
 
-var CCO_API_URL = 'https://script.google.com/macros/s/AKfycbxFyIE_VI_rRcuNnQgYU9l5JXcbbu18vVTfzTKieaVpnL61CvZeuhUJGmdTcozSqBG80g/exec';
+var CCO_API_URL = 'https://script.google.com/macros/s/AKfycbyeoa-8Vv2lze3okfNxSA20hOtwOo0dvB_wIaWBJujG0XbxgrXOkswON4fPrEHdeBAa/exec';
 
 function requisitarCco_(action, params) {
   var query = ['action=' + encodeURIComponent(action)];

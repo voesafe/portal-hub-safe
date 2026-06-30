@@ -21,24 +21,39 @@ function doGet(e) {
 
     switch (action) {
 
-      case 'kpis':
-        return jsonSuccess(calcularKPIs(perfilEhAdmin(perfil) ? null : pac, perfil, mes, ano));
+      case 'kpis': {
+        var uKpis = exigirSessao(token);
+        return jsonSuccess(calcularKPIs(perfilEhAdmin(uKpis.perfil) ? null : uKpis.pac, uKpis.perfil, mes, ano));
+      }
 
-      case 'vendas':
-        var filtPac = perfilEhAdmin(perfil) ? null : pac;
+      case 'vendas': {
+        var uVendas = exigirSessao(token);
+        var filtPac = perfilEhAdmin(uVendas.perfil) ? null : uVendas.pac;
         return jsonSuccess(listarVendas(filtPac, mes, ano));
+      }
 
-      case 'venda':
+      case 'venda': {
         if (!id) return jsonError('ID obrigatório');
-        return jsonSuccess(buscarVenda(id));
+        var uVenda = exigirSessao(token);
+        var vendaItem = buscarVenda(id);
+        if (vendaItem && !perfilEhAdmin(uVenda.perfil) &&
+            String(vendaItem.pac || '').toLowerCase() !== String(uVenda.pac || '').toLowerCase()) {
+          return jsonError('Sem permissão para ver esta venda.');
+        }
+        return jsonSuccess(vendaItem);
+      }
 
-      case 'faturamento':
-        if (!perfilEhAdmin(perfil)) return jsonError('Acesso negado');
+      case 'faturamento': {
+        var uFat = exigirSessao(token);
+        if (!perfilEhAdmin(uFat.perfil)) return jsonError('Acesso negado');
         return jsonSuccess(listarFaturamento(mes, ano));
+      }
 
-      case 'faturamento-resumo':
-        if (!perfilEhAdmin(perfil)) return jsonError('Acesso negado');
+      case 'faturamento-resumo': {
+        var uFatR = exigirSessao(token);
+        if (!perfilEhAdmin(uFatR.perfil)) return jsonError('Acesso negado');
         return jsonSuccess(resumoFaturamento(ano));
+      }
 
       case 'usuarios':
         exigirGestaoUsuarios(token);
@@ -57,10 +72,12 @@ function doGet(e) {
 
       // Concorrência — todos os logados podem ver
       case 'listar-concorrencia':
+        exigirSessao(token);
         return jsonSuccess(listarConcorrencia());
 
       // Preços SAFE — todos os logados podem ver
       case 'listar-precos-safe':
+        exigirSessao(token);
         return jsonSuccess(listarPrecosSafe());
 
       // ── Newzenler / Progresso de Alunos ───────────────────
@@ -134,32 +151,42 @@ function doPost(e) {
         return jsonSuccess({ mensagem: 'Senha alterada com sucesso' });
 
       // ── Vendas ─────────────────────────────────────────────
-      case 'criar-venda':
-        if (perfilSomenteLeitura(perfil)) return jsonError('Acesso somente leitura');
-        if (!perfilEhAdminCompleto(perfil)) dados.pac = pac;
+      case 'criar-venda': {
+        var uCriarV = exigirSessao(token);
+        if (perfilSomenteLeitura(uCriarV.perfil)) return jsonError('Acesso somente leitura');
+        if (!perfilEhAdminCompleto(uCriarV.perfil)) dados.pac = uCriarV.pac;
         return jsonSuccess(criarVenda(dados));
+      }
 
-      case 'editar-venda':
-        if (perfilSomenteLeitura(perfil)) return jsonError('Acesso somente leitura');
+      case 'editar-venda': {
+        var uEditarV = exigirSessao(token);
+        if (perfilSomenteLeitura(uEditarV.perfil)) return jsonError('Acesso somente leitura');
         if (!dados.id) return jsonError('ID obrigatório');
-        var atualizado = atualizarVenda(dados.id, dados, pac, perfil);
+        var atualizado = atualizarVenda(dados.id, dados, uEditarV.pac, uEditarV.perfil);
         if (!atualizado) return jsonError('Venda não encontrada');
         return jsonSuccess({ mensagem: 'Venda atualizada' });
+      }
 
-      case 'excluir-venda':
-        if (perfilSomenteLeitura(perfil)) return jsonError('Acesso somente leitura');
+      case 'excluir-venda': {
+        var uExcluirV = exigirSessao(token);
+        if (perfilSomenteLeitura(uExcluirV.perfil)) return jsonError('Acesso somente leitura');
         if (!dados.id) return jsonError('ID obrigatório');
-        return jsonSuccess(excluirVenda(dados.id, pac, perfil));
+        return jsonSuccess(excluirVenda(dados.id, uExcluirV.pac, uExcluirV.perfil));
+      }
 
       // ── Faturamento ────────────────────────────────────────
-      case 'salvar-faturamento':
-        if (!perfilEhAdminCompleto(perfil)) return jsonError('Acesso negado');
+      case 'salvar-faturamento': {
+        var uSalvarFat = exigirSessao(token);
+        if (!perfilEhAdminCompleto(uSalvarFat.perfil)) return jsonError('Acesso negado');
         return jsonSuccess(salvarFaturamento(dados.mes, dados.ano, dados.canal, dados.valor));
+      }
 
-      case 'excluir-faturamento':
-        if (!perfilEhAdminCompleto(perfil)) return jsonError('Acesso negado');
+      case 'excluir-faturamento': {
+        var uExcluirFat = exigirSessao(token);
+        if (!perfilEhAdminCompleto(uExcluirFat.perfil)) return jsonError('Acesso negado');
         if (!dados.id) return jsonError('ID obrigatório');
         return jsonSuccess(excluirFaturamento(dados.id));
+      }
 
       // ── Usuários ───────────────────────────────────────────
       case 'criar-usuario':
@@ -179,25 +206,33 @@ function doPost(e) {
         return jsonSuccess(salvarBase(dados));
 
       // ── Concorrência — PAC pode criar/editar, só admin pode excluir ──
-      case 'criar-concorrente':
-        if (perfilSomenteLeitura(perfil)) return jsonError('Acesso somente leitura');
-        return jsonSuccess(criarConcorrente(dados, pac));
+      case 'criar-concorrente': {
+        var uCriarC = exigirSessao(token);
+        if (perfilSomenteLeitura(uCriarC.perfil)) return jsonError('Acesso somente leitura');
+        return jsonSuccess(criarConcorrente(dados, uCriarC.pac));
+      }
 
-      case 'editar-concorrente':
-        if (perfilSomenteLeitura(perfil)) return jsonError('Acesso somente leitura');
+      case 'editar-concorrente': {
+        var uEditarC = exigirSessao(token);
+        if (perfilSomenteLeitura(uEditarC.perfil)) return jsonError('Acesso somente leitura');
         if (!dados.id) return jsonError('ID obrigatório');
         return jsonSuccess(editarConcorrente(dados.id, dados));
+      }
 
-      case 'excluir-concorrente':
-        if (!perfilEhAdminCompleto(perfil)) return jsonError('Acesso negado');
+      case 'excluir-concorrente': {
+        var uExcluirC = exigirSessao(token);
+        if (!perfilEhAdminCompleto(uExcluirC.perfil)) return jsonError('Acesso negado');
         if (!dados.id) return jsonError('ID obrigatório');
         return jsonSuccess(excluirConcorrente(dados.id));
+      }
 
       // ── Preços SAFE — só admin completo edita ─────────────
-      case 'salvar-preco-safe':
-        if (!perfilEhAdminCompleto(perfil)) return jsonError('Acesso negado');
+      case 'salvar-preco-safe': {
+        var uPreco = exigirSessao(token);
+        if (!perfilEhAdminCompleto(uPreco.perfil)) return jsonError('Acesso negado');
         if (!dados.curso) return jsonError('Curso obrigatório');
         return jsonSuccess(salvarPrecoSafe(dados));
+      }
 
       // ── Controle de Gastos - sessão validada no servidor ───
       case 'controle-gastos':
