@@ -46,7 +46,9 @@ const Inicio = {
 
   modulos() {
     const acessoHubPrincipal =
-      !Auth.eUsuarioExclusivoCco() && !Auth.eUsuarioExclusivoControleGastos();
+      !Auth.eUsuarioExclusivoCco() &&
+      !Auth.eUsuarioExclusivoControleGastos() &&
+      !Auth.eUsuarioExclusivoEscalaMinions();
     const acessoAdmin = Auth.eAdmin();
     const acessoMaster = Auth.perfilEhMaster(Auth.getPerfil());
     const acessoSafeMinions = Auth.podeAcessarSafeMinions();
@@ -268,7 +270,7 @@ const Inicio = {
       .map(modulo => this.renderizarModulo(modulo))
       .join('');
     const secaoBases = document.getElementById('home-bases')?.closest('.home-section');
-    if (Auth.eUsuarioExclusivoControleGastos()) {
+    if (Auth.eUsuarioExclusivoControleGastos() || Auth.eUsuarioExclusivoEscalaMinions()) {
       if (secaoBases) secaoBases.hidden = true;
     } else {
       await this.carregarBases();
