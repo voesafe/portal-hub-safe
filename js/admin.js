@@ -47,6 +47,9 @@ const Admin = {
     if (Auth.normalizarPerfil(perfil) === 'controle_gastos_visualizacao') {
       return 'Controle de Gastos · Leitura';
     }
+    if (Auth.normalizarPerfil(perfil) === 'escala_minions') {
+      return 'Escala & SAFE MINIONS';
+    }
     if (Auth.perfilSomenteLeitura(perfil)) return 'Admin leitura';
     if (Auth.perfilEhAdmin(perfil)) return 'Administrador';
     if (Auth.normalizarPerfil(perfil) === 'cco_admin') return 'Administrador CCO';
@@ -242,6 +245,11 @@ const Admin = {
         titulo: 'Controle de Gastos · Somente visualização',
         descricao: 'Acesso exclusivo aos indicadores do Controle de Gastos, sem alterar valores, receitas ou categorias.',
         tags: ['Apenas Controle de Gastos', 'Visão Geral', 'Sem edição']
+      },
+      escala_minions: {
+        titulo: 'Escala CCO/INVA + SAFE MINIONS',
+        descricao: 'Acesso exclusivo à Escala CCO, Horas Voadas INVA Mês e SAFE MINIONS. Nenhum outro módulo do Hub fica visível.',
+        tags: ['Escala CCO', 'Horas Voadas INVA', 'SAFE MINIONS']
       }
     };
   },
@@ -260,7 +268,7 @@ const Admin = {
     document.getElementById('u-access-summary-tags').innerHTML = dados.tags
       .map(tag => `<span>${this.escape(tag)}</span>`)
       .join('');
-    resumo.classList.toggle('restricted', perfil === 'controle_gastos_visualizacao');
+    resumo.classList.toggle('restricted', perfil === 'controle_gastos_visualizacao' || perfil === 'escala_minions');
   },
 
   atualizarCamposOrigem() {

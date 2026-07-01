@@ -168,11 +168,17 @@ function validarAcaoPerfilExclusivo_(token, action) {
     return;
   }
   if (!sessao.expiraEm || Number(sessao.expiraEm) < Date.now()) return;
-  if (normalizarPerfil(sessao.perfil) !== 'controle_gastos_visualizacao') return;
 
-  var permitidas = ['controle-gastos', 'alterar-senha'];
+  var acoesPorPerfilExclusivo = {
+    controle_gastos_visualizacao: ['controle-gastos', 'alterar-senha'],
+    escala_minions: ['alterar-senha']
+  };
+  var perfil = normalizarPerfil(sessao.perfil);
+  var permitidas = acoesPorPerfilExclusivo[perfil];
+  if (!permitidas) return;
+
   if (permitidas.indexOf(String(action || '')) === -1) {
-    throw new Error('Este acesso é exclusivo para visualização do Controle de Gastos.');
+    throw new Error('Este acesso é exclusivo e não permite esta ação no Hub.');
   }
 }
 
@@ -329,7 +335,8 @@ function validarPerfilHub_(perfil) {
   var normalizado = normalizarPerfil(perfil || 'pac');
   var permitidos = [
     'pac', 'admin', 'master', 'admin_readonly',
-    'admin_visualizacao', 'financeiro', 'controle_gastos_visualizacao'
+    'admin_visualizacao', 'financeiro', 'controle_gastos_visualizacao',
+    'escala_minions'
   ];
   if (permitidos.indexOf(normalizado) === -1) {
     throw new Error('Tipo de acesso inválido.');

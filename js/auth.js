@@ -38,7 +38,7 @@ const Auth = {
 
   perfilPodeAcessarEscalaCco(perfil) {
     const p = this.normalizarPerfil(perfil);
-    return p === 'admin' || p === 'master' || this.perfilEhCco(p);
+    return p === 'admin' || p === 'master' || p === 'escala_minions' || this.perfilEhCco(p);
   },
 
   podeAcessarEscalaCco() {
@@ -47,7 +47,7 @@ const Auth = {
 
   perfilPodeAcessarHorasVoadasInva(perfil) {
     const p = this.normalizarPerfil(perfil);
-    return p === 'admin' || p === 'master';
+    return p === 'admin' || p === 'master' || p === 'escala_minions';
   },
 
   podeAcessarHorasVoadasInva() {
@@ -55,7 +55,8 @@ const Auth = {
   },
 
   perfilPodeAcessarSafeMinions(perfil) {
-    return this.perfilEhMaster(perfil) || this.perfilEhCco(perfil);
+    const p = this.normalizarPerfil(perfil);
+    return p === 'escala_minions' || this.perfilEhMaster(perfil) || this.perfilEhCco(perfil);
   },
 
   podeAcessarSafeMinions() {
@@ -72,6 +73,10 @@ const Auth = {
 
   eUsuarioExclusivoControleGastos() {
     return this.normalizarPerfil(this.getPerfil()) === 'controle_gastos_visualizacao';
+  },
+
+  eUsuarioExclusivoEscalaMinions() {
+    return this.normalizarPerfil(this.getPerfil()) === 'escala_minions';
   },
 
   paginaInicial() {
@@ -147,6 +152,7 @@ const Auth = {
     if (this.perfilEhMaster(perfil)) return 'Master TI';
     if (p === 'financeiro') return 'Financeiro';
     if (p === 'controle_gastos_visualizacao') return 'Controle de Gastos · Visualização';
+    if (p === 'escala_minions') return 'Escala & SAFE MINIONS';
     if (this.perfilSomenteLeitura(perfil)) return 'Visualização';
     if (this.perfilEhAdmin(perfil))        return 'Administrador';
     return 'Consultor Comercial';
@@ -214,6 +220,15 @@ const Auth = {
     if (this.eUsuarioExclusivoControleGastos() &&
         destino !== 'inicio.html' &&
         destino !== 'controle-gastos.html' &&
+        destino !== 'acesso-negado.html') {
+      window.location.replace('inicio.html');
+      return false;
+    }
+    if (this.eUsuarioExclusivoEscalaMinions() &&
+        destino !== 'inicio.html' &&
+        destino !== 'escala-cco.html' &&
+        destino !== 'horas-voadas-inva.html' &&
+        destino !== 'safe-minions.html' &&
         destino !== 'acesso-negado.html') {
       window.location.replace('inicio.html');
       return false;
@@ -400,6 +415,7 @@ const Auth = {
     );
 
     const acessoExclusivoGastos = this.eUsuarioExclusivoControleGastos();
+    const acessoExclusivoEscalaMinions = this.eUsuarioExclusivoEscalaMinions();
     const acessoHubPrincipal = !this.eUsuarioExclusivoCco() && !acessoExclusivoGastos;
     const dashboardPermitido = acessoHubPrincipal;
     const dashboardDestino = dashboardPermitido
@@ -417,6 +433,19 @@ const Auth = {
         'financeiro',
         item('controle-gastos.html', 'Controle de Gastos', 'gastos'),
         ['controle-gastos.html']
+      )
+    ] : acessoExclusivoEscalaMinions ? [
+      `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
+        <span class="nav-icon" aria-hidden="true">${this.iconSvg('inicio')}</span>
+        <span>Início</span>
+      </a>`,
+      secaoEscala,
+      secao(
+        'administracao',
+        'Administração',
+        'administracao',
+        item('safe-minions.html', 'SAFE MINIONS', 'minions'),
+        ['safe-minions.html']
       )
     ] : [
       `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
@@ -447,7 +476,7 @@ const Auth = {
     const acessoFechamento = this.podeAcessarFechamentoHoras();
     const acessoProgressoAlunos = this.podeAcessarProgressoAlunos();
 
-    if (!acessoExclusivoGastos) secoes.push(secao(
+    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
       'portal-aluno',
       'Portal do Aluno',
       'academico',
@@ -457,7 +486,7 @@ const Auth = {
       ['progresso-alunos.html']
     ));
 
-    if (!acessoExclusivoGastos) secoes.push(secao(
+    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
       'administracao',
       'Administração',
       'administracao',
@@ -477,7 +506,7 @@ const Auth = {
       ['safe-minions.html']
     ));
 
-    if (!acessoExclusivoGastos) secoes.push(secao(
+    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
       'financeiro',
       'Financeiro',
       'financeiro',
@@ -501,7 +530,7 @@ const Auth = {
       ]
     ));
 
-    if (!acessoExclusivoGastos) secoes.push(secao(
+    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
       'suporte',
       'Suporte',
       'suporte',
@@ -509,7 +538,7 @@ const Auth = {
       ['bases.html']
     ));
 
-    if (!acessoExclusivoGastos) secoes.push(secao(
+    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
       'ti',
       'T.I.',
       'ti',
