@@ -79,6 +79,14 @@ const Inicio = {
         permitido: Auth.podeAcessarEscalaCco()
       },
       {
+        titulo: 'Escala PAV de Base',
+        descricao: 'Escala de PAV das bases (CPN e SJK), fechamento e cadastro.',
+        href: 'escala-pav.html',
+        icone: 'escala',
+        tom: 'teal',
+        permitido: Auth.podeAcessarEscalaPav()
+      },
+      {
         titulo: 'Horas Voadas INVA Mês',
         descricao: 'Acompanhamento de instrutores e horas sincronizadas com o CAVOK.',
         href: 'horas-voadas-inva.html',

@@ -45,6 +45,15 @@ const Auth = {
     return this.perfilPodeAcessarEscalaCco(this.getPerfil());
   },
 
+  perfilPodeAcessarEscalaPav(perfil) {
+    const p = this.normalizarPerfil(perfil);
+    return p === 'master' || p === 'financeiro';
+  },
+
+  podeAcessarEscalaPav() {
+    return this.perfilPodeAcessarEscalaPav(this.getPerfil());
+  },
+
   perfilPodeAcessarHorasVoadasInva(perfil) {
     const p = this.normalizarPerfil(perfil);
     return p === 'admin' || p === 'master' || p === 'escala_minions';
@@ -252,6 +261,14 @@ const Auth = {
     return true;
   },
 
+  protegerEscalaPav() {
+    if (!this.estaLogado()) return this.irParaLogin();
+    if (!this.podeAcessarEscalaPav()) {
+      return this.negarAcesso('Escala PAV de Base', 'escala-pav.html');
+    }
+    return true;
+  },
+
   protegerHorasVoadasInva() {
     if (!this.estaLogado()) return this.irParaLogin();
     if (!this.podeAcessarHorasVoadasInva()) {
@@ -401,6 +418,7 @@ const Auth = {
 
     const acessoEscalaCco = this.podeAcessarEscalaCco();
     const acessoHorasVoadasInva = this.podeAcessarHorasVoadasInva();
+    const acessoEscalaPav = this.podeAcessarEscalaPav();
     const secaoEscala = secao(
       'escala',
       'Escala',
@@ -408,10 +426,13 @@ const Auth = {
       item('escala-cco.html', 'Escala CCO', 'escala', {
         permitido: acessoEscalaCco
       }) +
+      item('escala-pav.html', 'Escala PAV de Base', 'escala', {
+        permitido: acessoEscalaPav
+      }) +
       item('horas-voadas-inva.html', 'Horas Voadas INVA Mês', 'horas', {
         permitido: acessoHorasVoadasInva
       }),
-      ['escala-cco.html', 'horas-voadas-inva.html']
+      ['escala-cco.html', 'escala-pav.html', 'horas-voadas-inva.html']
     );
 
     const acessoExclusivoGastos = this.eUsuarioExclusivoControleGastos();
@@ -615,6 +636,7 @@ const Auth = {
       'controle-gastos.html': 'gastos',
       'fechamento-horas.html': 'horas',
       'escala-cco.html': 'escala',
+      'escala-pav.html': 'escala',
       'horas-voadas-inva.html': 'horas',
       'safe-minions.html': 'minions',
       'bases.html': 'bases',
