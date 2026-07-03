@@ -3,6 +3,33 @@
 // SAFE Hub
 // ============================================================
 
+const CURSOS_VENDAS = [
+  'Adaptação de Instrutor Externo',
+  'Alojamento',
+  'Aperfeiçoamento Contínuo',
+  'Curriculo de Solo',
+  'Horas de Voo',
+  'INVA Prático',
+  'INVA Teórico',
+  'Piloto Comercial/IFR MLTE',
+  'Piloto Comercial/IFR Prático',
+  'Piloto Comercial Teórico',
+  'Piloto Privado Prático',
+  'Piloto Privado Teórico',
+  'PLA AZUL',
+  'SAFE Pilot Academy',
+  'SIMULADOR AATD',
+  'SIMULADOR PCATD',
+  'Voo de Incentivo'
+];
+
+const PACOTES_LEGADOS_CURSOS = {
+  'Pacote Piloto Privado Teórico + Prático': ['Piloto Privado Teórico', 'Piloto Privado Prático'],
+  'Pacote Piloto Comercial/IFR Teórico + Prático': ['Piloto Comercial Teórico', 'Piloto Comercial/IFR Prático'],
+  'Pacote Piloto Comercial/IFR MLTE Teórico + Prático': ['Piloto Comercial/IFR MLTE', 'Piloto Comercial/IFR Prático'],
+  'Pacote INVA Teórico + Prático': ['INVA Teórico', 'INVA Prático']
+};
+
 const Vendas = {
 
   mesFiltro:   CONFIG.MES_ATUAL,
@@ -14,6 +41,8 @@ const Vendas = {
   filtroEstado:'',
   filtroIdade: '',
   editandoId:  null,
+  cursosSelecionados: [],
+  cursoBusca: '',
 
   async init() {
     Auth.proteger();
@@ -182,10 +211,159 @@ const Vendas = {
   },
 
   initForm() {
+    this.initCursoPicker();
     document.getElementById('btn-nova-venda')?.addEventListener('click',   () => this.abrirForm());
     document.getElementById('modal-close')?.addEventListener('click',      () => fecharModal('modal-venda'));
     document.getElementById('modal-cancelar')?.addEventListener('click',   () => fecharModal('modal-venda'));
     document.getElementById('btn-salvar')?.addEventListener('click',       () => this.salvar());
+  },
+
+  initCursoPicker() {
+    const picker = document.getElementById('curso-picker');
+    const trigger = document.getElementById('curso-picker-trigger');
+    const busca = document.getElementById('curso-picker-search');
+    const limpar = document.getElementById('curso-picker-clear');
+    if (!picker || !trigger) return;
+
+    trigger.addEventListener('click', () => {
+      const aberto = picker.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+      if (aberto) setTimeout(() => busca?.focus(), 0);
+    });
+
+    busca?.addEventListener('input', e => {
+      this.cursoBusca = e.target.value || '';
+      this.renderCursoPicker();
+    });
+
+    limpar?.addEventListener('click', () => {
+      this.setCursosSelecionados([]);
+      busca?.focus();
+    });
+
+    document.addEventListener('click', e => {
+      if (!picker.contains(e.target)) this.fecharCursoPicker();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') this.fecharCursoPicker();
+    });
+
+    this.renderCursoPicker();
+  },
+
+  fecharCursoPicker() {
+    const picker = document.getElementById('curso-picker');
+    const trigger = document.getElementById('curso-picker-trigger');
+    picker?.classList.remove('open');
+    trigger?.setAttribute('aria-expanded', 'false');
+  },
+
+  _normalizarCursoTexto(valor) {
+    return String(valor || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  },
+
+  cursosPorTexto(valor) {
+    const texto = String(valor || '').trim();
+    if (!texto) return [];
+    if (PACOTES_LEGADOS_CURSOS[texto]) return [...PACOTES_LEGADOS_CURSOS[texto]];
+
+    const porNormalizado = new Map(CURSOS_VENDAS.map(curso => [this._normalizarCursoTexto(curso), curso]));
+    const encontrados = [];
+
+    texto
+      .split(/\s+\+\s+|,\s*|;\s*/)
+      .map(parte => parte.trim())
+      .filter(Boolean)
+      .forEach(parte => {
+        const curso = porNormalizado.get(this._normalizarCursoTexto(parte));
+        if (curso && !encontrados.includes(curso)) encontrados.push(curso);
+      });
+
+    if (encontrados.length) return encontrados;
+    return [texto];
+  },
+
+  setCursosSelecionados(cursos) {
+    const vistos = new Set();
+    this.cursosSelecionados = cursos
+      .map(curso => String(curso || '').trim())
+      .filter(curso => {
+        const chave = this._normalizarCursoTexto(curso);
+        if (!curso || vistos.has(chave)) return false;
+        vistos.add(chave);
+        return true;
+      });
+    this.atualizarCursoHidden();
+    this.renderCursoPicker();
+  },
+
+  alternarCurso(curso) {
+    if (!CURSOS_VENDAS.includes(curso)) return;
+    const selecionados = this.cursosSelecionados.includes(curso)
+      ? this.cursosSelecionados.filter(item => item !== curso)
+      : [...this.cursosSelecionados, curso];
+    this.setCursosSelecionados(selecionados);
+  },
+
+  removerCursoSelecionado(curso) {
+    const chave = this._normalizarCursoTexto(curso);
+    this.setCursosSelecionados(
+      this.cursosSelecionados.filter(item => this._normalizarCursoTexto(item) !== chave)
+    );
+  },
+
+  atualizarCursoHidden() {
+    const campo = document.getElementById('f-curso');
+    if (campo) campo.value = this.cursosSelecionados.join(' + ');
+  },
+
+  renderCursoPicker() {
+    const lista = document.getElementById('curso-picker-options');
+    const placeholder = document.getElementById('curso-picker-placeholder');
+    const chips = document.getElementById('curso-picker-selected');
+    const contador = document.getElementById('curso-picker-count');
+    if (!lista || !placeholder || !chips || !contador) return;
+
+    const termo = this._normalizarCursoTexto(this.cursoBusca);
+    const cursos = termo
+      ? CURSOS_VENDAS.filter(curso => this._normalizarCursoTexto(curso).includes(termo))
+      : CURSOS_VENDAS;
+
+    lista.innerHTML = cursos.length
+      ? cursos.map(curso => {
+        const selecionado = this.cursosSelecionados.includes(curso);
+        return `
+          <button class="curso-picker-option${selecionado ? ' selected' : ''}" type="button" role="option" aria-selected="${selecionado ? 'true' : 'false'}" data-curso="${escapeHtml(curso)}">
+            <span class="curso-picker-check">${selecionado ? '✓' : ''}</span>
+            <span>${escapeHtml(curso)}</span>
+          </button>`;
+      }).join('')
+      : '<div class="curso-picker-empty">Nenhum curso encontrado</div>';
+
+    lista.querySelectorAll('[data-curso]').forEach(btn => {
+      btn.addEventListener('click', () => this.alternarCurso(btn.dataset.curso));
+    });
+
+    const total = this.cursosSelecionados.length;
+    placeholder.textContent = total
+      ? `${total} curso${total === 1 ? '' : 's'} selecionado${total === 1 ? '' : 's'}`
+      : 'Selecione um ou mais cursos';
+    contador.textContent = `${total} selecionado${total === 1 ? '' : 's'}`;
+
+    chips.innerHTML = this.cursosSelecionados.map(curso => `
+      <button class="curso-chip" type="button" data-curso-remove="${escapeHtml(curso)}">
+        <span>${escapeHtml(curso)}</span>
+        <span aria-hidden="true">×</span>
+      </button>
+    `).join('');
+    chips.querySelectorAll('[data-curso-remove]').forEach(btn => {
+      btn.addEventListener('click', () => this.removerCursoSelecionado(btn.dataset.cursoRemove));
+    });
   },
 
   initExportacao() {
@@ -476,7 +654,7 @@ const Vendas = {
       document.getElementById('f-cidade').value       = venda.cidade      || '';
       document.getElementById('f-estado').value       = venda.estado      || '';
       document.getElementById('f-origem').value       = venda.origem      || '';
-      document.getElementById('f-curso').value        = venda.curso       || '';
+      this.setCursosSelecionados(this.cursosPorTexto(venda.curso));
       document.getElementById('f-email').value        = venda.email       || '';
       setInputBRL('f-valor', venda.valor);
       document.getElementById('f-lead-novo').value    = venda.leadNovo    || 'Não';
@@ -490,13 +668,18 @@ const Vendas = {
       document.getElementById('f-sexo').value         = '';
       document.getElementById('f-estado').value       = '';
       document.getElementById('f-origem').value       = '';
-      document.getElementById('f-curso').value        = '';
+      this.setCursosSelecionados([]);
       document.getElementById('f-lead-novo').value    = 'Não';
       document.getElementById('f-quem-comprou').value = '';
     }
 
     const campoPac = document.getElementById('f-pac');
     if (campoPac) { campoPac.disabled = !Auth.eAdmin(); if (!Auth.eAdmin()) campoPac.value = Auth.getPac(); }
+    this.cursoBusca = '';
+    const buscaCurso = document.getElementById('curso-picker-search');
+    if (buscaCurso) buscaCurso.value = '';
+    this.fecharCursoPicker();
+    this.renderCursoPicker();
 
     abrirModal('modal-venda');
     setTimeout(() => document.getElementById('f-nome')?.focus(), 150);

@@ -42,7 +42,9 @@ const CONFIG = {
     'Piloto Privado Prático',
     'Piloto Privado Teórico',
     'PLA AZUL',
-    'SAFE Pilot Academy'
+    'SAFE Pilot Academy',
+    'SIMULADOR AATD',
+    'SIMULADOR PCATD'
   ],
 
   CANAIS_FATURAMENTO: [

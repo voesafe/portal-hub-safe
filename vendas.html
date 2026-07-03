@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-  <link rel="stylesheet" href="css/vendas.css?v=20260615-unify">
+  <link rel="stylesheet" href="css/vendas.css?v=20260703-cursos-multiselect">
 </head>
 <body>
 
@@ -177,32 +177,22 @@
 
       <div class="form-group">
         <label class="form-label">Curso / Produto Comprado *</label>
-        <select class="form-control" id="f-curso">
-          <option value="">Selecione o curso</option>
-          <optgroup label="Cursos Individuais">
-            <option>Adaptação de Instrutor Externo</option>
-            <option>Alojamento</option>
-            <option>Aperfeiçoamento Contínuo</option>
-            <option>Curriculo de Solo</option>
-            <option>Horas de Voo</option>
-            <option>INVA Prático</option>
-            <option>INVA Teórico</option>
-            <option>Piloto Comercial/IFR MLTE</option>
-            <option>Piloto Comercial/IFR Prático</option>
-            <option>Piloto Comercial Teórico</option>
-            <option>Piloto Privado Prático</option>
-            <option>Piloto Privado Teórico</option>
-            <option>PLA AZUL</option>
-            <option>SAFE Pilot Academy</option>
-            <option>Voo de Incentivo</option>
-          </optgroup>
-          <optgroup label="Pacotes Teórico + Prático">
-            <option>Pacote Piloto Privado Teórico + Prático</option>
-            <option>Pacote Piloto Comercial/IFR Teórico + Prático</option>
-            <option>Pacote Piloto Comercial/IFR MLTE Teórico + Prático</option>
-            <option>Pacote INVA Teórico + Prático</option>
-          </optgroup>
-        </select>
+        <input type="hidden" id="f-curso">
+        <div class="curso-picker" id="curso-picker">
+          <button class="form-control curso-picker-trigger" id="curso-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span id="curso-picker-placeholder">Selecione um ou mais cursos</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="curso-picker-panel" id="curso-picker-panel">
+            <input type="text" class="form-control curso-picker-search" id="curso-picker-search" placeholder="Buscar curso">
+            <div class="curso-picker-options" id="curso-picker-options" role="listbox" aria-multiselectable="true"></div>
+            <div class="curso-picker-footer">
+              <span id="curso-picker-count">0 selecionados</span>
+              <button class="curso-picker-clear" id="curso-picker-clear" type="button">Limpar</button>
+            </div>
+          </div>
+        </div>
+        <div class="curso-picker-selected" id="curso-picker-selected"></div>
       </div>
 
       <div class="form-row">
@@ -307,7 +297,7 @@
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth.js?v=20260703-escala-pav"></script>
-<script src="js/vendas.js?v=20260615-unify"></script>
+<script src="js/vendas.js?v=20260703-cursos-multiselect"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
