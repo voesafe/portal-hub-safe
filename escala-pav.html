@@ -1060,19 +1060,21 @@ let state = {
 };
 
 // ─── API ─────────────────────────────────────────────────────
-// Leituras via GET (querystring) — imunes ao "sumiço" do corpo no redirect do
-// Apps Script e ao hop de autenticacao quando o usuario esta logado no Google.
-// Escritas seguem via POST (dados no corpo), com action tambem na querystring.
-const PAV_READ_ACTIONS = new Set(['getPAVs', 'getEscala', 'getFinanceiro']);
+// GET (querystring) é imune ao "sumiço" do corpo no redirect do Apps Script e ao
+// hop de autenticação quando o usuário está logado no Google. Leituras e savePAV
+// (campos escalares) vão por GET. saveEscala manda um array — que o backend só
+// entende no corpo do POST —, então segue por POST e a confirmação é feita
+// relendo a escala (ver handler do botão Salvar escala).
+const PAV_GET_ACTIONS = new Set(['getPAVs', 'getEscala', 'getFinanceiro', 'savePAV']);
 async function api(action, body = {}) {
   showLoading(true);
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 30000);
   try {
     let res;
-    if (PAV_READ_ACTIONS.has(action)) {
+    if (PAV_GET_ACTIONS.has(action)) {
       const params = new URLSearchParams({ action });
-      Object.keys(body).forEach(k => params.append(k, body[k]));
+      Object.keys(body).forEach(k => params.append(k, body[k] == null ? '' : body[k]));
       res = await fetch(API_URL + '?' + params.toString(), { signal: ctrl.signal });
     } else {
       res = await fetch(API_URL + '?action=' + encodeURIComponent(action), {
@@ -1467,7 +1469,21 @@ document.getElementById('btnSalvarEscala')?.addEventListener('click', async () =
     sjk_id: v.sjk_id || ''
   }));
 
-  const res = await api('saveEscala', { escala: escalaArr });
+  let res = await api('saveEscala', { escala: escalaArr });
+  if (!res.ok) {
+    // A resposta do POST pode ter se perdido no redirect do Apps Script mesmo
+    // com a escrita tendo ocorrido. Confirma relendo a escala (GET, confiável).
+    const check = await api('getEscala');
+    if (check.ok) {
+      const gravou = escalaArr.every(day => {
+        const g = (check.escala || []).find(d => String(d.data) === String(day.data));
+        return g
+          && String(g.cpn_id || '') === String(day.cpn_id || '')
+          && String(g.sjk_id || '') === String(day.sjk_id || '');
+      });
+      if (gravou) res = { ok: true };
+    }
+  }
   if (res.ok) {
     // Merge editadas no estado principal
     Object.assign(state.escala, state.escalaEditada);
