@@ -1060,20 +1060,36 @@ let state = {
 };
 
 // ─── API ─────────────────────────────────────────────────────
+// Leituras via GET (querystring) — imunes ao "sumiço" do corpo no redirect do
+// Apps Script e ao hop de autenticacao quando o usuario esta logado no Google.
+// Escritas seguem via POST (dados no corpo), com action tambem na querystring.
+const PAV_READ_ACTIONS = new Set(['getPAVs', 'getEscala', 'getFinanceiro']);
 async function api(action, body = {}) {
   showLoading(true);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 30000);
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action, ...body })
-    });
-    const data = await res.json();
-    return data;
+    let res;
+    if (PAV_READ_ACTIONS.has(action)) {
+      const params = new URLSearchParams({ action });
+      Object.keys(body).forEach(k => params.append(k, body[k]));
+      res = await fetch(API_URL + '?' + params.toString(), { signal: ctrl.signal });
+    } else {
+      res = await fetch(API_URL + '?action=' + encodeURIComponent(action), {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action, ...body }),
+        signal: ctrl.signal
+      });
+    }
+    return await res.json();
   } catch (e) {
-    toast('Erro de conexão com o servidor', 'error');
+    toast(e.name === 'AbortError'
+      ? 'O servidor demorou a responder. Tente novamente.'
+      : 'Erro de conexão com o servidor', 'error');
     return { ok: false };
   } finally {
+    clearTimeout(timer);
     showLoading(false);
   }
 }
