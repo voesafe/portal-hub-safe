@@ -1141,8 +1141,8 @@ async function entrarNoApp() {
     document.getElementById('tabCad').style.display = 'none';
   }
 
-  await carregarPAVs();
-  await carregarEscala();
+  // busca PAVs e escala em paralelo p/ reduzir o tempo de abertura
+  await Promise.all([carregarPAVs(), carregarEscala()]);
   renderCalendario();
   populateFinMes();
 
