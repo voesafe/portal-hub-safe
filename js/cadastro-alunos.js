@@ -152,16 +152,16 @@ const CadastroAlunos = {
 
   atualizarResumo() {
     const c = this.contagens();
-    document.getElementById('kpi-pendentes').textContent = c.pendentes;
-    document.getElementById('kpi-prontos').textContent = c.trello;
-    document.getElementById('kpi-concluidos').textContent = c.concluidos;
-    document.getElementById('kpi-atencao').textContent = c.atencao;
-    document.getElementById('count-ativos').textContent = c.ativos;
-    document.getElementById('count-pendentes').textContent = c.pendentes;
-    document.getElementById('count-trello').textContent = c.trello;
-    document.getElementById('count-concluidos').textContent = c.concluidos;
-    document.getElementById('count-atencao').textContent = c.atencao;
-    document.getElementById('count-inativos').textContent = c.inativos;
+    const setTexto = (id, valor) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = valor;
+    };
+    setTexto('count-ativos', c.ativos);
+    setTexto('count-pendentes', c.pendentes);
+    setTexto('count-trello', c.trello);
+    setTexto('count-concluidos', c.concluidos);
+    setTexto('count-atencao', c.atencao);
+    setTexto('count-inativos', c.inativos);
   },
 
   alunosFiltrados() {
