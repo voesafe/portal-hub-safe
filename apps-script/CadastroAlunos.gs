@@ -5,7 +5,6 @@
 
 var CADASTRO_ALUNOS_SHEET_ID = '1aNLtIIvalqPG7FkKncD5j16Pmgy5ly-34coaa4Gyyp8';
 var CADASTRO_ALUNOS_SHEET_NAME = 'Planilha Alunos';
-var CADASTRO_ALUNOS_TRELLO_API_URL = 'CADASTRO_ALUNOS_API_URL_AQUI';
 
 var CADASTRO_ALUNOS_EXTRA_HEADERS = [
   'HUB_STATUS',
@@ -205,40 +204,11 @@ function sincronizarTrelloCadastroAluno(id, usuario, token) {
   var aluno = linhaParaCadastroAluno_(alvo.row, alvo.rowNumber, contexto.indices);
   if (aluno.status === 'inativo') throw new Error('Reative o aluno antes de sincronizar Trello.');
   if (!aluno.elegivel) throw new Error('Este curso não é elegível S141.');
+  if (!aluno.s141) throw new Error('Marque o S141 antes de sincronizar o Trello.');
   if (!aluno.baseTrello) throw new Error('Base não identificada. Revise o cadastro antes de sincronizar Trello.');
 
-  var endpoint = obterCadastroAlunosTrelloApiUrl_();
-  if (!endpoint || endpoint === 'CADASTRO_ALUNOS_API_URL_AQUI') {
-    throw new Error('Endpoint Trello ainda não configurado em CADASTRO_ALUNOS_API_URL.');
-  }
-
-  var params = {
-    action: 'sincronizarAluno',
-    nome: aluno.nome,
-    cpf: aluno.cpf,
-    matricula: aluno.matricula,
-    base: aluno.baseTrello,
-    curso: aluno.cursoOperacional,
-    token: token || ''
-  };
-  var url = endpoint + '?' + Object.keys(params).map(function(chave) {
-    return encodeURIComponent(chave) + '=' + encodeURIComponent(params[chave] || '');
-  }).join('&');
-  var resposta = UrlFetchApp.fetch(url, {
-    method: 'get',
-    muteHttpExceptions: true,
-    followRedirects: true
-  });
-  var texto = resposta.getContentText();
-  var dados;
-  try {
-    dados = JSON.parse(texto);
-  } catch (e) {
-    throw new Error('O backend Trello respondeu em formato inválido.');
-  }
-  if (!dados.ok) throw new Error(dados.error || 'Não foi possível sincronizar o Trello.');
-
-  var trelloUrl = dados.url || dados.data && dados.data.url || '';
+  var dados = sincronizarCadastroAlunoNoTrello_(aluno);
+  var trelloUrl = dados.url || '';
   setCadastroAlunoValor_(contexto.sheet, alvo.rowNumber, contexto.indices, 'trelloUrl', trelloUrl);
   setCadastroAlunoValor_(contexto.sheet, alvo.rowNumber, contexto.indices, 'trelloStatus', dados.status || 'sincronizado');
   setCadastroAlunoValor_(contexto.sheet, alvo.rowNumber, contexto.indices, 'hubStatus', 'concluido');
@@ -485,11 +455,6 @@ function obterCadastroAlunosSheetId_() {
     CADASTRO_ALUNOS_SHEET_ID;
 }
 
-function obterCadastroAlunosTrelloApiUrl_() {
-  return PropertiesService.getScriptProperties().getProperty('CADASTRO_ALUNOS_API_URL') ||
-    CADASTRO_ALUNOS_TRELLO_API_URL;
-}
-
 function normalizarHeaderCadastroAluno_(valor) {
   return normalizarTextoCadastroAluno_(valor).replace(/\s+/g, '_');
 }
@@ -539,4 +504,213 @@ function resumirCadastroAlunos_(alunos) {
     if (aluno.status === 'atencao') resumo.atencao++;
   });
   return resumo;
+}
+
+function sincronizarCadastroAlunoNoTrello_(aluno) {
+  var cfg = obterConfigCadastroAlunosTrello_();
+  var curso = String(aluno.cursoCodigo || '').toUpperCase();
+  var listId = cfg.listas[curso];
+  var templateId = cfg.templates[curso];
+  if (!listId || !templateId) throw new Error('Curso sem lista/template Trello configurado: ' + curso);
+
+  var card = buscarCardCadastroAlunoTrello_(cfg, aluno);
+  var criado = false;
+  if (!card) {
+    card = criarCardCadastroAlunoTrello_(cfg, aluno, listId, templateId);
+    criado = true;
+  } else if (String(card.idList) !== String(listId)) {
+    card = trelloCadastroAlunos_('put', '/cards/' + card.id, {
+      idList: listId
+    }, null, cfg);
+  }
+
+  atualizarBaseCadastroAlunoTrello_(cfg, card.id, aluno.baseTrello);
+  marcarS141CadastroAlunoTrello_(cfg, card.id, curso);
+
+  var atualizado = trelloCadastroAlunos_('get', '/cards/' + card.id, {
+    fields: 'name,url,idList'
+  }, null, cfg);
+
+  return {
+    url: atualizado.url || card.url || '',
+    status: criado ? 'criado' : 'atualizado',
+    message: criado ? 'Card criado e checklist S141 marcado.' : 'Card atualizado e checklist S141 marcado.'
+  };
+}
+
+function buscarCardCadastroAlunoTrello_(cfg, aluno) {
+  var cardPorUrl = buscarCardCadastroAlunoPorUrl_(cfg, aluno.trelloUrl);
+  if (cardPorUrl) return cardPorUrl;
+
+  var cards = trelloCadastroAlunos_('get', '/boards/' + cfg.boardId + '/cards', {
+    fields: 'name,idList,closed,url,isTemplate'
+  }, null, cfg);
+  var nomeAluno = normalizarNomeCartaoCadastroAlunoTrello_(aluno.nome);
+  var encontrados = cards.filter(function(card) {
+    if (card.closed || card.isTemplate) return false;
+    return normalizarNomeCartaoCadastroAlunoTrello_(card.name) === nomeAluno;
+  });
+  if (!encontrados.length) return null;
+  if (encontrados.length > 1) {
+    throw new Error('Mais de um card encontrado no Trello com este nome. Abra o Trello e resolva a duplicidade antes de sincronizar.');
+  }
+  return encontrados[0];
+}
+
+function buscarCardCadastroAlunoPorUrl_(cfg, url) {
+  var shortLink = extrairShortLinkTrello_(url);
+  if (!shortLink) return null;
+  try {
+    var card = trelloCadastroAlunos_('get', '/cards/' + shortLink, {
+      fields: 'name,idList,closed,url,isTemplate'
+    }, null, cfg);
+    if (card && !card.closed && !card.isTemplate) return card;
+  } catch (e) {
+    return null;
+  }
+  return null;
+}
+
+function criarCardCadastroAlunoTrello_(cfg, aluno, listId, templateId) {
+  return trelloCadastroAlunos_('post', '/cards', {
+    idList: listId,
+    idCardSource: templateId,
+    keepFromSource: 'all',
+    name: aluno.nome,
+    pos: 'top'
+  }, null, cfg);
+}
+
+function atualizarBaseCadastroAlunoTrello_(cfg, cardId, base) {
+  if (!cfg.baseFields.sjk || !cfg.baseFields.cpn) {
+    throw new Error('Campos de Base do Trello não configurados.');
+  }
+  var baseNormalizada = String(base || '').toUpperCase();
+  setCheckboxCadastroAlunoTrello_(cfg, cardId, cfg.baseFields.sjk, baseNormalizada === 'SJK');
+  setCheckboxCadastroAlunoTrello_(cfg, cardId, cfg.baseFields.cpn, baseNormalizada === 'CPN');
+}
+
+function setCheckboxCadastroAlunoTrello_(cfg, cardId, fieldId, checked) {
+  trelloCadastroAlunos_('put', '/cards/' + cardId + '/customField/' + fieldId + '/item', {}, {
+    value: {
+      checked: checked ? 'true' : 'false'
+    }
+  }, cfg);
+}
+
+function marcarS141CadastroAlunoTrello_(cfg, cardId, curso) {
+  var checklists = trelloCadastroAlunos_('get', '/cards/' + cardId + '/checklists', {}, null, cfg);
+  var item = localizarItemS141CadastroAlunoTrello_(checklists, curso);
+  if (!item) {
+    throw new Error('Checklist "Cadastro S141" do curso ' + curso + ' não encontrado neste card.');
+  }
+  trelloCadastroAlunos_('put', '/cards/' + cardId + '/checkItem/' + item.id, {
+    state: 'complete'
+  }, null, cfg);
+}
+
+function localizarItemS141CadastroAlunoTrello_(checklists, curso) {
+  var prioridades = {
+    PP: ['piloto privado inicial'],
+    PC: ['cadastro anac piloto comercial', 'piloto comercial inicial'],
+    INVA: ['cadastro anac inva', 'inva inicial']
+  }[curso] || [];
+
+  for (var p = 0; p < prioridades.length; p++) {
+    var alvo = prioridades[p];
+    for (var c = 0; c < checklists.length; c++) {
+      var checklist = checklists[c];
+      var nomeChecklist = normalizarTextoCadastroAluno_(checklist.name);
+      if (nomeChecklist.indexOf(alvo) === -1) continue;
+      var item = localizarItemCadastroS141_(checklist);
+      if (item) return item;
+    }
+  }
+
+  if (curso === 'PP') {
+    for (var i = 0; i < checklists.length; i++) {
+      var itemInicial = localizarItemCadastroS141_(checklists[i]);
+      if (itemInicial) return itemInicial;
+    }
+  }
+  return null;
+}
+
+function localizarItemCadastroS141_(checklist) {
+  var itens = checklist.checkItems || [];
+  for (var i = 0; i < itens.length; i++) {
+    if (normalizarTextoCadastroAluno_(itens[i].name) === 'cadastro s141') return itens[i];
+  }
+  return null;
+}
+
+function trelloCadastroAlunos_(method, path, params, payload, cfg) {
+  var query = {
+    key: cfg.key,
+    token: cfg.token
+  };
+  Object.keys(params || {}).forEach(function(k) {
+    if (params[k] !== undefined && params[k] !== null) query[k] = params[k];
+  });
+  var url = 'https://api.trello.com/1' + path + '?' + Object.keys(query).map(function(k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(query[k]);
+  }).join('&');
+  var opcoes = {
+    method: method,
+    muteHttpExceptions: true,
+    followRedirects: true
+  };
+  if (payload) {
+    opcoes.contentType = 'application/json';
+    opcoes.payload = JSON.stringify(payload);
+  }
+  var resposta = UrlFetchApp.fetch(url, opcoes);
+  var status = resposta.getResponseCode();
+  var texto = resposta.getContentText();
+  if (status < 200 || status >= 300) {
+    throw new Error('Trello respondeu erro ' + status + ': ' + texto.slice(0, 180));
+  }
+  if (!texto) return {};
+  try {
+    return JSON.parse(texto);
+  } catch (e) {
+    return {};
+  }
+}
+
+function obterConfigCadastroAlunosTrello_() {
+  var props = PropertiesService.getScriptProperties();
+  var cfg = {
+    key: props.getProperty('TRELLO_API_KEY'),
+    token: props.getProperty('TRELLO_TOKEN'),
+    boardId: props.getProperty('CADASTRO_ALUNOS_TRELLO_BOARD_ID'),
+    listas: {
+      PP: props.getProperty('CADASTRO_ALUNOS_TRELLO_LIST_PP_ID'),
+      PC: props.getProperty('CADASTRO_ALUNOS_TRELLO_LIST_PC_ID'),
+      INVA: props.getProperty('CADASTRO_ALUNOS_TRELLO_LIST_INVA_ID')
+    },
+    templates: {
+      PP: props.getProperty('CADASTRO_ALUNOS_TRELLO_TEMPLATE_PP_ID'),
+      PC: props.getProperty('CADASTRO_ALUNOS_TRELLO_TEMPLATE_PC_ID'),
+      INVA: props.getProperty('CADASTRO_ALUNOS_TRELLO_TEMPLATE_INVA_ID')
+    },
+    baseFields: {
+      sjk: props.getProperty('CADASTRO_ALUNOS_TRELLO_BASE_SJK_FIELD_ID'),
+      cpn: props.getProperty('CADASTRO_ALUNOS_TRELLO_BASE_CPN_FIELD_ID')
+    }
+  };
+
+  if (!cfg.key || !cfg.token || !cfg.boardId) {
+    throw new Error('Credenciais/board do Trello ainda não configurados nas propriedades do Apps Script.');
+  }
+  return cfg;
+}
+
+function extrairShortLinkTrello_(url) {
+  var match = String(url || '').match(/trello\.com\/c\/([^\/?#]+)/i);
+  return match ? match[1] : '';
+}
+
+function normalizarNomeCartaoCadastroAlunoTrello_(nome) {
+  return normalizarTextoCadastroAluno_(nome).replace(/^[0-9]+[\s.]*/, '').trim();
 }
