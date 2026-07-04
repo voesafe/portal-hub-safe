@@ -4,18 +4,75 @@
 // ============================================================
 
 const Auth = {
+  SESSION_MAX_MS: 12 * 60 * 60 * 1000,
+  SESSION_TIMEZONE: 'America/Sao_Paulo',
 
   salvarSessao(usuario) {
-    // localStorage: sessão persiste em refresh, fechar aba e reabrir o app
-    localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(usuario));
+    localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(this.normalizarSessao(usuario)));
+  },
+
+  versaoSessaoAtual() {
+    return CONFIG.SESSION_VERSION || CONFIG.APP_VERSION || '1.0.0';
+  },
+
+  diaLocal(data = new Date()) {
+    try {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: this.SESSION_TIMEZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(data);
+    } catch {
+      return data.toISOString().slice(0, 10);
+    }
+  },
+
+  normalizarSessao(usuario) {
+    const agora = Date.now();
+    const loginEm = Number(usuario?.loginEm || usuario?.criadoEm || agora);
+    const expiraEmServidor = Number(usuario?.expiraEm || 0);
+    const expiraEm = expiraEmServidor
+      ? Math.min(expiraEmServidor, loginEm + this.SESSION_MAX_MS)
+      : loginEm + this.SESSION_MAX_MS;
+
+    return {
+      ...usuario,
+      loginEm,
+      expiraEm,
+      diaLogin: usuario?.diaLogin || this.diaLocal(new Date(loginEm)),
+      sessionVersion: this.versaoSessaoAtual()
+    };
+  },
+
+  limparSessao() {
+    localStorage.removeItem(CONFIG.SESSION_KEY);
+    sessionStorage.removeItem(CONFIG.SESSION_KEY);
+    sessionStorage.removeItem('cco_session');
+  },
+
+  motivoSessaoInvalida(sessao) {
+    if (!sessao || typeof sessao !== 'object') return 'ausente';
+    if (!sessao.loginEm || !sessao.expiraEm || !sessao.diaLogin || !sessao.sessionVersion) {
+      return 'legada';
+    }
+    if (sessao.sessionVersion !== this.versaoSessaoAtual()) return 'versao';
+    if (Date.now() >= Number(sessao.expiraEm)) return 'tempo';
+    if (sessao.diaLogin !== this.diaLocal()) return 'dia';
+    return '';
   },
 
   getSessao() {
     try {
-      // migração: sessões antigas ainda podem estar em sessionStorage
       const raw = localStorage.getItem(CONFIG.SESSION_KEY)
                || sessionStorage.getItem(CONFIG.SESSION_KEY);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      const sessao = JSON.parse(raw);
+      if (this.motivoSessaoInvalida(sessao)) {
+        this.limparSessao();
+        return null;
+      }
+      return sessao;
     } catch { return null; }
   },
 
@@ -173,11 +230,14 @@ const Auth = {
   getEmail()  { return this.getSessao()?.email  || null; },
 
   logout() {
-    localStorage.removeItem(CONFIG.SESSION_KEY);
+    this.limparSessao();
     localStorage.removeItem('safe_return_to');
-    sessionStorage.removeItem(CONFIG.SESSION_KEY);
-    sessionStorage.removeItem('cco_session');
     window.location.href = 'index.html';
+  },
+
+  expirarSessaoServidor() {
+    this.limparSessao();
+    this.irParaLogin();
   },
 
   // Guarda a página atual e manda para o login; após autenticar,

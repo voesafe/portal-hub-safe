@@ -9,7 +9,7 @@ const CONFIG = {
   CAVOK_FECHAMENTO_API_ENABLED: true,
 
   APP_NAME:    'SAFE Hub',
-  APP_VERSION: '1.0.0',
+  APP_VERSION: '2026.07.04-session-policy',
   API_TIMEOUT_MS: 30000,
 
   MESES: [

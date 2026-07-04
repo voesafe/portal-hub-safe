@@ -4,6 +4,11 @@
 // Login por e-mail (coluna D = row[3])
 // ============================================================
 
+var SAFE_AUTH_VERSION = '2026.07.04-session-policy';
+var SAFE_SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+var SAFE_SESSION_EPOCH_KEY = 'SAFE_SESSION_EPOCH_MS';
+var SAFE_SESSION_TIMEZONE = 'America/Sao_Paulo';
+
 /**
  * Valida login por e-mail e retorna dados do usuário
  */
@@ -56,26 +61,52 @@ function criarTokenSessao(usuario) {
     pac: String(usuario.pac || ''),
     perfil: normalizarPerfil(usuario.perfil),
     criadoEm: agora,
-    expiraEm: agora + (12 * 60 * 60 * 1000)
+    expiraEm: agora + SAFE_SESSION_TTL_MS,
+    diaLogin: dataLocalSessao_(agora),
+    versaoAuth: SAFE_AUTH_VERSION
   };
 
-  // Remove sessões vencidas para evitar crescimento indefinido das propriedades.
+  limparSessoesInvalidas_(props, agora);
+
+  props.setProperty('SAFE_SESSION_' + token, JSON.stringify(sessao));
+
+  return token;
+}
+
+function dataLocalSessao_(timestamp) {
+  return Utilities.formatDate(
+    new Date(Number(timestamp) || Date.now()),
+    SAFE_SESSION_TIMEZONE,
+    'yyyy-MM-dd'
+  );
+}
+
+function obterEpochSessao_(props) {
+  return Number(props.getProperty(SAFE_SESSION_EPOCH_KEY) || 0);
+}
+
+function sessaoInvalidaPorPolitica_(sessao, agora, props) {
+  if (!sessao || !sessao.expiraEm || !sessao.criadoEm || !sessao.diaLogin || !sessao.versaoAuth) return true;
+  if (Number(sessao.expiraEm) <= agora) return true;
+  if (Number(sessao.criadoEm) < obterEpochSessao_(props)) return true;
+  if (String(sessao.versaoAuth) !== SAFE_AUTH_VERSION) return true;
+  if (String(sessao.diaLogin) !== dataLocalSessao_(agora)) return true;
+  return false;
+}
+
+function limparSessoesInvalidas_(props, agora) {
   var propriedades = props.getProperties();
   Object.keys(propriedades).forEach(function(chave) {
     if (chave.indexOf('SAFE_SESSION_') !== 0) return;
     try {
       var anterior = JSON.parse(propriedades[chave]);
-      if (!anterior.expiraEm || Number(anterior.expiraEm) < agora) {
+      if (sessaoInvalidaPorPolitica_(anterior, agora, props)) {
         props.deleteProperty(chave);
       }
     } catch (e) {
       props.deleteProperty(chave);
     }
   });
-
-  props.setProperty('SAFE_SESSION_' + token, JSON.stringify(sessao));
-
-  return token;
 }
 
 /**
@@ -97,7 +128,8 @@ function validarTokenSessao(token) {
     return null;
   }
 
-  if (!sessao.expiraEm || Number(sessao.expiraEm) < Date.now()) {
+  var agora = Date.now();
+  if (sessaoInvalidaPorPolitica_(sessao, agora, props)) {
     props.deleteProperty(chave);
     return null;
   }
@@ -157,17 +189,22 @@ function exigirEdicaoControleGastos(token) {
 
 function validarAcaoPerfilExclusivo_(token, action) {
   if (!token) return;
-  var raw = PropertiesService.getScriptProperties()
-    .getProperty('SAFE_SESSION_' + String(token));
+  var props = PropertiesService.getScriptProperties();
+  var chave = 'SAFE_SESSION_' + String(token);
+  var raw = props.getProperty(chave);
   if (!raw) return;
 
   var sessao;
   try {
     sessao = JSON.parse(raw);
   } catch (e) {
+    props.deleteProperty(chave);
     return;
   }
-  if (!sessao.expiraEm || Number(sessao.expiraEm) < Date.now()) return;
+  if (sessaoInvalidaPorPolitica_(sessao, Date.now(), props)) {
+    props.deleteProperty(chave);
+    return;
+  }
 
   var acoesPorPerfilExclusivo = {
     controle_gastos_visualizacao: ['controle-gastos', 'alterar-senha'],
@@ -198,6 +235,20 @@ function exigirGestaoBases(token) {
     throw new Error('A edicao das bases e restrita a administradores.');
   }
   return usuario;
+}
+
+function forcarLogoutGlobal(token) {
+  exigirGestaoUsuarios(token);
+  var props = PropertiesService.getScriptProperties();
+  props.setProperty(SAFE_SESSION_EPOCH_KEY, String(Date.now()));
+
+  Object.keys(props.getProperties()).forEach(function(chave) {
+    if (chave.indexOf('SAFE_SESSION_') === 0) props.deleteProperty(chave);
+  });
+
+  return {
+    mensagem: 'Todas as sessões ativas foram encerradas.'
+  };
 }
 
 /**

@@ -31,6 +31,15 @@ const Cache = {
 };
 
 const API = {
+  sessaoExpirada(data) {
+    const msg = String(data?.error || data?.mensagem || '');
+    return /sess[aã]o expirada/i.test(msg);
+  },
+
+  tratarSessaoExpirada(data) {
+    if (!this.sessaoExpirada(data) || typeof Auth === 'undefined') return;
+    setTimeout(() => Auth.expirarSessaoServidor(), 800);
+  },
 
   async get(action, params = {}, useCache = true) {
     try {
@@ -52,6 +61,7 @@ const API = {
       const query = new URLSearchParams({ ...base, ...params }).toString();
       const res   = await fetch(`${CONFIG.API_URL}?${query}`);
       const data  = await res.json();
+      this.tratarSessaoExpirada(data);
 
       if (data.ok && useCache) Cache.set(action, cacheParams, data);
       return data;
@@ -77,8 +87,9 @@ const API = {
         body:    JSON.stringify(body)
       });
       const raw = await res.text();
+      let parsed;
       try {
-        return JSON.parse(raw);
+        parsed = JSON.parse(raw);
       } catch (parseError) {
         console.error('[API POST resposta inválida]', {
           status: res.status,
@@ -90,6 +101,8 @@ const API = {
           error: `O servidor respondeu em formato inválido (HTTP ${res.status}).`
         };
       }
+      this.tratarSessaoExpirada(parsed);
+      return parsed;
     } catch (err) {
       console.error('[API POST]', err);
       return { ok: false, error: 'Erro de conexão com o servidor.' };
@@ -124,6 +137,7 @@ const API = {
   async getUsuariosLogin() { return this.get('login-usuarios', {}, true); },
   async criarUsuario(dados)  { return this.post('criar-usuario',  dados); },
   async editarUsuario(dados) { return this.post('editar-usuario', dados); },
+  async forcarLogoutGlobal() { return this.post('forcar-logout-global', {}); },
 
   // ── Bases ──────────────────────────────────────────────────
   async getBases(useCache = true) { return this.get('bases', {}, useCache); },

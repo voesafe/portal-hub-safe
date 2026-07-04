@@ -210,8 +210,27 @@ const Admin = {
   initForm() {
     document.getElementById('btn-novo-usuario')?.addEventListener('click', () => this.abrirForm());
     document.getElementById('btn-salvar-usuario')?.addEventListener('click', () => this.salvar());
+    document.getElementById('btn-forcar-relogin')?.addEventListener('click', () => this.forcarReloginGlobal());
     document.getElementById('u-origem')?.addEventListener('change', () => this.atualizarCamposOrigem());
     document.getElementById('u-perfil')?.addEventListener('change', () => this.atualizarResumoAcesso());
+  },
+
+  async forcarReloginGlobal() {
+    const msg = 'Isso vai encerrar todas as sessões ativas do Hub, inclusive a sua. Todos precisarão entrar novamente.';
+    if (!window.confirm(`${msg}\n\nDeseja continuar?`)) return;
+
+    const btn = document.getElementById('btn-forcar-relogin');
+    btnLoading(btn, true);
+    const res = await API.forcarLogoutGlobal();
+    btnLoading(btn, false);
+
+    if (!res.ok) {
+      toast(res.error || 'Não foi possível forçar o relogin geral.', 'error');
+      return;
+    }
+
+    toast('Sessões encerradas. Redirecionando para o login.', 'success');
+    setTimeout(() => Auth.logout(), 1200);
   },
 
   perfisAcesso() {

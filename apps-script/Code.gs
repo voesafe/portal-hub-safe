@@ -200,6 +200,9 @@ function doPost(e) {
         if (!editado) return jsonError('Usuário não encontrado');
         return jsonSuccess({ mensagem: 'Usuário atualizado' });
 
+      case 'forcar-logout-global':
+        return jsonSuccess(forcarLogoutGlobal(token));
+
       // ── Bases ──────────────────────────────────────────────
       case 'salvar-base':
         exigirGestaoBases(token);
