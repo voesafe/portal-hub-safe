@@ -69,10 +69,6 @@ function importarCadastroAlunos(alunos, usuario) {
   alunos.forEach(function(raw) {
     var novo = normalizarAlunoImportado_(raw);
     if (!novo.nome && !novo.cpf) return;
-    if (!novo.cpf) {
-      resumo.atencoes++;
-      return;
-    }
 
     var candidatos = porCpf[novo.cpf] || [];
     var ativo = candidatos.filter(function(c) { return c.aluno.status !== 'inativo'; })[0];
@@ -83,6 +79,36 @@ function importarCadastroAlunos(alunos, usuario) {
     var conflitoNome = (porNome[normalizarTextoCadastroAluno_(novo.nome)] || []).some(function(c) {
       return c.aluno.cpf && c.aluno.cpf !== novo.cpf;
     });
+    var cpfInvalido = !novo.cpf || !novo.cpfValido;
+
+    if (cpfInvalido) {
+      var obsCpf = novo.cpf
+        ? 'CPF inválido no XLS do CAVOK. Corrija o cadastro antes de seguir para S141/Trello.'
+        : 'CPF ausente no XLS do CAVOK. Corrija o cadastro antes de seguir para S141/Trello.';
+      if (mesmoCurso || ativo || inativo) {
+        var alvoCpf = mesmoCurso || ativo || inativo;
+        atualizarLinhaCadastroAluno_(sheet, alvoCpf.item.rowNumber, indices, novo, {
+          situacao: ativo || mesmoCurso ? 'Ativo' : 'Inativo',
+          s141: false,
+          hubStatus: 'atencao',
+          obs: obsCpf,
+          atualizadoEm: agora
+        });
+        resumo.existentes++;
+      } else {
+        appendCadastroAluno_(sheet, indices, novo, {
+          situacao: 'Ativo',
+          s141: false,
+          hubStatus: 'atencao',
+          obs: obsCpf,
+          atualizadoEm: agora
+        });
+        resumo.novos++;
+      }
+      resumo.atencoes++;
+      if (!novo.elegivel) resumo.naoElegiveis++;
+      return;
+    }
 
     if (inativo && !ativo) {
       atualizarLinhaCadastroAluno_(sheet, inativo.item.rowNumber, indices, novo, {
@@ -354,6 +380,7 @@ function normalizarAlunoImportado_(raw) {
     matricula: String(obj.matricula || '').trim(),
     nome: String(obj.nome || obj.cliente || '').trim(),
     cpf: normalizarCpfCadastroAluno_(obj.cpf),
+    cpfValido: cpfValidoCadastroAluno_(obj.cpf),
     email: String(obj.email || obj.e_mail || '').trim(),
     curso: String(cursoOriginal || '').trim(),
     cursoOperacional: cursoInfo.codigo,
@@ -471,6 +498,23 @@ function normalizarTextoCadastroAluno_(valor) {
 
 function normalizarCpfCadastroAluno_(valor) {
   return String(valor || '').replace(/\D/g, '');
+}
+
+function cpfValidoCadastroAluno_(valor) {
+  var cpf = normalizarCpfCadastroAluno_(valor);
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+  var soma = 0;
+  for (var i = 0; i < 9; i++) soma += Number(cpf.charAt(i)) * (10 - i);
+  var digito1 = 11 - (soma % 11);
+  if (digito1 >= 10) digito1 = 0;
+
+  soma = 0;
+  for (var j = 0; j < 10; j++) soma += Number(cpf.charAt(j)) * (11 - j);
+  var digito2 = 11 - (soma % 11);
+  if (digito2 >= 10) digito2 = 0;
+
+  return digito1 === Number(cpf.charAt(9)) && digito2 === Number(cpf.charAt(10));
 }
 
 function formatarCpfCadastroAluno_(cpf) {
