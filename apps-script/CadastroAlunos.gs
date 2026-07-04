@@ -3,7 +3,7 @@
 // SAFE Escola de Aviação | SAFE Hub
 // ============================================================
 
-var CADASTRO_ALUNOS_SHEET_ID = '1aNLtIlvalqPG7FkKncD5j16Pmgy5ly-34coaa4Gyyp8';
+var CADASTRO_ALUNOS_SHEET_ID = '1aNLtIIvalqPG7FkKncD5j16Pmgy5ly-34coaa4Gyyp8';
 var CADASTRO_ALUNOS_SHEET_NAME = 'Planilha Alunos';
 var CADASTRO_ALUNOS_TRELLO_API_URL = 'CADASTRO_ALUNOS_API_URL_AQUI';
 
