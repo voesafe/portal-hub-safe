@@ -172,15 +172,85 @@
   color: #c0392b;
 }
 
+.cadastro-cpf-button {
+  color: var(--navy);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.cadastro-cpf-button:hover {
+  color: var(--blue-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .cadastro-actions {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  flex-wrap: nowrap;
   gap: 6px;
+  position: relative;
 }
 
 .cadastro-actions .btn {
   padding: 6px 10px;
   font-size: .74rem;
+  white-space: nowrap;
+}
+
+.cadastro-menu-trigger {
+  min-width: 32px;
+  padding-inline: 8px !important;
+  font-size: .9rem !important;
+  line-height: 1;
+}
+
+.cadastro-action-menu {
+  position: relative;
+}
+
+.cadastro-action-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  display: none;
+  min-width: 168px;
+  padding: 6px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 12px 28px rgba(29, 41, 81, .16);
+}
+
+.cadastro-action-menu.open .cadastro-action-popover {
+  display: grid;
+  gap: 2px;
+}
+
+.cadastro-action-popover button,
+.cadastro-action-popover a {
+  display: block;
+  width: 100%;
+  padding: 8px 9px;
+  border-radius: 6px;
+  color: var(--navy);
+  font-size: .76rem;
+  font-weight: 800;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.cadastro-action-popover button:hover,
+.cadastro-action-popover a:hover {
+  background: var(--gray-100);
+}
+
+.cadastro-alunos-page .card {
+  overflow: visible;
 }
 
 .table-cadastro-alunos td {
@@ -238,7 +308,7 @@
 
 .table-cadastro-alunos th:nth-child(8),
 .table-cadastro-alunos td:nth-child(8) {
-  width: 170px;
+  width: 165px;
 }
 
 .table.table-cadastro-alunos tbody td:nth-child(3),
@@ -301,6 +371,15 @@
     gap: 8px;
     padding: 7px 0;
     white-space: normal !important;
+  }
+
+  .cadastro-actions {
+    flex-wrap: wrap;
+  }
+
+  .cadastro-action-popover {
+    left: 0;
+    right: auto;
   }
 
   .table-cadastro-alunos tbody td::before {

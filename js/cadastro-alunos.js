@@ -42,6 +42,9 @@ const CadastroAlunos = {
       this.ordenacao = evento.target.value || 'matricula_desc';
       this.renderizar();
     });
+    document.addEventListener('click', evento => {
+      if (!evento.target.closest('.cadastro-action-menu')) this.fecharMenusAcao();
+    });
 
     document.querySelectorAll('.cadastro-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -55,6 +58,12 @@ const CadastroAlunos = {
       const botao = evento.target.closest('[data-acao]');
       if (!botao) return;
       this.executarAcao(botao.dataset.acao, botao.dataset.id, botao);
+    });
+  },
+
+  fecharMenusAcao(menuAtual = null) {
+    document.querySelectorAll('.cadastro-action-menu.open').forEach(menu => {
+      if (menu !== menuAtual) menu.classList.remove('open');
     });
   },
 
@@ -228,9 +237,6 @@ const CadastroAlunos = {
     const curso = aluno.cursoOperacional || aluno.curso || '—';
     const base = aluno.baseTrello || aluno.base || '—';
     const obs = aluno.observacao ? `<small>${escapeHtml(aluno.observacao)}</small>` : '';
-    const trello = aluno.trelloUrl
-      ? `<small><a href="${escapeHtml(aluno.trelloUrl)}" target="_blank" rel="noopener noreferrer">Abrir Trello</a></small>`
-      : '';
     return `
       <tr>
         <td data-label="Matrícula">
@@ -240,7 +246,9 @@ const CadastroAlunos = {
           <strong>${escapeHtml(aluno.nome || 'Aluno sem nome')}</strong>
           <small>${escapeHtml(aluno.email || 'sem e-mail')}</small>
         </td>
-        <td data-label="CPF">${escapeHtml(aluno.cpfFormatado || aluno.cpf || '—')}</td>
+        <td data-label="CPF">
+          ${this.renderCpf(aluno)}
+        </td>
         <td data-label="Curso">
           <strong>${escapeHtml(curso)}</strong>
           <span class="cadastro-muted">${escapeHtml(aluno.curso || '')}</span>
@@ -250,7 +258,6 @@ const CadastroAlunos = {
         <td data-label="Status">
           <span class="cadastro-status ${escapeHtml(aluno.status || '')}">${escapeHtml(meta.label)}</span>
           ${obs}
-          ${trello}
         </td>
         <td data-label="Ações">
           <div class="cadastro-actions">${this.renderAcoes(aluno)}</div>
@@ -264,21 +271,45 @@ const CadastroAlunos = {
       return `<button class="btn btn-primary" data-acao="reativar" data-id="${escapeHtml(aluno.id)}">Reativar</button>`;
     }
 
-    const botoes = [];
-    if (aluno.cpf) {
-      botoes.push(`<button class="btn btn-ghost" data-acao="copiar-cpf" data-id="${escapeHtml(aluno.id)}">Copiar CPF</button>`);
-    }
+    const principal = this.renderAcaoPrincipal(aluno);
+    const itensMenu = this.renderItensMenuAcao(aluno);
+    return `
+      ${principal}
+      <div class="cadastro-action-menu">
+        <button class="btn btn-ghost cadastro-menu-trigger" type="button" data-acao="menu-acoes" data-id="${escapeHtml(aluno.id)}" aria-label="Mais ações">...</button>
+        <div class="cadastro-action-popover">
+          ${itensMenu}
+        </div>
+      </div>
+    `;
+  },
+
+  renderCpf(aluno) {
+    const cpf = aluno.cpfFormatado || aluno.cpf || '';
+    if (!cpf) return '—';
+    return `<button class="cadastro-cpf-button" type="button" data-acao="copiar-cpf" data-id="${escapeHtml(aluno.id)}" title="Copiar CPF">${escapeHtml(cpf)}</button>`;
+  },
+
+  renderAcaoPrincipal(aluno) {
     if (['pendente_s141', 'novo_curso', 'reativado'].includes(aluno.status)) {
-      botoes.push(`<button class="btn btn-primary" data-acao="marcar-s141" data-id="${escapeHtml(aluno.id)}">Marcar S141 feito</button>`);
+      return `<button class="btn btn-primary" data-acao="marcar-s141" data-id="${escapeHtml(aluno.id)}">Marcar S141</button>`;
     }
     if (aluno.status === 'pronto_trello') {
-      botoes.push(`<button class="btn btn-primary" data-acao="sync-trello" data-id="${escapeHtml(aluno.id)}">Sincronizar Trello</button>`);
+      return `<button class="btn btn-primary" data-acao="sync-trello" data-id="${escapeHtml(aluno.id)}">Sincronizar</button>`;
     }
     if (aluno.trelloUrl) {
-      botoes.push(`<a class="btn btn-ghost" href="${escapeHtml(aluno.trelloUrl)}" target="_blank" rel="noopener noreferrer">Abrir Trello</a>`);
+      return `<a class="btn btn-primary" href="${escapeHtml(aluno.trelloUrl)}" target="_blank" rel="noopener noreferrer">Abrir Trello</a>`;
     }
-    botoes.push(`<button class="btn btn-ghost" data-acao="inativar" data-id="${escapeHtml(aluno.id)}">Inativar</button>`);
-    return botoes.join('');
+    return '';
+  },
+
+  renderItensMenuAcao(aluno) {
+    const itens = [];
+    if (aluno.cpf) {
+      itens.push(`<button type="button" data-acao="copiar-cpf" data-id="${escapeHtml(aluno.id)}">Copiar CPF</button>`);
+    }
+    itens.push(`<button type="button" data-acao="inativar" data-id="${escapeHtml(aluno.id)}">Inativar</button>`);
+    return itens.join('');
   },
 
   alunoPorId(id) {
@@ -289,15 +320,25 @@ const CadastroAlunos = {
     const aluno = this.alunoPorId(id);
     if (!aluno) return;
 
+    if (acao === 'menu-acoes') {
+      const menu = botao.closest('.cadastro-action-menu');
+      const abrir = !menu?.classList.contains('open');
+      this.fecharMenusAcao(menu);
+      menu?.classList.toggle('open', abrir);
+      return;
+    }
+
     if (acao === 'copiar-cpf') {
       await navigator.clipboard?.writeText(aluno.cpf || '');
       toast('CPF copiado.', 'success');
+      this.fecharMenusAcao();
       return;
     }
 
     if (acao === 'inativar' && !window.confirm(`Inativar ${aluno.nome}?`)) return;
     if (acao === 'reativar' && !window.confirm(`Reativar ${aluno.nome}?`)) return;
 
+    this.fecharMenusAcao();
     btnLoading(botao, true);
     try {
       const chamadas = {
