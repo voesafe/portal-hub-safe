@@ -53,11 +53,16 @@ function importarCadastroAlunos(alunos, usuario) {
 
   var porCpf = {};
   var porNome = {};
+  var porMatricula = {};
   linhas.forEach(function(item) {
     var aluno = linhaParaCadastroAluno_(item.row, item.rowNumber, indices);
     if (aluno.cpf) {
       if (!porCpf[aluno.cpf]) porCpf[aluno.cpf] = [];
       porCpf[aluno.cpf].push({ item: item, aluno: aluno });
+    }
+    if (aluno.matricula) {
+      if (!porMatricula[aluno.matricula]) porMatricula[aluno.matricula] = [];
+      porMatricula[aluno.matricula].push({ item: item, aluno: aluno });
     }
     var nomeKey = normalizarTextoCadastroAluno_(aluno.nome);
     if (nomeKey) {
@@ -71,6 +76,7 @@ function importarCadastroAlunos(alunos, usuario) {
     if (!novo.nome && !novo.cpf) return;
 
     var candidatos = porCpf[novo.cpf] || [];
+    if (!candidatos.length && novo.matricula) candidatos = porMatricula[novo.matricula] || [];
     var ativo = candidatos.filter(function(c) { return c.aluno.status !== 'inativo'; })[0];
     var inativo = candidatos.filter(function(c) { return c.aluno.status === 'inativo'; })[0];
     var mesmoCurso = candidatos.filter(function(c) {
@@ -166,10 +172,17 @@ function importarCadastroAlunos(alunos, usuario) {
     var item = { row: sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0], rowNumber: rowNumber };
     if (!porCpf[novo.cpf]) porCpf[novo.cpf] = [];
     porCpf[novo.cpf].push({ item: item, aluno: linhaParaCadastroAluno_(item.row, rowNumber, indices) });
+    if (novo.matricula) {
+      if (!porMatricula[novo.matricula]) porMatricula[novo.matricula] = [];
+      porMatricula[novo.matricula].push({ item: item, aluno: linhaParaCadastroAluno_(item.row, rowNumber, indices) });
+    }
     resumo.novos++;
     if (!novo.elegivel) resumo.naoElegiveis++;
     if (conflitoNome) resumo.atencoes++;
   });
+
+  var duplicidadesRemovidas = removerDuplicidadesExatasCadastroAlunos_(sheet, indices);
+  if (duplicidadesRemovidas) resumo.atencoes += duplicidadesRemovidas;
 
   var listado = listarCadastroAlunos(usuario);
   listado.resumoImportacao = resumo;
@@ -497,11 +510,18 @@ function normalizarTextoCadastroAluno_(valor) {
 }
 
 function normalizarCpfCadastroAluno_(valor) {
-  return String(valor || '').replace(/\D/g, '');
+  var cpf = String(valor || '').replace(/\D/g, '');
+  var cpfComZero = '0' + cpf;
+  if (cpf.length === 10 && cpfValidoNumeroCadastroAluno_(cpfComZero)) return cpfComZero;
+  return cpf;
 }
 
 function cpfValidoCadastroAluno_(valor) {
   var cpf = normalizarCpfCadastroAluno_(valor);
+  return cpfValidoNumeroCadastroAluno_(cpf);
+}
+
+function cpfValidoNumeroCadastroAluno_(cpf) {
   if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
   var soma = 0;
@@ -515,6 +535,56 @@ function cpfValidoCadastroAluno_(valor) {
   if (digito2 >= 10) digito2 = 0;
 
   return digito1 === Number(cpf.charAt(9)) && digito2 === Number(cpf.charAt(10));
+}
+
+function removerDuplicidadesExatasCadastroAlunos_(sheet, idx) {
+  var headerInfo = detectarHeaderCadastroAlunos_(sheet);
+  var lastRow = sheet.getLastRow();
+  var lastCol = sheet.getLastColumn();
+  if (lastRow <= headerInfo.row) return 0;
+
+  var values = sheet.getRange(headerInfo.row + 1, 1, lastRow - headerInfo.row, lastCol).getValues();
+  var grupos = {};
+  values.forEach(function(row, offset) {
+    var rowNumber = headerInfo.row + 1 + offset;
+    var aluno = linhaParaCadastroAluno_(row, rowNumber, idx);
+    var chave = [
+      aluno.matricula,
+      aluno.cpf,
+      normalizarCursoCadastroAluno_(aluno.curso).codigo,
+      normalizarTextoCadastroAluno_(aluno.nome)
+    ].join('|');
+    if (!aluno.matricula || !aluno.cpf || !aluno.nome) return;
+    if (!grupos[chave]) grupos[chave] = [];
+    grupos[chave].push({ rowNumber: rowNumber, aluno: aluno });
+  });
+
+  var linhasParaExcluir = [];
+  Object.keys(grupos).forEach(function(chave) {
+    var grupo = grupos[chave];
+    if (grupo.length < 2) return;
+    grupo.sort(function(a, b) {
+      return scoreLinhaCadastroAluno_(b.aluno) - scoreLinhaCadastroAluno_(a.aluno) ||
+        a.rowNumber - b.rowNumber;
+    });
+    grupo.slice(1).forEach(function(item) {
+      linhasParaExcluir.push(item.rowNumber);
+    });
+  });
+
+  linhasParaExcluir.sort(function(a, b) { return b - a; }).forEach(function(rowNumber) {
+    sheet.deleteRow(rowNumber);
+  });
+  return linhasParaExcluir.length;
+}
+
+function scoreLinhaCadastroAluno_(aluno) {
+  var score = 0;
+  if (aluno.status !== 'inativo') score += 10;
+  if (aluno.status && aluno.status !== 'atencao') score += 20;
+  if (aluno.s141 || aluno.status === 'concluido' || aluno.status === 'concluido_legado') score += 100;
+  if (aluno.trelloUrl) score += 50;
+  return score;
 }
 
 function formatarCpfCadastroAluno_(cpf) {
