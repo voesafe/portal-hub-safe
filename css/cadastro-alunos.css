@@ -49,6 +49,33 @@
   align-items: flex-start;
 }
 
+.cadastro-table-tools {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 10px;
+  width: min(100%, 560px);
+}
+
+.cadastro-sort-label {
+  display: grid;
+  gap: 4px;
+  min-width: 190px;
+  color: var(--gray-500);
+  font-size: .7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.cadastro-sort-label span {
+  line-height: 1.1;
+}
+
+.cadastro-sort {
+  min-width: 190px;
+}
+
 .cadastro-search {
   max-width: 320px;
 }
@@ -173,6 +200,17 @@
 
   .cadastro-search {
     max-width: none;
+  }
+
+  .cadastro-table-tools {
+    display: grid;
+    width: 100%;
+  }
+
+  .cadastro-sort-label,
+  .cadastro-sort {
+    min-width: 0;
+    width: 100%;
   }
 
   .table-cadastro-alunos,

@@ -6,6 +6,7 @@
 const CadastroAlunos = {
   alunos: [],
   filtro: 'ativos',
+  ordenacao: 'matricula_desc',
 
   statusMeta: {
     pendente_s141: { label: 'Pendente S141' },
@@ -37,6 +38,10 @@ const CadastroAlunos = {
     document.getElementById('btn-recarregar-alunos')?.addEventListener('click', () => this.carregar(true));
     document.getElementById('arquivo-cavok')?.addEventListener('change', evento => this.importarArquivo(evento));
     document.getElementById('cadastro-busca')?.addEventListener('input', () => this.renderizar());
+    document.getElementById('cadastro-ordenacao')?.addEventListener('change', evento => {
+      this.ordenacao = evento.target.value || 'matricula_desc';
+      this.renderizar();
+    });
 
     document.querySelectorAll('.cadastro-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -163,6 +168,7 @@ const CadastroAlunos = {
       if (!busca) return true;
       return [
         aluno.nome,
+        aluno.matricula,
         aluno.cpf,
         aluno.curso,
         aluno.cursoOperacional,
@@ -171,17 +177,46 @@ const CadastroAlunos = {
     });
   },
 
+  ordenarAlunos(lista) {
+    const ordenadores = {
+      matricula_desc: (a, b) => this.numeroMatricula(b) - this.numeroMatricula(a) || this.compararTexto(a.nome, b.nome),
+      matricula_asc: (a, b) => this.numeroMatricula(a) - this.numeroMatricula(b) || this.compararTexto(a.nome, b.nome),
+      nome_asc: (a, b) => this.compararTexto(a.nome, b.nome),
+      data_desc: (a, b) => this.valorData(b.dataMatricula) - this.valorData(a.dataMatricula) || this.numeroMatricula(b) - this.numeroMatricula(a),
+      status_asc: (a, b) => this.compararTexto(this.statusMeta[a.status]?.label || a.status, this.statusMeta[b.status]?.label || b.status)
+    };
+    return [...lista].sort(ordenadores[this.ordenacao] || ordenadores.matricula_desc);
+  },
+
+  numeroMatricula(aluno) {
+    const numero = Number(String(aluno?.matricula || '').replace(/\D/g, ''));
+    return Number.isFinite(numero) ? numero : 0;
+  },
+
+  valorData(valor) {
+    const texto = String(valor || '').trim();
+    const partesBr = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (partesBr) return new Date(Number(partesBr[3]), Number(partesBr[2]) - 1, Number(partesBr[1])).getTime();
+    const data = new Date(texto);
+    const tempo = data.getTime();
+    return Number.isFinite(tempo) ? tempo : 0;
+  },
+
+  compararTexto(a, b) {
+    return String(a || '').localeCompare(String(b || ''), 'pt-BR', { sensitivity: 'base' });
+  },
+
   renderizar() {
     this.atualizarResumo();
     const tbody = document.getElementById('cadastro-alunos-tbody');
     const subtitle = document.getElementById('cadastro-lista-subtitle');
     if (!tbody) return;
 
-    const lista = this.alunosFiltrados();
+    const lista = this.ordenarAlunos(this.alunosFiltrados());
     if (subtitle) subtitle.textContent = `${lista.length} aluno(s) exibido(s) de ${this.alunos.length}.`;
 
     if (!lista.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted" style="padding:32px">Nenhum aluno encontrado para este filtro.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted" style="padding:32px">Nenhum aluno encontrado para este filtro.</td></tr>';
       return;
     }
 
@@ -198,9 +233,12 @@ const CadastroAlunos = {
       : '';
     return `
       <tr>
+        <td data-label="Matrícula">
+          <strong>${escapeHtml(aluno.matricula || '—')}</strong>
+        </td>
         <td class="cadastro-aluno-cell" data-label="Aluno">
           <strong>${escapeHtml(aluno.nome || 'Aluno sem nome')}</strong>
-          <small>Matrícula ${escapeHtml(aluno.matricula || '—')} · ${escapeHtml(aluno.email || 'sem e-mail')}</small>
+          <small>${escapeHtml(aluno.email || 'sem e-mail')}</small>
         </td>
         <td data-label="CPF">${escapeHtml(aluno.cpfFormatado || aluno.cpf || '—')}</td>
         <td data-label="Curso">

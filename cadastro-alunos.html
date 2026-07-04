@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-  <link rel="stylesheet" href="css/cadastro-alunos.css?v=20260704-cadastro-alunos-v1">
+  <link rel="stylesheet" href="css/cadastro-alunos.css?v=20260704-cadastro-alunos-v2">
 </head>
 <body>
 <div class="app-shell">
@@ -96,7 +96,19 @@
             <h2 class="card-title">Fila operacional</h2>
             <p class="cadastro-card-subtitle" id="cadastro-lista-subtitle">Carregando alunos...</p>
           </div>
-          <input class="form-control cadastro-search" id="cadastro-busca" type="search" placeholder="Buscar por nome, CPF ou curso">
+          <div class="cadastro-table-tools">
+            <label class="cadastro-sort-label" for="cadastro-ordenacao">
+              <span>Ordenar por</span>
+              <select class="form-control cadastro-sort" id="cadastro-ordenacao">
+                <option value="matricula_desc" selected>Matrícula mais recente</option>
+                <option value="matricula_asc">Matrícula mais antiga</option>
+                <option value="nome_asc">Nome A-Z</option>
+                <option value="data_desc">Data de matrícula</option>
+                <option value="status_asc">Status</option>
+              </select>
+            </label>
+            <input class="form-control cadastro-search" id="cadastro-busca" type="search" placeholder="Buscar por matrícula, nome, CPF ou curso">
+          </div>
         </div>
 
         <div class="cadastro-tabs" role="tablist" aria-label="Filtro de alunos">
@@ -112,6 +124,7 @@
           <table class="table table-cadastro-alunos">
             <thead>
               <tr>
+                <th>Matrícula</th>
                 <th>Aluno</th>
                 <th>CPF</th>
                 <th>Curso</th>
@@ -122,7 +135,7 @@
               </tr>
             </thead>
             <tbody id="cadastro-alunos-tbody">
-              <tr><td colspan="7" class="text-center text-muted" style="padding:32px">Carregando alunos...</td></tr>
+              <tr><td colspan="8" class="text-center text-muted" style="padding:32px">Carregando alunos...</td></tr>
             </tbody>
           </table>
         </div>
@@ -143,6 +156,6 @@
 <script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
 <script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
 <script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
-<script src="js/cadastro-alunos.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/cadastro-alunos.js?v=20260704-cadastro-alunos-v2"></script>
 </body>
 </html>
