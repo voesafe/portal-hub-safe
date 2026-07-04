@@ -344,8 +344,13 @@ function linhaParaCadastroAluno_(row, rowNumber, idx) {
   var ativo = normalizarTextoCadastroAluno_(valorLinhaCadastroAluno_(row, idx.situacao) || 'Ativo') !== 'inativo';
   var s141 = valorBooleano(valorLinhaCadastroAluno_(row, idx.s141));
   var hubStatus = String(valorLinhaCadastroAluno_(row, idx.hubStatus) || '').trim();
-  var status = calcularStatusCadastroAluno_(ativo, s141, cursoInfo, baseInfo, hubStatus);
   var cpf = normalizarCpfCadastroAluno_(valorLinhaCadastroAluno_(row, idx.cpf));
+  var observacao = String(valorLinhaCadastroAluno_(row, idx.observacao) || '').trim();
+  if (atencaoCpfResolvidaCadastroAluno_(hubStatus, observacao, cpf)) {
+    hubStatus = '';
+    observacao = '';
+  }
+  var status = calcularStatusCadastroAluno_(ativo, s141, cursoInfo, baseInfo, hubStatus);
 
   return {
     id: String(rowNumber),
@@ -367,8 +372,14 @@ function linhaParaCadastroAluno_(row, rowNumber, idx) {
     status: status,
     trelloUrl: String(valorLinhaCadastroAluno_(row, idx.trelloUrl) || '').trim(),
     trelloStatus: String(valorLinhaCadastroAluno_(row, idx.trelloStatus) || '').trim(),
-    observacao: String(valorLinhaCadastroAluno_(row, idx.observacao) || '').trim()
+    observacao: observacao
   };
+}
+
+function atencaoCpfResolvidaCadastroAluno_(hubStatus, observacao, cpf) {
+  if (String(hubStatus || '') !== 'atencao') return false;
+  if (normalizarTextoCadastroAluno_(observacao).indexOf('cpf invalido') === -1) return false;
+  return cpfValidoCadastroAluno_(cpf);
 }
 
 function calcularStatusCadastroAluno_(ativo, s141, cursoInfo, baseInfo, hubStatus) {
