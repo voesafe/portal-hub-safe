@@ -117,6 +117,10 @@ function doGet(e) {
         return jsonSuccess(newzenlerProgressoAluno(p.email));
       }
 
+      case 'cadastro-alunos':
+        var usuarioCadastro = exigirCadastroAlunos(token);
+        return jsonSuccess(listarCadastroAlunos(usuarioCadastro));
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }
@@ -202,6 +206,26 @@ function doPost(e) {
 
       case 'forcar-logout-global':
         return jsonSuccess(forcarLogoutGlobal(token));
+
+      case 'cadastro-alunos-importar':
+        var usuarioImportaAlunos = exigirCadastroAlunos(token);
+        return jsonSuccess(importarCadastroAlunos(dados.alunos || [], usuarioImportaAlunos));
+
+      case 'cadastro-alunos-marcar-s141':
+        var usuarioS141 = exigirCadastroAlunos(token);
+        return jsonSuccess(marcarS141CadastroAluno(dados.id, usuarioS141));
+
+      case 'cadastro-alunos-sync-trello':
+        var usuarioSyncAluno = exigirCadastroAlunos(token);
+        return jsonSuccess(sincronizarTrelloCadastroAluno(dados.id, usuarioSyncAluno, token));
+
+      case 'cadastro-alunos-inativar':
+        var usuarioInativaAluno = exigirCadastroAlunos(token);
+        return jsonSuccess(alterarSituacaoCadastroAluno(dados.id, false, usuarioInativaAluno));
+
+      case 'cadastro-alunos-reativar':
+        var usuarioReativaAluno = exigirCadastroAlunos(token);
+        return jsonSuccess(alterarSituacaoCadastroAluno(dados.id, true, usuarioReativaAluno));
 
       // ── Bases ──────────────────────────────────────────────
       case 'salvar-base':

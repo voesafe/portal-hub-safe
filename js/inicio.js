@@ -52,6 +52,7 @@ const Inicio = {
     const acessoAdmin = Auth.eAdmin();
     const acessoMaster = Auth.perfilEhMaster(Auth.getPerfil());
     const acessoSafeMinions = Auth.podeAcessarSafeMinions();
+    const acessoCadastroAlunos = Auth.podeAcessarCadastroAlunos();
 
     return [
       {
@@ -133,6 +134,14 @@ const Inicio = {
         icone: 'minions',
         tom: 'navy',
         permitido: acessoSafeMinions
+      },
+      {
+        titulo: 'Cadastro de Alunos',
+        descricao: 'Fila S141 e sincronização do cadastro operacional no Trello.',
+        href: 'cadastro-alunos.html',
+        icone: 'aluno',
+        tom: 'blue',
+        permitido: acessoCadastroAlunos
       },
       {
         titulo: 'Usuários',

@@ -6,10 +6,11 @@
 const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbxpOGXgEJ5qBl46iy0JIoli9Ugl8O5-cS-iSxeeLEjsnnB0Pl50fGxSV3H2_DVNie6FsQ/exec',
   HORAS_VOADAS_INVA_API_URL: 'https://script.google.com/macros/s/AKfycbyThE1-1S77CJFfrSsWVVYak4tu-V37xsXH1VZFckKf1CJulgueWhqpKx70NWg9ifA9/exec',
+  CADASTRO_ALUNOS_API_URL: 'CADASTRO_ALUNOS_API_URL_AQUI',
   CAVOK_FECHAMENTO_API_ENABLED: true,
 
   APP_NAME:    'SAFE Hub',
-  APP_VERSION: '2026.07.04-session-policy',
+  APP_VERSION: '2026.07.04-cadastro-alunos-v1',
   API_TIMEOUT_MS: 30000,
 
   MESES: [

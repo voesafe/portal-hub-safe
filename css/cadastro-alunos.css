@@ -1,0 +1,211 @@
+.cadastro-alunos-page {
+  min-height: calc(100vh - var(--topbar-h));
+}
+
+.cadastro-upload-input {
+  display: none;
+}
+
+.cadastro-upload-btn {
+  cursor: pointer;
+}
+
+.cadastro-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.cadastro-import-card {
+  margin-bottom: 20px;
+}
+
+.cadastro-card-subtitle {
+  margin-top: 3px;
+  color: var(--gray-400);
+  font-size: .78rem;
+}
+
+.cadastro-import-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cadastro-import-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.cadastro-table-header {
+  align-items: flex-start;
+}
+
+.cadastro-search {
+  max-width: 320px;
+}
+
+.cadastro-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border-radius: 10px;
+  background: var(--gray-100);
+}
+
+.cadastro-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: var(--gray-500);
+  font-size: .78rem;
+  font-weight: 800;
+  transition: var(--transition);
+}
+
+.cadastro-tab span {
+  min-width: 22px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(29, 41, 81, .08);
+  font-size: .68rem;
+}
+
+.cadastro-tab.active {
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 2px 8px rgba(29, 41, 81, .08);
+}
+
+.cadastro-aluno-cell strong {
+  display: block;
+}
+
+.cadastro-aluno-cell small,
+.cadastro-muted {
+  display: block;
+  margin-top: 3px;
+  color: var(--gray-400);
+  font-size: .72rem;
+}
+
+.cadastro-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.cadastro-status.pendente_s141,
+.cadastro-status.novo_curso,
+.cadastro-status.reativado {
+  background: rgba(243, 156, 18, .13);
+  color: #b66d08;
+}
+
+.cadastro-status.pronto_trello {
+  background: rgba(91, 174, 226, .13);
+  color: var(--blue-dark);
+}
+
+.cadastro-status.concluido,
+.cadastro-status.concluido_legado {
+  background: rgba(46, 204, 113, .13);
+  color: #229954;
+}
+
+.cadastro-status.nao_elegivel_s141,
+.cadastro-status.inativo {
+  background: rgba(142, 164, 192, .16);
+  color: var(--gray-500);
+}
+
+.cadastro-status.atencao {
+  background: rgba(231, 76, 60, .12);
+  color: #c0392b;
+}
+
+.cadastro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cadastro-actions .btn {
+  padding: 6px 10px;
+  font-size: .74rem;
+}
+
+.table-cadastro-alunos td {
+  vertical-align: top;
+}
+
+@media (max-width: 1024px) {
+  .cadastro-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .cadastro-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cadastro-search {
+    max-width: none;
+  }
+
+  .table-cadastro-alunos,
+  .table-cadastro-alunos tbody,
+  .table-cadastro-alunos tr,
+  .table-cadastro-alunos td {
+    display: block;
+    width: 100%;
+  }
+
+  .table-cadastro-alunos thead {
+    display: none;
+  }
+
+  .table-cadastro-alunos tbody tr {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .table-cadastro-alunos tbody td {
+    display: grid !important;
+    grid-template-columns: minmax(92px, 34%) 1fr;
+    gap: 8px;
+    padding: 7px 0;
+    white-space: normal !important;
+  }
+
+  .table-cadastro-alunos tbody td::before {
+    content: attr(data-label);
+    color: var(--gray-500);
+    font-size: .72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+}

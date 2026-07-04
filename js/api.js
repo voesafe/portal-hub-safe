@@ -139,6 +139,14 @@ const API = {
   async editarUsuario(dados) { return this.post('editar-usuario', dados); },
   async forcarLogoutGlobal() { return this.post('forcar-logout-global', {}); },
 
+  // ── Cadastro de Alunos / Trello ────────────────────────────
+  async getCadastroAlunos() { return this.get('cadastro-alunos', {}, false); },
+  async importarCadastroAlunos(alunos) { return this.post('cadastro-alunos-importar', { alunos }); },
+  async marcarS141CadastroAluno(id) { return this.post('cadastro-alunos-marcar-s141', { id }); },
+  async sincronizarTrelloCadastroAluno(id) { return this.post('cadastro-alunos-sync-trello', { id }); },
+  async inativarCadastroAluno(id) { return this.post('cadastro-alunos-inativar', { id }); },
+  async reativarCadastroAluno(id) { return this.post('cadastro-alunos-reativar', { id }); },
+
   // ── Bases ──────────────────────────────────────────────────
   async getBases(useCache = true) { return this.get('bases', {}, useCache); },
   async salvarBase(dados) {

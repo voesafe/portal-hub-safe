@@ -228,6 +228,15 @@ function exigirGestaoUsuarios(token) {
   return usuario;
 }
 
+function exigirCadastroAlunos(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (normalizarPerfil(usuario.perfil) !== 'master') {
+    throw new Error('O Cadastro de Aluno é exclusivo do Master TI.');
+  }
+  return usuario;
+}
+
 function exigirGestaoBases(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessao expirada. Entre novamente.');
