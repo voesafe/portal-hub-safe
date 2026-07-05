@@ -18,15 +18,21 @@ const AccessControl = {
   inicializarMenuMobile() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    const hamburger = document.getElementById('hamburger');
+    const hamburgerOriginal = document.getElementById('hamburger');
+    if (!sidebar || !hamburgerOriginal) return;
+    const hamburger = hamburgerOriginal.cloneNode(true);
+    hamburgerOriginal.replaceWith(hamburger);
     const fechar = () => {
-      sidebar?.classList.remove('mobile-open');
+      sidebar.classList.remove('mobile-open');
       overlay?.classList.remove('active');
-      hamburger?.setAttribute('aria-expanded', 'false');
+      hamburger.setAttribute('aria-expanded', 'false');
     };
 
-    hamburger?.addEventListener('click', () => {
-      const aberto = sidebar?.classList.toggle('mobile-open');
+    hamburger.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const aberto = !sidebar.classList.contains('mobile-open');
+      sidebar.classList.toggle('mobile-open', aberto);
       overlay?.classList.toggle('active', !!aberto);
       hamburger.setAttribute('aria-expanded', String(!!aberto));
     });

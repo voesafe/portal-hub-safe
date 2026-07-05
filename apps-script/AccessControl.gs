@@ -214,6 +214,16 @@ var ACCESS_DEFAULT_GROUPS = [
 ];
 
 function garantirEstruturaControleAcesso_() {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    garantirEstruturaControleAcessoSemLock_();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function garantirEstruturaControleAcessoSemLock_() {
   var ss = SpreadsheetApp.openById(SHEET_ID);
   garantirColunaUsuariosSuperadmin_();
   garantirSheetComCabecalho_(ss, SHEETS.PERMISSIONS_CATALOG, [
@@ -235,9 +245,11 @@ function garantirEstruturaControleAcesso_() {
     'ID', 'USUARIO_ALVO', 'ACAO', 'DETALHE', 'EXECUTADO_POR', 'CRIADO_EM'
   ]);
 
+  removerDuplicidadesControleAcesso_();
   sincronizarCatalogoPermissoes_();
   sincronizarGruposPadrao_();
   migrarAcessosLegados_();
+  removerDuplicidadesControleAcesso_();
 }
 
 function garantirSheetComCabecalho_(ss, nome, cabecalho) {
@@ -274,43 +286,53 @@ function sincronizarCatalogoPermissoes_() {
   var sheet = getSheet(SHEETS.PERMISSIONS_CATALOG);
   var data = sheet.getDataRange().getValues();
   var existentes = {};
+  var novasLinhas = [];
   for (var i = 1; i < data.length; i++) {
     existentes[String(data[i][0])] = true;
   }
   ACCESS_PERMISSIONS.forEach(function(item) {
     if (existentes[item[0]]) return;
-    sheet.appendRow([item[0], item[1], item[2], true, new Date()]);
+    existentes[item[0]] = true;
+    novasLinhas.push([item[0], item[1], item[2], true, new Date()]);
   });
+  if (novasLinhas.length) {
+    sheet.getRange(sheet.getLastRow() + 1, 1, novasLinhas.length, novasLinhas[0].length).setValues(novasLinhas);
+  }
 }
 
 function sincronizarGruposPadrao_() {
   var groupsSheet = getSheet(SHEETS.ACCESS_GROUPS);
   var groupPermsSheet = getSheet(SHEETS.ACCESS_GROUP_PERMISSIONS);
   var gruposData = groupsSheet.getDataRange().getValues();
+  var relacoesData = groupPermsSheet.getDataRange().getValues();
   var grupos = {};
+  var relacoes = {};
+  var novosGrupos = [];
+  var novasRelacoes = [];
   for (var i = 1; i < gruposData.length; i++) {
     grupos[String(gruposData[i][0])] = i + 1;
   }
+  for (var r = 1; r < relacoesData.length; r++) {
+    relacoes[String(relacoesData[r][0]) + '|' + String(relacoesData[r][1])] = true;
+  }
   ACCESS_DEFAULT_GROUPS.forEach(function(grupo) {
     if (!grupos[grupo.id]) {
-      groupsSheet.appendRow([grupo.id, grupo.nome, grupo.descricao, true, true, new Date(), new Date()]);
+      grupos[grupo.id] = true;
+      novosGrupos.push([grupo.id, grupo.nome, grupo.descricao, true, true, new Date(), new Date()]);
     }
     grupo.permissoes.forEach(function(permissao) {
-      if (!relacaoGrupoPermissaoExiste_(groupPermsSheet, grupo.id, permissao)) {
-        groupPermsSheet.appendRow([grupo.id, permissao, new Date()]);
-      }
+      var chave = grupo.id + '|' + permissao;
+      if (relacoes[chave]) return;
+      relacoes[chave] = true;
+      novasRelacoes.push([grupo.id, permissao, new Date()]);
     });
   });
-}
-
-function relacaoGrupoPermissaoExiste_(sheet, groupId, permissionId) {
-  var data = sheet.getDataRange().getValues();
-  for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0]) === String(groupId) && String(data[i][1]) === String(permissionId)) {
-      return true;
-    }
+  if (novosGrupos.length) {
+    groupsSheet.getRange(groupsSheet.getLastRow() + 1, 1, novosGrupos.length, novosGrupos[0].length).setValues(novosGrupos);
   }
-  return false;
+  if (novasRelacoes.length) {
+    groupPermsSheet.getRange(groupPermsSheet.getLastRow() + 1, 1, novasRelacoes.length, novasRelacoes[0].length).setValues(novasRelacoes);
+  }
 }
 
 function migrarAcessosLegados_() {
@@ -318,12 +340,18 @@ function migrarAcessosLegados_() {
   var idx = indiceCabecalho_(usuariosSheet);
   var userGroupsSheet = getSheet(SHEETS.USER_GROUPS);
   var usuarios = usuariosSheet.getDataRange().getValues();
+  var vinculosData = userGroupsSheet.getDataRange().getValues();
   var mapaGrupoPorPerfil = {};
+  var vinculos = {};
+  var novosVinculos = [];
   ACCESS_DEFAULT_GROUPS.forEach(function(grupo) {
     grupo.legacyPerfis.forEach(function(perfil) {
       mapaGrupoPorPerfil[normalizarPerfil(perfil)] = grupo.id;
     });
   });
+  for (var v = 1; v < vinculosData.length; v++) {
+    vinculos[String(vinculosData[v][0]) + '|' + String(vinculosData[v][1])] = true;
+  }
 
   for (var i = 1; i < usuarios.length; i++) {
     var row = usuarios[i];
@@ -334,18 +362,52 @@ function migrarAcessosLegados_() {
       usuariosSheet.getRange(i + 1, idx.SUPERADMIN).setValue(true);
     }
     var groupId = mapaGrupoPorPerfil[perfil];
-    if (groupId && !relacaoUsuarioGrupoExiste_(userGroupsSheet, userId, groupId)) {
-      userGroupsSheet.appendRow([userId, groupId, new Date(), new Date()]);
+    var chave = String(userId) + '|' + String(groupId || '');
+    if (groupId && !vinculos[chave]) {
+      vinculos[chave] = true;
+      novosVinculos.push([userId, groupId, new Date(), new Date()]);
     }
+  }
+  if (novosVinculos.length) {
+    userGroupsSheet.getRange(userGroupsSheet.getLastRow() + 1, 1, novosVinculos.length, novosVinculos[0].length).setValues(novosVinculos);
   }
 }
 
-function relacaoUsuarioGrupoExiste_(sheet, userId, groupId) {
+function removerDuplicidadesControleAcesso_() {
+  deduplicarSheetControleAcesso_(getSheet(SHEETS.PERMISSIONS_CATALOG), function(row) {
+    return String(row[0] || '').trim();
+  });
+  deduplicarSheetControleAcesso_(getSheet(SHEETS.ACCESS_GROUPS), function(row) {
+    return String(row[0] || '').trim();
+  });
+  deduplicarSheetControleAcesso_(getSheet(SHEETS.ACCESS_GROUP_PERMISSIONS), function(row) {
+    return String(row[0] || '').trim() + '|' + String(row[1] || '').trim();
+  });
+  deduplicarSheetControleAcesso_(getSheet(SHEETS.USER_GROUPS), function(row) {
+    return String(row[0] || '').trim() + '|' + String(row[1] || '').trim();
+  });
+  deduplicarSheetControleAcesso_(getSheet(SHEETS.USER_PERMISSIONS), function(row) {
+    return String(row[0] || '').trim() + '|' + String(row[1] || '').trim() + '|' + String(row[2] || '').trim();
+  });
+}
+
+function deduplicarSheetControleAcesso_(sheet, chaveFn) {
   var data = sheet.getDataRange().getValues();
+  if (data.length <= 2) return;
+  var vistos = {};
+  var linhasParaExcluir = [];
   for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0]) === String(userId) && String(data[i][1]) === String(groupId)) return true;
+    var chave = chaveFn(data[i]);
+    if (!chave || chave === '|') continue;
+    if (vistos[chave]) {
+      linhasParaExcluir.push(i + 1);
+    } else {
+      vistos[chave] = true;
+    }
   }
-  return false;
+  for (var j = linhasParaExcluir.length - 1; j >= 0; j--) {
+    sheet.deleteRow(linhasParaExcluir[j]);
+  }
 }
 
 function usuarioSuperadminPorId_(userId) {
