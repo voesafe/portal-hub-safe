@@ -10,8 +10,27 @@ const AccessControl = {
   async init() {
     if (!Auth.protegerControleAcesso()) return;
     Auth.preencherUI();
+    this.inicializarMenuMobile();
     this.vincularEventos();
     await this.carregar();
+  },
+
+  inicializarMenuMobile() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger');
+    const fechar = () => {
+      sidebar?.classList.remove('mobile-open');
+      overlay?.classList.remove('active');
+      hamburger?.setAttribute('aria-expanded', 'false');
+    };
+
+    hamburger?.addEventListener('click', () => {
+      const aberto = sidebar?.classList.toggle('mobile-open');
+      overlay?.classList.toggle('active', !!aberto);
+      hamburger.setAttribute('aria-expanded', String(!!aberto));
+    });
+    overlay?.addEventListener('click', fechar);
   },
 
   vincularEventos() {
@@ -33,6 +52,7 @@ const AccessControl = {
   async carregar() {
     const res = await API.getControleAcesso();
     if (!res.ok) {
+      this.renderErroBackend(res.error || 'Erro ao carregar controle de acesso.');
       toast(res.error || 'Erro ao carregar controle de acesso.', 'error');
       return;
     }
@@ -41,6 +61,17 @@ const AccessControl = {
     this.renderResumo();
     this.renderGrupos();
     this.renderCatalogo();
+  },
+
+  renderErroBackend(mensagem) {
+    const texto = /Ação desconhecida:\s*access-control/i.test(String(mensagem || ''))
+      ? 'O frontend já está atualizado, mas o Apps Script publicado ainda não possui a rota de Controle de Acesso. Publique a nova versão do backend para carregar grupos e permissões.'
+      : mensagem;
+    document.getElementById('access-kpi-grupos').textContent = '0';
+    document.getElementById('access-kpi-permissoes').textContent = '0';
+    document.getElementById('access-kpi-usuarios').textContent = '0';
+    document.getElementById('access-groups').innerHTML = `<div class="access-empty">${this.escape(texto)}</div>`;
+    document.getElementById('access-permission-list').innerHTML = `<div class="access-empty">${this.escape(texto)}</div>`;
   },
 
   renderResumo() {
