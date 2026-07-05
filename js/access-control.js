@@ -42,6 +42,10 @@ const AccessControl = {
       definirAberto(!document.body.classList.contains('access-menu-open'));
     }, true);
     overlay?.addEventListener('click', fechar);
+    document.querySelector('.sidebar-close')?.addEventListener('click', fechar);
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+      link.addEventListener('click', fechar);
+    });
   },
 
   vincularEventos() {
