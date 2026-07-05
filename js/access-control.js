@@ -27,12 +27,16 @@ const AccessControl = {
       document.getElementById('hamburger')?.setAttribute('aria-expanded', String(aberto));
     };
 
-    const fechar = event => {
-      event?.preventDefault?.();
+    const fechar = () => {
       sidebar.classList.remove('mobile-open');
       overlay?.classList.remove('active');
       document.body.classList.remove('access-menu-open');
       document.getElementById('hamburger')?.setAttribute('aria-expanded', 'false');
+    };
+
+    const fecharCancelandoEvento = event => {
+      event?.preventDefault?.();
+      fechar();
     };
 
     document.addEventListener('click', event => {
@@ -41,10 +45,11 @@ const AccessControl = {
       event.stopPropagation();
       definirAberto(!document.body.classList.contains('access-menu-open'));
     }, true);
-    overlay?.addEventListener('click', fechar);
-    document.querySelector('.sidebar-close')?.addEventListener('click', fechar);
-    document.querySelectorAll('.sidebar-nav a').forEach(link => {
-      link.addEventListener('click', fechar);
+    overlay?.addEventListener('click', fecharCancelandoEvento);
+    document.querySelector('.sidebar-close')?.addEventListener('click', fecharCancelandoEvento);
+    document.querySelector('.sidebar-nav')?.addEventListener('click', event => {
+      if (!event.target.closest('a[href]')) return;
+      fechar();
     });
   },
 
