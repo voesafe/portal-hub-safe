@@ -768,3 +768,10 @@ function alterarMinhaSenha(token, senhaAtual, novaSenha) {
   }
   return alterarSenha(usuario.email, senhaAtual, novaSenha);
 }
+
+function autorizarPermissoesHub() {
+  return {
+    planilha: SpreadsheetApp.openById(SHEET_ID).getName(),
+    cotaEmail: MailApp.getRemainingDailyQuota()
+  };
+}
