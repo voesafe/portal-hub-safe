@@ -375,6 +375,7 @@ const Admin = {
     document.getElementById('u-senha-ajuda').textContent = this.editandoId
       ? 'Preencha somente para redefinir a senha deste acesso.'
       : 'Defina uma senha temporária individual e envie ao colaborador por um canal seguro.';
+    document.getElementById('grupo-email-boas-vindas').hidden = !!this.editandoId;
     this.atualizarResumoAcesso();
   },
 
@@ -451,6 +452,7 @@ const Admin = {
     document.getElementById('u-role-cco').value = usuario?.roleOrigem || 'user';
     document.getElementById('u-ativo').value = usuario ? String(this.estaAtivo(usuario.ativo)) : 'true';
     document.getElementById('u-superadmin').checked = this.eSuperadminUsuario(usuario);
+    document.getElementById('u-enviar-boas-vindas').checked = !usuario;
     this.acessosSelecionados = {
       grupos: new Set((usuario?.grupos || []).map(String)),
       permissoes: new Set((usuario?.permissoesAvulsas || []).map(String))
@@ -517,6 +519,7 @@ const Admin = {
       superadmin: origem === 'hub' && document.getElementById('u-superadmin').checked,
       grupos: origem === 'hub' ? Array.from(this.acessosSelecionados.grupos) : undefined,
       permissoesAvulsas: origem === 'hub' ? Array.from(this.acessosSelecionados.permissoes) : undefined,
+      enviarBoasVindas: !this.editandoId && document.getElementById('u-enviar-boas-vindas').checked,
       senha: document.getElementById('u-senha').value || undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),
@@ -559,6 +562,11 @@ const Admin = {
     }
 
     toast(this.editandoId ? 'Acesso atualizado.' : 'Acesso criado.', 'success');
+    if (!this.editandoId && res.data?.emailBoasVindasErro) {
+      toast(`Acesso criado, mas o e-mail de boas-vindas não foi enviado: ${res.data.emailBoasVindasErro}`, 'warning', 7000);
+    } else if (!this.editandoId && res.data?.emailBoasVindasEnviado) {
+      toast('E-mail de boas-vindas enviado.', 'success');
+    }
     fecharModal('modal-usuario');
     await this.carregar();
   },

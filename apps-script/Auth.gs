@@ -382,10 +382,104 @@ function criarUsuario(dados) {
 function criarUsuarioCentralizado(dados) {
   dados.email = validarEmailUsuario_(dados.email);
   validarUnicidadeEmailCentral_(null, dados.email);
+  var resultado;
   if (String(dados.origem || 'hub').toLowerCase() === 'cco') {
-    return salvarUsuarioCco(dados);
+    resultado = salvarUsuarioCco(dados);
+  } else {
+    resultado = criarUsuario(dados);
   }
-  return criarUsuario(dados);
+  if (dados.enviarBoasVindas !== false) {
+    try {
+      enviarEmailBoasVindasUsuario_(dados, resultado);
+      resultado.emailBoasVindasEnviado = true;
+    } catch (e) {
+      resultado.emailBoasVindasErro = e.message;
+    }
+  }
+  return resultado;
+}
+
+function enviarEmailBoasVindasUsuario_(dados, resultado) {
+  var email = validarEmailUsuario_(dados.email);
+  var nome = String(dados.nome || resultado.nome || 'colaborador').trim();
+  var primeiroNome = nome.split(/\s+/)[0] || 'olá';
+  var senha = String(dados.senha || '').trim();
+  if (!senha) throw new Error('senha temporária não informada.');
+
+  var assunto = 'Bem-vindo ao SAFE Hub';
+  var loginUrl = 'https://hub.voesafe.com.br/';
+  var sistema = String(dados.origem || 'hub').toLowerCase() === 'cco'
+    ? 'SAFE Hub e rotinas CCO'
+    : 'SAFE Hub';
+  var html = templateEmailBoasVindas_(primeiroNome, nome, email, senha, loginUrl, sistema);
+  var texto = [
+    'Olá, ' + primeiroNome + '!',
+    '',
+    'Seu acesso ao ' + sistema + ' foi criado.',
+    'Acesse: ' + loginUrl,
+    'E-mail: ' + email,
+    'Senha temporária: ' + senha,
+    '',
+    'Após entrar, altere sua senha em Usuários > Alterar minha senha.',
+    '',
+    'SAFE Escola de Aviação'
+  ].join('\n');
+
+  MailApp.sendEmail({
+    to: email,
+    subject: assunto,
+    body: texto,
+    htmlBody: html,
+    name: 'SAFE Hub'
+  });
+}
+
+function templateEmailBoasVindas_(primeiroNome, nome, email, senha, loginUrl, sistema) {
+  var escNome = escapeHtmlEmail_(nome);
+  var escPrimeiroNome = escapeHtmlEmail_(primeiroNome);
+  var escEmail = escapeHtmlEmail_(email);
+  var escSenha = escapeHtmlEmail_(senha);
+  var escSistema = escapeHtmlEmail_(sistema);
+  return ''
+    + '<div style="margin:0;padding:0;background:#f3f6fb;font-family:Arial,Helvetica,sans-serif;color:#19213f;">'
+    + '  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#f3f6fb;padding:32px 0;">'
+    + '    <tr><td align="center" style="padding:32px 16px;">'
+    + '      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;border-collapse:collapse;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #dfe7f3;">'
+    + '        <tr><td style="padding:28px 32px;background:#19213f;color:#ffffff;">'
+    + '          <div style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8fd4ff;">SAFE Hub</div>'
+    + '          <h1 style="margin:10px 0 0;font-size:26px;line-height:1.2;color:#ffffff;">Bem-vindo, ' + escPrimeiroNome + '.</h1>'
+    + '          <p style="margin:8px 0 0;color:#d9e4f2;font-size:15px;line-height:1.5;">Seu acesso ao ' + escSistema + ' foi criado com sucesso.</p>'
+    + '        </td></tr>'
+    + '        <tr><td style="padding:30px 32px;">'
+    + '          <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#44516f;">Olá, <strong>' + escNome + '</strong>. A partir de agora você pode acessar o ambiente operacional da SAFE usando as credenciais abaixo.</p>'
+    + '          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:0 0 22px;background:#f7faff;border:1px solid #dfe7f3;border-radius:10px;">'
+    + '            <tr><td style="padding:16px 18px;border-bottom:1px solid #dfe7f3;color:#7482a0;font-size:12px;font-weight:700;text-transform:uppercase;">E-mail de acesso</td></tr>'
+    + '            <tr><td style="padding:0 18px 16px;color:#19213f;font-size:16px;font-weight:700;">' + escEmail + '</td></tr>'
+    + '            <tr><td style="padding:16px 18px;border-top:1px solid #dfe7f3;border-bottom:1px solid #dfe7f3;color:#7482a0;font-size:12px;font-weight:700;text-transform:uppercase;">Senha temporária</td></tr>'
+    + '            <tr><td style="padding:0 18px 18px;color:#19213f;font-size:18px;font-weight:800;letter-spacing:.04em;">' + escSenha + '</td></tr>'
+    + '          </table>'
+    + '          <div style="text-align:center;margin:24px 0 22px;">'
+    + '            <a href="' + loginUrl + '" style="display:inline-block;padding:13px 22px;border-radius:9px;background:#2f9ed8;color:#ffffff;text-decoration:none;font-size:14px;font-weight:800;">Acessar SAFE Hub</a>'
+    + '          </div>'
+    + '          <div style="padding:16px 18px;border-radius:10px;background:#fff8e8;border:1px solid #f1d7a7;color:#6f5521;font-size:13px;line-height:1.55;">'
+    + '            <strong>Recomendação de segurança:</strong> no primeiro acesso, vá em <strong>Usuários &gt; Alterar minha senha</strong> e substitua a senha temporária por uma senha pessoal.'
+    + '          </div>'
+    + '          <p style="margin:22px 0 0;color:#7482a0;font-size:13px;line-height:1.5;">Se você não esperava este acesso, avise o responsável administrativo da SAFE.</p>'
+    + '        </td></tr>'
+    + '        <tr><td style="padding:18px 32px;background:#f7faff;color:#7482a0;font-size:12px;line-height:1.5;">SAFE Escola de Aviação<br>Este é um e-mail automático do SAFE Hub.</td></tr>'
+    + '      </table>'
+    + '    </td></tr>'
+    + '  </table>'
+    + '</div>';
+}
+
+function escapeHtmlEmail_(valor) {
+  return String(valor || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /**
