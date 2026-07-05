@@ -213,6 +213,11 @@ function doPost(e) {
             !valorBooleano(dados.superadmin)) {
           return jsonError('Você não pode remover seu próprio acesso de superadmin.');
         }
+        if (String(dados.id) === String(gestorEditaUsuario.id) &&
+            dados.hasOwnProperty('ativo') &&
+            !valorBooleano(dados.ativo)) {
+          return jsonError('Você não pode desativar seu próprio acesso.');
+        }
         dados.atualizadoPor = gestorEditaUsuario.email || gestorEditaUsuario.pac || '';
         var editado = atualizarUsuarioCentralizado(dados.id, dados);
         if (!editado) return jsonError('Usuário não encontrado');

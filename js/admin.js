@@ -5,6 +5,8 @@
 
 const Admin = {
   usuarios: [],
+  controleAcesso: { grupos: [], permissoes: [] },
+  acessosSelecionados: { grupos: new Set(), permissoes: new Set() },
   editandoId: null,
   abaAtual: 'ativos',
 
@@ -20,10 +22,18 @@ const Admin = {
   },
 
   async carregar() {
-    const res = await API.getUsuarios();
+    const [res, acessoRes] = await Promise.all([
+      API.getUsuarios(),
+      API.getControleAcesso()
+    ]);
     if (!res.ok) {
       toast(res.error || 'Erro ao carregar usuários.', 'error');
       return;
+    }
+    if (acessoRes.ok) {
+      this.controleAcesso = acessoRes.data || { grupos: [], permissoes: [] };
+    } else {
+      toast(acessoRes.error || 'Não foi possível carregar grupos e permissões.', 'warning');
     }
 
     this.usuarios = res.data?.usuarios || [];
@@ -68,6 +78,15 @@ const Admin = {
 
   badgeUsuario(usuario) {
     return this.eSuperadminUsuario(usuario) ? 'badge-blue' : this.badgePerfil(usuario.perfil);
+  },
+
+  resumoAcessoUsuario(usuario) {
+    if (this.normalizarOrigem(usuario.origem) === 'cco') return 'Acesso gerenciado no CCO';
+    if (this.eSuperadminUsuario(usuario)) return 'Acesso total ao Hub';
+    const grupos = Array.isArray(usuario.grupos) ? usuario.grupos.length : 0;
+    const permissoes = Array.isArray(usuario.permissoesAvulsas) ? usuario.permissoesAvulsas.length : 0;
+    if (!grupos && !permissoes) return 'Sem grupos ou permissões avulsas';
+    return `${grupos} grupo(s) · ${permissoes} permissão(ões) avulsa(s)`;
   },
 
   eSuperadminUsuario(usuario) {
@@ -140,10 +159,12 @@ const Admin = {
       return;
     }
 
+    const usuarioAtualId = String(Auth.getSessao()?.id || '');
     tbody.innerHTML = usuarios.map(usuario => {
       const ativo = this.estaAtivo(usuario.ativo);
       const origem = this.normalizarOrigem(usuario.origem);
       const completo = this.cadastroCompleto(usuario);
+      const proprioUsuario = String(usuario.id) === usuarioAtualId;
       return `
         <tr>
           <td class="col-nome" data-label="Usuário">
@@ -159,12 +180,15 @@ const Admin = {
             <span class="badge origem-badge origem-${origem}">${this.labelOrigem(origem)}</span>
             <small class="usuario-modulo">${this.escape(usuario.modulo || 'SAFE Hub')}</small>
           </td>
-          <td class="col-perfil" data-label="Perfil"><span class="badge ${this.badgeUsuario(usuario)}">${this.labelPerfil(usuario)}</span></td>
+          <td class="col-perfil" data-label="Perfil">
+            <span class="badge ${this.badgeUsuario(usuario)}">${this.labelPerfil(usuario)}</span>
+            <small class="usuario-access-line">${this.escape(this.resumoAcessoUsuario(usuario))}</small>
+          </td>
           <td data-label="Cadastro"><span class="cadastro-status ${completo ? 'completo' : 'pendente'}">${completo ? 'Completo' : 'Ação necessária'}</span></td>
           <td data-label="Ação">
             <div class="usuario-actions">
               <button class="btn btn-ghost btn-sm" onclick="Admin.editar('${this.escapeAtributo(usuario.id)}')">Editar</button>
-              <button class="btn btn-sm ${ativo ? 'btn-status-danger' : 'btn-status-success'}" onclick="Admin.alternarStatus('${this.escapeAtributo(usuario.id)}')">
+              <button class="btn btn-sm ${ativo ? 'btn-status-danger' : 'btn-status-success'}" ${proprioUsuario ? 'disabled title="Você não pode desativar seu próprio acesso"' : `onclick="Admin.alternarStatus('${this.escapeAtributo(usuario.id)}')"`}>
                 ${ativo ? 'Desativar' : 'Reativar'}
               </button>
             </div>
@@ -223,6 +247,26 @@ const Admin = {
     document.getElementById('u-origem')?.addEventListener('change', () => this.atualizarCamposOrigem());
     document.getElementById('u-perfil')?.addEventListener('change', () => this.atualizarResumoAcesso());
     document.getElementById('u-superadmin')?.addEventListener('change', () => this.atualizarResumoAcesso());
+    document.getElementById('u-busca-grupos')?.addEventListener('input', () => this.renderSeletoresAcesso());
+    document.getElementById('u-busca-permissoes')?.addEventListener('input', () => this.renderSeletoresAcesso());
+    document.getElementById('u-grupos-acesso')?.addEventListener('change', event => {
+      const input = event.target.closest('input[data-access-group]');
+      if (!input) return;
+      this.alternarSet(this.acessosSelecionados.grupos, input.dataset.accessGroup, input.checked);
+      this.atualizarResumoAcesso();
+    });
+    document.getElementById('u-permissoes-avulsas')?.addEventListener('change', event => {
+      const input = event.target.closest('input[data-access-permission]');
+      if (!input) return;
+      this.alternarSet(this.acessosSelecionados.permissoes, input.dataset.accessPermission, input.checked);
+      this.atualizarResumoAcesso();
+    });
+  },
+
+  alternarSet(set, valor, ativo) {
+    if (!valor) return;
+    if (ativo) set.add(valor);
+    else set.delete(valor);
   },
 
   async forcarReloginGlobal() {
@@ -288,7 +332,10 @@ const Admin = {
     const resumo = document.getElementById('u-access-summary');
     if (!resumo) return;
     resumo.hidden = origem === 'cco';
-    if (origem === 'cco') return;
+    if (origem === 'cco') {
+      this.atualizarEstadoRbac();
+      return;
+    }
 
     const superadmin = document.getElementById('u-superadmin')?.checked;
     document.getElementById('grupo-superadmin')?.classList.toggle('is-active', !!superadmin);
@@ -299,6 +346,7 @@ const Admin = {
         .map(tag => `<span>${this.escape(tag)}</span>`)
         .join('');
       resumo.classList.remove('restricted');
+      this.atualizarEstadoRbac();
       return;
     }
 
@@ -310,6 +358,7 @@ const Admin = {
       .map(tag => `<span>${this.escape(tag)}</span>`)
       .join('');
     resumo.classList.toggle('restricted', perfil === 'controle_gastos_visualizacao' || perfil === 'escala_minions');
+    this.atualizarEstadoRbac();
   },
 
   atualizarCamposOrigem() {
@@ -319,6 +368,7 @@ const Admin = {
     document.getElementById('grupo-perfil-hub').hidden = cco;
     document.getElementById('grupo-perfil-cco').hidden = !cco;
     document.getElementById('grupo-superadmin').hidden = cco;
+    document.getElementById('usuario-rbac').hidden = cco;
     document.getElementById('u-senha-label').textContent = this.editandoId
       ? 'Nova senha (opcional)'
       : 'Senha inicial';
@@ -326,6 +376,65 @@ const Admin = {
       ? 'Preencha somente para redefinir a senha deste acesso.'
       : 'Defina uma senha temporária individual e envie ao colaborador por um canal seguro.';
     this.atualizarResumoAcesso();
+  },
+
+  renderSeletoresAcesso() {
+    const gruposEl = document.getElementById('u-grupos-acesso');
+    const permissoesEl = document.getElementById('u-permissoes-avulsas');
+    if (!gruposEl || !permissoesEl) return;
+
+    const buscaGrupos = document.getElementById('u-busca-grupos')?.value.trim().toLowerCase() || '';
+    const buscaPermissoes = document.getElementById('u-busca-permissoes')?.value.trim().toLowerCase() || '';
+    const grupos = (this.controleAcesso.grupos || [])
+      .filter(grupo => grupo.ativo !== false)
+      .filter(grupo => !buscaGrupos || [grupo.nome, grupo.descricao, grupo.id].join(' ').toLowerCase().includes(buscaGrupos));
+    const permissoes = (this.controleAcesso.permissoes || [])
+      .filter(permissao => !buscaPermissoes || [permissao.modulo, permissao.nome, permissao.id].join(' ').toLowerCase().includes(buscaPermissoes));
+
+    gruposEl.innerHTML = grupos.length
+      ? grupos.map(grupo => `
+          <label class="usuario-rbac-option">
+            <input type="checkbox" data-access-group="${this.escapeAtributo(grupo.id)}" ${this.acessosSelecionados.grupos.has(String(grupo.id)) ? 'checked' : ''}>
+            <span>
+              <strong>${this.escape(grupo.nome || grupo.id)}</strong>
+              <small>${this.escape(grupo.descricao || grupo.id)}</small>
+            </span>
+          </label>
+        `).join('')
+      : '<div class="usuario-rbac-empty">Nenhum grupo encontrado.</div>';
+
+    const permissoesPorModulo = permissoes.reduce((acc, permissao) => {
+      const modulo = permissao.modulo || 'Outras permissões';
+      if (!acc[modulo]) acc[modulo] = [];
+      acc[modulo].push(permissao);
+      return acc;
+    }, {});
+
+    permissoesEl.innerHTML = Object.keys(permissoesPorModulo).length
+      ? Object.keys(permissoesPorModulo).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(modulo => `
+          <div class="usuario-rbac-module">
+            <div class="usuario-rbac-module-title">${this.escape(modulo)}</div>
+            ${permissoesPorModulo[modulo].map(permissao => `
+              <label class="usuario-rbac-option compact">
+                <input type="checkbox" data-access-permission="${this.escapeAtributo(permissao.id)}" ${this.acessosSelecionados.permissoes.has(String(permissao.id)) ? 'checked' : ''}>
+                <span>${this.escape(permissao.nome || permissao.id)}</span>
+              </label>
+            `).join('')}
+          </div>
+        `).join('')
+      : '<div class="usuario-rbac-empty">Nenhuma permissão encontrada.</div>';
+
+    this.atualizarEstadoRbac();
+  },
+
+  atualizarEstadoRbac() {
+    const origem = document.getElementById('u-origem')?.value || 'hub';
+    const superadmin = document.getElementById('u-superadmin')?.checked;
+    const bloqueado = origem === 'cco' || !!superadmin;
+    document.getElementById('usuario-rbac')?.classList.toggle('is-disabled', bloqueado);
+    document.querySelectorAll('#usuario-rbac input').forEach(input => {
+      input.disabled = bloqueado;
+    });
   },
 
   abrirForm(usuario = null) {
@@ -342,6 +451,10 @@ const Admin = {
     document.getElementById('u-role-cco').value = usuario?.roleOrigem || 'user';
     document.getElementById('u-ativo').value = usuario ? String(this.estaAtivo(usuario.ativo)) : 'true';
     document.getElementById('u-superadmin').checked = this.eSuperadminUsuario(usuario);
+    this.acessosSelecionados = {
+      grupos: new Set((usuario?.grupos || []).map(String)),
+      permissoes: new Set((usuario?.permissoesAvulsas || []).map(String))
+    };
     document.getElementById('u-senha').value = '';
     document.getElementById('u-iniciais').value = usuario?.initials || '';
     document.getElementById('u-cpf').value = usuario?.cpf || '';
@@ -352,6 +465,7 @@ const Admin = {
 
     document.getElementById('u-pac').disabled = !!usuario;
     this.atualizarCamposOrigem();
+    this.renderSeletoresAcesso();
     abrirModal('modal-usuario');
   },
 
@@ -401,6 +515,8 @@ const Admin = {
       roleOrigem: document.getElementById('u-role-cco').value,
       ativo: document.getElementById('u-ativo').value === 'true',
       superadmin: origem === 'hub' && document.getElementById('u-superadmin').checked,
+      grupos: origem === 'hub' ? Array.from(this.acessosSelecionados.grupos) : undefined,
+      permissoesAvulsas: origem === 'hub' ? Array.from(this.acessosSelecionados.permissoes) : undefined,
       senha: document.getElementById('u-senha').value || undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),

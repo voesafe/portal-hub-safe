@@ -297,6 +297,136 @@
   font-weight: 700;
 }
 
+.usuario-access-line {
+  display: block;
+  margin-top: 5px;
+  color: var(--gray-400);
+  font-size: .7rem;
+  line-height: 1.35;
+}
+
+.usuario-rbac {
+  margin: 0 0 18px;
+  padding: 15px;
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-sm);
+  background: var(--off-white);
+}
+
+.usuario-rbac[hidden] {
+  display: none !important;
+}
+
+.usuario-rbac.is-disabled {
+  opacity: .72;
+}
+
+.usuario-rbac-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.usuario-rbac-header strong {
+  color: var(--navy);
+  font-size: .84rem;
+}
+
+.usuario-rbac-header p {
+  margin: 3px 0 0;
+  color: var(--gray-500);
+  font-size: .73rem;
+  line-height: 1.4;
+}
+
+.usuario-rbac-header a {
+  color: var(--blue-dark);
+  font-size: .72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.usuario-rbac-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.usuario-rbac-panel {
+  min-width: 0;
+}
+
+.usuario-rbac-list {
+  display: grid;
+  gap: 7px;
+  max-height: 260px;
+  margin-top: 9px;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.usuario-rbac-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+
+.usuario-rbac-option.compact {
+  padding: 7px 9px;
+}
+
+.usuario-rbac-option input {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--navy);
+}
+
+.usuario-rbac-option strong,
+.usuario-rbac-option small {
+  display: block;
+}
+
+.usuario-rbac-option strong {
+  color: var(--navy);
+  font-size: .76rem;
+}
+
+.usuario-rbac-option small,
+.usuario-rbac-option.compact span {
+  color: var(--gray-500);
+  font-size: .7rem;
+  line-height: 1.35;
+}
+
+.usuario-rbac-module {
+  display: grid;
+  gap: 6px;
+}
+
+.usuario-rbac-module-title {
+  padding: 3px 2px;
+  color: var(--navy);
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.usuario-rbac-empty {
+  padding: 18px;
+  border: 1px dashed var(--gray-200);
+  border-radius: var(--radius-sm);
+  color: var(--gray-400);
+  font-size: .76rem;
+  text-align: center;
+}
+
 .cadastro-status {
   display: inline-flex;
   align-items: center;
@@ -353,8 +483,13 @@
   background: rgba(39, 134, 90, .08);
 }
 
+.usuario-actions .btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
 .modal {
-  max-width: 640px;
+  max-width: 920px;
 }
 
 .usuario-color {
@@ -403,6 +538,10 @@
 
   .usuario-actions {
     justify-content: flex-start;
+  }
+
+  .usuario-rbac-grid {
+    grid-template-columns: 1fr;
   }
 }
 .usuarios-policy {

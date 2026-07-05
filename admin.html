@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-  <link rel="stylesheet" href="css/admin.css?v=20260608-module-access">
+  <link rel="stylesheet" href="css/admin.css?v=20260705-rbac-v1">
 </head>
 <body>
 
@@ -235,6 +235,27 @@
           <div class="usuario-access-tags" id="u-access-summary-tags"></div>
         </div>
       </div>
+      <div class="usuario-rbac" id="usuario-rbac">
+        <div class="usuario-rbac-header">
+          <div>
+            <strong>Controle detalhado</strong>
+            <p>Associe grupos como padrão e permissões individuais apenas para exceções.</p>
+          </div>
+          <a href="access-control.html" target="_blank" rel="noopener noreferrer">Gerenciar grupos</a>
+        </div>
+        <div class="usuario-rbac-grid">
+          <section class="usuario-rbac-panel">
+            <label class="form-label" for="u-busca-grupos">Grupos do usuário</label>
+            <input class="form-control" id="u-busca-grupos" type="search" placeholder="Buscar grupo">
+            <div class="usuario-rbac-list" id="u-grupos-acesso"></div>
+          </section>
+          <section class="usuario-rbac-panel">
+            <label class="form-label" for="u-busca-permissoes">Permissões avulsas</label>
+            <input class="form-control" id="u-busca-permissoes" type="search" placeholder="Buscar permissão">
+            <div class="usuario-rbac-list" id="u-permissoes-avulsas"></div>
+          </section>
+        </div>
+      </div>
       </div>
       <div id="campos-cco" class="campos-cco" hidden>
         <div class="usuario-form-section-title">Dados operacionais do CCO</div>
@@ -290,6 +311,6 @@
 <script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
 <script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
 <script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
-<script src="js/admin.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/admin.js?v=20260705-rbac-v1"></script>
 </body>
 </html>

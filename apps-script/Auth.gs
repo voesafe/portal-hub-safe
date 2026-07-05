@@ -302,13 +302,15 @@ function listarUsuarios() {
   var sheet = getSheet(SHEETS.USUARIOS);
   var data = sheet.getDataRange().getValues();
   var idx = indiceCabecalho_(sheet);
+  var acessos = carregarAcessosUsuarios_();
   var usuarios = [];
 
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
     if (!row[0]) continue;
+    var userId = String(row[0]);
     usuarios.push({
-      id:       row[0],
+      id:       userId,
       nome:     row[1],
       pac:      row[2],
       email:    row[3],
@@ -316,6 +318,8 @@ function listarUsuarios() {
       ativo:    row[6],
       criadoEm: row[7],
       superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
+      grupos: acessos.gruposPorUsuario[userId] || [],
+      permissoesAvulsas: acessos.permissoesPorUsuario[userId] || [],
       origem:   'hub',
       modulo:   'Hub / Comercial'
     });
@@ -368,6 +372,9 @@ function criarUsuario(dados) {
   if (idx.SUPERADMIN) {
     sheet.getRange(sheet.getLastRow(), idx.SUPERADMIN).setValue(valorBooleano(dados.superadmin));
   }
+  if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas)) {
+    salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor);
+  }
 
   return { id: id, nome: dados.nome };
 }
@@ -409,6 +416,9 @@ function atualizarUsuario(id, dados) {
       if (idx.ATUALIZADO_EM) sheet.getRange(row, idx.ATUALIZADO_EM).setValue(new Date());
       if (idx.ATUALIZADO_POR && dados.atualizadoPor) {
         sheet.getRange(row, idx.ATUALIZADO_POR).setValue(dados.atualizadoPor);
+      }
+      if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas)) {
+        salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor);
       }
       return true;
     }

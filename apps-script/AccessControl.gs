@@ -495,6 +495,97 @@ function listarGruposAcesso_() {
   return grupos;
 }
 
+function carregarAcessosUsuarios_() {
+  var gruposSheet = getSheet(SHEETS.USER_GROUPS);
+  var permissoesSheet = getSheet(SHEETS.USER_PERMISSIONS);
+  var gruposData = gruposSheet.getDataRange().getValues();
+  var permissoesData = permissoesSheet.getDataRange().getValues();
+  var gruposPorUsuario = {};
+  var permissoesPorUsuario = {};
+
+  for (var i = 1; i < gruposData.length; i++) {
+    var userId = String(gruposData[i][0] || '').trim();
+    var groupId = String(gruposData[i][1] || '').trim();
+    if (!userId || !groupId) continue;
+    if (!gruposPorUsuario[userId]) gruposPorUsuario[userId] = [];
+    if (gruposPorUsuario[userId].indexOf(groupId) === -1) gruposPorUsuario[userId].push(groupId);
+  }
+
+  for (var p = 1; p < permissoesData.length; p++) {
+    var usuarioId = String(permissoesData[p][0] || '').trim();
+    var permissaoId = String(permissoesData[p][1] || '').trim();
+    var tipo = String(permissoesData[p][2] || 'GRANT').trim().toUpperCase();
+    if (!usuarioId || !permissaoId || tipo === 'DENY') continue;
+    if (!permissoesPorUsuario[usuarioId]) permissoesPorUsuario[usuarioId] = [];
+    if (permissoesPorUsuario[usuarioId].indexOf(permissaoId) === -1) {
+      permissoesPorUsuario[usuarioId].push(permissaoId);
+    }
+  }
+
+  return {
+    gruposPorUsuario: gruposPorUsuario,
+    permissoesPorUsuario: permissoesPorUsuario
+  };
+}
+
+function salvarAcessosUsuario_(userId, grupos, permissoesAvulsas, usuarioExecutor) {
+  garantirEstruturaControleAcesso_();
+  if (!userId) throw new Error('Usuário obrigatório para salvar acessos.');
+  var gruposNormalizados = normalizarListaIdsAcesso_(grupos);
+  var permissoesNormalizadas = normalizarListaIdsAcesso_(permissoesAvulsas);
+  validarIdsAcesso_(SHEETS.ACCESS_GROUPS, gruposNormalizados, 'grupo de acesso');
+  validarIdsAcesso_(SHEETS.PERMISSIONS_CATALOG, permissoesNormalizadas, 'permissão');
+
+  substituirVinculosUsuario_(getSheet(SHEETS.USER_GROUPS), userId, gruposNormalizados, function(id) {
+    return [userId, id, new Date(), new Date()];
+  });
+  substituirVinculosUsuario_(getSheet(SHEETS.USER_PERMISSIONS), userId, permissoesNormalizadas, function(id) {
+    return [userId, id, 'GRANT', new Date()];
+  });
+  registrarAuditoriaAcesso_(userId, 'USUARIO_ACESSOS_ATUALIZADOS', JSON.stringify({
+    grupos: gruposNormalizados.length,
+    permissoesAvulsas: permissoesNormalizadas.length
+  }), usuarioExecutor);
+}
+
+function normalizarListaIdsAcesso_(lista) {
+  if (!Array.isArray(lista)) return [];
+  var vistos = {};
+  var resultado = [];
+  lista.forEach(function(item) {
+    var id = String(item || '').trim();
+    if (!id || vistos[id]) return;
+    vistos[id] = true;
+    resultado.push(id);
+  });
+  return resultado;
+}
+
+function validarIdsAcesso_(sheetName, ids, tipo) {
+  if (!ids.length) return;
+  var sheet = getSheet(sheetName);
+  var data = sheet.getDataRange().getValues();
+  var existentes = {};
+  for (var i = 1; i < data.length; i++) {
+    if (!data[i][0]) continue;
+    var ativo = data[i].length < 4 || valorBooleano(data[i][3]);
+    if (ativo) existentes[String(data[i][0])] = true;
+  }
+  ids.forEach(function(id) {
+    if (!existentes[id]) throw new Error('O ' + tipo + ' "' + id + '" não existe ou está inativo.');
+  });
+}
+
+function substituirVinculosUsuario_(sheet, userId, ids, linhaFn) {
+  var data = sheet.getDataRange().getValues();
+  for (var i = data.length - 1; i >= 1; i--) {
+    if (String(data[i][0]) === String(userId)) sheet.deleteRow(i + 1);
+  }
+  if (!ids.length) return;
+  var linhas = ids.map(linhaFn);
+  sheet.getRange(sheet.getLastRow() + 1, 1, linhas.length, linhas[0].length).setValues(linhas);
+}
+
 function salvarGrupoAcesso(dados, usuarioExecutor) {
   garantirEstruturaControleAcesso_();
   var id = String(dados.id || '').trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '_');
