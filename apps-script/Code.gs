@@ -223,6 +223,25 @@ function doPost(e) {
         if (!editado) return jsonError('Usuário não encontrado');
         return jsonSuccess({ mensagem: 'Usuário atualizado' });
 
+      case 'alterar-status-usuario':
+        var gestorStatusUsuario = exigirGestaoUsuarios(token);
+        if (!dados.id) return jsonError('ID obrigatório');
+        if (String(dados.id) === String(gestorStatusUsuario.id) &&
+            dados.hasOwnProperty('ativo') &&
+            !valorBooleano(dados.ativo)) {
+          return jsonError('Você não pode desativar seu próprio acesso.');
+        }
+        dados.atualizadoPor = gestorStatusUsuario.email || gestorStatusUsuario.pac || '';
+        var statusAlterado = alterarStatusUsuarioCentralizado(dados.id, dados);
+        if (!statusAlterado) return jsonError('Usuário não encontrado');
+        return jsonSuccess({ mensagem: 'Status atualizado' });
+
+      case 'reenviar-boas-vindas-usuario':
+        var gestorReenviaBoasVindas = exigirGestaoUsuarios(token);
+        if (!dados.id) return jsonError('ID obrigatório');
+        dados.atualizadoPor = gestorReenviaBoasVindas.email || gestorReenviaBoasVindas.pac || '';
+        return jsonSuccess(reenviarEmailBoasVindasUsuarioCentralizado(dados.id, dados));
+
       case 'forcar-logout-global':
         return jsonSuccess(forcarLogoutGlobal(token));
 

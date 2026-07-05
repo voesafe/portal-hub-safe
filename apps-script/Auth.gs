@@ -399,6 +399,20 @@ function criarUsuarioCentralizado(dados) {
   return resultado;
 }
 
+function reenviarEmailBoasVindasUsuarioCentralizado(id, dados) {
+  validarSenhaUsuario_(dados.senha, true);
+  var atualizado = atualizarUsuarioCentralizado(id, dados);
+  if (!atualizado) throw new Error('Usuário não encontrado.');
+
+  enviarEmailBoasVindasUsuario_(dados, {
+    id: id,
+    nome: dados.nome,
+    origem: dados.origem
+  });
+
+  return { emailBoasVindasEnviado: true };
+}
+
 function enviarEmailBoasVindasUsuario_(dados, resultado) {
   var email = validarEmailUsuario_(dados.email);
   var nome = String(dados.nome || resultado.nome || 'colaborador').trim();
@@ -600,6 +614,45 @@ function atualizarUsuarioCentralizado(id, dados) {
     return salvarUsuarioCco(dados);
   }
   return atualizarUsuario(id, dados);
+}
+
+function alterarStatusUsuarioCentralizado(id, dados) {
+  if (String(dados.origem || '').toLowerCase() === 'cco' ||
+      String(id || '').indexOf('cco:') === 0) {
+    return alterarStatusUsuarioCco_(id, dados.ativo);
+  }
+  return alterarStatusUsuarioHub_(id, dados.ativo, dados.atualizadoPor);
+}
+
+function alterarStatusUsuarioHub_(id, ativo, atualizadoPor) {
+  garantirEstruturaControleAcesso_();
+  var sheet = getSheet(SHEETS.USUARIOS);
+  var data = sheet.getDataRange().getValues();
+  var idx = indiceCabecalho_(sheet);
+
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(id)) {
+      var row = i + 1;
+      sheet.getRange(row, 7).setValue(valorBooleano(ativo));
+      if (idx.ATUALIZADO_EM) sheet.getRange(row, idx.ATUALIZADO_EM).setValue(new Date());
+      if (idx.ATUALIZADO_POR && atualizadoPor) {
+        sheet.getRange(row, idx.ATUALIZADO_POR).setValue(atualizadoPor);
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+function alterarStatusUsuarioCco_(id, ativo) {
+  var username = String(id || '').replace(/^cco:/, '').trim().toLowerCase();
+  if (!username) return false;
+  var resposta = requisitarCco_('toggleUserActive', {
+    username: username,
+    active: String(valorBooleano(ativo))
+  });
+  if (!resposta.ok && resposta.error) throw new Error(resposta.error);
+  return true;
 }
 
 function validarUnicidadeEmailCentral_(idIgnorado, email) {

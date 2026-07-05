@@ -243,6 +243,7 @@ const Admin = {
   initForm() {
     document.getElementById('btn-novo-usuario')?.addEventListener('click', () => this.abrirForm());
     document.getElementById('btn-salvar-usuario')?.addEventListener('click', () => this.salvar());
+    document.getElementById('btn-reenviar-boas-vindas')?.addEventListener('click', () => this.reenviarBoasVindas());
     document.getElementById('btn-forcar-relogin')?.addEventListener('click', () => this.forcarReloginGlobal());
     document.getElementById('u-origem')?.addEventListener('change', () => this.atualizarCamposOrigem());
     document.getElementById('u-perfil')?.addEventListener('change', () => this.atualizarResumoAcesso());
@@ -376,6 +377,7 @@ const Admin = {
       ? 'Preencha somente para redefinir a senha deste acesso.'
       : 'Defina uma senha temporária individual e envie ao colaborador por um canal seguro.';
     document.getElementById('grupo-email-boas-vindas').hidden = !!this.editandoId;
+    document.getElementById('btn-reenviar-boas-vindas').hidden = !this.editandoId;
     this.atualizarResumoAcesso();
   },
 
@@ -488,12 +490,7 @@ const Admin = {
 
     if (!window.confirm(`Deseja ${verbo} o acesso de ${usuario.nome}?\n\n${explicacao}`)) return;
 
-    const res = await API.editarUsuario({
-      ...usuario,
-      id: usuario.id,
-      origem: this.normalizarOrigem(usuario.origem),
-      ativo: !ativo
-    });
+    const res = await API.alterarStatusUsuario(usuario.id, this.normalizarOrigem(usuario.origem), !ativo);
 
     if (!res.ok) {
       toast(res.error || `Não foi possível ${verbo} o acesso.`, 'error');
@@ -504,10 +501,9 @@ const Admin = {
     await this.carregar();
   },
 
-  async salvar() {
-    const btn = document.getElementById('btn-salvar-usuario');
+  dadosFormularioUsuario() {
     const origem = document.getElementById('u-origem').value;
-    const dados = {
+    return {
       id: this.editandoId,
       origem,
       nome: document.getElementById('u-nome').value.trim(),
@@ -519,7 +515,6 @@ const Admin = {
       superadmin: origem === 'hub' && document.getElementById('u-superadmin').checked,
       grupos: origem === 'hub' ? Array.from(this.acessosSelecionados.grupos) : undefined,
       permissoesAvulsas: origem === 'hub' ? Array.from(this.acessosSelecionados.permissoes) : undefined,
-      enviarBoasVindas: !this.editandoId && document.getElementById('u-enviar-boas-vindas').checked,
       senha: document.getElementById('u-senha').value || undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),
@@ -528,6 +523,40 @@ const Admin = {
       color: document.getElementById('u-cor').value,
       scheduleVisible: document.getElementById('u-visivel-escala').checked
     };
+  },
+
+  async reenviarBoasVindas() {
+    if (!this.editandoId) return;
+    const dados = this.dadosFormularioUsuario();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email)) {
+      toast('Informe um e-mail válido antes de reenviar.', 'warning');
+      return;
+    }
+    if (!dados.senha || dados.senha.length < 8) {
+      toast('Informe uma nova senha temporária com pelo menos 8 caracteres.', 'warning');
+      return;
+    }
+    if (!window.confirm('Isso vai redefinir a senha deste usuário e reenviar o e-mail de boas-vindas. Continuar?')) return;
+
+    const btn = document.getElementById('btn-reenviar-boas-vindas');
+    btnLoading(btn, true);
+    const res = await API.reenviarEmailBoasVindas(dados);
+    btnLoading(btn, false);
+
+    if (!res.ok) {
+      toast(res.error || 'Não foi possível reenviar o e-mail.', 'error');
+      return;
+    }
+    document.getElementById('u-senha').value = '';
+    toast('Senha redefinida e e-mail reenviado.', 'success');
+    await this.carregar();
+  },
+
+  async salvar() {
+    const btn = document.getElementById('btn-salvar-usuario');
+    const dados = this.dadosFormularioUsuario();
+    dados.enviarBoasVindas = !this.editandoId && document.getElementById('u-enviar-boas-vindas').checked;
+    const origem = dados.origem;
 
     if (!dados.nome) {
       toast('Informe o nome completo.', 'warning');

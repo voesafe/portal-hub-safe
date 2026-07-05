@@ -137,6 +137,8 @@ const API = {
   async getUsuariosLogin() { return this.get('login-usuarios', {}, true); },
   async criarUsuario(dados)  { return this.post('criar-usuario',  dados); },
   async editarUsuario(dados) { return this.post('editar-usuario', dados); },
+  async alterarStatusUsuario(id, origem, ativo) { return this.post('alterar-status-usuario', { id, origem, ativo }); },
+  async reenviarEmailBoasVindas(dados) { return this.post('reenviar-boas-vindas-usuario', dados); },
   async forcarLogoutGlobal() { return this.post('forcar-logout-global', {}); },
   async getControleAcesso() { return this.get('access-control', {}, false); },
   async salvarGrupoAcesso(dados) { return this.post('salvar-access-group', dados); },

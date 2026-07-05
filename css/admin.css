@@ -95,6 +95,18 @@
   font-weight: 500;
 }
 
+.usuario-send-welcome {
+  margin-top: 10px;
+}
+
+.usuario-welcome-email small {
+  display: block;
+  margin-top: 3px;
+  color: var(--gray-400);
+  font-size: .72rem;
+  line-height: 1.35;
+}
+
 .usuarios-count {
   padding: 4px 10px;
   border-radius: 999px;
