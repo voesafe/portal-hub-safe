@@ -99,6 +99,17 @@
   margin-top: 10px;
 }
 
+.usuario-security-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.usuario-security-actions[hidden] {
+  display: none !important;
+}
+
 .usuario-welcome-email small {
   display: block;
   margin-top: 3px;
@@ -373,7 +384,7 @@
 .usuario-rbac-list {
   display: grid;
   gap: 7px;
-  max-height: 260px;
+  max-height: 210px;
   margin-top: 9px;
   padding-right: 4px;
   overflow-y: auto;
@@ -553,6 +564,10 @@
   }
 
   .usuario-rbac-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .usuario-security-actions {
     grid-template-columns: 1fr;
   }
 }

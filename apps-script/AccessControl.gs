@@ -274,7 +274,7 @@ function indiceCabecalho_(sheet) {
 function garantirColunaUsuariosSuperadmin_() {
   var sheet = getSheet(SHEETS.USUARIOS);
   var idx = indiceCabecalho_(sheet);
-  ['SUPERADMIN', 'ATUALIZADO_EM', 'ATUALIZADO_POR'].forEach(function(nome) {
+  ['SUPERADMIN', 'CPF', 'ATUALIZADO_EM', 'ATUALIZADO_POR'].forEach(function(nome) {
     if (idx[nome]) return;
     var col = sheet.getLastColumn() + 1;
     sheet.getRange(1, col).setValue(nome);

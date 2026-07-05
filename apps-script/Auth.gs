@@ -317,6 +317,7 @@ function listarUsuarios() {
       perfil:   row[5],
       ativo:    row[6],
       criadoEm: row[7],
+      cpf:      idx.CPF ? String(row[idx.CPF - 1] || '') : '',
       superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
       grupos: acessos.gruposPorUsuario[userId] || [],
       permissoesAvulsas: acessos.permissoesPorUsuario[userId] || [],
@@ -352,7 +353,9 @@ function criarUsuario(dados) {
   var sheet = getSheet(SHEETS.USUARIOS);
   var idx = indiceCabecalho_(sheet);
   dados.email = validarEmailUsuario_(dados.email);
+  dados.cpf = validarCpfUsuario_(dados.cpf, true);
   dados.pac = dados.pac || gerarIdentificadorHubUnico_(sheet, dados.email);
+  dados.senha = dados.senha || senhaPadraoUsuario_(dados);
   validarSenhaUsuario_(dados.senha, true);
   validarUnicidadeUsuarioHub_(sheet, null, dados.pac, dados.email);
   dados.perfil = validarPerfilHub_(dados.perfil || 'pac');
@@ -372,6 +375,9 @@ function criarUsuario(dados) {
   if (idx.SUPERADMIN) {
     sheet.getRange(sheet.getLastRow(), idx.SUPERADMIN).setValue(valorBooleano(dados.superadmin));
   }
+  if (idx.CPF) {
+    sheet.getRange(sheet.getLastRow(), idx.CPF).setValue(dados.cpf);
+  }
   if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas)) {
     salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor);
   }
@@ -381,6 +387,8 @@ function criarUsuario(dados) {
 
 function criarUsuarioCentralizado(dados) {
   dados.email = validarEmailUsuario_(dados.email);
+  dados.cpf = validarCpfUsuario_(dados.cpf, true);
+  dados.senha = dados.senha || senhaPadraoUsuario_(dados);
   validarUnicidadeEmailCentral_(null, dados.email);
   var resultado;
   if (String(dados.origem || 'hub').toLowerCase() === 'cco') {
@@ -400,15 +408,10 @@ function criarUsuarioCentralizado(dados) {
 }
 
 function reenviarEmailBoasVindasUsuarioCentralizado(id, dados) {
-  validarSenhaUsuario_(dados.senha, true);
-  var atualizado = atualizarUsuarioCentralizado(id, dados);
-  if (!atualizado) throw new Error('Usuário não encontrado.');
-
-  enviarEmailBoasVindasUsuario_(dados, {
-    id: id,
-    nome: dados.nome,
-    origem: dados.origem
-  });
+  var usuario = buscarUsuarioCentralizadoPorId_(id);
+  if (!usuario) throw new Error('Usuário não encontrado.');
+  usuario.cpf = validarCpfUsuario_(usuario.cpf, true);
+  enviarEmailBoasVindasUsuario_(usuario, usuario);
 
   return { emailBoasVindasEnviado: true };
 }
@@ -417,8 +420,7 @@ function enviarEmailBoasVindasUsuario_(dados, resultado) {
   var email = validarEmailUsuario_(dados.email);
   var nome = String(dados.nome || resultado.nome || 'colaborador').trim();
   var primeiroNome = nome.split(/\s+/)[0] || 'olá';
-  var senha = String(dados.senha || '').trim();
-  if (!senha) throw new Error('senha temporária não informada.');
+  var senha = senhaPadraoUsuario_(dados);
 
   var assunto = 'Bem-vindo ao SAFE Hub';
   var loginUrl = 'https://hub.voesafe.com.br/';
@@ -432,9 +434,9 @@ function enviarEmailBoasVindasUsuario_(dados, resultado) {
     'Seu acesso ao ' + sistema + ' foi criado.',
     'Acesse: ' + loginUrl,
     'E-mail: ' + email,
-    'Senha temporária: ' + senha,
+    'Senha padrão inicial: ' + senha,
     '',
-    'Após entrar, altere sua senha em Usuários > Alterar minha senha.',
+    'Após entrar, recomendamos alterar sua senha em Usuários > Alterar minha senha.',
     '',
     'SAFE Escola de Aviação'
   ].join('\n');
@@ -465,18 +467,18 @@ function templateEmailBoasVindas_(primeiroNome, nome, email, senha, loginUrl, si
     + '          <p style="margin:8px 0 0;color:#d9e4f2;font-size:15px;line-height:1.5;">Seu acesso ao ' + escSistema + ' foi criado com sucesso.</p>'
     + '        </td></tr>'
     + '        <tr><td style="padding:30px 32px;">'
-    + '          <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#44516f;">Olá, <strong>' + escNome + '</strong>. A partir de agora você pode acessar o ambiente operacional da SAFE usando as credenciais abaixo.</p>'
+    + '          <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#44516f;">Olá, <strong>' + escNome + '</strong>. A partir de agora você pode acessar o ambiente operacional da SAFE usando as informações abaixo.</p>'
     + '          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:0 0 22px;background:#f7faff;border:1px solid #dfe7f3;border-radius:10px;">'
     + '            <tr><td style="padding:16px 18px;border-bottom:1px solid #dfe7f3;color:#7482a0;font-size:12px;font-weight:700;text-transform:uppercase;">E-mail de acesso</td></tr>'
     + '            <tr><td style="padding:0 18px 16px;color:#19213f;font-size:16px;font-weight:700;">' + escEmail + '</td></tr>'
-    + '            <tr><td style="padding:16px 18px;border-top:1px solid #dfe7f3;border-bottom:1px solid #dfe7f3;color:#7482a0;font-size:12px;font-weight:700;text-transform:uppercase;">Senha temporária</td></tr>'
+    + '            <tr><td style="padding:16px 18px;border-top:1px solid #dfe7f3;border-bottom:1px solid #dfe7f3;color:#7482a0;font-size:12px;font-weight:700;text-transform:uppercase;">Senha padrão inicial</td></tr>'
     + '            <tr><td style="padding:0 18px 18px;color:#19213f;font-size:18px;font-weight:800;letter-spacing:.04em;">' + escSenha + '</td></tr>'
     + '          </table>'
     + '          <div style="text-align:center;margin:24px 0 22px;">'
     + '            <a href="' + loginUrl + '" style="display:inline-block;padding:13px 22px;border-radius:9px;background:#2f9ed8;color:#ffffff;text-decoration:none;font-size:14px;font-weight:800;">Acessar SAFE Hub</a>'
     + '          </div>'
     + '          <div style="padding:16px 18px;border-radius:10px;background:#fff8e8;border:1px solid #f1d7a7;color:#6f5521;font-size:13px;line-height:1.55;">'
-    + '            <strong>Recomendação de segurança:</strong> no primeiro acesso, vá em <strong>Usuários &gt; Alterar minha senha</strong> e substitua a senha temporária por uma senha pessoal.'
+    + '            <strong>Recomendação de segurança:</strong> no primeiro acesso, vá em <strong>Usuários &gt; Alterar minha senha</strong> e substitua a senha padrão por uma senha pessoal. Se você já alterou sua senha antes, continue usando a senha atual.'
     + '          </div>'
     + '          <p style="margin:22px 0 0;color:#7482a0;font-size:13px;line-height:1.5;">Se você não esperava este acesso, avise o responsável administrativo da SAFE.</p>'
     + '        </td></tr>'
@@ -505,6 +507,7 @@ function atualizarUsuario(id, dados) {
   var data = sheet.getDataRange().getValues();
   var idx = indiceCabecalho_(sheet);
   dados.email = validarEmailUsuario_(dados.email);
+  dados.cpf = validarCpfUsuario_(dados.cpf, true);
   validarSenhaUsuario_(dados.senha, false);
   validarUnicidadeUsuarioHub_(sheet, id, dados.pac, dados.email);
   if (dados.perfil) dados.perfil = validarPerfilHub_(dados.perfil);
@@ -521,6 +524,7 @@ function atualizarUsuario(id, dados) {
       if (dados.hasOwnProperty('superadmin') && idx.SUPERADMIN) {
         sheet.getRange(row, idx.SUPERADMIN).setValue(valorBooleano(dados.superadmin));
       }
+      if (idx.CPF) sheet.getRange(row, idx.CPF).setValue(dados.cpf);
       if (idx.ATUALIZADO_EM) sheet.getRange(row, idx.ATUALIZADO_EM).setValue(new Date());
       if (idx.ATUALIZADO_POR && dados.atualizadoPor) {
         sheet.getRange(row, idx.ATUALIZADO_POR).setValue(dados.atualizadoPor);
@@ -561,6 +565,19 @@ function validarSenhaUsuario_(senha, obrigatoria) {
   if (valor.length < 8) {
     throw new Error('A senha deve ter pelo menos 8 caracteres.');
   }
+}
+
+function validarCpfUsuario_(cpf, obrigatorio) {
+  var valor = String(cpf || '').replace(/\D/g, '');
+  if (!valor && !obrigatorio) return '';
+  if (valor.length !== 11) {
+    throw new Error('Informe um CPF válido com 11 dígitos.');
+  }
+  return valor;
+}
+
+function senhaPadraoUsuario_(dados) {
+  return validarCpfUsuario_(dados && dados.cpf, true);
 }
 
 function gerarIdentificadorHub_(email) {
@@ -616,12 +633,61 @@ function atualizarUsuarioCentralizado(id, dados) {
   return atualizarUsuario(id, dados);
 }
 
+function resetarSenhaPadraoUsuarioCentralizado(id) {
+  if (String(id || '').indexOf('cco:') === 0) {
+    return resetarSenhaPadraoUsuarioCco_(id);
+  }
+  return resetarSenhaPadraoUsuarioHub_(id);
+}
+
+function resetarSenhaPadraoUsuarioHub_(id) {
+  garantirEstruturaControleAcesso_();
+  var sheet = getSheet(SHEETS.USUARIOS);
+  var data = sheet.getDataRange().getValues();
+  var idx = indiceCabecalho_(sheet);
+  if (!idx.CPF) throw new Error('A coluna CPF ainda não está disponível.');
+
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(id)) {
+      var cpf = senhaPadraoUsuario_({ cpf: data[i][idx.CPF - 1] });
+      sheet.getRange(i + 1, 5).setValue(hashSenha(cpf));
+      if (idx.ATUALIZADO_EM) sheet.getRange(i + 1, idx.ATUALIZADO_EM).setValue(new Date());
+      return { senhaResetada: true };
+    }
+  }
+  throw new Error('Usuário não encontrado.');
+}
+
+function resetarSenhaPadraoUsuarioCco_(id) {
+  var usuario = buscarUsuarioCentralizadoPorId_(id);
+  if (!usuario) throw new Error('Usuário não encontrado.');
+  usuario.senha = senhaPadraoUsuario_(usuario);
+  var resultado = salvarUsuarioCco(usuario);
+  return { senhaResetada: true, id: resultado.id };
+}
+
 function alterarStatusUsuarioCentralizado(id, dados) {
   if (String(dados.origem || '').toLowerCase() === 'cco' ||
       String(id || '').indexOf('cco:') === 0) {
     return alterarStatusUsuarioCco_(id, dados.ativo);
   }
   return alterarStatusUsuarioHub_(id, dados.ativo, dados.atualizadoPor);
+}
+
+function buscarUsuarioCentralizadoPorId_(id) {
+  if (String(id || '').indexOf('cco:') === 0) {
+    var usuariosCco = listarUsuariosCco();
+    for (var c = 0; c < usuariosCco.length; c++) {
+      if (String(usuariosCco[c].id) === String(id)) return usuariosCco[c];
+    }
+    return null;
+  }
+
+  var usuarios = listarUsuarios();
+  for (var i = 0; i < usuarios.length; i++) {
+    if (String(usuarios[i].id) === String(id)) return usuarios[i];
+  }
+  return null;
 }
 
 function alterarStatusUsuarioHub_(id, ativo, atualizadoPor) {

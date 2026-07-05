@@ -244,6 +244,7 @@ const Admin = {
     document.getElementById('btn-novo-usuario')?.addEventListener('click', () => this.abrirForm());
     document.getElementById('btn-salvar-usuario')?.addEventListener('click', () => this.salvar());
     document.getElementById('btn-reenviar-boas-vindas')?.addEventListener('click', () => this.reenviarBoasVindas());
+    document.getElementById('btn-resetar-senha-padrao')?.addEventListener('click', () => this.resetarSenhaPadrao());
     document.getElementById('btn-forcar-relogin')?.addEventListener('click', () => this.forcarReloginGlobal());
     document.getElementById('u-origem')?.addEventListener('change', () => this.atualizarCamposOrigem());
     document.getElementById('u-perfil')?.addEventListener('change', () => this.atualizarResumoAcesso());
@@ -332,7 +333,7 @@ const Admin = {
     const origem = document.getElementById('u-origem').value;
     const resumo = document.getElementById('u-access-summary');
     if (!resumo) return;
-    resumo.hidden = origem === 'cco';
+    resumo.hidden = true;
     if (origem === 'cco') {
       this.atualizarEstadoRbac();
       return;
@@ -366,18 +367,11 @@ const Admin = {
     const origem = document.getElementById('u-origem').value;
     const cco = origem === 'cco';
     document.getElementById('campos-cco').hidden = !cco;
-    document.getElementById('grupo-perfil-hub').hidden = cco;
     document.getElementById('grupo-perfil-cco').hidden = !cco;
     document.getElementById('grupo-superadmin').hidden = cco;
     document.getElementById('usuario-rbac').hidden = cco;
-    document.getElementById('u-senha-label').textContent = this.editandoId
-      ? 'Nova senha (opcional)'
-      : 'Senha inicial';
-    document.getElementById('u-senha-ajuda').textContent = this.editandoId
-      ? 'Preencha somente para redefinir a senha deste acesso.'
-      : 'Defina uma senha temporária individual e envie ao colaborador por um canal seguro.';
     document.getElementById('grupo-email-boas-vindas').hidden = !!this.editandoId;
-    document.getElementById('btn-reenviar-boas-vindas').hidden = !this.editandoId;
+    document.getElementById('acoes-usuario-existente').hidden = !this.editandoId;
     this.atualizarResumoAcesso();
   },
 
@@ -459,7 +453,6 @@ const Admin = {
       grupos: new Set((usuario?.grupos || []).map(String)),
       permissoes: new Set((usuario?.permissoesAvulsas || []).map(String))
     };
-    document.getElementById('u-senha').value = '';
     document.getElementById('u-iniciais').value = usuario?.initials || '';
     document.getElementById('u-cpf').value = usuario?.cpf || '';
     document.getElementById('u-nascimento').value = usuario?.birthdate || '';
@@ -515,7 +508,6 @@ const Admin = {
       superadmin: origem === 'hub' && document.getElementById('u-superadmin').checked,
       grupos: origem === 'hub' ? Array.from(this.acessosSelecionados.grupos) : undefined,
       permissoesAvulsas: origem === 'hub' ? Array.from(this.acessosSelecionados.permissoes) : undefined,
-      senha: document.getElementById('u-senha').value || undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),
       birthdate: document.getElementById('u-nascimento').value.trim(),
@@ -532,11 +524,11 @@ const Admin = {
       toast('Informe um e-mail válido antes de reenviar.', 'warning');
       return;
     }
-    if (!dados.senha || dados.senha.length < 8) {
-      toast('Informe uma nova senha temporária com pelo menos 8 caracteres.', 'warning');
+    if (dados.cpf.length !== 11) {
+      toast('Cadastre um CPF válido antes de reenviar o e-mail.', 'warning');
       return;
     }
-    if (!window.confirm('Isso vai redefinir a senha deste usuário e reenviar o e-mail de boas-vindas. Continuar?')) return;
+    if (!window.confirm('Reenviar o e-mail de boas-vindas para este usuário? A senha atual não será alterada.')) return;
 
     const btn = document.getElementById('btn-reenviar-boas-vindas');
     btnLoading(btn, true);
@@ -547,9 +539,29 @@ const Admin = {
       toast(res.error || 'Não foi possível reenviar o e-mail.', 'error');
       return;
     }
-    document.getElementById('u-senha').value = '';
-    toast('Senha redefinida e e-mail reenviado.', 'success');
+    toast('E-mail de boas-vindas reenviado.', 'success');
     await this.carregar();
+  },
+
+  async resetarSenhaPadrao() {
+    if (!this.editandoId) return;
+    const dados = this.dadosFormularioUsuario();
+    if (dados.cpf.length !== 11) {
+      toast('Cadastre e salve um CPF válido antes de resetar a senha.', 'warning');
+      return;
+    }
+    if (!window.confirm('Resetar a senha deste usuário para o CPF cadastrado?')) return;
+
+    const btn = document.getElementById('btn-resetar-senha-padrao');
+    btnLoading(btn, true);
+    const res = await API.resetarSenhaPadraoUsuario(this.editandoId);
+    btnLoading(btn, false);
+
+    if (!res.ok) {
+      toast(res.error || 'Não foi possível resetar a senha.', 'error');
+      return;
+    }
+    toast('Senha resetada para o CPF cadastrado.', 'success');
   },
 
   async salvar() {
@@ -570,12 +582,8 @@ const Admin = {
       toast('Para o CCO, informe iniciais, CPF e data de nascimento.', 'warning');
       return;
     }
-    if (!this.editandoId && String(dados.senha || '').length < 8) {
-      toast('A senha inicial deve ter pelo menos 8 caracteres.', 'warning');
-      return;
-    }
-    if (this.editandoId && dados.senha && dados.senha.length < 8) {
-      toast('A nova senha deve ter pelo menos 8 caracteres.', 'warning');
+    if (dados.cpf.length !== 11) {
+      toast('Informe um CPF válido com 11 dígitos.', 'warning');
       return;
     }
 

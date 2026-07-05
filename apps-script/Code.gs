@@ -242,6 +242,11 @@ function doPost(e) {
         dados.atualizadoPor = gestorReenviaBoasVindas.email || gestorReenviaBoasVindas.pac || '';
         return jsonSuccess(reenviarEmailBoasVindasUsuarioCentralizado(dados.id, dados));
 
+      case 'resetar-senha-padrao-usuario':
+        exigirGestaoUsuarios(token);
+        if (!dados.id) return jsonError('ID obrigatório');
+        return jsonSuccess(resetarSenhaPadraoUsuarioCentralizado(dados.id));
+
       case 'forcar-logout-global':
         return jsonSuccess(forcarLogoutGlobal(token));
 
