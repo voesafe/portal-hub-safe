@@ -199,8 +199,49 @@
   background: rgba(91, 174, 226, .07);
 }
 
+.usuario-superadmin {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: -2px 0 18px;
+  padding: 14px 15px;
+  border: 1px solid rgba(29, 41, 81, .2);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+
+.usuario-superadmin input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--navy);
+}
+
+.usuario-superadmin strong,
+.usuario-superadmin small {
+  display: block;
+}
+
+.usuario-superadmin strong {
+  color: var(--navy);
+  font-size: .82rem;
+}
+
+.usuario-superadmin small {
+  margin-top: 3px;
+  color: var(--gray-500);
+  font-size: .73rem;
+  line-height: 1.4;
+}
+
+.usuario-superadmin.is-active {
+  border-color: rgba(29, 41, 81, .36);
+  background: rgba(29, 41, 81, .06);
+}
+
 .form-group[hidden],
-.campos-cco[hidden] {
+.campos-cco[hidden],
+.usuario-superadmin[hidden] {
   display: none !important;
 }
 

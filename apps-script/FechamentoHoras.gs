@@ -46,7 +46,7 @@ function perfilPodeAcessarFechamentoHoras(perfil, email) {
 function exigirAcessoFechamentoHoras(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
-  if (!perfilPodeAcessarFechamentoHoras(usuario.perfil, usuario.email)) {
+  if (!usuarioEhSuperadmin(usuario) && !perfilPodeAcessarFechamentoHoras(usuario.perfil, usuario.email)) {
     throw new Error('Acesso ao fechamento de horas não autorizado.');
   }
   return usuario;

@@ -14,8 +14,10 @@ var SAFE_SESSION_TIMEZONE = 'America/Sao_Paulo';
  */
 function login(email, senha) {
   try {
+    garantirColunaUsuariosSuperadmin_();
     var sheet = getSheet(SHEETS.USUARIOS);
     var data = sheet.getDataRange().getValues();
+    var idx = indiceCabecalho_(sheet);
     var hash = hashSenha(senha);
     var identificador = String(email || '').trim().toLowerCase();
 
@@ -31,7 +33,8 @@ function login(email, senha) {
           nome:   row[1],
           pac:    row[2],
           email:  row[3],
-          perfil: row[5]
+          perfil: row[5],
+          superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master'
         };
         usuario.token = criarTokenSessao(usuario);
         return usuario;
@@ -60,6 +63,7 @@ function criarTokenSessao(usuario) {
     email: String(usuario.email || '').trim().toLowerCase(),
     pac: String(usuario.pac || ''),
     perfil: normalizarPerfil(usuario.perfil),
+    superadmin: valorBooleano(usuario.superadmin),
     criadoEm: agora,
     expiraEm: agora + SAFE_SESSION_TTL_MS,
     diaLogin: dataLocalSessao_(agora),
@@ -142,6 +146,8 @@ function validarTokenSessao(token) {
   }
 
   var sheet = getSheet(SHEETS.USUARIOS);
+  garantirColunaUsuariosSuperadmin_();
+  var idx = indiceCabecalho_(sheet);
   var data = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
@@ -156,6 +162,7 @@ function validarTokenSessao(token) {
       pac: row[2],
       email: row[3],
       perfil: normalizarPerfil(row[5]),
+      superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
       token: token
     };
   }
@@ -172,7 +179,7 @@ function exigirSessao(token) {
 function exigirAcessoFinanceiro(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
-  if (!perfilPodeAcessarFinanceiro(usuario.perfil, usuario.email)) {
+  if (!usuarioEhSuperadmin(usuario) && !perfilPodeAcessarFinanceiro(usuario.perfil, usuario.email)) {
     throw new Error('Acesso financeiro não autorizado.');
   }
   return usuario;
@@ -181,7 +188,7 @@ function exigirAcessoFinanceiro(token) {
 function exigirEdicaoControleGastos(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
-  if (!perfilPodeEditarControleGastos(usuario.perfil, usuario.email)) {
+  if (!usuarioEhSuperadmin(usuario) && !perfilPodeEditarControleGastos(usuario.perfil, usuario.email)) {
     throw new Error('Este acesso permite somente visualizar o Controle de Gastos.');
   }
   return usuario;
@@ -211,6 +218,7 @@ function validarAcaoPerfilExclusivo_(token, action) {
     escala_minions: ['alterar-senha']
   };
   var perfil = normalizarPerfil(sessao.perfil);
+  if (valorBooleano(sessao.superadmin)) return;
   var permitidas = acoesPorPerfilExclusivo[perfil];
   if (!permitidas) return;
 
@@ -222,8 +230,8 @@ function validarAcaoPerfilExclusivo_(token, action) {
 function exigirGestaoUsuarios(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
-  if (normalizarPerfil(usuario.perfil) !== 'master') {
-    throw new Error('A gestão central de usuários é exclusiva do Master TI.');
+  if (!usuarioEhSuperadmin(usuario)) {
+    throw new Error('A gestão central de usuários é exclusiva de superadmins.');
   }
   return usuario;
 }
@@ -231,7 +239,7 @@ function exigirGestaoUsuarios(token) {
 function exigirCadastroAlunos(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
-  if (normalizarPerfil(usuario.perfil) !== 'master') {
+  if (!usuarioEhSuperadmin(usuario)) {
     throw new Error('O Cadastro de Aluno é exclusivo do Master TI.');
   }
   return usuario;
@@ -240,7 +248,7 @@ function exigirCadastroAlunos(token) {
 function exigirGestaoBases(token) {
   var usuario = validarTokenSessao(token);
   if (!usuario) throw new Error('Sessao expirada. Entre novamente.');
-  if (!perfilEhAdminCompleto(usuario.perfil)) {
+  if (!usuarioEhSuperadmin(usuario) && !perfilEhAdminCompleto(usuario.perfil)) {
     throw new Error('A edicao das bases e restrita a administradores.');
   }
   return usuario;
@@ -290,8 +298,10 @@ function listarUsuariosLogin() {
  * Lista todos os usuários (só admin)
  */
 function listarUsuarios() {
+  garantirEstruturaControleAcesso_();
   var sheet = getSheet(SHEETS.USUARIOS);
   var data = sheet.getDataRange().getValues();
+  var idx = indiceCabecalho_(sheet);
   var usuarios = [];
 
   for (var i = 1; i < data.length; i++) {
@@ -305,6 +315,7 @@ function listarUsuarios() {
       perfil:   row[5],
       ativo:    row[6],
       criadoEm: row[7],
+      superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
       origem:   'hub',
       modulo:   'Hub / Comercial'
     });
@@ -333,7 +344,9 @@ function listarUsuariosCentralizados() {
  * Cria novo usuário (só admin)
  */
 function criarUsuario(dados) {
+  garantirEstruturaControleAcesso_();
   var sheet = getSheet(SHEETS.USUARIOS);
+  var idx = indiceCabecalho_(sheet);
   dados.email = validarEmailUsuario_(dados.email);
   dados.pac = dados.pac || gerarIdentificadorHubUnico_(sheet, dados.email);
   validarSenhaUsuario_(dados.senha, true);
@@ -352,6 +365,9 @@ function criarUsuario(dados) {
     dados.hasOwnProperty('ativo') ? valorBooleano(dados.ativo) : true,
     new Date()
   ]);
+  if (idx.SUPERADMIN) {
+    sheet.getRange(sheet.getLastRow(), idx.SUPERADMIN).setValue(valorBooleano(dados.superadmin));
+  }
 
   return { id: id, nome: dados.nome };
 }
@@ -369,8 +385,10 @@ function criarUsuarioCentralizado(dados) {
  * Atualiza usuário (só admin)
  */
 function atualizarUsuario(id, dados) {
+  garantirEstruturaControleAcesso_();
   var sheet = getSheet(SHEETS.USUARIOS);
   var data = sheet.getDataRange().getValues();
+  var idx = indiceCabecalho_(sheet);
   dados.email = validarEmailUsuario_(dados.email);
   validarSenhaUsuario_(dados.senha, false);
   validarUnicidadeUsuarioHub_(sheet, id, dados.pac, dados.email);
@@ -385,6 +403,13 @@ function atualizarUsuario(id, dados) {
       if (dados.senha)  sheet.getRange(row, 5).setValue(hashSenha(dados.senha));
       if (dados.perfil) sheet.getRange(row, 6).setValue(dados.perfil);
       if (dados.hasOwnProperty('ativo')) sheet.getRange(row, 7).setValue(dados.ativo);
+      if (dados.hasOwnProperty('superadmin') && idx.SUPERADMIN) {
+        sheet.getRange(row, idx.SUPERADMIN).setValue(valorBooleano(dados.superadmin));
+      }
+      if (idx.ATUALIZADO_EM) sheet.getRange(row, idx.ATUALIZADO_EM).setValue(new Date());
+      if (idx.ATUALIZADO_POR && dados.atualizadoPor) {
+        sheet.getRange(row, idx.ATUALIZADO_POR).setValue(dados.atualizadoPor);
+      }
       return true;
     }
   }

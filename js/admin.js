@@ -41,6 +41,7 @@ const Admin = {
   },
 
   labelPerfil(usuario) {
+    if (this.eSuperadminUsuario(usuario)) return 'Superadmin';
     const perfil = usuario.perfil;
     if (Auth.perfilEhMaster(perfil)) return 'Master TI';
     if (Auth.normalizarPerfil(perfil) === 'financeiro') return 'Financeiro';
@@ -63,6 +64,14 @@ const Admin = {
     if (Auth.normalizarPerfil(perfil).includes('financeiro')) return 'badge-teal';
     if (Auth.perfilSomenteLeitura(perfil)) return 'badge-orange';
     return Auth.normalizarPerfil(perfil).includes('admin') ? 'badge-navy' : 'badge-teal';
+  },
+
+  badgeUsuario(usuario) {
+    return this.eSuperadminUsuario(usuario) ? 'badge-blue' : this.badgePerfil(usuario.perfil);
+  },
+
+  eSuperadminUsuario(usuario) {
+    return usuario?.superadmin === true || String(usuario?.superadmin).toLowerCase() === 'true';
   },
 
   estaAtivo(valor) {
@@ -150,7 +159,7 @@ const Admin = {
             <span class="badge origem-badge origem-${origem}">${this.labelOrigem(origem)}</span>
             <small class="usuario-modulo">${this.escape(usuario.modulo || 'SAFE Hub')}</small>
           </td>
-          <td class="col-perfil" data-label="Perfil"><span class="badge ${this.badgePerfil(usuario.perfil)}">${this.labelPerfil(usuario)}</span></td>
+          <td class="col-perfil" data-label="Perfil"><span class="badge ${this.badgeUsuario(usuario)}">${this.labelPerfil(usuario)}</span></td>
           <td data-label="Cadastro"><span class="cadastro-status ${completo ? 'completo' : 'pendente'}">${completo ? 'Completo' : 'Ação necessária'}</span></td>
           <td data-label="Ação">
             <div class="usuario-actions">
@@ -213,6 +222,7 @@ const Admin = {
     document.getElementById('btn-forcar-relogin')?.addEventListener('click', () => this.forcarReloginGlobal());
     document.getElementById('u-origem')?.addEventListener('change', () => this.atualizarCamposOrigem());
     document.getElementById('u-perfil')?.addEventListener('change', () => this.atualizarResumoAcesso());
+    document.getElementById('u-superadmin')?.addEventListener('change', () => this.atualizarResumoAcesso());
   },
 
   async forcarReloginGlobal() {
@@ -280,6 +290,18 @@ const Admin = {
     resumo.hidden = origem === 'cco';
     if (origem === 'cco') return;
 
+    const superadmin = document.getElementById('u-superadmin')?.checked;
+    document.getElementById('grupo-superadmin')?.classList.toggle('is-active', !!superadmin);
+    if (superadmin) {
+      document.getElementById('u-access-summary-title').textContent = 'Superadmin';
+      document.getElementById('u-access-summary-description').textContent = 'Acesso total ao SAFE Hub, incluindo usuários, grupos, permissões e módulos futuros.';
+      document.getElementById('u-access-summary-tags').innerHTML = ['Acesso total', 'Ignora grupos', 'Inclui novas permissões']
+        .map(tag => `<span>${this.escape(tag)}</span>`)
+        .join('');
+      resumo.classList.remove('restricted');
+      return;
+    }
+
     const perfil = document.getElementById('u-perfil').value;
     const dados = this.perfisAcesso()[perfil] || this.perfisAcesso().pac;
     document.getElementById('u-access-summary-title').textContent = dados.titulo;
@@ -296,6 +318,7 @@ const Admin = {
     document.getElementById('campos-cco').hidden = !cco;
     document.getElementById('grupo-perfil-hub').hidden = cco;
     document.getElementById('grupo-perfil-cco').hidden = !cco;
+    document.getElementById('grupo-superadmin').hidden = cco;
     document.getElementById('u-senha-label').textContent = this.editandoId
       ? 'Nova senha (opcional)'
       : 'Senha inicial';
@@ -318,6 +341,7 @@ const Admin = {
     document.getElementById('u-perfil').value = usuario?.perfil || 'pac';
     document.getElementById('u-role-cco').value = usuario?.roleOrigem || 'user';
     document.getElementById('u-ativo').value = usuario ? String(this.estaAtivo(usuario.ativo)) : 'true';
+    document.getElementById('u-superadmin').checked = this.eSuperadminUsuario(usuario);
     document.getElementById('u-senha').value = '';
     document.getElementById('u-iniciais').value = usuario?.initials || '';
     document.getElementById('u-cpf').value = usuario?.cpf || '';
@@ -376,6 +400,7 @@ const Admin = {
       perfil: document.getElementById('u-perfil').value,
       roleOrigem: document.getElementById('u-role-cco').value,
       ativo: document.getElementById('u-ativo').value === 'true',
+      superadmin: origem === 'hub' && document.getElementById('u-superadmin').checked,
       senha: document.getElementById('u-senha').value || undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),
@@ -397,7 +422,7 @@ const Admin = {
       toast('Para o CCO, informe iniciais, CPF e data de nascimento.', 'warning');
       return;
     }
-    if (!this.editandoId && dados.senha.length < 8) {
+    if (!this.editandoId && String(dados.senha || '').length < 8) {
       toast('A senha inicial deve ter pelo menos 8 caracteres.', 'warning');
       return;
     }

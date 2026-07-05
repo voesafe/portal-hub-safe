@@ -80,13 +80,18 @@ const Auth = {
 
   eAdmin() {
     const s = this.getSessao();
-    return s && this.perfilEhAdmin(s.perfil);
+    return s && (this.eSuperadmin() || this.perfilEhAdmin(s.perfil));
   },
 
   eAdminCompleto() {
     const s = this.getSessao();
     const p = this.normalizarPerfil(s?.perfil);
-    return s && (p === 'admin' || p === 'master');
+    return s && (this.eSuperadmin() || p === 'admin' || p === 'master');
+  },
+
+  eSuperadmin() {
+    const s = this.getSessao();
+    return !!(s && (s.superadmin === true || String(s.superadmin).toLowerCase() === 'true' || this.perfilEhMaster(s.perfil)));
   },
 
   perfilEhCco(perfil) {
@@ -99,6 +104,7 @@ const Auth = {
   },
 
   podeAcessarEscalaCco() {
+    if (this.eSuperadmin()) return true;
     return this.perfilPodeAcessarEscalaCco(this.getPerfil());
   },
 
@@ -108,6 +114,7 @@ const Auth = {
   },
 
   podeAcessarEscalaPav() {
+    if (this.eSuperadmin()) return true;
     return this.perfilPodeAcessarEscalaPav(this.getPerfil());
   },
 
@@ -117,6 +124,7 @@ const Auth = {
   },
 
   podeAcessarHorasVoadasInva() {
+    if (this.eSuperadmin()) return true;
     return this.perfilPodeAcessarHorasVoadasInva(this.getPerfil());
   },
 
@@ -126,14 +134,17 @@ const Auth = {
   },
 
   podeAcessarSafeMinions() {
+    if (this.eSuperadmin()) return true;
     return this.perfilPodeAcessarSafeMinions(this.getPerfil());
   },
 
   podeAcessarProgressoAlunos() {
+    if (this.eSuperadmin()) return true;
     return this.eAdminCompleto();
   },
 
   podeAcessarCadastroAlunos() {
+    if (this.eSuperadmin()) return true;
     return this.perfilEhMaster(this.getPerfil());
   },
 
@@ -193,10 +204,12 @@ const Auth = {
   },
 
   podeAcessarFinanceiro() {
+    if (this.eSuperadmin()) return true;
     return this.perfilPodeAcessarFinanceiro(this.getPerfil(), this.getEmail());
   },
 
   podeEditarFinanceiro() {
+    if (this.eSuperadmin()) return true;
     const p = this.normalizarPerfil(this.getPerfil());
     if (p === 'master') return true;
     return p === 'financeiro' &&
@@ -211,6 +224,7 @@ const Auth = {
   },
 
   podeAcessarFechamentoHoras() {
+    if (this.eSuperadmin()) return true;
     return this.perfilPodeAcessarFechamentoHoras(this.getPerfil(), this.getEmail());
   },
 
@@ -375,8 +389,16 @@ const Auth = {
 
   protegerGestaoUsuarios() {
     if (!this.proteger()) return false;
-    if (!this.perfilEhMaster(this.getPerfil())) {
+    if (!this.eSuperadmin()) {
       return this.negarAcesso('Gestão central de usuários', 'admin.html');
+    }
+    return true;
+  },
+
+  protegerControleAcesso() {
+    if (!this.proteger()) return false;
+    if (!this.eSuperadmin()) {
+      return this.negarAcesso('Controle de Acesso', 'access-control.html');
     }
     return true;
   },
@@ -426,6 +448,7 @@ const Auth = {
       faturamento:  `<svg ${base}><rect x="3" y="6" width="18" height="14" rx="2"></rect><path d="M16 10h5"></path><path d="M7 6V4h10v2"></path><path d="M7 14h4"></path></svg>`,
       concorrencia: `<svg ${base}><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3"></path><path d="M12 19v3"></path><path d="M2 12h3"></path><path d="M19 12h3"></path></svg>`,
       usuarios:     `<svg ${base}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+      acesso:       `<svg ${base}><path d="M20 7h-9"></path><circle cx="7" cy="7" r="4"></circle><path d="M15 7v4"></path><path d="M18 7v3"></path><rect x="4" y="15" width="16" height="6" rx="2"></rect><path d="M8 18h.01"></path></svg>`,
       gastos:       `<svg ${base}><path d="M3 6h18"></path><path d="M7 3v6"></path><path d="M17 3v6"></path><rect x="3" y="6" width="18" height="15" rx="2"></rect><path d="M8 12h3"></path><path d="M8 16h5"></path><path d="M16 12v4"></path><path d="M14 14h4"></path></svg>`,
       horas:        `<svg ${base}><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path><path d="M5 3 2 6"></path><path d="m19 3 3 3"></path></svg>`,
       escala:       `<svg ${base}><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M3 10h18"></path><path d="m8 15 2 2 4-4"></path></svg>`,
@@ -564,6 +587,7 @@ const Auth = {
     ];
 
     const acessoMaster = this.perfilEhMaster(this.getPerfil());
+    const acessoSuperadmin = this.eSuperadmin();
     const acessoSafeMinions = this.podeAcessarSafeMinions();
     const acessoCadastroAlunos = this.podeAcessarCadastroAlunos();
     const acessoAdmin = this.eAdmin();
@@ -632,18 +656,14 @@ const Auth = {
       'suporte',
       'Suporte',
       'suporte',
-      item('bases.html', 'Bases', 'bases'),
-      ['bases.html']
-    ));
-
-    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
-      'ti',
-      'T.I.',
-      'ti',
-      item('admin.html', 'Usuários', 'usuarios', {
-        permitido: acessoMaster
-      }),
-      ['admin.html']
+      item('bases.html', 'Bases', 'bases') +
+        item('admin.html', 'Usuários', 'usuarios', {
+          permitido: acessoSuperadmin
+        }) +
+        item('access-control.html', 'Controle de Acesso', 'acesso', {
+          permitido: acessoSuperadmin
+        }),
+      ['bases.html', 'admin.html', 'access-control.html']
     ));
 
     nav.innerHTML = secoes.join('');
@@ -710,6 +730,7 @@ const Auth = {
       'faturamento.html': 'faturamento',
       'concorrencia.html':'concorrencia',
       'admin.html':       'usuarios',
+      'access-control.html': 'acesso',
       'controle-gastos.html': 'gastos',
       'fechamento-horas.html': 'horas',
       'escala-cco.html': 'escala',
@@ -865,7 +886,7 @@ const Auth = {
       el.textContent = sessao.nome;
     });
     document.querySelectorAll('.sidebar-user-role').forEach(el => {
-      el.textContent = this.descricaoPerfil(sessao.perfil);
+      el.textContent = this.eSuperadmin() ? 'Superadmin' : this.descricaoPerfil(sessao.perfil);
     });
 
     if (!this.eAdmin()) {

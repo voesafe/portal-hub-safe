@@ -51,6 +51,7 @@ const Inicio = {
       !Auth.eUsuarioExclusivoEscalaMinions();
     const acessoAdmin = Auth.eAdmin();
     const acessoMaster = Auth.perfilEhMaster(Auth.getPerfil());
+    const acessoSuperadmin = Auth.eSuperadmin();
     const acessoSafeMinions = Auth.podeAcessarSafeMinions();
     const acessoCadastroAlunos = Auth.podeAcessarCadastroAlunos();
 
@@ -149,7 +150,15 @@ const Inicio = {
         href: 'admin.html',
         icone: 'usuarios',
         tom: 'violet',
-        permitido: acessoAdmin
+        permitido: acessoSuperadmin
+      },
+      {
+        titulo: 'Controle de Acesso',
+        descricao: 'Grupos, permissões e acessos efetivos dos colaboradores.',
+        href: 'access-control.html',
+        icone: 'acesso',
+        tom: 'navy',
+        permitido: acessoSuperadmin
       },
       {
         titulo: 'Planilha Administrativa',

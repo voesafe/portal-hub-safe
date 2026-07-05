@@ -138,6 +138,8 @@ const API = {
   async criarUsuario(dados)  { return this.post('criar-usuario',  dados); },
   async editarUsuario(dados) { return this.post('editar-usuario', dados); },
   async forcarLogoutGlobal() { return this.post('forcar-logout-global', {}); },
+  async getControleAcesso() { return this.get('access-control', {}, false); },
+  async salvarGrupoAcesso(dados) { return this.post('salvar-access-group', dados); },
 
   // ── Cadastro de Alunos / Trello ────────────────────────────
   async getCadastroAlunos() { return this.get('cadastro-alunos', {}, false); },

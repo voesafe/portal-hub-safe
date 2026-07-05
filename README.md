@@ -72,6 +72,7 @@ portal-hub-safe/
 | `FechamentoHoras.gs` | Copie o conteúdo de `apps-script/FechamentoHoras.gs` |
 | `Cavok.gs` | Copie o conteúdo de `apps-script/Cavok.gs` |
 | `Cco.gs` | Copie o conteúdo de `apps-script/Cco.gs` |
+| `AccessControl.gs` | Copie o conteúdo de `apps-script/AccessControl.gs` |
 | `Utils.gs` | Copie o conteúdo de `apps-script/Utils.gs` |
 
 3. Em `Utils.gs`, substitua:
