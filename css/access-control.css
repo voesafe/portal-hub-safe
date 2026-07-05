@@ -4,6 +4,21 @@
   gap: 18px;
 }
 
+body.access-menu-open {
+  overflow: hidden;
+}
+
+body.access-menu-open .sidebar {
+  transform: translateX(0) !important;
+  z-index: 500;
+}
+
+body.access-menu-open .sidebar-overlay {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 450;
+}
+
 .access-overview {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

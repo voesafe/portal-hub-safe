@@ -18,24 +18,29 @@ const AccessControl = {
   inicializarMenuMobile() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    const hamburgerOriginal = document.getElementById('hamburger');
-    if (!sidebar || !hamburgerOriginal) return;
-    const hamburger = hamburgerOriginal.cloneNode(true);
-    hamburgerOriginal.replaceWith(hamburger);
-    const fechar = () => {
-      sidebar.classList.remove('mobile-open');
-      overlay?.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', 'false');
+    if (!sidebar) return;
+
+    const definirAberto = aberto => {
+      document.body.classList.toggle('access-menu-open', aberto);
+      sidebar.classList.toggle('mobile-open', aberto);
+      overlay?.classList.toggle('active', aberto);
+      document.getElementById('hamburger')?.setAttribute('aria-expanded', String(aberto));
     };
 
-    hamburger.addEventListener('click', event => {
+    const fechar = event => {
+      event?.preventDefault?.();
+      sidebar.classList.remove('mobile-open');
+      overlay?.classList.remove('active');
+      document.body.classList.remove('access-menu-open');
+      document.getElementById('hamburger')?.setAttribute('aria-expanded', 'false');
+    };
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#hamburger')) return;
       event.preventDefault();
       event.stopPropagation();
-      const aberto = !sidebar.classList.contains('mobile-open');
-      sidebar.classList.toggle('mobile-open', aberto);
-      overlay?.classList.toggle('active', !!aberto);
-      hamburger.setAttribute('aria-expanded', String(!!aberto));
-    });
+      definirAberto(!document.body.classList.contains('access-menu-open'));
+    }, true);
     overlay?.addEventListener('click', fechar);
   },
 
