@@ -689,16 +689,33 @@ function salvarGrupoAcesso(dados, usuarioExecutor) {
 function substituirPermissoesGrupo_(groupId, permissoes) {
   var sheet = getSheet(SHEETS.ACCESS_GROUP_PERMISSIONS);
   var data = sheet.getDataRange().getValues();
-  for (var i = data.length - 1; i >= 1; i--) {
-    if (String(data[i][0]) === String(groupId)) sheet.deleteRow(i + 1);
+  var alvo = String(groupId);
+  var agora = new Date();
+  var cabecalho = data.length ? data[0] : ['GROUP_ID', 'PERMISSION_ID', 'CRIADO_EM'];
+  var totalColunas = cabecalho.length;
+
+  // Mantém as relações dos outros grupos e reconstrói as do grupo atual.
+  var linhas = [cabecalho];
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]) !== alvo) linhas.push(data[i]);
   }
   var vistas = {};
   permissoes.forEach(function(permissao) {
     var id = String(permissao || '').trim();
     if (!id || vistas[id]) return;
     vistas[id] = true;
-    sheet.appendRow([groupId, id, new Date()]);
+    var linha = [alvo, id, agora];
+    while (linha.length < totalColunas) linha.push('');
+    linhas.push(linha.slice(0, totalColunas));
   });
+
+  // Reescreve a aba inteira de uma só vez: evita deleteRow em loop
+  // (que reindexa a planilha a cada chamada) e um appendRow por permissão.
+  var ultimaLinha = sheet.getLastRow();
+  if (ultimaLinha > 1) {
+    sheet.getRange(2, 1, ultimaLinha - 1, totalColunas).clearContent();
+  }
+  sheet.getRange(1, 1, linhas.length, totalColunas).setValues(linhas);
 }
 
 function registrarAuditoriaAcesso_(usuarioAlvo, acao, detalhe, usuarioExecutor) {
