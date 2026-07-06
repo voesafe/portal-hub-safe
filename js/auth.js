@@ -94,6 +94,22 @@ const Auth = {
     return !!(s && (s.superadmin === true || String(s.superadmin).toLowerCase() === 'true' || this.perfilEhMaster(s.perfil)));
   },
 
+  permissoesEfetivas() {
+    const s = this.getSessao();
+    if (!Array.isArray(s?.permissoesEfetivas)) return [];
+    return s.permissoesEfetivas.map(id => String(id || '').trim()).filter(Boolean);
+  },
+
+  temPermissao(permissaoId) {
+    if (this.eSuperadmin()) return true;
+    const id = String(permissaoId || '').trim();
+    return !!id && this.permissoesEfetivas().includes(id);
+  },
+
+  temAlgumaPermissao(permissoes) {
+    return Array.isArray(permissoes) && permissoes.some(id => this.temPermissao(id));
+  },
+
   perfilEhCco(perfil) {
     return this.normalizarPerfil(perfil).startsWith('cco_');
   },
@@ -115,7 +131,15 @@ const Auth = {
 
   podeAcessarEscalaPav() {
     if (this.eSuperadmin()) return true;
-    return this.perfilPodeAcessarEscalaPav(this.getPerfil());
+    return this.perfilPodeAcessarEscalaPav(this.getPerfil()) ||
+      this.temAlgumaPermissao([
+        'escala_pav.visualizar_calendario',
+        'escala_pav.editar_escala',
+        'escala_pav.visualizar_financeiro',
+        'escala_pav.exportar_ifood',
+        'escala_pav.gerenciar_pavs',
+        'escala_pav.inativar_reativar_pav'
+      ]);
   },
 
   perfilPodeAcessarHorasVoadasInva(perfil) {

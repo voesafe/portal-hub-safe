@@ -1013,9 +1013,9 @@ body.dark .pav-app select.field-input{background-image:url("data:image/svg+xml,%
   </main>
 </div>
 
-<script src="js/config.js?v=20260704-session-policy"></script>
-<script src="js/api.js?v=20260704-session-policy"></script>
-<script src="js/auth.js?v=20260704-session-policy"></script>
+<script src="js/config.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/api.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/auth.js?v=20260706-rbac-effective-v1"></script>
 <script>
 // ─── SESSÃO ──────────────────────────────────────────────────
 (function() {
@@ -1053,6 +1053,14 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbzpP_WDtYI5xaDJc4uHf9a_
 let state = {
   perfil: null,
   usuario: null,
+  acessos: {
+    calendario: false,
+    editarEscala: false,
+    financeiro: false,
+    exportarIfood: false,
+    gerenciarPavs: false,
+    inativarReativarPav: false
+  },
   pavs: [],
   escala: {}, // { 'YYYY-MM-DD': { cpn_id, cpn_nome, sjk_id, sjk_nome } }
   mesAtual: new Date(),
@@ -1066,8 +1074,8 @@ let state = {
 // entende no corpo do POST —, então segue por POST e a confirmação é feita
 // relendo a escala (ver handler do botão Salvar escala).
 const PAV_GET_ACTIONS = new Set(['getPAVs', 'getEscala', 'getFinanceiro', 'savePAV']);
-async function api(action, body = {}) {
-  showLoading(true);
+async function api(action, body = {}, opts = {}) {
+  if (!opts.silent) showLoading(true);
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 30000);
   try {
@@ -1086,14 +1094,34 @@ async function api(action, body = {}) {
     }
     return await res.json();
   } catch (e) {
-    toast(e.name === 'AbortError'
-      ? 'O servidor demorou a responder. Tente novamente.'
-      : 'Erro de conexão com o servidor', 'error');
+    if (!opts.silent) {
+      toast(e.name === 'AbortError'
+        ? 'O servidor demorou a responder. Tente novamente.'
+        : 'Erro de conexão com o servidor', 'error');
+    }
     return { ok: false };
   } finally {
     clearTimeout(timer);
-    showLoading(false);
+    if (!opts.silent) showLoading(false);
   }
+}
+
+// ─── CACHE LOCAL (stale-while-revalidate) ────────────────────
+// O Apps Script leva 3-15s por chamada. Guardamos a última resposta no
+// navegador: a página abre na hora com os dados conhecidos e atualiza em
+// segundo plano quando o servidor responde.
+const PAV_CACHE_KEY = 'pav-cache-v1';
+function lerCachePav() {
+  try { return JSON.parse(localStorage.getItem(PAV_CACHE_KEY)) || {}; }
+  catch { return {}; }
+}
+function gravarCachePav(patch) {
+  try {
+    const c = lerCachePav();
+    Object.assign(c, patch);
+    c.ts = Date.now();
+    localStorage.setItem(PAV_CACHE_KEY, JSON.stringify(c));
+  } catch {}
 }
 
 // ─── UTILS ───────────────────────────────────────────────────
@@ -1131,25 +1159,76 @@ function nomeMes(date) {
 
 document.getElementById('btnLogout')?.addEventListener('click', () => Auth.logout());
 
+function configurarAcessosPav(sessao) {
+  const perfilHub = Auth.normalizarPerfil(sessao?.perfil);
+  const adminLegado = Auth.eSuperadmin() || perfilHub === 'master';
+  const financeiroLegado = perfilHub === 'financeiro';
+
+  state.acessos = {
+    calendario: adminLegado || financeiroLegado || Auth.temPermissao('escala_pav.visualizar_calendario'),
+    editarEscala: adminLegado || Auth.temPermissao('escala_pav.editar_escala'),
+    financeiro: adminLegado || financeiroLegado || Auth.temPermissao('escala_pav.visualizar_financeiro'),
+    exportarIfood: adminLegado || financeiroLegado || Auth.temPermissao('escala_pav.exportar_ifood'),
+    gerenciarPavs: adminLegado || Auth.temPermissao('escala_pav.gerenciar_pavs'),
+    inativarReativarPav: adminLegado || Auth.temPermissao('escala_pav.inativar_reativar_pav')
+  };
+
+  if (adminLegado) {
+    state.perfil = 'admin';
+  } else if (financeiroLegado || (state.acessos.financeiro && !state.acessos.editarEscala && !state.acessos.gerenciarPavs)) {
+    state.perfil = 'financeiro';
+  } else {
+    state.perfil = 'visualizacao';
+  }
+}
+
+function aplicarAcessosPav() {
+  const tabFin = document.getElementById('tabFin');
+  const tabCad = document.getElementById('tabCad');
+  const calActions = document.querySelector('.cal-actions');
+  const dangerZone = document.getElementById('dangerZone');
+  const viewCadastro = document.getElementById('viewCadastro');
+  const btnExportar = document.getElementById('btnExportarIfood');
+
+  if (tabFin) tabFin.style.display = state.acessos.financeiro ? '' : 'none';
+  if (tabCad) tabCad.style.display = state.acessos.gerenciarPavs ? '' : 'none';
+  if (calActions) calActions.style.display = state.acessos.editarEscala ? '' : 'none';
+  if (dangerZone) dangerZone.style.display = state.acessos.editarEscala ? '' : 'none';
+  if (viewCadastro && !state.acessos.gerenciarPavs) viewCadastro.style.display = 'none';
+  if (btnExportar && !state.acessos.exportarIfood) btnExportar.style.display = 'none';
+}
+
 async function entrarNoApp() {
   sessionStorage.setItem('pav-session', JSON.stringify({ perfil: state.perfil, usuario: state.usuario }));
   document.getElementById('appScreen').classList.add('active');
   document.getElementById('appScreen').style.display = 'flex';
   document.getElementById('topbarUser').textContent = state.usuario + ' · ' + state.perfil;
+  aplicarAcessosPav();
 
-  // Esconde elementos admin se for financeiro
-  if (state.perfil === 'financeiro') {
-    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-    document.getElementById('tabCad').style.display = 'none';
+  // Abre na hora com o cache local (se existir) e atualiza em segundo plano;
+  // sem cache, primeira visita espera o servidor (com overlay).
+  const cache = lerCachePav();
+  if (cache.pavs && cache.escala) {
+    state.pavs = cache.pavs;
+    popularSelects();
+    aplicarEscala(cache.escala);
+    renderCalendario();
+    populateFinMes();
+    Promise.all([carregarPAVs({ silent: true }), carregarEscala({ silent: true })])
+      .then(() => {
+        renderCalendario();
+        populateFinMes();
+        const cad = document.getElementById('viewCadastro');
+        if (cad && cad.style.display !== 'none') renderCadastro();
+      });
+  } else {
+    await Promise.all([carregarPAVs(), carregarEscala()]);
+    renderCalendario();
+    populateFinMes();
   }
 
-  // busca PAVs e escala em paralelo p/ reduzir o tempo de abertura
-  await Promise.all([carregarPAVs(), carregarEscala()]);
-  renderCalendario();
-  populateFinMes();
-
-  // Financeiro entra direto na aba financeiro
-  if (state.perfil === 'financeiro') {
+  // Financeiro entra direto na aba financeiro quando esse for o único acesso operacional.
+  if (state.perfil === 'financeiro' && state.acessos.financeiro) {
     document.getElementById('tabCal').classList.remove('active');
     document.getElementById('tabFin').classList.add('active');
     setActiveView('viewFinanceiro');
@@ -1164,7 +1243,9 @@ async function entrarNoApp() {
     const savedView = localStorage.getItem('pav-last-view') || 'viewCalendario';
     // Garantir que a view salva existe e o perfil tem acesso
     const viewValida = ['viewCalendario', 'viewFinanceiro', 'viewCadastro'].includes(savedView);
-    const viewPermitida = savedView !== 'viewCadastro' || state.perfil === 'admin';
+    const viewPermitida = savedView === 'viewCalendario' ||
+      (savedView === 'viewFinanceiro' && state.acessos.financeiro) ||
+      (savedView === 'viewCadastro' && state.acessos.gerenciarPavs);
     const viewFinal = (viewValida && viewPermitida) ? savedView : 'viewCalendario';
     // Atualizar tab ativa visualmente
     document.querySelectorAll('.tab-btn[data-view]').forEach(b => {
@@ -1178,6 +1259,8 @@ async function entrarNoApp() {
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (!btn.dataset.view) return; // ignorar filtros de base
+    if (btn.dataset.view === 'viewFinanceiro' && !state.acessos.financeiro) return;
+    if (btn.dataset.view === 'viewCadastro' && !state.acessos.gerenciarPavs) return;
     document.querySelectorAll('.tab-btn[data-view]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     localStorage.setItem('pav-last-view', btn.dataset.view);
@@ -1186,31 +1269,44 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 function setActiveView(viewId) {
+  if (viewId === 'viewFinanceiro' && !state.acessos.financeiro) viewId = 'viewCalendario';
+  if (viewId === 'viewCadastro' && !state.acessos.gerenciarPavs) viewId = 'viewCalendario';
   ['viewCalendario', 'viewFinanceiro', 'viewCadastro'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = (id === viewId) ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.tab-btn[data-view]').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === viewId);
   });
   if (viewId === 'viewFinanceiro') carregarFinanceiro();
   if (viewId === 'viewCadastro')   renderCadastro();
 }
 
 // ─── DADOS ───────────────────────────────────────────────────
-async function carregarPAVs() {
-  const res = await api('getPAVs');
+async function carregarPAVs(opts) {
+  const res = await api('getPAVs', {}, opts);
   if (res.ok) {
     state.pavs = res.pavs;
     popularSelects();
+    gravarCachePav({ pavs: res.pavs });
   }
+  return res.ok;
 }
 
-async function carregarEscala() {
-  const res = await api('getEscala');
+function aplicarEscala(lista) {
+  state.escala = {};
+  (lista || []).forEach(item => {
+    state.escala[String(item.data)] = item;
+  });
+}
+
+async function carregarEscala(opts) {
+  const res = await api('getEscala', {}, opts);
   if (res.ok) {
-    state.escala = {};
-    res.escala.forEach(item => {
-      state.escala[String(item.data)] = item;
-    });
+    aplicarEscala(res.escala);
+    gravarCachePav({ escala: res.escala });
   }
+  return res.ok;
 }
 
 function popularSelects() {
@@ -1297,8 +1393,7 @@ function criarDia(num, dataStr, outromes, isHoje = false) {
   const sjkNome = esc ? esc.sjk_nome : null;
   cell.appendChild(criarChip('SJK', sjkId, sjkNome, dataStr));
 
-  // Drag & drop (só admin)
-  if (state.perfil === 'admin') {
+  if (state.acessos.editarEscala) {
     setupDragDrop(cell, dataStr);
   }
 
@@ -1307,7 +1402,7 @@ function criarDia(num, dataStr, outromes, isHoje = false) {
 
 function criarChip(base, id, nome, dataStr) {
   if (!id || !nome) {
-    if (state.perfil !== 'admin') return document.createTextNode('');
+    if (!state.acessos.editarEscala) return document.createTextNode('');
     const empty = document.createElement('div');
     empty.className = 'pav-empty';
     empty.textContent = `+ ${base}`;
@@ -1316,7 +1411,7 @@ function criarChip(base, id, nome, dataStr) {
   }
   const chip = document.createElement('div');
   chip.className = `pav-chip ${base.toLowerCase()}`;
-  chip.draggable = state.perfil === 'admin';
+  chip.draggable = state.acessos.editarEscala;
   chip.dataset.base = base;
   chip.dataset.id = id;
   chip.dataset.data = dataStr;
@@ -1324,10 +1419,10 @@ function criarChip(base, id, nome, dataStr) {
   chip.innerHTML = `
     <span class="chip-base">${base}</span>
     <span class="chip-name">${nome}</span>
-    ${state.perfil === 'admin' ? '<button class="chip-edit" title="Editar">✎</button>' : ''}
+    ${state.acessos.editarEscala ? '<button class="chip-edit" title="Editar">✎</button>' : ''}
   `;
 
-  if (state.perfil === 'admin') {
+  if (state.acessos.editarEscala) {
     chip.querySelector('.chip-edit').addEventListener('click', e => {
       e.stopPropagation();
       abrirModalDia(dataStr);
@@ -1459,6 +1554,10 @@ document.getElementById('btnNextMes').addEventListener('click', () => {
 
 // SALVAR ESCALA
 document.getElementById('btnSalvarEscala')?.addEventListener('click', async () => {
+  if (!state.acessos.editarEscala) {
+    toast('Você não tem permissão para editar a escala.', 'error');
+    return;
+  }
   if (Object.keys(state.escalaEditada).length === 0) {
     toast('Nenhuma alteração para salvar', 'error'); return;
   }
@@ -1499,6 +1598,11 @@ document.getElementById('btnSalvarEscala')?.addEventListener('click', async () =
       };
     });
     state.escalaEditada = {};
+    // atualiza o cache local e invalida o financeiro (depende da escala)
+    gravarCachePav({
+      escala: Object.entries(state.escala).map(([data, v]) => ({ ...v, data })),
+      fin: {}
+    });
     renderCalendario();
     toast('Escala salva com sucesso!');
   } else {
@@ -1511,6 +1615,10 @@ let modalDiaData = null;
 let modalDiaBase = null;
 
 function abrirModalDia(dataStr, base = null) {
+  if (!state.acessos.editarEscala) {
+    toast('Você não tem permissão para editar a escala.', 'error');
+    return;
+  }
   modalDiaData = dataStr;
   modalDiaBase = base;
   const d = new Date(dataStr + 'T12:00:00');
@@ -1581,6 +1689,10 @@ function atualizarSemanPAV() {
 }
 
 document.getElementById('modalSemanaConfirm').addEventListener('click', () => {
+  if (!state.acessos.editarEscala) {
+    toast('Você não tem permissão para editar a escala.', 'error');
+    return;
+  }
   const base  = document.getElementById('semanBase').value;
   const pavId = document.getElementById('semanPAV').value;
   if (!pavId) { toast('Selecione um PAV', 'error'); return; }
@@ -1629,11 +1741,36 @@ function populateFinMes() {
 }
 
 async function carregarFinanceiro() {
+  if (!state.acessos.financeiro) return;
   const mes = document.getElementById('finMesSelect').value;
-  const res = await api('getFinanceiro', { mes });
-  console.log('getFinanceiro resposta:', JSON.stringify(res));
-  if (!res.ok) { toast('Erro ao carregar financeiro: ' + (res.msg||''), 'error'); return; }
 
+  // Mostra na hora o último resultado conhecido do mês e atualiza por baixo
+  const cacheFin = lerCachePav().fin || {};
+  const emCache = cacheFin[mes];
+  if (emCache) {
+    renderFinanceiro(emCache);
+    api('getFinanceiro', { mes }, { silent: true }).then(res => {
+      if (!res.ok) return;
+      const c = lerCachePav();
+      c.fin = c.fin || {};
+      c.fin[mes] = res;
+      gravarCachePav({ fin: c.fin });
+      // só re-renderiza se o usuário ainda está olhando o mesmo mês
+      if (document.getElementById('finMesSelect').value === mes) renderFinanceiro(res);
+    });
+    return;
+  }
+
+  const res = await api('getFinanceiro', { mes });
+  if (!res.ok) { toast('Erro ao carregar financeiro: ' + (res.msg||''), 'error'); return; }
+  const c = lerCachePav();
+  c.fin = c.fin || {};
+  c.fin[mes] = res;
+  gravarCachePav({ fin: c.fin });
+  renderFinanceiro(res);
+}
+
+function renderFinanceiro(res) {
   // Guardar resultado globalmente para exportação
   window._finResultado = res.resultado;
   mostrarBtnExportar();
@@ -1666,6 +1803,7 @@ let cadFiltroBase = 'todos';
 let cadVerInativos = false; // inativos ocultos por padrão
 
 function renderCadastro() {
+  if (!state.acessos.gerenciarPavs) return;
   const grid         = document.getElementById('pavsGrid');
   const gridInativos = document.getElementById('pavsGridInativos');
   const secInativos  = document.getElementById('inativosSection');
@@ -1738,6 +1876,10 @@ document.getElementById('btnVerInativos')?.addEventListener('click', () => {
 });
 
 document.getElementById('btnNovoPAV')?.addEventListener('click', () => {
+  if (!state.acessos.gerenciarPavs) {
+    toast('Você não tem permissão para gerenciar PAVs.', 'error');
+    return;
+  }
   document.getElementById('pavFormID').value = '';
   document.getElementById('modalPAVTitle').textContent = 'Novo PAV';
   ['pavNome','pavCPF','pavNascimento','pavTel','pavEmail'].forEach(id => document.getElementById(id).value = '');
@@ -1747,6 +1889,10 @@ document.getElementById('btnNovoPAV')?.addEventListener('click', () => {
 });
 
 function editarPAV(id) {
+  if (!state.acessos.gerenciarPavs) {
+    toast('Você não tem permissão para gerenciar PAVs.', 'error');
+    return;
+  }
   const pav = state.pavs.find(p => String(p.ID) === String(id));
   if (!pav) return;
   document.getElementById('pavFormID').value = pav.ID;
@@ -1762,6 +1908,10 @@ function editarPAV(id) {
 }
 
 async function inativarPAV(id) {
+  if (!state.acessos.inativarReativarPav) {
+    toast('Você não tem permissão para inativar ou reativar PAVs.', 'error');
+    return;
+  }
   const pav = state.pavs.find(p => String(p.ID) === String(id));
   if (!pav) return;
   const novoStatus = pav.Status === 'Ativo' ? 'Inativo' : 'Ativo';
@@ -1778,6 +1928,10 @@ document.getElementById('modalPAVCancel').addEventListener('click', () => {
 });
 
 document.getElementById('modalPAVConfirm').addEventListener('click', async () => {
+  if (!state.acessos.gerenciarPavs) {
+    toast('Você não tem permissão para gerenciar PAVs.', 'error');
+    return;
+  }
   const id   = document.getElementById('pavFormID').value;
   const body = {
     'Nome Completo':   document.getElementById('pavNome').value.trim(),
@@ -1792,11 +1946,18 @@ document.getElementById('modalPAVConfirm').addEventListener('click', async () =>
 
   const res = await api('savePAV', body);
   if (res.ok) {
-    await carregarPAVs();
+    // fecha o modal na hora; a lista sincroniza em segundo plano
     document.getElementById('modalPAV').classList.remove('open');
-    renderCadastro();
-    popularSelects();
     toast(id ? 'PAV atualizado!' : 'PAV cadastrado!');
+    if (id) {
+      // edição: atualiza o card local imediatamente
+      const p = state.pavs.find(x => String(x.ID) === String(id));
+      if (p) Object.assign(p, body);
+      renderCadastro();
+      popularSelects();
+    }
+    // sincroniza com o servidor (traz o ID de PAV novo) sem travar a tela
+    carregarPAVs({ silent: true }).then(ok => { if (ok) renderCadastro(); });
   } else {
     toast('Erro ao salvar PAV', 'error');
   }
@@ -1822,9 +1983,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if(!Auth.protegerEscalaPav()) return;
   iniciarShellHub();
   const sessao=Auth.getSessao();
-  const perfilHub=Auth.normalizarPerfil(sessao.perfil);
-  // master → admin (controle total) · financeiro → financeiro (somente financeiro)
-  state.perfil = (perfilHub === 'financeiro') ? 'financeiro' : 'admin';
+  configurarAcessosPav(sessao);
   state.usuario = sessao.nome || 'SAFE';
   try {
     await entrarNoApp();
@@ -1867,14 +2026,16 @@ document.getElementById('pavNascimento').addEventListener('input', function() {
 
 // ─── EXPORTAR IFOOD ──────────────────────────────────────────
 function mostrarBtnExportar() {
-  const perfil = state.perfil;
   const btn = document.getElementById('btnExportarIfood');
-  if (btn && (perfil === 'financeiro' || perfil === 'admin')) {
-    btn.style.display = 'inline-flex';
-  }
+  if (!btn) return;
+  btn.style.display = state.acessos.exportarIfood ? 'inline-flex' : 'none';
 }
 
 document.getElementById('btnExportarIfood')?.addEventListener('click', () => {
+  if (!state.acessos.exportarIfood) {
+    toast('Você não tem permissão para exportar o financeiro.', 'error');
+    return;
+  }
   if (!window._finResultado || window._finResultado.length === 0) {
     toast('Nenhum dado financeiro para exportar', 'error'); return;
   }

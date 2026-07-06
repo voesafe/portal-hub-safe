@@ -10,7 +10,7 @@ const CONFIG = {
   CAVOK_FECHAMENTO_API_ENABLED: true,
 
   APP_NAME:    'SAFE Hub',
-  APP_VERSION: '2026.07.04-cadastro-alunos-v1',
+  APP_VERSION: '2026.07.06-rbac-effective-v1',
   API_TIMEOUT_MS: 30000,
 
   MESES: [

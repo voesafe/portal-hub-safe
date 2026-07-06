@@ -4,7 +4,7 @@
 // Login por e-mail (coluna D = row[3])
 // ============================================================
 
-var SAFE_AUTH_VERSION = '2026.07.04-session-policy';
+var SAFE_AUTH_VERSION = '2026.07.06-rbac-effective';
 var SAFE_SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 var SAFE_SESSION_EPOCH_KEY = 'SAFE_SESSION_EPOCH_MS';
 var SAFE_SESSION_TIMEZONE = 'America/Sao_Paulo';
@@ -36,6 +36,7 @@ function login(email, senha) {
           perfil: row[5],
           superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master'
         };
+        anexarPermissoesEfetivasSessao_(usuario);
         usuario.token = criarTokenSessao(usuario);
         return usuario;
       }
@@ -43,6 +44,7 @@ function login(email, senha) {
 
     var usuarioCco = autenticarUsuarioCcoPorEmail(identificador, senha);
     if (!usuarioCco) return null;
+    usuarioCco.permissoesEfetivas = [];
     usuarioCco.token = criarTokenSessao(usuarioCco);
     return usuarioCco;
   } catch(e) {
@@ -64,6 +66,7 @@ function criarTokenSessao(usuario) {
     pac: String(usuario.pac || ''),
     perfil: normalizarPerfil(usuario.perfil),
     superadmin: valorBooleano(usuario.superadmin),
+    permissoesEfetivas: Array.isArray(usuario.permissoesEfetivas) ? usuario.permissoesEfetivas : [],
     criadoEm: agora,
     expiraEm: agora + SAFE_SESSION_TTL_MS,
     diaLogin: dataLocalSessao_(agora),
@@ -83,6 +86,15 @@ function dataLocalSessao_(timestamp) {
     SAFE_SESSION_TIMEZONE,
     'yyyy-MM-dd'
   );
+}
+
+function anexarPermissoesEfetivasSessao_(usuario) {
+  try {
+    usuario.permissoesEfetivas = calcularPermissoesEfetivasUsuario_(usuario.id, usuario.superadmin);
+  } catch (e) {
+    usuario.permissoesEfetivas = [];
+  }
+  return usuario;
 }
 
 function obterEpochSessao_(props) {
@@ -142,6 +154,7 @@ function validarTokenSessao(token) {
     var usuarioCco = buscarUsuarioCco(sessao.pac);
     if (!usuarioCco) return null;
     usuarioCco.token = token;
+    usuarioCco.permissoesEfetivas = [];
     return usuarioCco;
   }
 
@@ -156,7 +169,7 @@ function validarTokenSessao(token) {
     if (!mesmoId && !mesmoEmail) continue;
     if (!valorBooleano(row[6])) return null;
 
-    return {
+    var usuarioAtual = {
       id: row[0],
       nome: row[1],
       pac: row[2],
@@ -165,6 +178,8 @@ function validarTokenSessao(token) {
       superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
       token: token
     };
+    anexarPermissoesEfetivasSessao_(usuarioAtual);
+    return usuarioAtual;
   }
 
   return null;

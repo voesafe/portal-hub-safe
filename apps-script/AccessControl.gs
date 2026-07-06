@@ -528,6 +528,51 @@ function carregarAcessosUsuarios_() {
   };
 }
 
+function carregarPermissoesPorGrupo_() {
+  var sheet = getSheet(SHEETS.ACCESS_GROUP_PERMISSIONS);
+  var data = sheet.getDataRange().getValues();
+  var permissoesPorGrupo = {};
+
+  for (var i = 1; i < data.length; i++) {
+    var groupId = String(data[i][0] || '').trim();
+    var permissaoId = String(data[i][1] || '').trim();
+    if (!groupId || !permissaoId) continue;
+    if (!permissoesPorGrupo[groupId]) permissoesPorGrupo[groupId] = [];
+    if (permissoesPorGrupo[groupId].indexOf(permissaoId) === -1) {
+      permissoesPorGrupo[groupId].push(permissaoId);
+    }
+  }
+
+  return permissoesPorGrupo;
+}
+
+function calcularPermissoesEfetivasUsuario_(userId, superadmin) {
+  if (valorBooleano(superadmin)) {
+    return ACCESS_PERMISSIONS.map(function(item) {
+      return item[0];
+    });
+  }
+
+  var usuarioId = String(userId || '').trim();
+  if (!usuarioId) return [];
+
+  var acessos = carregarAcessosUsuarios_();
+  var permissoesPorGrupo = carregarPermissoesPorGrupo_();
+  var efetivas = {};
+
+  (acessos.gruposPorUsuario[usuarioId] || []).forEach(function(groupId) {
+    (permissoesPorGrupo[groupId] || []).forEach(function(permissaoId) {
+      efetivas[permissaoId] = true;
+    });
+  });
+
+  (acessos.permissoesPorUsuario[usuarioId] || []).forEach(function(permissaoId) {
+    efetivas[permissaoId] = true;
+  });
+
+  return Object.keys(efetivas);
+}
+
 function salvarAcessosUsuario_(userId, grupos, permissoesAvulsas, usuarioExecutor) {
   garantirEstruturaControleAcesso_();
   if (!userId) throw new Error('Usuário obrigatório para salvar acessos.');
