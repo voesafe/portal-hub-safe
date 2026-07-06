@@ -176,7 +176,7 @@ body.dark .pav-app{
 /* ═══════════════════════════════════════════
    ── APP LAYOUT ──
 ══════════════════════════════════════════ */
-.pav-app #appScreen{flex-direction:column}
+.pav-app #appScreen{flex-direction:column;padding-top:64px}
 
 /* TOPBAR */
 .pav-app .topbar{
@@ -185,7 +185,7 @@ body.dark .pav-app{
   background:var(--topbar-bg);
   backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:100;
+  position:fixed;top:0;left:0;right:0;z-index:100;
 }
 .pav-app .topbar-left{display:flex;align-items:center;gap:16px}
 .pav-app .topbar-logo{display:flex;align-items:center;gap:10px}
@@ -627,6 +627,7 @@ body.dark .pav-app select.field-input{background-image:url("data:image/svg+xml,%
 ══════════════════════════════════════════ */
 @media (max-width: 768px){
   .pav-app .topbar{padding:0 12px;height:56px;gap:6px}
+  .pav-app #appScreen{padding-top:56px}
   .pav-app .topbar-divider,.pav-app .topbar-title{display:none}
   .pav-app .tab-btn{font-size:11px;padding:6px 8px}
   .pav-app .topbar-logo-text{font-size:13px}
