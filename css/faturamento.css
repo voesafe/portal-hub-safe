@@ -1,0 +1,22 @@
+/* ============================================================
+   faturamento.css - Estilos específicos da página de Faturamento
+   SAFE Hub
+   ============================================================ */
+
+.btn-acao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  background: transparent;
+}
+.btn-acao:hover { transform: scale(1.1); }
+.btn-editar-fat { color: var(--blue); }
+.btn-editar-fat:hover { background: rgba(91,174,226,.12); }
+.btn-excluir-fat { color: #e74c3c; }
+.btn-excluir-fat:hover { background: rgba(231,76,60,.1); }
