@@ -9,6 +9,7 @@ const Admin = {
   acessosSelecionados: { grupos: new Set(), permissoes: new Set() },
   editandoId: null,
   abaAtual: 'ativos',
+  CACHE_USUARIOS_KEY: 'safe-admin-usuarios-cache-v1',
 
   async init() {
     if (!Auth.protegerGestaoUsuarios()) return;
@@ -16,12 +17,46 @@ const Admin = {
     this.initSidebar();
     this.initForm();
     this.initFiltros();
+    this.limparFiltrosIniciais();
     this.initTabs();
     this.initAlterarSenha();
     await this.carregar();
   },
 
-  async carregar() {
+  lerCacheUsuarios() {
+    try {
+      const cache = JSON.parse(localStorage.getItem(this.CACHE_USUARIOS_KEY) || 'null');
+      if (!cache || !Array.isArray(cache.usuarios)) return null;
+      if (Date.now() - Number(cache.ts || 0) > 5 * 60 * 1000) return null;
+      return cache;
+    } catch {
+      return null;
+    }
+  },
+
+  gravarCacheUsuarios(payload) {
+    try {
+      localStorage.setItem(this.CACHE_USUARIOS_KEY, JSON.stringify({
+        usuarios: payload?.usuarios || [],
+        aviso: payload?.aviso || '',
+        ts: Date.now()
+      }));
+    } catch {}
+  },
+
+  aplicarUsuarios(payload) {
+    this.usuarios = payload?.usuarios || [];
+    this.renderResumo();
+    this.renderTabela();
+  },
+
+  async carregar(opcoes = {}) {
+    const usarCache = opcoes.usarCache !== false;
+    const cache = usarCache ? this.lerCacheUsuarios() : null;
+    if (cache) {
+      this.aplicarUsuarios(cache);
+    }
+
     const [res, acessoRes] = await Promise.all([
       API.getUsuarios(),
       API.getControleAcesso()
@@ -36,10 +71,9 @@ const Admin = {
       toast(acessoRes.error || 'Não foi possível carregar grupos e permissões.', 'warning');
     }
 
-    this.usuarios = res.data?.usuarios || [];
+    this.aplicarUsuarios(res.data || {});
+    this.gravarCacheUsuarios(res.data || {});
     if (res.data?.aviso) toast(res.data.aviso, 'warning', 6000);
-    this.renderResumo();
-    this.renderTabela();
   },
 
   normalizarOrigem(origem) {
@@ -224,6 +258,24 @@ const Admin = {
         this.renderTabela();
       });
     });
+  },
+
+  limparFiltrosIniciais() {
+    const busca = document.getElementById('filtro-busca');
+    if (busca) {
+      busca.value = '';
+      busca.setAttribute('autocomplete', 'off');
+      setTimeout(() => {
+        if (busca.value) {
+          busca.value = '';
+          this.renderTabela();
+        }
+      }, 150);
+    }
+    const origem = document.getElementById('filtro-origem');
+    const cadastro = document.getElementById('filtro-cadastro');
+    if (origem) origem.value = '';
+    if (cadastro) cadastro.value = '';
   },
 
   initTabs() {
@@ -491,7 +543,10 @@ const Admin = {
     }
 
     toast(ativo ? 'Acesso desativado.' : 'Acesso reativado.', 'success');
-    await this.carregar();
+    usuario.ativo = !ativo;
+    this.gravarCacheUsuarios({ usuarios: this.usuarios });
+    this.renderResumo();
+    this.renderTabela();
   },
 
   dadosFormularioUsuario() {

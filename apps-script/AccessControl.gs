@@ -252,6 +252,23 @@ function garantirEstruturaControleAcessoSemLock_() {
   removerDuplicidadesControleAcesso_();
 }
 
+function garantirEstruturaControleAcessoLeitura_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  garantirColunaUsuariosSuperadmin_();
+  garantirSheetComCabecalho_(ss, SHEETS.ACCESS_GROUPS, [
+    'ID', 'NOME', 'DESCRICAO', 'ATIVO', 'SISTEMA', 'CRIADO_EM', 'ATUALIZADO_EM'
+  ]);
+  garantirSheetComCabecalho_(ss, SHEETS.ACCESS_GROUP_PERMISSIONS, [
+    'GROUP_ID', 'PERMISSION_ID', 'CRIADO_EM'
+  ]);
+  garantirSheetComCabecalho_(ss, SHEETS.USER_GROUPS, [
+    'USER_ID', 'GROUP_ID', 'CRIADO_EM', 'ATUALIZADO_EM'
+  ]);
+  garantirSheetComCabecalho_(ss, SHEETS.USER_PERMISSIONS, [
+    'USER_ID', 'PERMISSION_ID', 'TIPO', 'CRIADO_EM'
+  ]);
+}
+
 function garantirSheetComCabecalho_(ss, nome, cabecalho) {
   var sheet = ss.getSheetByName(nome);
   if (!sheet) sheet = ss.insertSheet(nome);

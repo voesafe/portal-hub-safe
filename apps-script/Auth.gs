@@ -313,7 +313,7 @@ function listarUsuariosLogin() {
  * Lista todos os usuários (só admin)
  */
 function listarUsuarios() {
-  garantirEstruturaControleAcesso_();
+  garantirEstruturaControleAcessoLeitura_();
   var sheet = getSheet(SHEETS.USUARIOS);
   var data = sheet.getDataRange().getValues();
   var idx = indiceCabecalho_(sheet);
@@ -733,6 +733,7 @@ function alterarStatusUsuarioCco_(id, ativo) {
     active: String(valorBooleano(ativo))
   });
   if (!resposta.ok && resposta.error) throw new Error(resposta.error);
+  invalidarCacheUsuariosCco_();
   return true;
 }
 

@@ -3,6 +3,8 @@
 // ============================================================
 
 var CCO_API_URL = 'https://script.google.com/macros/s/AKfycbyeoa-8Vv2lze3okfNxSA20hOtwOo0dvB_wIaWBJujG0XbxgrXOkswON4fPrEHdeBAa/exec';
+var CCO_USERS_CACHE_KEY = 'CCO_USERS_CACHE_V1';
+var CCO_USERS_CACHE_SECONDS = 300;
 
 function requisitarCco_(action, params) {
   var query = ['action=' + encodeURIComponent(action)];
@@ -68,11 +70,25 @@ function buscarUsuarioCcoPorEmail(email) {
   return null;
 }
 
-function listarUsuariosCco() {
+function invalidarCacheUsuariosCco_() {
+  try {
+    CacheService.getScriptCache().remove(CCO_USERS_CACHE_KEY);
+  } catch (e) {}
+}
+
+function listarUsuariosCco(usarCache) {
+  usarCache = usarCache !== false;
+  if (usarCache) {
+    try {
+      var cached = CacheService.getScriptCache().get(CCO_USERS_CACHE_KEY);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+  }
+
   var resposta = requisitarCco_('getUsers', {});
   var usuarios = resposta.users || {};
 
-  return Object.keys(usuarios).map(function(username) {
+  var lista = Object.keys(usuarios).map(function(username) {
     var dados = usuarios[username] || {};
     return {
       id: 'cco:' + username,
@@ -94,6 +110,12 @@ function listarUsuariosCco() {
       ifoodExclude: dados.ifoodExclude === true
     };
   });
+
+  try {
+    CacheService.getScriptCache().put(CCO_USERS_CACHE_KEY, JSON.stringify(lista), CCO_USERS_CACHE_SECONDS);
+  } catch (e) {}
+
+  return lista;
 }
 
 function salvarUsuarioCco(dados) {
@@ -161,6 +183,7 @@ function salvarUsuarioCco(dados) {
 
   var resposta = requisitarCco_('saveUser', params);
   if (!resposta.ok && resposta.error) throw new Error(resposta.error);
+  invalidarCacheUsuariosCco_();
 
   if (!isNew && dados.hasOwnProperty('ativo') &&
       valorBooleano(dados.ativo) !== existente.ativo) {
@@ -169,6 +192,7 @@ function salvarUsuarioCco(dados) {
       active: String(valorBooleano(dados.ativo))
     });
     if (!status.ok && status.error) throw new Error(status.error);
+    invalidarCacheUsuariosCco_();
   }
 
   return { id: 'cco:' + username, nome: params.name, origem: 'cco' };
