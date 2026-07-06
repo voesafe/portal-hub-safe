@@ -5,6 +5,7 @@
 
 const Admin = {
   usuarios: [],
+  contagemEmails: new Map(),
   controleAcesso: { grupos: [], permissoes: [] },
   acessosSelecionados: { grupos: new Set(), permissoes: new Set() },
   editandoId: null,
@@ -46,8 +47,20 @@ const Admin = {
 
   aplicarUsuarios(payload) {
     this.usuarios = payload?.usuarios || [];
+    this.recalcularContagemEmails();
     this.renderResumo();
     this.renderTabela();
+  },
+
+  // Conta e-mails uma única vez por carga em vez de refiltrar a lista inteira
+  // para cada usuário (antes O(n²) a cada render da tabela/resumo/filtro).
+  recalcularContagemEmails() {
+    this.contagemEmails = new Map();
+    this.usuarios.forEach(usuario => {
+      const email = String(usuario.email || '').trim().toLowerCase();
+      if (!email) return;
+      this.contagemEmails.set(email, (this.contagemEmails.get(email) || 0) + 1);
+    });
   },
 
   async carregar(opcoes = {}) {
@@ -172,9 +185,7 @@ const Admin = {
   cadastroCompleto(usuario) {
     const email = String(usuario.email || '').trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
-    return this.usuarios.filter(item =>
-      String(item.email || '').trim().toLowerCase() === email
-    ).length === 1;
+    return (this.contagemEmails?.get(email) || 0) === 1;
   },
 
   renderTabela() {
@@ -265,12 +276,19 @@ const Admin = {
     if (busca) {
       busca.value = '';
       busca.setAttribute('autocomplete', 'off');
-      setTimeout(() => {
+      // O campo começa readonly (no HTML) para impedir o autofill do navegador,
+      // que estava injetando o e-mail do usuário logado. Só liberamos a digitação
+      // quando o próprio usuário interage com o campo.
+      const liberar = () => busca.removeAttribute('readonly');
+      busca.addEventListener('focus', liberar, { once: true });
+      busca.addEventListener('pointerdown', liberar, { once: true });
+      // Rede de segurança: se o navegador ainda assim preencher, limpamos.
+      [150, 500].forEach(delay => setTimeout(() => {
         if (busca.value) {
           busca.value = '';
           this.renderTabela();
         }
-      }, 150);
+      }, delay));
     }
     const origem = document.getElementById('filtro-origem');
     const cadastro = document.getElementById('filtro-cadastro');
@@ -307,6 +325,8 @@ const Admin = {
       const input = event.target.closest('input[data-access-group]');
       if (!input) return;
       this.alternarSet(this.acessosSelecionados.grupos, input.dataset.accessGroup, input.checked);
+      // Re-renderiza para ocultar/reexibir as permissões que o grupo passa a cobrir.
+      this.renderSeletoresAcesso();
       this.atualizarResumoAcesso();
     });
     document.getElementById('u-permissoes-avulsas')?.addEventListener('change', event => {
@@ -427,10 +447,25 @@ const Admin = {
     this.atualizarResumoAcesso();
   },
 
+  permissoesDosGruposSelecionados() {
+    const cobertas = new Set();
+    const grupos = this.controleAcesso.grupos || [];
+    this.acessosSelecionados.grupos.forEach(groupId => {
+      const grupo = grupos.find(item => String(item.id) === String(groupId));
+      (grupo?.permissoes || []).forEach(permissaoId => cobertas.add(String(permissaoId)));
+    });
+    return cobertas;
+  },
+
   renderSeletoresAcesso() {
     const gruposEl = document.getElementById('u-grupos-acesso');
     const permissoesEl = document.getElementById('u-permissoes-avulsas');
     if (!gruposEl || !permissoesEl) return;
+
+    // Permissões já garantidas pelos grupos selecionados não aparecem como avulsas:
+    // elas são redundantes. Também as removemos da seleção avulsa para não salvar duplicado.
+    const cobertasPorGrupo = this.permissoesDosGruposSelecionados();
+    cobertasPorGrupo.forEach(id => this.acessosSelecionados.permissoes.delete(id));
 
     const buscaGrupos = document.getElementById('u-busca-grupos')?.value.trim().toLowerCase() || '';
     const buscaPermissoes = document.getElementById('u-busca-permissoes')?.value.trim().toLowerCase() || '';
@@ -438,6 +473,7 @@ const Admin = {
       .filter(grupo => grupo.ativo !== false)
       .filter(grupo => !buscaGrupos || [grupo.nome, grupo.descricao, grupo.id].join(' ').toLowerCase().includes(buscaGrupos));
     const permissoes = (this.controleAcesso.permissoes || [])
+      .filter(permissao => !cobertasPorGrupo.has(String(permissao.id)))
       .filter(permissao => !buscaPermissoes || [permissao.modulo, permissao.nome, permissao.id].join(' ').toLowerCase().includes(buscaPermissoes));
 
     gruposEl.innerHTML = grupos.length
@@ -459,7 +495,10 @@ const Admin = {
       return acc;
     }, {});
 
-    permissoesEl.innerHTML = Object.keys(permissoesPorModulo).length
+    const nota = cobertasPorGrupo.size
+      ? `<div class="usuario-rbac-note">${cobertasPorGrupo.size} permissão(ões) já vêm dos grupos selecionados e ficam ocultas aqui. Use avulsas apenas para acessos extras.</div>`
+      : '';
+    permissoesEl.innerHTML = nota + (Object.keys(permissoesPorModulo).length
       ? Object.keys(permissoesPorModulo).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(modulo => `
           <div class="usuario-rbac-module">
             <div class="usuario-rbac-module-title">${this.escape(modulo)}</div>
@@ -471,7 +510,7 @@ const Admin = {
             `).join('')}
           </div>
         `).join('')
-      : '<div class="usuario-rbac-empty">Nenhuma permissão encontrada.</div>';
+      : '<div class="usuario-rbac-empty">Nenhuma permissão avulsa disponível.</div>');
 
     this.atualizarEstadoRbac();
   },
@@ -484,6 +523,47 @@ const Admin = {
     document.querySelectorAll('#usuario-rbac input').forEach(input => {
       input.disabled = bloqueado;
     });
+    this.atualizarAcessoEfetivo();
+  },
+
+  // União das permissões dos grupos selecionados com as avulsas marcadas.
+  acessoEfetivoSelecionado() {
+    const efetivas = new Set(this.permissoesDosGruposSelecionados());
+    this.acessosSelecionados.permissoes.forEach(id => efetivas.add(String(id)));
+    return efetivas;
+  },
+
+  atualizarAcessoEfetivo() {
+    const el = document.getElementById('u-rbac-efetivo');
+    if (!el) return;
+    const catalogo = this.controleAcesso.permissoes || [];
+    const superadmin = document.getElementById('u-superadmin')?.checked;
+
+    if (superadmin) {
+      el.innerHTML = `<strong>Acesso efetivo</strong>`
+        + `<span class="usuario-rbac-effective-total">Acesso total (superadmin) · ${catalogo.length} permissões</span>`;
+      return;
+    }
+
+    const efetivas = this.acessoEfetivoSelecionado();
+    if (!efetivas.size) {
+      el.innerHTML = `<strong>Acesso efetivo</strong>`
+        + `<span class="usuario-rbac-effective-empty">Nenhuma permissão — o usuário não verá nenhum módulo.</span>`;
+      return;
+    }
+
+    const porModulo = {};
+    catalogo.forEach(permissao => {
+      if (!efetivas.has(String(permissao.id))) return;
+      const modulo = permissao.modulo || 'Outros';
+      porModulo[modulo] = (porModulo[modulo] || 0) + 1;
+    });
+    const chips = Object.keys(porModulo)
+      .sort((a, b) => a.localeCompare(b, 'pt-BR'))
+      .map(modulo => `<span>${this.escape(modulo)} <b>${porModulo[modulo]}</b></span>`)
+      .join('');
+    el.innerHTML = `<strong>Acesso efetivo · ${efetivas.size} permissão(ões)</strong>`
+      + `<div class="usuario-rbac-effective-chips">${chips}</div>`;
   },
 
   abrirForm(usuario = null) {
@@ -551,6 +631,9 @@ const Admin = {
 
   dadosFormularioUsuario() {
     const origem = document.getElementById('u-origem').value;
+    const superadmin = origem === 'hub' && document.getElementById('u-superadmin').checked;
+    // Superadmin ignora grupos e avulsas no acesso efetivo; enviamos listas vazias
+    // para o backend limpar vínculos antigos e não deixar dados mortos gravados.
     return {
       id: this.editandoId,
       origem,
@@ -560,9 +643,9 @@ const Admin = {
       perfil: document.getElementById('u-perfil').value,
       roleOrigem: document.getElementById('u-role-cco').value,
       ativo: document.getElementById('u-ativo').value === 'true',
-      superadmin: origem === 'hub' && document.getElementById('u-superadmin').checked,
-      grupos: origem === 'hub' ? Array.from(this.acessosSelecionados.grupos) : undefined,
-      permissoesAvulsas: origem === 'hub' ? Array.from(this.acessosSelecionados.permissoes) : undefined,
+      superadmin,
+      grupos: origem === 'hub' ? (superadmin ? [] : Array.from(this.acessosSelecionados.grupos)) : undefined,
+      permissoesAvulsas: origem === 'hub' ? (superadmin ? [] : Array.from(this.acessosSelecionados.permissoes)) : undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),
       birthdate: document.getElementById('u-nascimento').value.trim(),

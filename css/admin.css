@@ -450,6 +450,72 @@
   text-align: center;
 }
 
+.usuario-rbac-note {
+  padding: 8px 10px;
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-sm);
+  background: var(--gray-50, #f7f8fa);
+  color: var(--gray-500);
+  font-size: .7rem;
+  line-height: 1.4;
+}
+
+.usuario-rbac-effective {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-sm);
+  background: var(--gray-50, #f7f8fa);
+}
+
+.usuario-rbac-effective:empty {
+  display: none;
+}
+
+.usuario-rbac-effective strong {
+  display: block;
+  color: var(--navy);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+.usuario-rbac-effective-total,
+.usuario-rbac-effective-empty {
+  display: block;
+  margin-top: 4px;
+  color: var(--gray-500);
+  font-size: .74rem;
+}
+
+.usuario-rbac-effective-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.usuario-rbac-effective-chips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  color: var(--gray-600, var(--gray-500));
+  font-size: .68rem;
+}
+
+.usuario-rbac-effective-chips b {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.usuario-rbac.is-disabled .usuario-rbac-effective {
+  opacity: .65;
+}
+
 .cadastro-status {
   display: inline-flex;
   align-items: center;

@@ -101,7 +101,7 @@
             </button>
           </div>
           <div class="usuarios-filtros">
-            <input class="form-control" id="filtro-busca" name="safe-admin-user-search" type="search" placeholder="Buscar por nome ou e-mail" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <input class="form-control" id="filtro-busca" name="safe-admin-user-search" type="search" placeholder="Buscar por nome ou e-mail" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly data-1p-ignore data-lpignore="true" data-form-type="other">
             <select class="form-control" id="filtro-origem">
               <option value="">Todos os sistemas</option>
               <option value="hub">Hub / Comercial</option>
@@ -258,6 +258,7 @@
               <div class="usuario-rbac-list" id="u-permissoes-avulsas"></div>
             </section>
           </div>
+          <div class="usuario-rbac-effective" id="u-rbac-efetivo"></div>
         </div>
       </div>
 
