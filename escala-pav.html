@@ -2248,7 +2248,8 @@ document.getElementById('exportConfirmar')?.addEventListener('click', () => {
 });
 
 function gerarXlsxIfood(resultado, mesLabel) {
-  const CNPJ_FIXO = '29.952.771/0001-60';
+  const soDigitos = v => String(v || '').replace(/\D/g, '');
+  const CNPJ_FIXO = soDigitos('29.952.771/0001-60');
 
   // Cabeçalhos da exportação iFood mantendo apenas colunas preenchidas
   const headers = [
@@ -2263,7 +2264,7 @@ function gerarXlsxIfood(resultado, mesLabel) {
   const dataRows = resultado.map(r => [
     CNPJ_FIXO,
     r.nome  || '',
-    r.cpf   || '',
+    soDigitos(r.cpf),
     r.nascimento || '',
     r.email || '',
     r.total || 0  // Livre = valor do mês (número)
