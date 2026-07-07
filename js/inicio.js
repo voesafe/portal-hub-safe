@@ -191,10 +191,17 @@ const Inicio = {
           modulo.titulo,
           modulo.destinoRestrito || modulo.href
         );
-    const status = modulo.permitido
-      ? ''
+    // Indicador no topo: seta (permitido) ou selo "Restrito".
+    // Obs.: a home só recebe módulos permitidos (filtro em iniciar()),
+    // o estado restrito é mantido por consistência/segurança.
+    const indicador = modulo.permitido
+      ? `<span class="home-module-arrow" aria-hidden="true">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+             <path d="M7 17 17 7"></path><path d="M9 7h8v8"></path>
+           </svg>
+         </span>`
       : `<span class="home-module-status">${Auth.iconSvg('lock')} Restrito</span>`;
-    const acao = modulo.permitido ? 'Acessar módulo' : 'Ver permissão necessária';
+    const acao = modulo.permitido ? 'Acessar' : 'Ver permissão necessária';
 
     return `
       <a class="home-module${modulo.permitido ? '' : ' restricted'}"
@@ -204,16 +211,10 @@ const Inicio = {
          aria-label="${acao}: ${modulo.titulo}">
         <div class="home-module-top">
           <span class="home-module-icon" aria-hidden="true">${Auth.iconSvg(modulo.icone)}</span>
-          ${status}
+          ${indicador}
         </div>
         <h3>${modulo.titulo}</h3>
         <p>${modulo.descricao}</p>
-        <span class="home-module-action">
-          ${acao}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m9 18 6-6-6-6"></path>
-          </svg>
-        </span>
       </a>
     `;
   },
@@ -236,6 +237,13 @@ const Inicio = {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(endereco)}`;
   },
 
+  iconesBase: {
+    pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.4-7-11a7 7 0 0 1 14 0c0 4.6-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>',
+    mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>',
+    phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.7a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.8 2z"></path></svg>',
+    map: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20 3 17V4l6 3 6-3 6 3v13l-6-3-6 3z"></path><path d="M9 7v13"></path><path d="M15 4v13"></path></svg>'
+  },
+
   renderizarBases(bases) {
     const container = document.getElementById('home-bases');
     if (!container) return;
@@ -246,25 +254,38 @@ const Inicio = {
     }
 
     container.innerHTML = bases.map(base => {
+      const cidadeUf = [base.cidade, base.uf].filter(Boolean).map(v => this.escape(v)).join(' · ');
       const complemento = base.complemento
         ? `<span>${this.escape(base.complemento)}</span>`
         : '';
-      const contato = [base.email, base.telefone].filter(Boolean)
-        .map(item => this.escape(item)).join(' <span aria-hidden="true">|</span> ');
+      const cep = base.cep ? `<span>CEP ${this.escape(base.cep)}</span>` : '';
+      const email = base.email
+        ? `<a class="home-base-contact" href="mailto:${this.escape(base.email)}">${this.iconesBase.mail}<span>${this.escape(base.email)}</span></a>`
+        : '';
+      const telefone = base.telefone
+        ? `<a class="home-base-contact" href="tel:${this.escape(String(base.telefone).replace(/[^0-9+]/g, ''))}">${this.iconesBase.phone}<span>${this.escape(base.telefone)}</span></a>`
+        : '';
       return `
         <article class="home-base">
-          <div class="home-base-content">
-            <h3>${this.escape(base.nome)}</h3>
-            <address>
-              <span>${this.escape(base.endereco)}</span>
-              ${complemento}
-              <span>${this.escape(base.cidade)} - ${this.escape(base.uf)}${base.cep ? ` · CEP ${this.escape(base.cep)}` : ''}</span>
-            </address>
-            ${contato ? `<p>${contato}</p>` : ''}
+          <div class="home-base-head">
+            <span class="home-base-icon" aria-hidden="true">${this.iconesBase.pin}</span>
+            <div>
+              <h3>${this.escape(base.nome)}</h3>
+              ${cidadeUf ? `<span class="home-base-city">${cidadeUf}</span>` : ''}
+            </div>
           </div>
-          <a class="home-base-map" href="${this.escape(this.linkMapa(base))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${this.escape(base.nome)} no mapa">
-            ${Auth.iconSvg('bases')}
-          </a>
+          <address>
+            <span>${this.escape(base.endereco)}</span>
+            ${complemento}
+            ${cep}
+          </address>
+          <div class="home-base-contacts">
+            ${email}
+            ${telefone}
+            <a class="home-base-maplink" href="${this.escape(this.linkMapa(base))}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${this.escape(base.nome)} no mapa">
+              ${this.iconesBase.map}<span>Ver no mapa</span>
+            </a>
+          </div>
         </article>
       `;
     }).join('');
