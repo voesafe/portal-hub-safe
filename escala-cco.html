@@ -298,6 +298,29 @@ body.dark .user-card-info{color:var(--text2)}
 .btn-save:hover{opacity:.88}
 .user-form-hint{font-size:11px;color:var(--muted);margin-top:4px;font-style:italic}
 
+/* ── Modal de exportação iFood ── */
+.export-modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px;width:100%;max-width:440px;box-shadow:var(--shadow2);animation:fadeUp .25s ease}
+.export-modal-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.export-modal-logo{width:30px;height:30px;object-fit:contain;flex-shrink:0}
+.export-modal-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:19px;color:var(--text);letter-spacing:-.3px}
+.export-modal-sub{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:22px}
+.export-field-label{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.export-mes-select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font);font-size:15px;font-weight:600;padding:13px 14px;cursor:pointer;outline:none;transition:border-color .2s}
+.export-mes-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(91,174,226,.12)}
+.export-preview{margin-top:18px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px 18px}
+.export-preview-mes{font-family:'Raleway',sans-serif;font-size:17px;font-weight:800;color:var(--teal);text-transform:capitalize;margin-bottom:12px}
+.export-preview-stats{display:flex;gap:26px}
+.export-preview-stat .n{font-size:22px;font-weight:800;font-family:'Raleway',sans-serif;color:var(--text);line-height:1}
+.export-preview-stat .l{font-size:11px;color:var(--muted);margin-top:4px}
+.export-confirm-callout{background:rgba(96,192,191,.08);border:1px solid rgba(96,192,191,.4);border-radius:8px;padding:16px 18px;font-size:14px;line-height:1.6;color:var(--text2)}
+.export-confirm-callout strong{color:var(--text)}
+.export-modal-actions{display:flex;gap:12px;margin-top:24px}
+.btn-export-back{flex:1;background:transparent;border:1px solid var(--border);color:var(--text2);padding:12px;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-export-back:hover{border-color:var(--text2);color:var(--text)}
+.btn-export-next,.btn-export-confirm{flex:1.4;background:linear-gradient(135deg,var(--blue),var(--teal));border:none;color:#fff;padding:12px;border-radius:8px;font-family:'Raleway',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-export-next:hover,.btn-export-confirm:hover{opacity:.9}
+.btn-export-next:disabled{opacity:.5;cursor:not-allowed}
+
 /* LOADING */
 #loadingBar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--blue),var(--teal));z-index:999;transition:width .3s ease}
 
@@ -732,7 +755,7 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
         </div>
       </div>
       <div class="topbar-right cco-actions">
-        <button class="nav-export-btn" id="navExportBtn" onclick="gerarXlsxIfood(window._lastUsersToShow, window._lastTotals)" title="Exportar planilha iFood">
+        <button class="nav-export-btn" id="navExportBtn" onclick="abrirModalExport()" title="Exportar planilha iFood">
           Exportar iFood
         </button>
         <a class="nav-ifood-btn" id="navIfoodBtn" href="https://empresas-app.ifood.com.br/auth/login" target="_blank" rel="noopener" title="Acessar iFood Benefícios">
@@ -1027,6 +1050,45 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 </div>
 <div id="toastContainer"></div>
 
+<!-- MODAL: EXPORTAÇÃO IFOOD -->
+<div class="modal-overlay" id="modalExportIfood">
+  <div class="export-modal">
+    <!-- Etapa 1: seleção do mês -->
+    <div id="exportStep1">
+      <div class="export-modal-head">
+        <img class="export-modal-logo" src="data:image/png;base64,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" alt="iFood"/>
+        <div class="export-modal-title">Exportar planilha iFood</div>
+      </div>
+      <div class="export-modal-sub">Selecione o mês que deseja exportar. Confira os números antes de gerar o arquivo.</div>
+      <label class="export-field-label" for="exportMesSelect">Mês da exportação</label>
+      <select class="export-mes-select" id="exportMesSelect"></select>
+      <div class="export-preview" id="exportPreview">
+        <div class="export-preview-mes" id="exportPreviewMes">—</div>
+        <div class="export-preview-stats">
+          <div class="export-preview-stat"><div class="n" id="exportPreviewPavs">—</div><div class="l">Colaboradores</div></div>
+          <div class="export-preview-stat"><div class="n" id="exportPreviewTotal">—</div><div class="l">Valor total</div></div>
+        </div>
+      </div>
+      <div class="export-modal-actions">
+        <button class="btn-export-back" onclick="fecharModalExport()">Cancelar</button>
+        <button class="btn-export-next" id="exportContinuar" onclick="exportIrParaConfirmacao()">Continuar</button>
+      </div>
+    </div>
+    <!-- Etapa 2: confirmação -->
+    <div id="exportStep2" style="display:none">
+      <div class="export-modal-head">
+        <div class="export-modal-title">Confirmar exportação</div>
+      </div>
+      <div class="export-modal-sub">Verifique se o mês está correto. Esta planilha será enviada ao iFood.</div>
+      <div class="export-confirm-callout" id="exportConfirmCallout"></div>
+      <div class="export-modal-actions">
+        <button class="btn-export-back" onclick="exportVoltarEtapa1()">Voltar</button>
+        <button class="btn-export-confirm" onclick="exportConfirmarExportacao()">Confirmar exportação</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: CADASTRO/EDIÇÃO DE FUNCIONÁRIO -->
 <div class="modal-overlay" id="userModal">
   <div class="user-modal">
@@ -1138,7 +1200,7 @@ function drawerAction(action){
     } else if(action === "func"){
       if(!document.getElementById("funcView")?.classList.contains("active")) toggleFuncView();
     } else if(action === "export"){
-      gerarXlsxIfood(window._lastUsersToShow, window._lastTotals);
+      abrirModalExport();
     }
   }, 300);
 }
@@ -1809,6 +1871,25 @@ async function removeBothShifts(dk){
   await toggleShift(dk,"t2",currentUser.username);
 }
 
+// ── Computa totais/usuários de um mês específico (reutilizado pela exportação) ──
+function computeFinForMonth(idx){
+  const{y,m}=MONTHS[idx],days=daysInMonth(y,m);
+  const totals={};
+  SCHEDULE_USERS.forEach(u=>{totals[u]={t1:0,t2:0,ho:0}});
+  for(let d=1;d<=days;d++){
+    const dk=dateKey(y,m,d),dd=scheduleData[dk]||{};
+    ["t1","t2","ho"].forEach(s=>{(dd[s]||[]).forEach(u=>{if(totals[u])totals[u][s]++})});
+  }
+  // Admin/Financeiro: exclui financeiroExclude (ex.: Pedro); user comum: só o próprio
+  let usersToShow;
+  if(isFinanceiro()||isAdmin()){
+    usersToShow = SCHEDULE_USERS.filter(u=>!USERS[u].financeiroExclude);
+  } else {
+    usersToShow = [currentUser.username];
+  }
+  return {usersToShow, totals};
+}
+
 // ── Render financials ─────────────────────────────────────
 function renderFinancials(){
   const{y,m}=MONTHS[currentMonthIdx],days=daysInMonth(y,m);
@@ -1817,23 +1898,7 @@ function renderFinancials(){
   // Remove botão iFood anterior se existir
   const oldIfood=document.getElementById("ifoodSection");if(oldIfood)oldIfood.remove();
 
-  const totals={};
-  SCHEDULE_USERS.forEach(u=>{totals[u]={t1:0,t2:0,ho:0}});
-
-  for(let d=1;d<=days;d++){
-    const dk=dateKey(y,m,d),dd=scheduleData[dk]||{};
-    ["t1","t2","ho"].forEach(s=>{(dd[s]||[]).forEach(u=>{if(totals[u])totals[u][s]++})});
-  }
-
-  // Admin: exclui Pedro (financeiroExclude); Financeiro: exclui Pedro também; user: só o próprio
-  let usersToShow;
-  if(isFinanceiro()){
-    usersToShow = SCHEDULE_USERS.filter(u=>!USERS[u].financeiroExclude);
-  } else if(isAdmin()){
-    usersToShow = SCHEDULE_USERS.filter(u=>!USERS[u].financeiroExclude);
-  } else {
-    usersToShow = [currentUser.username];
-  }
+  const{usersToShow,totals}=computeFinForMonth(currentMonthIdx);
 
   // Salvar globalmente para o botão do nav acessar (admin e financeiro)
   window._lastUsersToShow = usersToShow;
@@ -2651,8 +2716,62 @@ function fmtR$(v, short=false){
 }
 
 // ─── EXPORTAR IFOOD ───────────────────────────────────────────
-function gerarXlsxIfood(usersToShow, totals) {
+// ── Modal de exportação: seleção de mês + confirmação ──
+let _exportModalIdx = null; // índice do mês escolhido no modal
+
+function abrirModalExport(){
+  const sel=document.getElementById("exportMesSelect");
+  sel.innerHTML=MONTHS.map((m,i)=>`<option value="${i}" ${i===currentMonthIdx?"selected":""}>${m.label}</option>`).join("");
+  document.getElementById("exportStep1").style.display="block";
+  document.getElementById("exportStep2").style.display="none";
+  document.getElementById("modalExportIfood").classList.add("open");
+  atualizarPreviewExport();
+}
+
+function fmtMoedaCco(v){return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+
+function atualizarPreviewExport(){
+  const idx=parseInt(document.getElementById("exportMesSelect").value,10);
+  _exportModalIdx=idx;
+  const label=MONTHS[idx].label;
+  const{usersToShow,totals}=computeFinForMonth(idx);
+  const totalVal=usersToShow.reduce((s,u)=>{const t=totals[u]||{t1:0,t2:0};return s+(t.t1+t.t2)*shiftValue;},0);
+  document.getElementById("exportPreviewMes").textContent=label;
+  document.getElementById("exportPreviewPavs").textContent=usersToShow.length;
+  document.getElementById("exportPreviewTotal").textContent=fmtMoedaCco(totalVal);
+  document.getElementById("exportContinuar").disabled=usersToShow.length===0;
+}
+
+function exportIrParaConfirmacao(){
+  const idx=_exportModalIdx;
+  const{usersToShow,totals}=computeFinForMonth(idx);
+  if(!usersToShow.length){showToast("Nenhum dado para exportar","error");return;}
+  const totalVal=usersToShow.reduce((s,u)=>{const t=totals[u]||{t1:0,t2:0};return s+(t.t1+t.t2)*shiftValue;},0);
+  document.getElementById("exportConfirmCallout").innerHTML=
+    `Você está prestes a exportar o mês de <strong style="text-transform:capitalize">${MONTHS[idx].label}</strong>, `+
+    `com <strong>${usersToShow.length} colaborador(es)</strong> e valor total de <strong>${fmtMoedaCco(totalVal)}</strong>.`+
+    `<br><br>O mês está correto?`;
+  document.getElementById("exportStep1").style.display="none";
+  document.getElementById("exportStep2").style.display="block";
+}
+
+function exportVoltarEtapa1(){
+  document.getElementById("exportStep2").style.display="none";
+  document.getElementById("exportStep1").style.display="block";
+}
+
+function fecharModalExport(){document.getElementById("modalExportIfood").classList.remove("open")}
+
+function exportConfirmarExportacao(){
+  const idx=_exportModalIdx;
+  const{usersToShow,totals}=computeFinForMonth(idx);
+  fecharModalExport();
+  gerarXlsxIfood(usersToShow,totals,idx);
+}
+
+function gerarXlsxIfood(usersToShow, totals, monthIdx) {
   if(!usersToShow||usersToShow.length===0){showToast("Nenhum dado para exportar","error");return;}
+  if(monthIdx===undefined) monthIdx=currentMonthIdx;
 
   function loadAndExport(){
     const CNPJ_FIXO = "29952771000160";
@@ -2691,7 +2810,7 @@ function gerarXlsxIfood(usersToShow, totals) {
     });
     XLSX.utils.book_append_sheet(wb, ws, "Planilha Modelo");
 
-    const mes = MONTHS[currentMonthIdx];
+    const mes = MONTHS[monthIdx];
     const mesLabel = new Date(mes.y, mes.m, 1).toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
     XLSX.writeFile(wb, `ifood_${mesLabel.replace(/\s/g,"_")}.xlsx`);
     showToast("Planilha exportada com sucesso!", "success");

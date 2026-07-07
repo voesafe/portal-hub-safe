@@ -573,6 +573,63 @@ body.dark .pav-app .fin-base-badge.sjk{background:rgba(96,192,191,0.25);color:#a
 }
 .pav-app .btn-modal-confirm:hover{opacity:0.88}
 
+/* ── Modal de exportação iFood ── */
+.pav-app .export-modal{
+  background:var(--modal-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:32px 30px;
+  width:100%;max-width:440px;box-shadow:var(--shadow);
+  animation:fadeUp 0.25s ease both;text-align:left;
+}
+.pav-app .export-modal-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.pav-app .export-modal-logo{width:30px;height:30px;object-fit:contain;flex-shrink:0}
+.pav-app .export-modal-title{
+  font-family:var(--font-head);font-size:19px;font-weight:800;letter-spacing:-0.3px;
+}
+.pav-app .export-modal-sub{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:22px}
+.pav-app .export-field-label{
+  display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px;
+}
+.pav-app .export-mes-select{
+  width:100%;background:var(--input-bg);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);
+  font-family:var(--font-body);font-size:15px;font-weight:600;
+  padding:13px 14px;cursor:pointer;transition:border-color 0.2s;
+}
+.pav-app .export-mes-select:focus{outline:none;border-color:var(--teal)}
+.pav-app .export-preview{
+  margin-top:18px;background:var(--input-bg);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:16px 18px;
+}
+.pav-app .export-preview-mes{
+  font-family:var(--font-head);font-size:17px;font-weight:800;
+  color:var(--teal);text-transform:capitalize;margin-bottom:12px;
+}
+.pav-app .export-preview-stats{display:flex;gap:26px}
+.pav-app .export-preview-stat .n{font-size:22px;font-weight:800;font-family:var(--font-head);line-height:1}
+.pav-app .export-preview-stat .l{font-size:11px;color:var(--muted);margin-top:4px}
+.pav-app .export-preview.loading{opacity:0.55}
+.pav-app .export-confirm-callout{
+  margin-top:4px;background:rgba(96,192,191,0.08);border:1px solid rgba(96,192,191,0.35);
+  border-radius:var(--radius-sm);padding:16px 18px;font-size:14px;line-height:1.6;
+}
+.pav-app .export-confirm-callout strong{color:var(--text)}
+.pav-app .export-modal-actions{display:flex;gap:12px;margin-top:24px}
+.pav-app .btn-export-back{
+  flex:1;background:transparent;border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--muted);
+  font-family:var(--font-body);font-size:14px;padding:12px;cursor:pointer;transition:all 0.2s;
+}
+.pav-app .btn-export-back:hover{color:var(--text);border-color:var(--text)}
+.pav-app .btn-export-next,.pav-app .btn-export-confirm{
+  flex:1.4;background:var(--teal);border:none;
+  border-radius:var(--radius-sm);color:#fff;
+  font-family:var(--font-head);font-size:14px;font-weight:700;
+  padding:12px;cursor:pointer;transition:opacity 0.2s;
+}
+.pav-app .btn-export-next:hover,.pav-app .btn-export-confirm:hover{opacity:0.9}
+.pav-app .btn-export-next:disabled{opacity:0.5;cursor:not-allowed}
+
 /* Modal escalar por dia da semana */
 .pav-app .weekday-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:16px 0}
 .pav-app .wd-btn{
@@ -1013,6 +1070,45 @@ body.dark .pav-app .fin-table th{background:#0e1830;color:#eaf0fb}
     <div class="modal-actions">
       <button class="btn-cancel" id="modalPAVCancel">Cancelar</button>
       <button class="btn-confirm" id="modalPAVConfirm">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL EXPORTAÇÃO IFOOD ── -->
+<div class="modal-overlay" id="modalExportIfood">
+  <div class="export-modal">
+    <!-- Etapa 1: seleção do mês -->
+    <div id="exportStep1">
+      <div class="export-modal-head">
+        <img class="export-modal-logo" src="data:image/png;base64,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" alt="iFood"/>
+        <div class="export-modal-title">Exportar planilha iFood</div>
+      </div>
+      <div class="export-modal-sub">Selecione o mês que deseja exportar. Confira os números antes de gerar o arquivo.</div>
+      <label class="export-field-label" for="exportMesSelect">Mês da exportação</label>
+      <select class="export-mes-select" id="exportMesSelect"></select>
+      <div class="export-preview" id="exportPreview">
+        <div class="export-preview-mes" id="exportPreviewMes">—</div>
+        <div class="export-preview-stats">
+          <div class="export-preview-stat"><div class="n" id="exportPreviewPavs">—</div><div class="l">Colaboradores</div></div>
+          <div class="export-preview-stat"><div class="n" id="exportPreviewTotal">—</div><div class="l">Valor total</div></div>
+        </div>
+      </div>
+      <div class="export-modal-actions">
+        <button class="btn-export-back" id="exportCancelar">Cancelar</button>
+        <button class="btn-export-next" id="exportContinuar">Continuar</button>
+      </div>
+    </div>
+    <!-- Etapa 2: confirmação -->
+    <div id="exportStep2" style="display:none">
+      <div class="export-modal-head">
+        <div class="export-modal-title">Confirmar exportação</div>
+      </div>
+      <div class="export-modal-sub">Verifique se o mês está correto. Esta planilha será enviada ao iFood.</div>
+      <div class="export-confirm-callout" id="exportConfirmCallout"></div>
+      <div class="export-modal-actions">
+        <button class="btn-export-back" id="exportVoltar">Voltar</button>
+        <button class="btn-export-confirm" id="exportConfirmar">Confirmar exportação</button>
+      </div>
     </div>
   </div>
 </div>
@@ -2043,27 +2139,115 @@ function mostrarBtnExportar() {
   btn.style.display = state.acessos.exportarIfood ? 'inline-flex' : 'none';
 }
 
-document.getElementById('btnExportarIfood')?.addEventListener('click', () => {
+// ── Modal de exportação: seleção de mês + confirmação ──
+let _exportModalResultado = null; // resultado do mês escolhido no modal
+
+function abrirModalExport() {
   if (!state.acessos.exportarIfood) {
     toast('Você não tem permissão para exportar o financeiro.', 'error');
     return;
   }
-  if (!window._finResultado || window._finResultado.length === 0) {
+  // Popula o dropdown do modal com os mesmos meses do financeiro
+  const finSel = document.getElementById('finMesSelect');
+  const expSel = document.getElementById('exportMesSelect');
+  expSel.innerHTML = finSel.innerHTML;
+  expSel.value = finSel.value; // começa no mês que está na tela
+
+  // Reset para etapa 1
+  document.getElementById('exportStep1').style.display = 'block';
+  document.getElementById('exportStep2').style.display = 'none';
+  document.getElementById('modalExportIfood').classList.add('open');
+  atualizarPreviewExport();
+}
+
+async function atualizarPreviewExport() {
+  const mes = document.getElementById('exportMesSelect').value;
+  const label = document.getElementById('exportMesSelect').selectedOptions[0]?.text || '';
+  const preview = document.getElementById('exportPreview');
+  const btnContinuar = document.getElementById('exportContinuar');
+
+  document.getElementById('exportPreviewMes').textContent = label;
+  document.getElementById('exportPreviewPavs').textContent = '…';
+  document.getElementById('exportPreviewTotal').textContent = '…';
+  preview.classList.add('loading');
+  btnContinuar.disabled = true;
+  _exportModalResultado = null;
+
+  // Usa cache se houver; senão busca no backend
+  let res = (lerCachePav().fin || {})[mes];
+  if (!res) {
+    res = await api('getFinanceiro', { mes }, { silent: true });
+    if (res && res.ok) {
+      const c = lerCachePav(); c.fin = c.fin || {}; c.fin[mes] = res;
+      gravarCachePav({ fin: c.fin });
+    }
+  }
+
+  // Se o usuário já mudou o mês enquanto carregava, ignora este resultado
+  if (document.getElementById('exportMesSelect').value !== mes) return;
+
+  if (!res || !res.ok) {
+    document.getElementById('exportPreviewPavs').textContent = '—';
+    document.getElementById('exportPreviewTotal').textContent = '—';
+    preview.classList.remove('loading');
+    toast('Não foi possível carregar os dados desse mês', 'error');
+    return;
+  }
+
+  _exportModalResultado = res.resultado || [];
+  const totalVal = _exportModalResultado.reduce((s, r) => s + (r.total || 0), 0);
+  document.getElementById('exportPreviewPavs').textContent = _exportModalResultado.length;
+  document.getElementById('exportPreviewTotal').textContent = fmtMoeda(totalVal);
+  preview.classList.remove('loading');
+  btnContinuar.disabled = _exportModalResultado.length === 0;
+}
+
+function fecharModalExport() {
+  document.getElementById('modalExportIfood').classList.remove('open');
+}
+
+document.getElementById('btnExportarIfood')?.addEventListener('click', abrirModalExport);
+document.getElementById('exportMesSelect')?.addEventListener('change', atualizarPreviewExport);
+document.getElementById('exportCancelar')?.addEventListener('click', fecharModalExport);
+document.getElementById('exportVoltar')?.addEventListener('click', () => {
+  document.getElementById('exportStep2').style.display = 'none';
+  document.getElementById('exportStep1').style.display = 'block';
+});
+
+document.getElementById('exportContinuar')?.addEventListener('click', () => {
+  if (!_exportModalResultado || _exportModalResultado.length === 0) {
     toast('Nenhum dado financeiro para exportar', 'error'); return;
   }
+  const label = document.getElementById('exportMesSelect').selectedOptions[0]?.text || '';
+  const totalVal = _exportModalResultado.reduce((s, r) => s + (r.total || 0), 0);
+  document.getElementById('exportConfirmCallout').innerHTML =
+    `Você está prestes a exportar o mês de <strong style="text-transform:capitalize">${label}</strong>, ` +
+    `com <strong>${_exportModalResultado.length} colaborador(es)</strong> e valor total de <strong>${fmtMoeda(totalVal)}</strong>. ` +
+    `<br><br>O mês está correto?`;
+  document.getElementById('exportStep1').style.display = 'none';
+  document.getElementById('exportStep2').style.display = 'block';
+});
+
+document.getElementById('exportConfirmar')?.addEventListener('click', () => {
+  const resultado = _exportModalResultado;
+  const label = document.getElementById('exportMesSelect').selectedOptions[0]?.text || 'exportacao';
+  if (!resultado || resultado.length === 0) {
+    toast('Nenhum dado financeiro para exportar', 'error'); return;
+  }
+  fecharModalExport();
 
   // Carregar SheetJS para gerar .xlsx real igual ao modelo iFood
   if (typeof XLSX === 'undefined') {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-    script.onload = () => gerarXlsxIfood();
+    script.onload = () => gerarXlsxIfood(resultado, label);
     document.head.appendChild(script);
   } else {
-    gerarXlsxIfood();
+    gerarXlsxIfood(resultado, label);
   }
 });
 
-function gerarXlsxIfood() {
+function gerarXlsxIfood(resultado, mesLabel) {
   const CNPJ_FIXO = '29.952.771/0001-60';
 
   // Cabeçalhos da exportação iFood mantendo apenas colunas preenchidas
@@ -2076,7 +2260,7 @@ function gerarXlsxIfood() {
     'Livre\n(opcional)'
   ];
 
-  const dataRows = window._finResultado.map(r => [
+  const dataRows = resultado.map(r => [
     CNPJ_FIXO,
     r.nome  || '',
     r.cpf   || '',
@@ -2101,8 +2285,7 @@ function gerarXlsxIfood() {
 
   XLSX.utils.book_append_sheet(wb, ws, 'Planilha Modelo');
 
-  const mesLabel = document.getElementById('finMesSelect').selectedOptions[0]?.text || 'exportacao';
-  const filename = `ifood_${mesLabel.replace(/\s/g,'_')}.xlsx`;
+  const filename = `ifood_${(mesLabel || 'exportacao').replace(/\s/g,'_')}.xlsx`;
 
   XLSX.writeFile(wb, filename);
   toast('Planilha exportada com sucesso!', 'success');
