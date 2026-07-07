@@ -67,7 +67,7 @@ const Vendas = {
     try {
       const res = await API.getUsuariosLogin();
       this.pacs = res.ok && Array.isArray(res.data) && res.data.length
-        ? res.data.filter(u => u.pac && !Auth.perfilSomenteLeitura(u.perfil) && !Auth.perfilEhMaster(u.perfil))
+        ? res.data.filter(u => u.pac && Auth.perfilEhConsultor(u.perfil))
         : fallback;
     } catch { this.pacs = fallback; }
 
