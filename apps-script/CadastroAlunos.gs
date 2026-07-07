@@ -6,6 +6,11 @@
 var CADASTRO_ALUNOS_SHEET_ID = '1aNLtIIvalqPG7FkKncD5j16Pmgy5ly-34coaa4Gyyp8';
 var CADASTRO_ALUNOS_SHEET_NAME = 'Planilha Alunos';
 
+// Fuso da planilha, capturado ao carregar o contexto. Usado para formatar
+// a data de matrícula no mesmo fuso em que o Sheets a armazenou, evitando o
+// deslocamento de -1 dia quando o fuso do script difere do fuso da planilha.
+var CADASTRO_ALUNOS_TZ_ = null;
+
 var CADASTRO_ALUNOS_EXTRA_HEADERS = [
   'HUB_STATUS',
   'CURSO_OPERACIONAL',
@@ -264,6 +269,7 @@ function sincronizarTrelloCadastroAluno(id, usuario, token) {
 
 function carregarContextoCadastroAlunos_() {
   var ss = SpreadsheetApp.openById(obterCadastroAlunosSheetId_());
+  CADASTRO_ALUNOS_TZ_ = ss.getSpreadsheetTimeZone();
   var sheet = ss.getSheetByName(CADASTRO_ALUNOS_SHEET_NAME);
   if (!sheet) throw new Error('Aba de alunos não encontrada: ' + CADASTRO_ALUNOS_SHEET_NAME);
   var headerInfo = detectarHeaderCadastroAlunos_(sheet);
@@ -606,7 +612,11 @@ function formatarCpfCadastroAluno_(cpf) {
 
 function formatarDataCadastroAluno_(valor) {
   if (!valor) return '';
-  if (Object.prototype.toString.call(valor) === '[object Date]') return formatarData(valor);
+  if (Object.prototype.toString.call(valor) === '[object Date]') {
+    // Formata no fuso da planilha (não no do script) para não recuar 1 dia.
+    var tz = CADASTRO_ALUNOS_TZ_ || Session.getScriptTimeZone();
+    return Utilities.formatDate(valor, tz, 'dd/MM/yyyy');
+  }
   return String(valor).trim();
 }
 
