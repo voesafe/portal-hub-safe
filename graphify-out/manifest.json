@@ -1,0 +1,977 @@
+{
+  ".clasp.json": {
+    "mtime": 1782833151.4105442,
+    "ast_hash": "f9ad9b382c5fa4895298d3668c659226",
+    "semantic_hash": "f9ad9b382c5fa4895298d3668c659226"
+  },
+  "admin-cli.js": {
+    "mtime": 1780839955.3947942,
+    "ast_hash": "1d8210ca98ce3965650c18533ee802d4",
+    "semantic_hash": "1d8210ca98ce3965650c18533ee802d4"
+  },
+  "apps-script/appsscript.json": {
+    "mtime": 1783260969.1097493,
+    "ast_hash": "a2864d96c0e1bfddc503822fd05e43ec",
+    "semantic_hash": "a2864d96c0e1bfddc503822fd05e43ec"
+  },
+  "assets/safe-minions/xlsx.full.min.js": {
+    "mtime": 1780757852.9530704,
+    "ast_hash": "31e9848e80e1ddf43c5aa31009cd2b7b",
+    "semantic_hash": "31e9848e80e1ddf43c5aa31009cd2b7b"
+  },
+  "js/access-control.js": {
+    "mtime": 1783256614.9300325,
+    "ast_hash": "d042bd099af95864bd7e992fbdf46394",
+    "semantic_hash": "d042bd099af95864bd7e992fbdf46394"
+  },
+  "js/admin.js": {
+    "mtime": 1783364528.28481,
+    "ast_hash": "a06ade9e5952dee3e4e1d146b0c1c945",
+    "semantic_hash": "a06ade9e5952dee3e4e1d146b0c1c945"
+  },
+  "js/api.js": {
+    "mtime": 1783261070.761267,
+    "ast_hash": "14c2d2d54666d2a6a18c0f27539766a4",
+    "semantic_hash": "14c2d2d54666d2a6a18c0f27539766a4"
+  },
+  "js/auth.js": {
+    "mtime": 1783435336.1464176,
+    "ast_hash": "68f3664471ce078005bfdbb16e04e7c8",
+    "semantic_hash": "68f3664471ce078005bfdbb16e04e7c8"
+  },
+  "js/bases.js": {
+    "mtime": 1780936662.8629997,
+    "ast_hash": "0a806dc483391c3d3e39e8418d3076db",
+    "semantic_hash": "0a806dc483391c3d3e39e8418d3076db"
+  },
+  "js/cadastro-alunos.js": {
+    "mtime": 1783202447.1066372,
+    "ast_hash": "0050ecd974c116a5e2779002d662ee48",
+    "semantic_hash": "0050ecd974c116a5e2779002d662ee48"
+  },
+  "js/concorrencia.js": {
+    "mtime": 1782833601.172566,
+    "ast_hash": "2c033fed3e82d078a6dca67516122ad3",
+    "semantic_hash": "2c033fed3e82d078a6dca67516122ad3"
+  },
+  "js/config.js": {
+    "mtime": 1783354964.3284733,
+    "ast_hash": "41aa03fcb6179d286e8367d899e57b86",
+    "semantic_hash": "41aa03fcb6179d286e8367d899e57b86"
+  },
+  "js/controle-gastos.js": {
+    "mtime": 1780945023.5599198,
+    "ast_hash": "ab4b53be87d64b123caf8cf59e949b2b",
+    "semantic_hash": "ab4b53be87d64b123caf8cf59e949b2b"
+  },
+  "js/dashboard.js": {
+    "mtime": 1780839955.3933463,
+    "ast_hash": "a62625553e24a5788d65c07a3cae1326",
+    "semantic_hash": "a62625553e24a5788d65c07a3cae1326"
+  },
+  "js/fechamento-horas.js": {
+    "mtime": 1781094438.253668,
+    "ast_hash": "73e8343cf81b81f274e9393a3f762240",
+    "semantic_hash": "73e8343cf81b81f274e9393a3f762240"
+  },
+  "js/horas-voadas-inva.js": {
+    "mtime": 1781094314.4087114,
+    "ast_hash": "025ea7d2d1f3d2093811129c21ab2b2f",
+    "semantic_hash": "025ea7d2d1f3d2093811129c21ab2b2f"
+  },
+  "js/inicio.js": {
+    "mtime": 1783383880.2934794,
+    "ast_hash": "3492c37f2cc95a5093e2799bf6307668",
+    "semantic_hash": "3492c37f2cc95a5093e2799bf6307668"
+  },
+  "js/progresso-alunos.js": {
+    "mtime": 1781543016.6532903,
+    "ast_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d",
+    "semantic_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d"
+  },
+  "js/vendas.js": {
+    "mtime": 1783435324.1307237,
+    "ast_hash": "35a691fb19192aecdeae0de1de21ef42",
+    "semantic_hash": "35a691fb19192aecdeae0de1de21ef42"
+  },
+  "preview/clean/assets/safe-minions/xlsx.full.min.js": {
+    "mtime": 1783375451.4449642,
+    "ast_hash": "31e9848e80e1ddf43c5aa31009cd2b7b",
+    "semantic_hash": "31e9848e80e1ddf43c5aa31009cd2b7b"
+  },
+  "preview/clean/js/access-control.js": {
+    "mtime": 1783375451.4367926,
+    "ast_hash": "d042bd099af95864bd7e992fbdf46394",
+    "semantic_hash": "d042bd099af95864bd7e992fbdf46394"
+  },
+  "preview/clean/js/admin.js": {
+    "mtime": 1783375451.4384868,
+    "ast_hash": "a06ade9e5952dee3e4e1d146b0c1c945",
+    "semantic_hash": "a06ade9e5952dee3e4e1d146b0c1c945"
+  },
+  "preview/clean/js/api.js": {
+    "mtime": 1783375451.439324,
+    "ast_hash": "14c2d2d54666d2a6a18c0f27539766a4",
+    "semantic_hash": "14c2d2d54666d2a6a18c0f27539766a4"
+  },
+  "preview/clean/js/auth.js": {
+    "mtime": 1783375451.4359114,
+    "ast_hash": "68f3664471ce078005bfdbb16e04e7c8",
+    "semantic_hash": "68f3664471ce078005bfdbb16e04e7c8"
+  },
+  "preview/clean/js/bases.js": {
+    "mtime": 1783375451.4374607,
+    "ast_hash": "0a806dc483391c3d3e39e8418d3076db",
+    "semantic_hash": "0a806dc483391c3d3e39e8418d3076db"
+  },
+  "preview/clean/js/cadastro-alunos.js": {
+    "mtime": 1783375451.4404762,
+    "ast_hash": "0050ecd974c116a5e2779002d662ee48",
+    "semantic_hash": "0050ecd974c116a5e2779002d662ee48"
+  },
+  "preview/clean/js/concorrencia.js": {
+    "mtime": 1783375451.4378467,
+    "ast_hash": "2c033fed3e82d078a6dca67516122ad3",
+    "semantic_hash": "2c033fed3e82d078a6dca67516122ad3"
+  },
+  "preview/clean/js/config.js": {
+    "mtime": 1783375451.4363291,
+    "ast_hash": "41aa03fcb6179d286e8367d899e57b86",
+    "semantic_hash": "41aa03fcb6179d286e8367d899e57b86"
+  },
+  "preview/clean/js/controle-gastos.js": {
+    "mtime": 1783375451.4381483,
+    "ast_hash": "ab4b53be87d64b123caf8cf59e949b2b",
+    "semantic_hash": "ab4b53be87d64b123caf8cf59e949b2b"
+  },
+  "preview/clean/js/dashboard.js": {
+    "mtime": 1783375451.4390507,
+    "ast_hash": "a62625553e24a5788d65c07a3cae1326",
+    "semantic_hash": "a62625553e24a5788d65c07a3cae1326"
+  },
+  "preview/clean/js/fechamento-horas.js": {
+    "mtime": 1783375451.4396393,
+    "ast_hash": "73e8343cf81b81f274e9393a3f762240",
+    "semantic_hash": "73e8343cf81b81f274e9393a3f762240"
+  },
+  "preview/clean/js/horas-voadas-inva.js": {
+    "mtime": 1783375451.438775,
+    "ast_hash": "025ea7d2d1f3d2093811129c21ab2b2f",
+    "semantic_hash": "025ea7d2d1f3d2093811129c21ab2b2f"
+  },
+  "preview/clean/js/inicio.js": {
+    "mtime": 1783375451.4401922,
+    "ast_hash": "abe8728957c8d714232261048d61fdd4",
+    "semantic_hash": "abe8728957c8d714232261048d61fdd4"
+  },
+  "preview/clean/js/preview-guard.js": {
+    "mtime": 1783375630.361117,
+    "ast_hash": "b3adae0b8ef306d758c966625e372953",
+    "semantic_hash": "b3adae0b8ef306d758c966625e372953"
+  },
+  "preview/clean/js/progresso-alunos.js": {
+    "mtime": 1783375451.4399135,
+    "ast_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d",
+    "semantic_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d"
+  },
+  "preview/clean/js/vendas.js": {
+    "mtime": 1783375451.4371495,
+    "ast_hash": "79d800d2eb3ad1c2e84fd7d8337170a1",
+    "semantic_hash": "79d800d2eb3ad1c2e84fd7d8337170a1"
+  },
+  "preview/denso/assets/safe-minions/xlsx.full.min.js": {
+    "mtime": 1783375451.4751258,
+    "ast_hash": "31e9848e80e1ddf43c5aa31009cd2b7b",
+    "semantic_hash": "31e9848e80e1ddf43c5aa31009cd2b7b"
+  },
+  "preview/denso/js/access-control.js": {
+    "mtime": 1783375451.4679048,
+    "ast_hash": "d042bd099af95864bd7e992fbdf46394",
+    "semantic_hash": "d042bd099af95864bd7e992fbdf46394"
+  },
+  "preview/denso/js/admin.js": {
+    "mtime": 1783375451.4693708,
+    "ast_hash": "a06ade9e5952dee3e4e1d146b0c1c945",
+    "semantic_hash": "a06ade9e5952dee3e4e1d146b0c1c945"
+  },
+  "preview/denso/js/api.js": {
+    "mtime": 1783375451.4702325,
+    "ast_hash": "14c2d2d54666d2a6a18c0f27539766a4",
+    "semantic_hash": "14c2d2d54666d2a6a18c0f27539766a4"
+  },
+  "preview/denso/js/auth.js": {
+    "mtime": 1783375451.4674056,
+    "ast_hash": "68f3664471ce078005bfdbb16e04e7c8",
+    "semantic_hash": "68f3664471ce078005bfdbb16e04e7c8"
+  },
+  "preview/denso/js/bases.js": {
+    "mtime": 1783375451.4685016,
+    "ast_hash": "0a806dc483391c3d3e39e8418d3076db",
+    "semantic_hash": "0a806dc483391c3d3e39e8418d3076db"
+  },
+  "preview/denso/js/cadastro-alunos.js": {
+    "mtime": 1783375451.4716327,
+    "ast_hash": "0050ecd974c116a5e2779002d662ee48",
+    "semantic_hash": "0050ecd974c116a5e2779002d662ee48"
+  },
+  "preview/denso/js/concorrencia.js": {
+    "mtime": 1783375451.4687965,
+    "ast_hash": "2c033fed3e82d078a6dca67516122ad3",
+    "semantic_hash": "2c033fed3e82d078a6dca67516122ad3"
+  },
+  "preview/denso/js/config.js": {
+    "mtime": 1783375451.4676373,
+    "ast_hash": "41aa03fcb6179d286e8367d899e57b86",
+    "semantic_hash": "41aa03fcb6179d286e8367d899e57b86"
+  },
+  "preview/denso/js/controle-gastos.js": {
+    "mtime": 1783375451.4690828,
+    "ast_hash": "ab4b53be87d64b123caf8cf59e949b2b",
+    "semantic_hash": "ab4b53be87d64b123caf8cf59e949b2b"
+  },
+  "preview/denso/js/dashboard.js": {
+    "mtime": 1783375451.469879,
+    "ast_hash": "a62625553e24a5788d65c07a3cae1326",
+    "semantic_hash": "a62625553e24a5788d65c07a3cae1326"
+  },
+  "preview/denso/js/fechamento-horas.js": {
+    "mtime": 1783375451.4707937,
+    "ast_hash": "73e8343cf81b81f274e9393a3f762240",
+    "semantic_hash": "73e8343cf81b81f274e9393a3f762240"
+  },
+  "preview/denso/js/horas-voadas-inva.js": {
+    "mtime": 1783375451.4696317,
+    "ast_hash": "025ea7d2d1f3d2093811129c21ab2b2f",
+    "semantic_hash": "025ea7d2d1f3d2093811129c21ab2b2f"
+  },
+  "preview/denso/js/inicio.js": {
+    "mtime": 1783375451.4713674,
+    "ast_hash": "abe8728957c8d714232261048d61fdd4",
+    "semantic_hash": "abe8728957c8d714232261048d61fdd4"
+  },
+  "preview/denso/js/preview-guard.js": {
+    "mtime": 1783375630.3643205,
+    "ast_hash": "b3adae0b8ef306d758c966625e372953",
+    "semantic_hash": "b3adae0b8ef306d758c966625e372953"
+  },
+  "preview/denso/js/progresso-alunos.js": {
+    "mtime": 1783375451.4710867,
+    "ast_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d",
+    "semantic_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d"
+  },
+  "preview/denso/js/vendas.js": {
+    "mtime": 1783375451.4682026,
+    "ast_hash": "79d800d2eb3ad1c2e84fd7d8337170a1",
+    "semantic_hash": "79d800d2eb3ad1c2e84fd7d8337170a1"
+  },
+  "preview/refinado/assets/safe-minions/xlsx.full.min.js": {
+    "mtime": 1783375451.411668,
+    "ast_hash": "31e9848e80e1ddf43c5aa31009cd2b7b",
+    "semantic_hash": "31e9848e80e1ddf43c5aa31009cd2b7b"
+  },
+  "preview/refinado/js/access-control.js": {
+    "mtime": 1783375451.4020503,
+    "ast_hash": "d042bd099af95864bd7e992fbdf46394",
+    "semantic_hash": "d042bd099af95864bd7e992fbdf46394"
+  },
+  "preview/refinado/js/admin.js": {
+    "mtime": 1783375451.4040034,
+    "ast_hash": "a06ade9e5952dee3e4e1d146b0c1c945",
+    "semantic_hash": "a06ade9e5952dee3e4e1d146b0c1c945"
+  },
+  "preview/refinado/js/api.js": {
+    "mtime": 1783375451.4049208,
+    "ast_hash": "14c2d2d54666d2a6a18c0f27539766a4",
+    "semantic_hash": "14c2d2d54666d2a6a18c0f27539766a4"
+  },
+  "preview/refinado/js/auth.js": {
+    "mtime": 1783375451.4013555,
+    "ast_hash": "68f3664471ce078005bfdbb16e04e7c8",
+    "semantic_hash": "68f3664471ce078005bfdbb16e04e7c8"
+  },
+  "preview/refinado/js/bases.js": {
+    "mtime": 1783375451.4028094,
+    "ast_hash": "0a806dc483391c3d3e39e8418d3076db",
+    "semantic_hash": "0a806dc483391c3d3e39e8418d3076db"
+  },
+  "preview/refinado/js/cadastro-alunos.js": {
+    "mtime": 1783375451.4064658,
+    "ast_hash": "0050ecd974c116a5e2779002d662ee48",
+    "semantic_hash": "0050ecd974c116a5e2779002d662ee48"
+  },
+  "preview/refinado/js/concorrencia.js": {
+    "mtime": 1783375451.4032185,
+    "ast_hash": "2c033fed3e82d078a6dca67516122ad3",
+    "semantic_hash": "2c033fed3e82d078a6dca67516122ad3"
+  },
+  "preview/refinado/js/config.js": {
+    "mtime": 1783375451.4017253,
+    "ast_hash": "41aa03fcb6179d286e8367d899e57b86",
+    "semantic_hash": "41aa03fcb6179d286e8367d899e57b86"
+  },
+  "preview/refinado/js/controle-gastos.js": {
+    "mtime": 1783375451.4036648,
+    "ast_hash": "ab4b53be87d64b123caf8cf59e949b2b",
+    "semantic_hash": "ab4b53be87d64b123caf8cf59e949b2b"
+  },
+  "preview/refinado/js/dashboard.js": {
+    "mtime": 1783375451.404621,
+    "ast_hash": "a62625553e24a5788d65c07a3cae1326",
+    "semantic_hash": "a62625553e24a5788d65c07a3cae1326"
+  },
+  "preview/refinado/js/fechamento-horas.js": {
+    "mtime": 1783375451.405343,
+    "ast_hash": "73e8343cf81b81f274e9393a3f762240",
+    "semantic_hash": "73e8343cf81b81f274e9393a3f762240"
+  },
+  "preview/refinado/js/horas-voadas-inva.js": {
+    "mtime": 1783375451.4043205,
+    "ast_hash": "025ea7d2d1f3d2093811129c21ab2b2f",
+    "semantic_hash": "025ea7d2d1f3d2093811129c21ab2b2f"
+  },
+  "preview/refinado/js/inicio.js": {
+    "mtime": 1783375451.4061627,
+    "ast_hash": "abe8728957c8d714232261048d61fdd4",
+    "semantic_hash": "abe8728957c8d714232261048d61fdd4"
+  },
+  "preview/refinado/js/preview-guard.js": {
+    "mtime": 1783375617.2548664,
+    "ast_hash": "b3adae0b8ef306d758c966625e372953",
+    "semantic_hash": "b3adae0b8ef306d758c966625e372953"
+  },
+  "preview/refinado/js/progresso-alunos.js": {
+    "mtime": 1783375451.4058561,
+    "ast_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d",
+    "semantic_hash": "9db7e28f58bb0bdd760e9b8ee1e7787d"
+  },
+  "preview/refinado/js/vendas.js": {
+    "mtime": 1783375451.4024677,
+    "ast_hash": "79d800d2eb3ad1c2e84fd7d8337170a1",
+    "semantic_hash": "79d800d2eb3ad1c2e84fd7d8337170a1"
+  },
+  "README.md": {
+    "mtime": 1783254074.2197094,
+    "ast_hash": "224c64481ab8d1c4801df0aad2a267fe",
+    "semantic_hash": "224c64481ab8d1c4801df0aad2a267fe"
+  },
+  "access-control.html": {
+    "mtime": 1783368327.8401773,
+    "ast_hash": "719adcb408ee8c40bacf46b93ef9a8b9",
+    "semantic_hash": "719adcb408ee8c40bacf46b93ef9a8b9"
+  },
+  "acesso-negado.html": {
+    "mtime": 1783368327.8405826,
+    "ast_hash": "b27be7f22becce7d02d2708b1131c1b9",
+    "semantic_hash": "b27be7f22becce7d02d2708b1131c1b9"
+  },
+  "admin.html": {
+    "mtime": 1783368327.8411257,
+    "ast_hash": "d987339a3b0e38be1d342dd08c2ad0bb",
+    "semantic_hash": "d987339a3b0e38be1d342dd08c2ad0bb"
+  },
+  "bases.html": {
+    "mtime": 1783368327.841593,
+    "ast_hash": "9e34dadde8ed5f972ca470476715ca90",
+    "semantic_hash": "9e34dadde8ed5f972ca470476715ca90"
+  },
+  "cadastro-alunos.html": {
+    "mtime": 1783368327.8421104,
+    "ast_hash": "1f4daef11347844c9aeaf15b8b565c42",
+    "semantic_hash": "1f4daef11347844c9aeaf15b8b565c42"
+  },
+  "concorrencia.html": {
+    "mtime": 1783368327.8424459,
+    "ast_hash": "eff75c867591d12d3dcfc649b2a0104c",
+    "semantic_hash": "eff75c867591d12d3dcfc649b2a0104c"
+  },
+  "controle-gastos.html": {
+    "mtime": 1783368327.8428428,
+    "ast_hash": "d8fff27b68d50eb65e8d5efe5333f45d",
+    "semantic_hash": "d8fff27b68d50eb65e8d5efe5333f45d"
+  },
+  "dashboard.html": {
+    "mtime": 1783368327.8431795,
+    "ast_hash": "8f4cba6498d702f77987ba4b4fba2893",
+    "semantic_hash": "8f4cba6498d702f77987ba4b4fba2893"
+  },
+  "debug.html": {
+    "mtime": 1783368327.8435903,
+    "ast_hash": "e932da39034b91dbcad768331a340608",
+    "semantic_hash": "e932da39034b91dbcad768331a340608"
+  },
+  "escala-cco.html": {
+    "mtime": 1783424966.7735152,
+    "ast_hash": "e0645a6de813f765c020a34f4919257b",
+    "semantic_hash": "e0645a6de813f765c020a34f4919257b"
+  },
+  "escala-pav.html": {
+    "mtime": 1783434250.033392,
+    "ast_hash": "59b66ab12abaa389d10c9e4f466c295d",
+    "semantic_hash": "59b66ab12abaa389d10c9e4f466c295d"
+  },
+  "faturamento.html": {
+    "mtime": 1783368327.846866,
+    "ast_hash": "3c68aa02e044b5185d76d5a409cfc478",
+    "semantic_hash": "3c68aa02e044b5185d76d5a409cfc478"
+  },
+  "fechamento-horas.html": {
+    "mtime": 1783368327.8471942,
+    "ast_hash": "dbfc1ea2a3bcabf2e69b0bd69a0d6d02",
+    "semantic_hash": "dbfc1ea2a3bcabf2e69b0bd69a0d6d02"
+  },
+  "horas-voadas-inva.html": {
+    "mtime": 1783368327.847542,
+    "ast_hash": "04174d481cfd4cef1564c9253cee240d",
+    "semantic_hash": "04174d481cfd4cef1564c9253cee240d"
+  },
+  "index.html": {
+    "mtime": 1783368327.8478422,
+    "ast_hash": "bde617ba29af5ea4b6ded910a9f90619",
+    "semantic_hash": "bde617ba29af5ea4b6ded910a9f90619"
+  },
+  "inicio.html": {
+    "mtime": 1783368327.8481176,
+    "ast_hash": "487e629e57f7bbc145e4d253148f1cb4",
+    "semantic_hash": "487e629e57f7bbc145e4d253148f1cb4"
+  },
+  "preview/clean/access-control.html": {
+    "mtime": 1783376195.8739886,
+    "ast_hash": "18d22c74102a565a41232c1fbe4a295d",
+    "semantic_hash": "18d22c74102a565a41232c1fbe4a295d"
+  },
+  "preview/clean/acesso-negado.html": {
+    "mtime": 1783376195.8762708,
+    "ast_hash": "2bfe1cae8cde36c322d698e6af927e9c",
+    "semantic_hash": "2bfe1cae8cde36c322d698e6af927e9c"
+  },
+  "preview/clean/admin.html": {
+    "mtime": 1783376195.8785632,
+    "ast_hash": "e78724cf3b902a1e22eea110220d5eca",
+    "semantic_hash": "e78724cf3b902a1e22eea110220d5eca"
+  },
+  "preview/clean/bases.html": {
+    "mtime": 1783376195.880798,
+    "ast_hash": "f0c3cffac7b3b437fac5ce2ec88ab20e",
+    "semantic_hash": "f0c3cffac7b3b437fac5ce2ec88ab20e"
+  },
+  "preview/clean/cadastro-alunos.html": {
+    "mtime": 1783376195.8829796,
+    "ast_hash": "b24ec67c54630d0d6d4a877feb67e4ff",
+    "semantic_hash": "b24ec67c54630d0d6d4a877feb67e4ff"
+  },
+  "preview/clean/concorrencia.html": {
+    "mtime": 1783376195.8854094,
+    "ast_hash": "9d8dd7a156ff138bfa0f02bb592e9b66",
+    "semantic_hash": "9d8dd7a156ff138bfa0f02bb592e9b66"
+  },
+  "preview/clean/controle-gastos.html": {
+    "mtime": 1783376195.887707,
+    "ast_hash": "ed3560153ce51a0f63178e6ef43043e6",
+    "semantic_hash": "ed3560153ce51a0f63178e6ef43043e6"
+  },
+  "preview/clean/dashboard.html": {
+    "mtime": 1783376195.8899019,
+    "ast_hash": "ada3c64da22586fb4870cdc62c172ae9",
+    "semantic_hash": "ada3c64da22586fb4870cdc62c172ae9"
+  },
+  "preview/clean/debug.html": {
+    "mtime": 1783376195.891981,
+    "ast_hash": "be4a308e6ed01f2584e54e956c8e1540",
+    "semantic_hash": "be4a308e6ed01f2584e54e956c8e1540"
+  },
+  "preview/clean/escala-cco.html": {
+    "mtime": 1783376195.8947272,
+    "ast_hash": "5602ce41e0e8b383a68a48376f325f80",
+    "semantic_hash": "5602ce41e0e8b383a68a48376f325f80"
+  },
+  "preview/clean/escala-pav.html": {
+    "mtime": 1783376195.897203,
+    "ast_hash": "d637f25d4520d492155c82501d506d9c",
+    "semantic_hash": "d637f25d4520d492155c82501d506d9c"
+  },
+  "preview/clean/faturamento.html": {
+    "mtime": 1783376195.8993556,
+    "ast_hash": "383f539caecd5ba5e971ef124e46ebeb",
+    "semantic_hash": "383f539caecd5ba5e971ef124e46ebeb"
+  },
+  "preview/clean/fechamento-horas.html": {
+    "mtime": 1783376195.9016638,
+    "ast_hash": "0a65c4584c8b20fa8b3f088f18d7fbc2",
+    "semantic_hash": "0a65c4584c8b20fa8b3f088f18d7fbc2"
+  },
+  "preview/clean/horas-voadas-inva.html": {
+    "mtime": 1783376195.904009,
+    "ast_hash": "523775dfce830aa1bc20a1b928efac77",
+    "semantic_hash": "523775dfce830aa1bc20a1b928efac77"
+  },
+  "preview/clean/index.html": {
+    "mtime": 1783376195.9061184,
+    "ast_hash": "57ed74a3056cd450cb58bb1b9dfcff23",
+    "semantic_hash": "57ed74a3056cd450cb58bb1b9dfcff23"
+  },
+  "preview/clean/inicio.html": {
+    "mtime": 1783376195.9082332,
+    "ast_hash": "6a7b8cc87ef7ee885d89373c3eefa1e6",
+    "semantic_hash": "6a7b8cc87ef7ee885d89373c3eefa1e6"
+  },
+  "preview/clean/progresso-alunos.html": {
+    "mtime": 1783376195.9106214,
+    "ast_hash": "0161d6d9c313374199172b10ec7ac7e7",
+    "semantic_hash": "0161d6d9c313374199172b10ec7ac7e7"
+  },
+  "preview/clean/safe-minions.html": {
+    "mtime": 1783376195.912914,
+    "ast_hash": "c436fca243866c34b6c87ed6aaed4623",
+    "semantic_hash": "c436fca243866c34b6c87ed6aaed4623"
+  },
+  "preview/clean/vendas.html": {
+    "mtime": 1783376195.9151497,
+    "ast_hash": "3dd17013ed5596a91354a74fd46cb107",
+    "semantic_hash": "3dd17013ed5596a91354a74fd46cb107"
+  },
+  "preview/denso/access-control.html": {
+    "mtime": 1783376195.917536,
+    "ast_hash": "18d22c74102a565a41232c1fbe4a295d",
+    "semantic_hash": "18d22c74102a565a41232c1fbe4a295d"
+  },
+  "preview/denso/acesso-negado.html": {
+    "mtime": 1783376195.9200468,
+    "ast_hash": "2bfe1cae8cde36c322d698e6af927e9c",
+    "semantic_hash": "2bfe1cae8cde36c322d698e6af927e9c"
+  },
+  "preview/denso/admin.html": {
+    "mtime": 1783376195.9221797,
+    "ast_hash": "e78724cf3b902a1e22eea110220d5eca",
+    "semantic_hash": "e78724cf3b902a1e22eea110220d5eca"
+  },
+  "preview/denso/bases.html": {
+    "mtime": 1783376195.924404,
+    "ast_hash": "f0c3cffac7b3b437fac5ce2ec88ab20e",
+    "semantic_hash": "f0c3cffac7b3b437fac5ce2ec88ab20e"
+  },
+  "preview/denso/cadastro-alunos.html": {
+    "mtime": 1783376195.9267945,
+    "ast_hash": "b24ec67c54630d0d6d4a877feb67e4ff",
+    "semantic_hash": "b24ec67c54630d0d6d4a877feb67e4ff"
+  },
+  "preview/denso/concorrencia.html": {
+    "mtime": 1783376195.929046,
+    "ast_hash": "9d8dd7a156ff138bfa0f02bb592e9b66",
+    "semantic_hash": "9d8dd7a156ff138bfa0f02bb592e9b66"
+  },
+  "preview/denso/controle-gastos.html": {
+    "mtime": 1783376195.9312243,
+    "ast_hash": "ed3560153ce51a0f63178e6ef43043e6",
+    "semantic_hash": "ed3560153ce51a0f63178e6ef43043e6"
+  },
+  "preview/denso/dashboard.html": {
+    "mtime": 1783376195.933394,
+    "ast_hash": "ada3c64da22586fb4870cdc62c172ae9",
+    "semantic_hash": "ada3c64da22586fb4870cdc62c172ae9"
+  },
+  "preview/denso/debug.html": {
+    "mtime": 1783376195.935617,
+    "ast_hash": "be4a308e6ed01f2584e54e956c8e1540",
+    "semantic_hash": "be4a308e6ed01f2584e54e956c8e1540"
+  },
+  "preview/denso/escala-cco.html": {
+    "mtime": 1783376195.937889,
+    "ast_hash": "5602ce41e0e8b383a68a48376f325f80",
+    "semantic_hash": "5602ce41e0e8b383a68a48376f325f80"
+  },
+  "preview/denso/escala-pav.html": {
+    "mtime": 1783376195.9402127,
+    "ast_hash": "d637f25d4520d492155c82501d506d9c",
+    "semantic_hash": "d637f25d4520d492155c82501d506d9c"
+  },
+  "preview/denso/faturamento.html": {
+    "mtime": 1783376195.9425774,
+    "ast_hash": "383f539caecd5ba5e971ef124e46ebeb",
+    "semantic_hash": "383f539caecd5ba5e971ef124e46ebeb"
+  },
+  "preview/denso/fechamento-horas.html": {
+    "mtime": 1783376195.944939,
+    "ast_hash": "0a65c4584c8b20fa8b3f088f18d7fbc2",
+    "semantic_hash": "0a65c4584c8b20fa8b3f088f18d7fbc2"
+  },
+  "preview/denso/horas-voadas-inva.html": {
+    "mtime": 1783376195.9471033,
+    "ast_hash": "523775dfce830aa1bc20a1b928efac77",
+    "semantic_hash": "523775dfce830aa1bc20a1b928efac77"
+  },
+  "preview/denso/index.html": {
+    "mtime": 1783376195.9492207,
+    "ast_hash": "57ed74a3056cd450cb58bb1b9dfcff23",
+    "semantic_hash": "57ed74a3056cd450cb58bb1b9dfcff23"
+  },
+  "preview/denso/inicio.html": {
+    "mtime": 1783376195.9514372,
+    "ast_hash": "6a7b8cc87ef7ee885d89373c3eefa1e6",
+    "semantic_hash": "6a7b8cc87ef7ee885d89373c3eefa1e6"
+  },
+  "preview/denso/progresso-alunos.html": {
+    "mtime": 1783376195.9536195,
+    "ast_hash": "0161d6d9c313374199172b10ec7ac7e7",
+    "semantic_hash": "0161d6d9c313374199172b10ec7ac7e7"
+  },
+  "preview/denso/safe-minions.html": {
+    "mtime": 1783376195.9558384,
+    "ast_hash": "c436fca243866c34b6c87ed6aaed4623",
+    "semantic_hash": "c436fca243866c34b6c87ed6aaed4623"
+  },
+  "preview/denso/vendas.html": {
+    "mtime": 1783376195.9579606,
+    "ast_hash": "3dd17013ed5596a91354a74fd46cb107",
+    "semantic_hash": "3dd17013ed5596a91354a74fd46cb107"
+  },
+  "preview/index.html": {
+    "mtime": 1783375768.3176832,
+    "ast_hash": "e47aa3506406e3ae74775882feabfcf0",
+    "semantic_hash": "e47aa3506406e3ae74775882feabfcf0"
+  },
+  "preview/pav/a-financeiro.html": {
+    "mtime": 1783384879.325592,
+    "ast_hash": "c3b2642387b75257bd3b91e5210e588c",
+    "semantic_hash": "c3b2642387b75257bd3b91e5210e588c"
+  },
+  "preview/pav/a-operacional.html": {
+    "mtime": 1783384832.375893,
+    "ast_hash": "8e64940a185773d1e89890ee6fd1b458",
+    "semantic_hash": "8e64940a185773d1e89890ee6fd1b458"
+  },
+  "preview/pav/a-pavs.html": {
+    "mtime": 1783384922.0224519,
+    "ast_hash": "4db4644204d611456b64ecd74e359ae3",
+    "semantic_hash": "4db4644204d611456b64ecd74e359ae3"
+  },
+  "preview/pav/index.html": {
+    "mtime": 1783385002.5085614,
+    "ast_hash": "2175bb7bfc91aec8cb1246e47099d34f",
+    "semantic_hash": "2175bb7bfc91aec8cb1246e47099d34f"
+  },
+  "preview/refinado/access-control.html": {
+    "mtime": 1783376195.813418,
+    "ast_hash": "18d22c74102a565a41232c1fbe4a295d",
+    "semantic_hash": "18d22c74102a565a41232c1fbe4a295d"
+  },
+  "preview/refinado/acesso-negado.html": {
+    "mtime": 1783376195.818211,
+    "ast_hash": "2bfe1cae8cde36c322d698e6af927e9c",
+    "semantic_hash": "2bfe1cae8cde36c322d698e6af927e9c"
+  },
+  "preview/refinado/admin.html": {
+    "mtime": 1783376195.8225038,
+    "ast_hash": "e78724cf3b902a1e22eea110220d5eca",
+    "semantic_hash": "e78724cf3b902a1e22eea110220d5eca"
+  },
+  "preview/refinado/bases.html": {
+    "mtime": 1783376195.826953,
+    "ast_hash": "f0c3cffac7b3b437fac5ce2ec88ab20e",
+    "semantic_hash": "f0c3cffac7b3b437fac5ce2ec88ab20e"
+  },
+  "preview/refinado/cadastro-alunos.html": {
+    "mtime": 1783376195.8306344,
+    "ast_hash": "b24ec67c54630d0d6d4a877feb67e4ff",
+    "semantic_hash": "b24ec67c54630d0d6d4a877feb67e4ff"
+  },
+  "preview/refinado/concorrencia.html": {
+    "mtime": 1783376195.8339498,
+    "ast_hash": "9d8dd7a156ff138bfa0f02bb592e9b66",
+    "semantic_hash": "9d8dd7a156ff138bfa0f02bb592e9b66"
+  },
+  "preview/refinado/controle-gastos.html": {
+    "mtime": 1783376195.8371577,
+    "ast_hash": "ed3560153ce51a0f63178e6ef43043e6",
+    "semantic_hash": "ed3560153ce51a0f63178e6ef43043e6"
+  },
+  "preview/refinado/dashboard.html": {
+    "mtime": 1783376195.8399992,
+    "ast_hash": "ada3c64da22586fb4870cdc62c172ae9",
+    "semantic_hash": "ada3c64da22586fb4870cdc62c172ae9"
+  },
+  "preview/refinado/debug.html": {
+    "mtime": 1783376195.8429635,
+    "ast_hash": "be4a308e6ed01f2584e54e956c8e1540",
+    "semantic_hash": "be4a308e6ed01f2584e54e956c8e1540"
+  },
+  "preview/refinado/escala-cco.html": {
+    "mtime": 1783376195.846217,
+    "ast_hash": "5602ce41e0e8b383a68a48376f325f80",
+    "semantic_hash": "5602ce41e0e8b383a68a48376f325f80"
+  },
+  "preview/refinado/escala-pav.html": {
+    "mtime": 1783376195.8490047,
+    "ast_hash": "d637f25d4520d492155c82501d506d9c",
+    "semantic_hash": "d637f25d4520d492155c82501d506d9c"
+  },
+  "preview/refinado/faturamento.html": {
+    "mtime": 1783376195.8517563,
+    "ast_hash": "383f539caecd5ba5e971ef124e46ebeb",
+    "semantic_hash": "383f539caecd5ba5e971ef124e46ebeb"
+  },
+  "preview/refinado/fechamento-horas.html": {
+    "mtime": 1783376195.85434,
+    "ast_hash": "0a65c4584c8b20fa8b3f088f18d7fbc2",
+    "semantic_hash": "0a65c4584c8b20fa8b3f088f18d7fbc2"
+  },
+  "preview/refinado/horas-voadas-inva.html": {
+    "mtime": 1783376195.8569286,
+    "ast_hash": "523775dfce830aa1bc20a1b928efac77",
+    "semantic_hash": "523775dfce830aa1bc20a1b928efac77"
+  },
+  "preview/refinado/index.html": {
+    "mtime": 1783376195.8594306,
+    "ast_hash": "57ed74a3056cd450cb58bb1b9dfcff23",
+    "semantic_hash": "57ed74a3056cd450cb58bb1b9dfcff23"
+  },
+  "preview/refinado/inicio.html": {
+    "mtime": 1783376195.8620977,
+    "ast_hash": "6a7b8cc87ef7ee885d89373c3eefa1e6",
+    "semantic_hash": "6a7b8cc87ef7ee885d89373c3eefa1e6"
+  },
+  "preview/refinado/progresso-alunos.html": {
+    "mtime": 1783376195.86446,
+    "ast_hash": "0161d6d9c313374199172b10ec7ac7e7",
+    "semantic_hash": "0161d6d9c313374199172b10ec7ac7e7"
+  },
+  "preview/refinado/safe-minions.html": {
+    "mtime": 1783376195.8668954,
+    "ast_hash": "c436fca243866c34b6c87ed6aaed4623",
+    "semantic_hash": "c436fca243866c34b6c87ed6aaed4623"
+  },
+  "preview/refinado/vendas.html": {
+    "mtime": 1783376195.8692355,
+    "ast_hash": "3dd17013ed5596a91354a74fd46cb107",
+    "semantic_hash": "3dd17013ed5596a91354a74fd46cb107"
+  },
+  "preview/v1-refinado.html": {
+    "mtime": 1783373555.538409,
+    "ast_hash": "98a9c7f6f3393eed43235ad6a1427687",
+    "semantic_hash": "98a9c7f6f3393eed43235ad6a1427687"
+  },
+  "preview/v2-clean.html": {
+    "mtime": 1783373605.278486,
+    "ast_hash": "fbe567cac9fe6cf5b1004538580a9c3f",
+    "semantic_hash": "fbe567cac9fe6cf5b1004538580a9c3f"
+  },
+  "preview/v3-denso.html": {
+    "mtime": 1783373666.8696284,
+    "ast_hash": "b8ea2b63c67dc9812d57dd618920198b",
+    "semantic_hash": "b8ea2b63c67dc9812d57dd618920198b"
+  },
+  "progresso-alunos.html": {
+    "mtime": 1783368327.8483696,
+    "ast_hash": "77bfb59a790f1d5cf311e4aaca2d040f",
+    "semantic_hash": "77bfb59a790f1d5cf311e4aaca2d040f"
+  },
+  "safe-minions.html": {
+    "mtime": 1783368327.8488255,
+    "ast_hash": "0edcccf5d09934d32f6c5f265622ee02",
+    "semantic_hash": "0edcccf5d09934d32f6c5f265622ee02"
+  },
+  "vendas.html": {
+    "mtime": 1783368327.8496025,
+    "ast_hash": "0ef17c4b84f99625931bf2001a354616",
+    "semantic_hash": "0ef17c4b84f99625931bf2001a354616"
+  },
+  "assets/icons/apple-touch-icon.png": {
+    "mtime": 1783368312.3252013,
+    "ast_hash": "e6ff0e75c2ff8db1c79b78caf6228caf",
+    "semantic_hash": "e6ff0e75c2ff8db1c79b78caf6228caf"
+  },
+  "assets/icons/pwa-desktop-1024.png": {
+    "mtime": 1783368312.327628,
+    "ast_hash": "0a052ca0cda46f61ce8484d76e07d489",
+    "semantic_hash": "0a052ca0cda46f61ce8484d76e07d489"
+  },
+  "assets/icons/pwa-desktop-512.png": {
+    "mtime": 1783368312.3268142,
+    "ast_hash": "4253a99aa5851d470739844381033a4a",
+    "semantic_hash": "4253a99aa5851d470739844381033a4a"
+  },
+  "assets/icons/pwa-mobile-192.png": {
+    "mtime": 1783368312.3260221,
+    "ast_hash": "6712e143605dd21bd819e78db6e5a5be",
+    "semantic_hash": "6712e143605dd21bd819e78db6e5a5be"
+  },
+  "assets/icons/pwa-mobile-maskable-512.png": {
+    "mtime": 1783368312.3282037,
+    "ast_hash": "ce5afbe3b6a4a61c0b52bad1bd981512",
+    "semantic_hash": "ce5afbe3b6a4a61c0b52bad1bd981512"
+  },
+  "assets/img/logo.png": {
+    "mtime": 1749650476.0,
+    "ast_hash": "ee2a9bbfed76b53978e77e90aed2c81f",
+    "semantic_hash": "ee2a9bbfed76b53978e77e90aed2c81f"
+  },
+  "assets/img/safe-logo-horizontal.png": {
+    "mtime": 1780839883.5917635,
+    "ast_hash": "0f328c59ba8760cd01455e1b5bbaf4a9",
+    "semantic_hash": "0f328c59ba8760cd01455e1b5bbaf4a9"
+  },
+  "assets/safe-minions/minion.png": {
+    "mtime": 1780757852.9559572,
+    "ast_hash": "d10af4ca184bc66287cf073543e738a8",
+    "semantic_hash": "d10af4ca184bc66287cf073543e738a8"
+  },
+  "favicon.png": {
+    "mtime": 1783368984.7482667,
+    "ast_hash": "ad0b38b1655436a9dbe7210315b04f23",
+    "semantic_hash": "ad0b38b1655436a9dbe7210315b04f23"
+  },
+  "preview/clean/assets/icons/apple-touch-icon.png": {
+    "mtime": 1783375451.4460633,
+    "ast_hash": "e6ff0e75c2ff8db1c79b78caf6228caf",
+    "semantic_hash": "e6ff0e75c2ff8db1c79b78caf6228caf"
+  },
+  "preview/clean/assets/icons/pwa-desktop-1024.png": {
+    "mtime": 1783375451.4475212,
+    "ast_hash": "0a052ca0cda46f61ce8484d76e07d489",
+    "semantic_hash": "0a052ca0cda46f61ce8484d76e07d489"
+  },
+  "preview/clean/assets/icons/pwa-desktop-512.png": {
+    "mtime": 1783375451.4464557,
+    "ast_hash": "4253a99aa5851d470739844381033a4a",
+    "semantic_hash": "4253a99aa5851d470739844381033a4a"
+  },
+  "preview/clean/assets/icons/pwa-mobile-192.png": {
+    "mtime": 1783375451.447032,
+    "ast_hash": "6712e143605dd21bd819e78db6e5a5be",
+    "semantic_hash": "6712e143605dd21bd819e78db6e5a5be"
+  },
+  "preview/clean/assets/icons/pwa-mobile-maskable-512.png": {
+    "mtime": 1783375451.446778,
+    "ast_hash": "ce5afbe3b6a4a61c0b52bad1bd981512",
+    "semantic_hash": "ce5afbe3b6a4a61c0b52bad1bd981512"
+  },
+  "preview/clean/assets/img/logo.png": {
+    "mtime": 1783375451.443044,
+    "ast_hash": "ee2a9bbfed76b53978e77e90aed2c81f",
+    "semantic_hash": "ee2a9bbfed76b53978e77e90aed2c81f"
+  },
+  "preview/clean/assets/img/safe-logo-horizontal.png": {
+    "mtime": 1783375451.442683,
+    "ast_hash": "0f328c59ba8760cd01455e1b5bbaf4a9",
+    "semantic_hash": "0f328c59ba8760cd01455e1b5bbaf4a9"
+  },
+  "preview/clean/assets/safe-minions/minion.png": {
+    "mtime": 1783375451.4437208,
+    "ast_hash": "d10af4ca184bc66287cf073543e738a8",
+    "semantic_hash": "d10af4ca184bc66287cf073543e738a8"
+  },
+  "preview/clean/favicon.png": {
+    "mtime": 1783375451.4502828,
+    "ast_hash": "ad0b38b1655436a9dbe7210315b04f23",
+    "semantic_hash": "ad0b38b1655436a9dbe7210315b04f23"
+  },
+  "preview/denso/assets/icons/apple-touch-icon.png": {
+    "mtime": 1783375451.4763515,
+    "ast_hash": "e6ff0e75c2ff8db1c79b78caf6228caf",
+    "semantic_hash": "e6ff0e75c2ff8db1c79b78caf6228caf"
+  },
+  "preview/denso/assets/icons/pwa-desktop-1024.png": {
+    "mtime": 1783375451.4785688,
+    "ast_hash": "0a052ca0cda46f61ce8484d76e07d489",
+    "semantic_hash": "0a052ca0cda46f61ce8484d76e07d489"
+  },
+  "preview/denso/assets/icons/pwa-desktop-512.png": {
+    "mtime": 1783375451.4769275,
+    "ast_hash": "4253a99aa5851d470739844381033a4a",
+    "semantic_hash": "4253a99aa5851d470739844381033a4a"
+  },
+  "preview/denso/assets/icons/pwa-mobile-192.png": {
+    "mtime": 1783375451.4780917,
+    "ast_hash": "6712e143605dd21bd819e78db6e5a5be",
+    "semantic_hash": "6712e143605dd21bd819e78db6e5a5be"
+  },
+  "preview/denso/assets/icons/pwa-mobile-maskable-512.png": {
+    "mtime": 1783375451.4775217,
+    "ast_hash": "ce5afbe3b6a4a61c0b52bad1bd981512",
+    "semantic_hash": "ce5afbe3b6a4a61c0b52bad1bd981512"
+  },
+  "preview/denso/assets/img/logo.png": {
+    "mtime": 1783375451.4740891,
+    "ast_hash": "ee2a9bbfed76b53978e77e90aed2c81f",
+    "semantic_hash": "ee2a9bbfed76b53978e77e90aed2c81f"
+  },
+  "preview/denso/assets/img/safe-logo-horizontal.png": {
+    "mtime": 1783375451.4737103,
+    "ast_hash": "0f328c59ba8760cd01455e1b5bbaf4a9",
+    "semantic_hash": "0f328c59ba8760cd01455e1b5bbaf4a9"
+  },
+  "preview/denso/assets/safe-minions/minion.png": {
+    "mtime": 1783375451.4746177,
+    "ast_hash": "d10af4ca184bc66287cf073543e738a8",
+    "semantic_hash": "d10af4ca184bc66287cf073543e738a8"
+  },
+  "preview/denso/favicon.png": {
+    "mtime": 1783375451.4812846,
+    "ast_hash": "ad0b38b1655436a9dbe7210315b04f23",
+    "semantic_hash": "ad0b38b1655436a9dbe7210315b04f23"
+  },
+  "preview/refinado/assets/icons/apple-touch-icon.png": {
+    "mtime": 1783375451.4130335,
+    "ast_hash": "e6ff0e75c2ff8db1c79b78caf6228caf",
+    "semantic_hash": "e6ff0e75c2ff8db1c79b78caf6228caf"
+  },
+  "preview/refinado/assets/icons/pwa-desktop-1024.png": {
+    "mtime": 1783375451.4149933,
+    "ast_hash": "0a052ca0cda46f61ce8484d76e07d489",
+    "semantic_hash": "0a052ca0cda46f61ce8484d76e07d489"
+  },
+  "preview/refinado/assets/icons/pwa-desktop-512.png": {
+    "mtime": 1783375451.41375,
+    "ast_hash": "4253a99aa5851d470739844381033a4a",
+    "semantic_hash": "4253a99aa5851d470739844381033a4a"
+  },
+  "preview/refinado/assets/icons/pwa-mobile-192.png": {
+    "mtime": 1783375451.4145126,
+    "ast_hash": "6712e143605dd21bd819e78db6e5a5be",
+    "semantic_hash": "6712e143605dd21bd819e78db6e5a5be"
+  },
+  "preview/refinado/assets/icons/pwa-mobile-maskable-512.png": {
+    "mtime": 1783375451.4141421,
+    "ast_hash": "ce5afbe3b6a4a61c0b52bad1bd981512",
+    "semantic_hash": "ce5afbe3b6a4a61c0b52bad1bd981512"
+  },
+  "preview/refinado/assets/img/logo.png": {
+    "mtime": 1783375451.409838,
+    "ast_hash": "ee2a9bbfed76b53978e77e90aed2c81f",
+    "semantic_hash": "ee2a9bbfed76b53978e77e90aed2c81f"
+  },
+  "preview/refinado/assets/img/safe-logo-horizontal.png": {
+    "mtime": 1783375451.4094286,
+    "ast_hash": "0f328c59ba8760cd01455e1b5bbaf4a9",
+    "semantic_hash": "0f328c59ba8760cd01455e1b5bbaf4a9"
+  },
+  "preview/refinado/assets/safe-minions/minion.png": {
+    "mtime": 1783375451.4106154,
+    "ast_hash": "d10af4ca184bc66287cf073543e738a8",
+    "semantic_hash": "d10af4ca184bc66287cf073543e738a8"
+  },
+  "preview/refinado/favicon.png": {
+    "mtime": 1783375451.4182618,
+    "ast_hash": "ad0b38b1655436a9dbe7210315b04f23",
+    "semantic_hash": "ad0b38b1655436a9dbe7210315b04f23"
+  },
+  "assets/safe-minions/banana.m4a": {
+    "mtime": 1780757852.9582095,
+    "ast_hash": "7e3a95f11963822dcfdf7eb348297248",
+    "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
+  },
+  "preview/clean/assets/safe-minions/banana.m4a": {
+    "mtime": 1783375451.445618,
+    "ast_hash": "7e3a95f11963822dcfdf7eb348297248",
+    "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
+  },
+  "preview/denso/assets/safe-minions/banana.m4a": {
+    "mtime": 1783375451.475642,
+    "ast_hash": "7e3a95f11963822dcfdf7eb348297248",
+    "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
+  },
+  "preview/refinado/assets/safe-minions/banana.m4a": {
+    "mtime": 1783375451.4123416,
+    "ast_hash": "7e3a95f11963822dcfdf7eb348297248",
+    "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
+  }
+}

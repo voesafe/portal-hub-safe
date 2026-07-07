@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAV · Financeiro (Operacional)</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
+<style>
+  :root{--navy:#1D2951;--blue:#5BAEE2;--blue-d:#3d8cc4;--teal:#60C0BF;--teal-d:#3f9d9c;
+    --bg:#F4F7FC;--card:#fff;--line:#E6ECF5;--line2:#DDE4EF;--ink:#1D2951;--muted:#7488a6;--muted2:#9aa9c2;
+    --cpn:#3d8cc4;--cpn-bg:#eaf3fb;--sjk:#3f9d9c;--sjk-bg:#e7f5f4;
+    --h:'Raleway',sans-serif;--b:'Montserrat',sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--b);background:var(--bg);color:var(--ink);min-height:100vh}
+  a{text-decoration:none;color:inherit}
+  .top{height:60px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-ic{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:18px}
+  .brand b{font-family:var(--h);font-weight:800;letter-spacing:.02em;font-size:15px}
+  .brand span{font-size:11px;color:var(--muted2);display:block;margin-top:-2px}
+  .tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:11px}
+  .tab{display:flex;align-items:center;gap:7px;padding:8px 15px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+  .tab.active{background:var(--card);color:var(--navy);box-shadow:0 1px 4px rgba(29,41,81,.1)}
+  .top-r{display:flex;align-items:center;gap:10px}
+  .icon-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--muted);background:var(--card)}
+  .user{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+  .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  .wrap{padding:24px;max-width:1240px;margin:0 auto}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .head h1{font-family:var(--h);font-size:1.5rem;font-weight:800}
+  .head .sub{font-size:.82rem;color:var(--muted);margin-top:2px}
+  .select{padding:9px 14px;border:1px solid var(--line2);border-radius:9px;font-family:var(--b);font-size:.82rem;font-weight:600;color:var(--navy);background:var(--card);cursor:pointer}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:9px;font-size:.82rem;font-weight:600;border:1px solid var(--line2);background:var(--card);color:var(--navy);cursor:pointer}
+  .btn:hover{border-color:var(--blue)}
+  .btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
+  .kpi .k-ic{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+  .kpi .k-l{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted2)}
+  .kpi .k-v{font-family:var(--h);font-size:1.7rem;font-weight:800;margin-top:6px}
+  .kpi .k-v.blue{color:var(--blue-d)}
+  .kpi .k-s{font-size:.72rem;color:var(--muted);margin-top:2px}
+  .b1{background:var(--cpn-bg);color:var(--cpn)}.b2{background:var(--sjk-bg);color:var(--sjk)}.b3{background:#eef0fb;color:#5a54c9}
+  .table-card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .table-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .table-head .t{font-family:var(--h);font-weight:700;font-size:1rem}
+  .table-head .cnt{font-size:.76rem;color:var(--muted);background:var(--bg);padding:4px 11px;border-radius:100px;font-weight:600}
+  .tbl-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.84rem}
+  thead th{background:var(--navy);color:#fff;font-family:var(--h);font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;padding:12px 18px;text-align:left;white-space:nowrap}
+  thead th.r{text-align:right}
+  tbody td{padding:13px 18px;border-bottom:1px solid var(--line);white-space:nowrap;color:var(--ink)}
+  tbody td.r{text-align:right}
+  tbody tr:hover{background:var(--bg)}
+  tbody tr:last-child td{border-bottom:none}
+  .cell-name{display:flex;align-items:center;gap:10px;font-weight:600}
+  .av-sm{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;flex-shrink:0}
+  .badge{padding:3px 10px;border-radius:100px;font-size:.64rem;font-weight:700;text-transform:uppercase}
+  .badge.cpn{background:var(--cpn-bg);color:var(--cpn)}.badge.sjk{background:var(--sjk-bg);color:var(--sjk)}
+  .muted{color:var(--muted)}
+  .total{font-family:var(--h);font-weight:800;color:var(--navy)}
+  .tfoot td{padding:14px 18px;border-top:2px solid var(--line);font-weight:700;background:var(--bg)}
+  .ribbon{position:fixed;bottom:14px;right:14px;z-index:99;display:flex;align-items:center;gap:8px;background:#141d3a;color:#fff;padding:7px 8px 7px 14px;border-radius:100px;box-shadow:0 10px 30px rgba(20,26,40,.4);font-size:12px;font-weight:600}
+  .ribbon a{padding:5px 11px;border-radius:100px;font-weight:700;color:#9fb0cf}
+  .ribbon a.on{background:#5BAEE2;color:#141d3a}
+</style></head>
+<body>
+  <div class="top">
+    <div class="brand"><div class="brand-ic"><i class="ti ti-plane-tilt"></i></div><div><b>Safe · PAV</b><span>Escala de base</span></div></div>
+    <div class="tabs"><a class="tab" href="a-operacional.html"><i class="ti ti-calendar"></i> Calendário</a><a class="tab active" href="a-financeiro.html"><i class="ti ti-cash"></i> Financeiro</a><a class="tab" href="a-pavs.html"><i class="ti ti-users"></i> PAVs</a></div>
+    <div class="top-r"><div class="icon-btn"><i class="ti ti-sun"></i></div><div class="user"><span>Victor</span><div class="avatar">V</div></div></div>
+  </div>
+
+  <div class="wrap">
+    <div class="head">
+      <div><h1>Fechamento Financeiro</h1><div class="sub">Cálculo mensal por PAV · valores para pagamento</div></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <select class="select"><option>Julho 2026</option><option>Junho 2026</option><option>Maio 2026</option></select>
+        <button class="btn"><i class="ti ti-download"></i> Exportar iFood</button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="k-ic b1"><i class="ti ti-users"></i></div><div class="k-l">Total de PAVs no mês</div><div class="k-v">6</div><div class="k-s">3 CPN · 3 SJK</div></div>
+      <div class="kpi"><div class="k-ic b2"><i class="ti ti-calendar-check"></i></div><div class="k-l">Total de dias escalados</div><div class="k-v">52</div><div class="k-s">soma de todas as bases</div></div>
+      <div class="kpi"><div class="k-ic b3"><i class="ti ti-cash"></i></div><div class="k-l">Valor total a pagar</div><div class="k-v blue">R$ 7.850</div><div class="k-s">fechamento de julho</div></div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-head"><div class="t">Detalhamento por PAV</div><div class="cnt">6 PAVs</div></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Nome</th><th>Base</th><th>CPF</th><th>Telefone</th><th>Email</th><th class="r">Dias</th><th class="r">Total</th></tr></thead>
+          <tbody id="tb"></tbody>
+          <tfoot><tr class="tfoot"><td colspan="5">Total geral</td><td class="r">52</td><td class="r total">R$ 7.850</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="ribbon">Operacional · <a href="a-operacional.html">Calendário</a><a class="on" href="a-financeiro.html">Financeiro</a><a href="a-pavs.html">PAVs</a></div>
+<script>
+var rows=[
+ ['Carlos Moraes','CM','CPN','123.456.789-00','(19) 99123-4567','carlos.m@voesafe.com.br',9,'R$ 1.350'],
+ ['André Lima','AL','CPN','234.567.890-11','(19) 99234-5678','andre.l@voesafe.com.br',9,'R$ 1.350'],
+ ['Bruno Dias','BD','CPN','345.678.901-22','(19) 99345-6789','bruno.d@voesafe.com.br',8,'R$ 1.200'],
+ ['Ana Prado','AP','SJK','456.789.012-33','(12) 99456-7890','ana.p@voesafe.com.br',9,'R$ 1.350'],
+ ['Marina Reis','MR','SJK','567.890.123-44','(12) 99567-8901','marina.r@voesafe.com.br',9,'R$ 1.350'],
+ ['Tiago Souza','TS','SJK','678.901.234-55','(12) 99678-9012','tiago.s@voesafe.com.br',8,'R$ 1.200']
+];
+document.getElementById('tb').innerHTML=rows.map(function(r){
+ var col=r[2]==='CPN'?'var(--cpn)':'var(--sjk)';
+ return '<tr><td><div class="cell-name"><span class="av-sm" style="background:'+col+'">'+r[1]+'</span>'+r[0]+'</div></td>'+
+ '<td><span class="badge '+r[2].toLowerCase()+'">'+r[2]+'</span></td>'+
+ '<td class="muted">'+r[3]+'</td><td class="muted">'+r[4]+'</td><td class="muted">'+r[5]+'</td>'+
+ '<td class="r">'+r[6]+'</td><td class="r total">'+r[7]+'</td></tr>';
+}).join('');
+</script>
+</body></html>

@@ -1,0 +1,419 @@
+.cadastro-alunos-page {
+  min-height: calc(100vh - var(--topbar-h));
+  padding-top: 24px;
+}
+
+.cadastro-upload-input {
+  display: none;
+}
+
+.cadastro-upload-btn {
+  cursor: pointer;
+}
+
+.cadastro-import-card {
+  margin-bottom: 20px;
+}
+
+.cadastro-card-subtitle {
+  margin-top: 3px;
+  color: var(--gray-400);
+  font-size: .78rem;
+}
+
+.cadastro-import-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cadastro-import-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.cadastro-fila-card {
+  border: 1px solid rgba(142, 164, 192, .18);
+  box-shadow: 0 12px 34px rgba(29, 41, 81, .07);
+}
+
+.cadastro-table-header {
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.cadastro-table-tools {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 10px;
+  width: min(100%, 560px);
+}
+
+.cadastro-sort-label {
+  display: grid;
+  gap: 4px;
+  min-width: 190px;
+  color: var(--gray-500);
+  font-size: .7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.cadastro-sort-label span {
+  line-height: 1.1;
+}
+
+.cadastro-sort {
+  min-width: 190px;
+  border-color: rgba(142, 164, 192, .34);
+  background-color: var(--white);
+}
+
+.cadastro-search {
+  max-width: 320px;
+  border-color: rgba(142, 164, 192, .34);
+  background-color: var(--white);
+}
+
+.cadastro-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin: 0 -4px 16px;
+  padding: 12px 4px 4px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--gray-100);
+  background: transparent;
+}
+
+.cadastro-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--gray-500);
+  font-size: .78rem;
+  font-weight: 800;
+  transition: var(--transition);
+}
+
+.cadastro-tab span {
+  min-width: 22px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(29, 41, 81, .07);
+  font-size: .68rem;
+}
+
+.cadastro-tab.active {
+  background: rgba(91, 174, 226, .12);
+  color: var(--navy);
+  box-shadow: inset 0 0 0 1px rgba(91, 174, 226, .18);
+}
+
+.cadastro-tab:hover {
+  background: rgba(142, 164, 192, .12);
+  color: var(--navy);
+}
+
+.cadastro-aluno-cell strong {
+  display: block;
+}
+
+.cadastro-aluno-cell small,
+.cadastro-muted {
+  display: block;
+  margin-top: 3px;
+  color: var(--gray-400);
+  font-size: .72rem;
+}
+
+.cadastro-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.cadastro-status.pendente_s141,
+.cadastro-status.novo_curso,
+.cadastro-status.reativado {
+  background: rgba(243, 156, 18, .13);
+  color: #b66d08;
+}
+
+.cadastro-status.pronto_trello {
+  background: rgba(91, 174, 226, .13);
+  color: var(--blue-dark);
+}
+
+.cadastro-status.concluido,
+.cadastro-status.concluido_legado {
+  background: rgba(46, 204, 113, .13);
+  color: #229954;
+}
+
+.cadastro-status.nao_elegivel_s141,
+.cadastro-status.inativo {
+  background: rgba(142, 164, 192, .16);
+  color: var(--gray-500);
+}
+
+.cadastro-status.atencao {
+  background: rgba(231, 76, 60, .12);
+  color: #c0392b;
+}
+
+.cadastro-cpf-button {
+  color: var(--navy);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.cadastro-cpf-button:hover {
+  color: var(--blue-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cadastro-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  position: relative;
+}
+
+.cadastro-actions .btn {
+  padding: 6px 10px;
+  font-size: .74rem;
+  white-space: nowrap;
+}
+
+.cadastro-menu-trigger {
+  min-width: 32px;
+  padding-inline: 8px !important;
+  font-size: .9rem !important;
+  line-height: 1;
+}
+
+.cadastro-action-menu {
+  position: relative;
+}
+
+.cadastro-action-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  display: none;
+  min-width: 168px;
+  padding: 6px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 12px 28px rgba(29, 41, 81, .16);
+}
+
+.cadastro-action-menu.open .cadastro-action-popover {
+  display: grid;
+  gap: 2px;
+}
+
+.cadastro-action-popover button,
+.cadastro-action-popover a {
+  display: block;
+  width: 100%;
+  padding: 8px 9px;
+  border-radius: 6px;
+  color: var(--navy);
+  font-size: .76rem;
+  font-weight: 800;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.cadastro-action-popover button:hover,
+.cadastro-action-popover a:hover {
+  background: var(--gray-100);
+}
+
+.cadastro-alunos-page .card {
+  overflow: visible;
+}
+
+.table-cadastro-alunos td {
+  vertical-align: top;
+}
+
+.cadastro-alunos-page .table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--gray-100);
+  border-radius: 10px;
+}
+
+.table-cadastro-alunos {
+  min-width: 1180px;
+  table-layout: fixed;
+}
+
+.table-cadastro-alunos thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.table-cadastro-alunos tbody tr:nth-child(even) {
+  background: rgba(244, 247, 251, .72);
+}
+
+.table-cadastro-alunos tbody tr:hover {
+  background: rgba(91, 174, 226, .08);
+}
+
+.table-cadastro-alunos tbody td {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.table-cadastro-alunos th:nth-child(1),
+.table-cadastro-alunos td:nth-child(1) {
+  width: 90px;
+}
+
+.table-cadastro-alunos th:nth-child(2),
+.table-cadastro-alunos td:nth-child(2) {
+  width: 260px;
+}
+
+.table.table-cadastro-alunos thead th:nth-child(3),
+.table.table-cadastro-alunos tbody td:nth-child(3) {
+  width: 140px;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.table-cadastro-alunos th:nth-child(4),
+.table-cadastro-alunos td:nth-child(4) {
+  width: 260px;
+}
+
+.table-cadastro-alunos th:nth-child(5),
+.table-cadastro-alunos td:nth-child(5) {
+  width: 70px;
+  white-space: nowrap;
+}
+
+.table-cadastro-alunos th:nth-child(6),
+.table-cadastro-alunos td:nth-child(6) {
+  width: 125px;
+  white-space: nowrap;
+}
+
+.table-cadastro-alunos th:nth-child(7),
+.table-cadastro-alunos td:nth-child(7) {
+  width: 185px;
+}
+
+.table-cadastro-alunos th:nth-child(8),
+.table-cadastro-alunos td:nth-child(8) {
+  width: 165px;
+}
+
+.table.table-cadastro-alunos tbody td:nth-child(3),
+.cadastro-cpf {
+  font-variant-numeric: tabular-nums;
+}
+
+.table-cadastro-alunos td:nth-child(2),
+.table-cadastro-alunos td:nth-child(4),
+.table-cadastro-alunos td:nth-child(7) {
+  white-space: normal;
+}
+
+@media (max-width: 720px) {
+  .cadastro-search {
+    max-width: none;
+  }
+
+  .cadastro-table-tools {
+    display: grid;
+    width: 100%;
+  }
+
+  .cadastro-sort-label,
+  .cadastro-sort {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .table-cadastro-alunos,
+  .table-cadastro-alunos tbody,
+  .table-cadastro-alunos tr,
+  .table-cadastro-alunos td {
+    display: block;
+    width: 100%;
+  }
+
+  .table-cadastro-alunos thead {
+    display: none;
+  }
+
+  .table-cadastro-alunos tbody tr {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+    border-radius: 8px;
+  }
+
+  .table-cadastro-alunos tbody td {
+    display: grid !important;
+    grid-template-columns: minmax(92px, 34%) 1fr;
+    gap: 8px;
+    padding: 7px 0;
+    white-space: normal !important;
+  }
+
+  .cadastro-actions {
+    flex-wrap: wrap;
+  }
+
+  .cadastro-action-popover {
+    left: 0;
+    right: auto;
+  }
+
+  .table-cadastro-alunos tbody td::before {
+    content: attr(data-label);
+    color: var(--gray-500);
+    font-size: .72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+}

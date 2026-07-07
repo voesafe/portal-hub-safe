@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Diagnóstico — SAFE Hub</title>
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <style>
+    body { font-family: 'Montserrat', sans-serif; padding: 32px; background: #f4f6fa; }
+    h2 { color: #1D2951; margin-top: 32px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+    select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
+    button { padding: 10px 20px; background: #1D2951; color: white; border: none; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: 600; }
+    button:hover { background: #5BAEE2; }
+    .ok  { color: #27ae60; font-weight: 700; }
+    .err { color: #e74c3c; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #1D2951; color: white; padding: 8px 12px; text-align: left; }
+    td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+    tr.hl td { background: #fff3e0; }
+    .alert-box { background: #fff8e1; border: 2px solid #f39c12; border-radius: 8px; padding: 16px; margin-top: 12px; font-size: 13px; }
+    .ok-box { background: #eafaf1; border: 2px solid #27ae60; border-radius: 8px; padding: 16px; margin-top: 12px; }
+    .sum-box { background: #eaf4ff; border: 2px solid #5BAEE2; border-radius: 8px; padding: 16px; margin-top: 12px; }
+    .debug-header { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+    .debug-logo { display: inline-flex; padding: 8px 12px; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .debug-logo img { display: block; width: 180px; height: auto; }
+    .debug-header h1 { margin: 0; color: #1D2951; }
+    @media (max-width: 640px) {
+      .debug-header { align-items: flex-start; flex-direction: column; }
+      .debug-logo img { width: 150px; }
+    }
+  </style>
+</head>
+<body>
+<header class="debug-header">
+  <a class="debug-logo" href="inicio.html" aria-label="Ir para a página inicial">
+    <img src="assets/img/safe-logo-horizontal.png" alt="SAFE Escola de Aviação">
+  </a>
+  <h1>Diagnóstico SAFE Hub</h1>
+</header>
+<p style="color:#666">Abra o SAFE Hub e faça login antes de usar este diagnóstico.</p>
+
+<div class="card">
+  <div class="row">
+    <label>Mês:
+      <select id="sel-mes">
+        <option value="">Todos</option>
+        <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+        <option value="3">Março</option><option value="4">Abril</option>
+        <option value="5">Maio</option><option value="6">Junho</option>
+        <option value="7">Julho</option><option value="8">Agosto</option>
+        <option value="9">Setembro</option><option value="10">Outubro</option>
+        <option value="11">Novembro</option><option value="12">Dezembro</option>
+      </select>
+    </label>
+    <label>Ano:
+      <select id="sel-ano">
+        <option value="2025">2025</option>
+        <option value="2026" selected>2026</option>
+      </select>
+    </label>
+    <button onclick="rodarTodos()">Rodar diagnostico</button>
+  </div>
+</div>
+
+<div class="card"><h2>1. KPI</h2><div id="res-kpis"><em style="color:#999">Aguardando...</em></div></div>
+<div class="card"><h2>2. Vendas brutas (soma linha a linha)</h2><div id="res-vendas"><em style="color:#999">Aguardando...</em></div></div>
+<div class="card"><h2>3. Vendas com inconsistencia de MES/ANO</h2>
+  <p style="color:#666;font-size:13px">Compara o campo MES da coluna com o mes real da DATA. Divergencias explicam a diferenca entre KPI e Faturamento.</p>
+  <div id="res-inconsistencia"><em style="color:#999">Aguardando...</em></div>
+</div>
+<div class="card"><h2>4. Faturamento resumo</h2><div id="res-fat-resumo"><em style="color:#999">Aguardando...</em></div></div>
+<div class="card"><h2>5. Comparacao final</h2><div id="res-comparacao"><em style="color:#999">Aguardando...</em></div></div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script>
+function fmt(v){return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);}
+
+// Parser correto: numero puro com ponto decimal ingles (35235.5) ou string BR com virgula
+function parseVal(v){
+  if(v===null||v===undefined||v==='') return 0;
+  if(typeof v==='number') return v;
+  var s=String(v).replace(/R\$/g,'').replace(/\s/g,'').replace(/\n/g,'').replace(/"/g,'').trim();
+  // formato BR: tem virgula como decimal
+  if(s.indexOf(',')>=0) return Number(s.replace(/\./g,'').replace(',','.'))||0;
+  // numero puro ingles: 35235.5
+  return Number(s)||0;
+}
+
+var _kpi=null,_fat=null;
+
+async function rodarTodos(){
+  var mes=document.getElementById('sel-mes').value||null;
+  var ano=document.getElementById('sel-ano').value;
+  await step1(mes,ano);
+  await step2(mes,ano);
+  await step3(mes,ano);
+  await step4(ano,mes);
+  step5(mes,ano);
+}
+
+async function step1(mes,ano){
+  var el=document.getElementById('res-kpis');
+  el.innerHTML='<em>Carregando...</em>';
+  var res=await API.getKPIs(mes,ano);
+  _kpi=res;
+  if(!res.ok){el.innerHTML='<span class="err">Erro: '+res.error+'</span>';return;}
+  var k=res.data;
+  el.innerHTML='<table><tr><th>Campo</th><th>Valor</th></tr>'
+    +'<tr><td>totalVendas</td><td>'+k.totalVendas+'</td></tr>'
+    +'<tr><td><strong>totalReceita</strong></td><td><strong class="ok">'+fmt(k.totalReceita)+'</strong></td></tr>'
+    +'<tr><td>ticketMedio</td><td>'+fmt(k.ticketMedio)+'</td></tr></table>';
+}
+
+async function step2(mes,ano){
+  var el=document.getElementById('res-vendas');
+  el.innerHTML='<em>Carregando...</em>';
+  var res=await API.getVendas(mes,ano);
+  if(!res.ok){el.innerHTML='<span class="err">Erro: '+res.error+'</span>';return;}
+  var lista=res.data||[];
+  var soma=0;
+  var rows=lista.map(function(v){
+    var n=parseVal(v.valor);
+    soma+=n;
+    return '<tr><td>'+v.data+'</td><td>'+v.pac+'</td><td>'+v.nome+'</td>'
+      +'<td style="font-family:monospace">'+JSON.stringify(v.valor)+'</td>'
+      +'<td>'+fmt(n)+'</td></tr>';
+  }).join('');
+  var kpiR=(_kpi&&_kpi.data)?_kpi.data.totalReceita:0;
+  var diff=Math.abs(soma-kpiR);
+  var status=diff<1?'<span class="ok">Bate com KPI</span>':'<span class="err">Difere do KPI em '+fmt(diff)+'</span>';
+  el.innerHTML='<p><strong>'+lista.length+' vendas</strong> . Soma: <strong class="'+(diff<1?'ok':'err')+'">'+fmt(soma)+'</strong> '+status+'</p>'
+    +'<table><tr><th>Data</th><th>PAC</th><th>Nome</th><th>Valor bruto (API)</th><th>Parseado</th></tr>'+rows+'</table>';
+}
+
+async function step3(mes,ano){
+  var el=document.getElementById('res-inconsistencia');
+  el.innerHTML='<em>Carregando todas as vendas do ano...</em>';
+  var res=await API.getVendas(null,ano);
+  if(!res.ok){el.innerHTML='<span class="err">Erro: '+res.error+'</span>';return;}
+  var lista=res.data||[];
+  var mesNum=mes?Number(mes):null;
+  var semMes=[],semAno=[],inconsistentes=[];
+
+  lista.forEach(function(v){
+    var mesCampo=Number(v.mes);
+    var anoCampo=Number(v.ano);
+    var mesData=null,anoData=null;
+    if(v.data){var p=v.data.split('-');anoData=Number(p[0]);mesData=Number(p[1]);}
+    if(!mesCampo||isNaN(mesCampo)){semMes.push(v);return;}
+    if(!anoCampo||isNaN(anoCampo)){semAno.push(v);return;}
+    if(mesNum){
+      if(mesData!==mesNum&&mesCampo===mesNum)
+        inconsistentes.push(Object.assign({},v,{mesCampo:mesCampo,mesData:mesData,tipo:'Campo MES='+mesNum+' mas DATA=mes '+mesData}));
+      if(mesData===mesNum&&mesCampo!==mesNum)
+        inconsistentes.push(Object.assign({},v,{mesCampo:mesCampo,mesData:mesData,tipo:'DATA=mes '+mesNum+' mas Campo MES='+mesCampo}));
+    } else {
+      if(mesData&&mesCampo&&mesData!==mesCampo)
+        inconsistentes.push(Object.assign({},v,{mesCampo:mesCampo,mesData:mesData,tipo:'MES coluna='+mesCampo+' vs DATA='+mesData}));
+    }
+  });
+
+  var html='';
+  if(semMes.length) html+='<div class="alert-box"><strong>'+semMes.length+' venda(s) sem campo MES</strong><br>'+semMes.map(function(v){return v.data+' . '+v.pac+' . '+v.nome+' . '+fmt(parseVal(v.valor));}).join('<br>')+'</div>';
+  if(semAno.length) html+='<div class="alert-box"><strong>'+semAno.length+' venda(s) sem campo ANO</strong><br>'+semAno.map(function(v){return v.data+' . '+v.pac+' . '+v.nome+' . '+fmt(parseVal(v.valor));}).join('<br>')+'</div>';
+  if(!inconsistentes.length&&!semMes.length&&!semAno.length){
+    html='<div class="ok-box">Nenhuma inconsistencia encontrada. Campos MES/ANO batem com as datas.</div>';
+  } else if(inconsistentes.length){
+    var somaInc=inconsistentes.reduce(function(s,v){return s+parseVal(v.valor);},0);
+    html+='<div class="alert-box"><strong>'+inconsistentes.length+' venda(s) com MES/ANO inconsistente . soma: '+fmt(somaInc)+'</strong><br>'
+      +'Esta soma provavelmente explica a diferenca entre KPI e Faturamento.</div>'
+      +'<table style="margin-top:12px"><tr><th>Data</th><th>PAC</th><th>Nome</th><th>Valor</th><th>Campo MES</th><th>Mes da Data</th><th>Problema</th></tr>'
+      +inconsistentes.map(function(v){
+        return '<tr class="hl"><td>'+v.data+'</td><td>'+v.pac+'</td><td>'+v.nome+'</td>'
+          +'<td>'+fmt(parseVal(v.valor))+'</td><td><strong>'+v.mesCampo+'</strong></td>'
+          +'<td><strong>'+v.mesData+'</strong></td><td style="color:#e74c3c;font-size:12px">'+v.tipo+'</td></tr>';
+      }).join('')+'</table>';
+  }
+  el.innerHTML=html;
+}
+
+async function step4(ano,mes){
+  var el=document.getElementById('res-fat-resumo');
+  el.innerHTML='<em>Carregando...</em>';
+  var res=await API.getResumoFaturamento(ano);
+  _fat=res;
+  if(!res.ok){el.innerHTML='<span class="err">Erro: '+res.error+'</span>';return;}
+  var MESES=['','Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var C4=['Lojinha','Safe Academy','Azul Pontos','Lito Academy'];
+  var data=res.data;
+  var exibir=mes?[Number(mes)]:Array.from({length:12},function(_,i){return i+1;}).filter(function(m){var d=data[m];return d&&Object.values(d).some(function(v){return v>0;});});
+  var tVC=0,t4=0;
+  var rows=exibir.map(function(m){
+    var d=data[m]||{};
+    var f4=C4.reduce(function(s,c){return s+(d[c]||0);},0);
+    t4+=f4;tVC+=(d['Vendas Comercial']||0);
+    return '<tr><td><strong>'+MESES[m]+'</strong></td>'
+      +'<td>'+fmt(d['Lojinha'])+'</td><td>'+fmt(d['Safe Academy'])+'</td>'
+      +'<td>'+fmt(d['Azul Pontos'])+'</td><td>'+fmt(d['Lito Academy'])+'</td>'
+      +'<td style="color:#888">'+fmt(d['Vendas Comercial'])+'</td>'
+      +'<td class="ok"><strong>'+fmt(f4)+'</strong></td></tr>';
+  }).join('');
+  el.innerHTML='<table><tr><th>Mes</th><th>Lojinha</th><th>Safe Academy</th><th>Azul Pontos</th><th>Lito Academy</th><th>Vendas Comercial (ref)</th><th>Fat. 4 canais</th></tr>'+rows+'</table>'
+    +'<div class="sum-box">Fat. 4 canais: <strong>'+fmt(t4)+'</strong> . Vendas Comercial: <span style="color:#888">'+fmt(tVC)+'</span></div>';
+}
+
+function step5(mes,ano){
+  var el=document.getElementById('res-comparacao');
+  if(!_kpi||!_fat){el.innerHTML='<em>Rode o diagnostico primeiro.</em>';return;}
+  var kpiR=(_kpi.data||{}).totalReceita||0;
+  var C4=['Lojinha','Safe Academy','Azul Pontos','Lito Academy'];
+  var fdata=(_fat.data)||{};
+  var mCalc=mes?[Number(mes)]:Array.from({length:12},function(_,i){return i+1;});
+  var fVC=0,f4=0;
+  mCalc.forEach(function(m){var d=fdata[m];if(!d)return;fVC+=(d['Vendas Comercial']||0);C4.forEach(function(c){f4+=(d[c]||0);});});
+  var global=kpiR+f4;
+  var diff=Math.abs(kpiR-fVC);
+  el.innerHTML='<table>'
+    +'<tr><th>Componente</th><th>Valor</th><th>Status</th></tr>'
+    +'<tr><td>Receita de Vendas (KPI)</td><td class="ok"><strong>'+fmt(kpiR)+'</strong></td><td>Fonte correta para o dashboard</td></tr>'
+    +'<tr><td>Vendas Comercial (Faturamento)</td><td style="color:#888">'+fmt(fVC)+'</td><td>Coluna informativa</td></tr>'
+    +'<tr><td>Diferenca</td><td class="'+(diff>1?'err':'ok')+'">'+fmt(diff)+'</td><td>'+(diff>1?'Ver secao 3 acima':'Alinhados')+'</td></tr>'
+    +'<tr><td colspan="3" style="height:1px;background:#eee;padding:0"></td></tr>'
+    +'<tr><td>Fat. 4 canais manuais</td><td>'+fmt(f4)+'</td><td>Canais lancados manualmente</td></tr>'
+    +'<tr><td><strong>Receita Global = KPI + Fat. 4 canais</strong></td><td class="ok"><strong>'+fmt(global)+'</strong></td><td>Calculo correto do dashboard</td></tr>'
+    +'</table>'
+    +'<div class="ok-box" style="margin-top:16px"><strong>Como interpretar:</strong><br>'
+    +'O card Receita Global do dashboard soma KPI Vendas ('+fmt(kpiR)+') + Fat. 4 canais ('+fmt(f4)+') = <strong>'+fmt(global)+'</strong>.<br>'
+    +'A coluna Vendas Comercial nao entra na soma global para nao contar duas vezes.'
+    +(diff>1?'<br><br>A diferenca de '+fmt(diff)+' entre KPI e Vendas Comercial provavelmente sao vendas com campo MES diferente da data real. Veja secao 3 e corrija direto na aba VENDAS da planilha.':'')
+    +'</div>';
+}
+</script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fechamento de Horas / Cotistas — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/fechamento-horas.css?v=20260606">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Fechamento de Horas / Cotistas</div>
+          <div class="topbar-subtitle">Horas voadas, simuladores e métricas operacionais</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-period">
+          <select id="fh-mes" aria-label="Mês"></select>
+          <select id="fh-ano" aria-label="Ano"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="page fechamento-page">
+      <div class="fechamento-tabs" role="tablist" aria-label="Áreas do fechamento">
+        <button class="fechamento-tab active" data-view="visao" role="tab">Visão Geral</button>
+        <button class="fechamento-tab" data-view="mes" role="tab">Fechamento Mensal</button>
+      </div>
+
+      <section class="fechamento-view active" id="fh-view-visao">
+        <div class="grid-kpis fechamento-kpis" id="fh-kpis-ano"></div>
+
+        <div class="fechamento-chart-grid">
+          <div class="card fechamento-chart-card fechamento-chart-wide">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Horas voadas por mês</div>
+                <div class="fechamento-card-sub">Evolução anual consolidada</div>
+              </div>
+            </div>
+            <div class="fechamento-chart-wrap">
+              <canvas id="fh-chart-meses"></canvas>
+              <div class="fechamento-empty" id="fh-empty-meses" hidden>Sem horas lançadas no ano</div>
+            </div>
+          </div>
+
+          <div class="card fechamento-chart-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">SJK x CPQ</div>
+                <div class="fechamento-card-sub">Composição mensal por base</div>
+              </div>
+            </div>
+            <div class="fechamento-chart-wrap">
+              <canvas id="fh-chart-bases"></canvas>
+              <div class="fechamento-empty" id="fh-empty-bases" hidden>Sem dados por base</div>
+            </div>
+          </div>
+
+          <div class="card fechamento-chart-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Alunos novos por mês</div>
+                <div class="fechamento-card-sub">Métrica preenchida manualmente</div>
+              </div>
+            </div>
+            <div class="fechamento-chart-wrap">
+              <canvas id="fh-chart-alunos"></canvas>
+              <div class="fechamento-empty" id="fh-empty-alunos" hidden>Sem alunos novos lançados</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fechamento-view" id="fh-view-mes">
+        <div class="fechamento-statusbar">
+          <div>
+            <div class="fechamento-status-line">
+              <span class="fechamento-status" id="fh-status">—</span>
+              <strong id="fh-competencia">—</strong>
+            </div>
+            <div class="fechamento-audit" id="fh-audit">Carregando informações do mês</div>
+          </div>
+          <div class="fechamento-actions">
+            <button class="btn btn-ghost" id="fh-btn-recarregar" title="Recarregar mês" aria-label="Recarregar mês">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg>
+            </button>
+            <button class="btn btn-ghost" id="fh-btn-status"></button>
+            <button class="btn btn-navy" id="fh-btn-editar">Editar</button>
+            <button class="btn btn-ghost" id="fh-btn-cancelar" hidden>Cancelar</button>
+            <button class="btn btn-primary" id="fh-btn-salvar" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+              Revisar e salvar
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-kpis fechamento-kpis" id="fh-kpis-mes"></div>
+
+        <div class="fechamento-month-grid">
+          <div class="card fechamento-table-card">
+            <div class="card-header fechamento-table-header">
+              <div>
+                <div class="card-title">Horas por aeronave</div>
+                <div class="fechamento-card-sub" id="fh-table-sub">Valores consolidados do mês</div>
+              </div>
+              <div class="fechamento-import-actions">
+                <button class="btn btn-primary btn-sm" id="fh-btn-cavok-api" hidden>
+                  Atualizar pela API CAVOK
+                </button>
+                <button class="btn btn-teal btn-sm" id="fh-btn-upload" hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14a2 2 0 0 0 2-2v-4"/><path d="M3 15v4a2 2 0 0 0 2 2"/></svg>
+                  Importar arquivo
+                </button>
+              </div>
+            </div>
+
+            <div class="fechamento-aircraft-tabs" id="fh-aircraft-tabs"></div>
+            <div class="table-wrapper">
+              <table class="table fechamento-table">
+                <thead>
+                  <tr>
+                    <th>Base</th>
+                    <th>Aeronave</th>
+                    <th class="text-right">Horas</th>
+                  </tr>
+                </thead>
+                <tbody id="fh-horas-body"></tbody>
+                <tfoot>
+                  <tr>
+                    <th colspan="2" id="fh-horas-total-label">Total</th>
+                    <td class="text-right" id="fh-horas-total">0,0 h</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="card fechamento-chart-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Distribuição de horas</div>
+                <div class="fechamento-card-sub">Aeronaves do filtro selecionado</div>
+              </div>
+            </div>
+            <div class="fechamento-chart-wrap fechamento-chart-month">
+              <canvas id="fh-chart-aeronaves"></canvas>
+              <div class="fechamento-empty" id="fh-empty-aeronaves" hidden>Sem horas no mês</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fechamento-bottom-grid">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Métricas de alunos</div>
+                <div class="fechamento-card-sub">Preenchimento manual até a futura importação Cavok</div>
+              </div>
+            </div>
+            <div class="fechamento-metricas" id="fh-metricas"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Histórico do mês</div>
+                <div class="fechamento-card-sub">Últimas alterações registradas</div>
+              </div>
+            </div>
+            <div class="fechamento-history" id="fh-history"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="fh-modal-upload">
+  <div class="modal fechamento-modal">
+    <div class="modal-header">
+      <h3>Importar relatório do Cavok</h3>
+      <button class="modal-close" data-close="fh-modal-upload" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="fechamento-modal-copy">A importação substitui somente as horas e o cálculo dos cotistas. As métricas de alunos permanecem intactas.</p>
+      <label class="fechamento-upload-zone" id="fh-upload-zone">
+        <input type="file" id="fh-upload-input" accept=".xls,.xlsx">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14a2 2 0 0 0 2-2v-4"/><path d="M3 15v4a2 2 0 0 0 2 2"/></svg>
+        <strong>Selecionar arquivo XLS/XLSX</strong>
+        <span>Export padrão do Cavok</span>
+      </label>
+      <div class="fechamento-upload-result" id="fh-upload-result" hidden></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fh-modal-upload">Cancelar</button>
+      <button class="btn btn-primary" id="fh-upload-aplicar" disabled>Aplicar horas</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fh-modal-save">
+  <div class="modal fechamento-modal">
+    <div class="modal-header">
+      <h3>Revisar fechamento</h3>
+      <button class="modal-close" data-close="fh-modal-save" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fechamento-review" id="fh-review"></div>
+      <div class="fechamento-warning">
+        Uma cópia automática da versão atual será registrada antes do salvamento.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fh-modal-save">Voltar</button>
+      <button class="btn btn-primary" id="fh-save-confirm">Confirmar salvamento</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fh-modal-status">
+  <div class="modal" style="max-width:430px">
+    <div class="modal-header">
+      <h3 id="fh-status-title">Confirmar ação</h3>
+      <button class="modal-close" data-close="fh-modal-status" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="fechamento-modal-copy" id="fh-status-copy"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fh-modal-status">Cancelar</button>
+      <button class="btn btn-navy" id="fh-status-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="fechamento-loading" id="fh-loading">
+  <div class="fechamento-loading-box">
+    <div class="spinner"></div>
+    <span>Carregando fechamento de horas</span>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/fechamento-horas.js?v=20260610-cavok"></script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

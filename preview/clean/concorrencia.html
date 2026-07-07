@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concorrência — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/concorrencia.css">
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div id="loading-overlay">
+  <div class="loading-card">
+    <img src="assets/img/logo.png" alt="SAFE" style="width:40px;height:40px;border-radius:50%;animation:spin .9s linear infinite">
+    <p>Carregando...</p>
+  </div>
+</div>
+
+<div class="app-shell">
+
+  <!-- ── Sidebar ─────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <div class="sidebar-toggle" id="sidebar-toggle" title="Recolher menu">‹</div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"></span><span class="nav-label">Dashboard</span>
+      </a>
+      <a href="vendas.html" class="nav-item">
+        <span class="nav-icon"></span><span class="nav-label">Vendas</span>
+      </a>
+      <hr class="nav-divider" data-admin-only>
+      <div class="nav-section-label" data-admin-only>Administração</div>
+      <a href="faturamento.html" class="nav-item" data-admin-only>
+        <span class="nav-icon"></span><span class="nav-label">Faturamento</span>
+      </a>
+      <a href="concorrencia.html" class="nav-item active">
+        <span class="nav-icon"></span><span class="nav-label">Concorrência</span>
+      </a>
+      <a href="admin.html" class="nav-item" data-admin-only>
+        <span class="nav-icon"></span><span class="nav-label">Usuários</span>
+      </a>
+
+      <hr class="nav-divider" data-finance-only>
+      <div class="nav-section-label" data-finance-only>Financeiro</div>
+      <a href="controle-gastos.html" class="nav-item" data-finance-only>
+        <span class="nav-icon"></span><span class="nav-label">Controle de Gastos</span>
+      </a>
+
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ── Main ─────────────────────────────────────────────── -->
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <div>
+          <div class="topbar-title">Concorrência</div>
+          <div class="topbar-subtitle">Comparativo de preços do mercado</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary" id="btn-nova-concorrente" data-write-only>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nova Concorrente
+        </button>
+      </div>
+    </div>
+
+    <div class="page">
+
+      <!-- Filtro -->
+      <div class="filtro-bar">
+        <select id="filtro-curso">
+          <option value="">Todos os cursos</option>
+        </select>
+      </div>
+
+      <!-- Comparativo -->
+      <div id="comparativo-container">
+        <!-- Renderizado via JS -->
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ── Modal: nova/editar concorrente ────────────────────── -->
+<div class="modal-overlay" id="modal-concorrente">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-header">
+      <h3 id="modal-conc-titulo" style="font-size:1.05rem">Nova Concorrente</h3>
+      <button class="modal-close" id="modal-conc-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label class="form-label">Nome da Escola Concorrente *</label>
+        <input type="text" class="form-control" id="fc-concorrente" placeholder="Ex: Aeroclube de São Paulo">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Curso *</label>
+        <select class="form-control" id="fc-curso">
+          <option value="" disabled selected>Selecione o curso</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Valor à Vista *</label>
+          <input type="text" class="form-control" id="fc-valor-avista" placeholder="Ex: 35000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Valor Parcelado</label>
+          <input type="text" class="form-control" id="fc-valor-parcelado" placeholder="Ex: 40000">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nº de Parcelas</label>
+          <input type="number" class="form-control" id="fc-parcelas" placeholder="Ex: 12" min="0" max="60">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Aeronave</label>
+          <input type="text" class="form-control" id="fc-aeronave" placeholder="Ex: Cessna 172">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Observações</label>
+        <textarea class="form-control" id="fc-obs" rows="3" placeholder="Informações adicionais, diferenciais, etc." style="resize:vertical"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="modal-conc-cancelar">Cancelar</button>
+      <button class="btn btn-primary" id="btn-conc-salvar">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal: preço SAFE ──────────────────────────────────── -->
+<div class="modal-overlay" id="modal-preco-safe">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <h3 id="modal-safe-titulo" style="font-size:1.05rem">Preço SAFE</h3>
+      <button class="modal-close" id="modal-safe-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div style="background:rgba(96,192,191,.08);border:1px solid rgba(96,192,191,.2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:20px">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal-dark);margin-bottom:2px">Curso</div>
+        <div id="fs-curso-display" style="font-weight:700;color:var(--navy);font-size:.95rem"></div>
+        <input type="hidden" id="fs-curso">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Valor à Vista *</label>
+          <input type="text" class="form-control" id="fs-valor-avista" placeholder="Ex: 35000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Valor Parcelado</label>
+          <input type="text" class="form-control" id="fs-valor-parcelado" placeholder="Ex: 40000">
+        </div>
+      </div>
+
+      <div class="form-group" style="max-width:50%">
+        <label class="form-label">Nº de Parcelas</label>
+        <input type="number" class="form-control" id="fs-parcelas" placeholder="Ex: 12" min="0" max="60">
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="modal-safe-cancelar">Cancelar</button>
+      <button class="btn btn-teal" id="btn-safe-salvar">Salvar Preço SAFE</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/concorrencia.js"></script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

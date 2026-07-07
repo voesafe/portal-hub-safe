@@ -1,0 +1,392 @@
+/* ============================================================
+   progresso-alunos.css — Progresso de Alunos (Newzenler)
+   SAFE Hub
+   ============================================================ */
+
+/* ── Layout da página ──────────────────────────────────────── */
+.progresso-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
+}
+
+/* ── Abas ──────────────────────────────────────────────────── */
+.progresso-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--gray-200);
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.progresso-tab {
+  padding: 10px 20px;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.progresso-tab:hover { color: var(--navy); }
+.progresso-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+
+.progresso-view { display: none; flex-direction: column; gap: 20px; }
+.progresso-view.active { display: flex; }
+
+/* ── Cards de alunos (aba Por Aluno) ───────────────────────── */
+.pa-alunos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pa-aluno-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+  width: 100%;
+}
+
+.pa-aluno-card:hover   { border-color: var(--blue); box-shadow: var(--shadow-sm); }
+.pa-aluno-card.selected { border-color: var(--navy); background: var(--gray-100); }
+
+.pa-aluno-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pa-aluno-info    { flex: 1; min-width: 0; }
+.pa-aluno-nome    { font-weight: 700; color: var(--navy); font-size: .9rem; }
+.pa-aluno-email   { font-size: .78rem; color: var(--gray-400); margin-top: 2px; }
+.pa-aluno-chevron { color: var(--gray-300); flex-shrink: 0; transition: var(--transition); }
+.pa-aluno-card:hover .pa-aluno-chevron { color: var(--blue); transform: translateX(2px); }
+.pa-aluno-card.selected .pa-aluno-chevron { color: var(--navy); }
+
+/* ── Detalhe do aluno ──────────────────────────────────────── */
+.pa-detalhe-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--navy);
+  border-radius: var(--radius-md);
+  color: var(--white);
+}
+
+.pa-detalhe-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pa-detalhe-nome  { font-family: var(--font-title); font-weight: 700; font-size: 1.05rem; }
+.pa-detalhe-email { font-size: .82rem; opacity: .7; margin-top: 3px; }
+
+/* ── Barra de filtros ──────────────────────────────────────── */
+.progresso-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progresso-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.progresso-filter-group label {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+
+.progresso-filter-group select,
+.progresso-filter-group input {
+  height: 38px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  font-size: .88rem;
+  color: var(--navy);
+  background: var(--white);
+  transition: border-color .2s;
+  width: 100%;
+}
+
+.progresso-filter-group select:focus,
+.progresso-filter-group input:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+
+.progresso-filter-group--curso { flex: 2; min-width: 240px; }
+
+.progresso-filter-actions {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  padding-bottom: 1px;
+}
+
+/* ── Cards de KPI ──────────────────────────────────────────── */
+.progresso-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.progresso-kpi {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progresso-kpi-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+
+.progresso-kpi-value {
+  font-family: var(--font-title);
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+}
+
+.progresso-kpi--total   .progresso-kpi-value { color: var(--navy); }
+.progresso-kpi--ns      .progresso-kpi-value { color: var(--gray-400); }
+.progresso-kpi--prog    .progresso-kpi-value { color: var(--blue); }
+.progresso-kpi--done    .progresso-kpi-value { color: var(--success); }
+
+/* ── Tabela ────────────────────────────────────────────────── */
+.progresso-table-card { background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
+
+.progresso-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--gray-100);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progresso-table-title { font-size: 1rem; font-weight: 700; color: var(--navy); }
+.progresso-table-sub   { font-size: .8rem; color: var(--gray-400); margin-top: 2px; }
+
+.progresso-table-status-filter {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.progresso-status-btn {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: .78rem;
+  font-weight: 600;
+  border: 1.5px solid var(--gray-200);
+  color: var(--gray-500);
+  background: var(--white);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.progresso-status-btn:hover   { border-color: var(--navy); color: var(--navy); }
+.progresso-status-btn.active  { background: var(--navy); border-color: var(--navy); color: var(--white); }
+
+.progresso-table-wrap { overflow-x: auto; }
+
+.progresso-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+}
+
+.progresso-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  border-bottom: 2px solid var(--gray-100);
+  white-space: nowrap;
+  background: var(--off-white);
+}
+
+.progresso-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: middle;
+}
+
+.progresso-table tbody tr:last-child td { border-bottom: none; }
+.progresso-table tbody tr:hover td { background: var(--off-white); }
+
+.progresso-nome { font-weight: 600; color: var(--navy); }
+.progresso-email { font-size: .78rem; color: var(--gray-400); margin-top: 2px; }
+
+/* ── Barra de progresso ────────────────────────────────────── */
+.progresso-bar-wrap { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+
+.progresso-bar-track {
+  flex: 1;
+  height: 7px;
+  background: var(--gray-100);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progresso-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--blue);
+  transition: width .3s ease;
+}
+
+.progresso-bar-fill--done  { background: var(--success); }
+.progresso-bar-fill--zero  { background: var(--gray-200); }
+
+/* Em andamento — % real indisponível: barra listrada animada */
+.progresso-bar-fill--indet {
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--blue) 0, var(--blue) 8px,
+    #bcd6f5 8px, #bcd6f5 16px
+  );
+  background-size: 22px 100%;
+  animation: progresso-indet 1s linear infinite;
+  opacity: .65;
+}
+
+@keyframes progresso-indet {
+  from { background-position: 0 0; }
+  to   { background-position: 22px 0; }
+}
+
+.progresso-bar-pct {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--gray-500);
+  min-width: 30px;
+  text-align: right;
+}
+
+/* ── Badges de status ──────────────────────────────────────── */
+.progresso-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+
+.progresso-badge--ns   { background: var(--gray-100);   color: var(--gray-500); }
+.progresso-badge--prog { background: #EBF5FF;            color: var(--blue-dark); }
+.progresso-badge--done { background: #E6F9EE;            color: #1a8a42; }
+
+/* ── Data ──────────────────────────────────────────────────── */
+.progresso-date { font-size: .78rem; color: var(--gray-500); white-space: nowrap; }
+
+/* ── Paginação ─────────────────────────────────────────────── */
+.progresso-paginacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid var(--gray-100);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progresso-paginacao-info { font-size: .82rem; color: var(--gray-500); }
+
+.progresso-paginacao-btns { display: flex; gap: 6px; }
+
+/* ── Estado vazio / loading ────────────────────────────────── */
+.progresso-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 10px;
+  color: var(--gray-400);
+  text-align: center;
+}
+
+.progresso-placeholder svg { opacity: .35; }
+.progresso-placeholder p   { font-size: .9rem; }
+
+.progresso-loading-row td {
+  text-align: center;
+  padding: 48px;
+  color: var(--gray-400);
+}
+
+/* ── Responsivo ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .progresso-page    { padding: 0 8px; gap: 16px; }
+  .progresso-kpis    { grid-template-columns: repeat(2, 1fr); }
+  .progresso-filters { flex-direction: column; }
+  .progresso-filter-group { min-width: 100%; }
+  .progresso-filter-group--curso { min-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .progresso-kpis { grid-template-columns: 1fr 1fr; }
+}

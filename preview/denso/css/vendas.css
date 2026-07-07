@@ -1,0 +1,204 @@
+/* ============================================================
+   vendas.css — Página de Vendas
+   SAFE Hub
+   ============================================================ */
+
+/* ── Fade-in de página ─────────────────────────────────────── */
+.page { animation: pageFadeIn .35s ease both; }
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Skeleton tabela ───────────────────────────────────────── */
+.sk-row td div {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Seções do modal ───────────────────────────────────────── */
+.modal-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-title);
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gray-400);
+  margin: 4px 0 16px;
+}
+.modal-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-100);
+}
+.modal-section-title svg { color: var(--blue); flex-shrink: 0; }
+
+/* ── Seletor de cursos ─────────────────────────────────────── */
+.curso-picker {
+  position: relative;
+}
+
+.curso-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+}
+
+.curso-picker-trigger span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.curso-picker-trigger svg {
+  flex-shrink: 0;
+  color: var(--gray-400);
+  transition: transform .2s ease;
+}
+
+.curso-picker.open .curso-picker-trigger {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(91,174,226,.15);
+}
+
+.curso-picker.open .curso-picker-trigger svg {
+  transform: rotate(180deg);
+}
+
+.curso-picker-panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  display: none;
+  padding: 10px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+}
+
+.curso-picker.open .curso-picker-panel {
+  display: block;
+}
+
+.curso-picker-search {
+  margin-bottom: 8px;
+}
+
+.curso-picker-options {
+  max-height: 230px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.curso-picker-option {
+  width: 100%;
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--navy);
+  font-size: .88rem;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.curso-picker-option:hover {
+  background: var(--gray-100);
+}
+
+.curso-picker-option.selected {
+  background: rgba(91,174,226,.12);
+  color: var(--blue-dark);
+  font-weight: 700;
+}
+
+.curso-picker-check {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--gray-300);
+  border-radius: 4px;
+  color: var(--white);
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.curso-picker-option.selected .curso-picker-check {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.curso-picker-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--gray-100);
+  color: var(--gray-400);
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.curso-picker-clear {
+  color: var(--blue-dark);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.curso-picker-empty {
+  padding: 14px 10px;
+  color: var(--gray-400);
+  font-size: .86rem;
+  text-align: center;
+}
+
+.curso-picker-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.curso-chip {
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--gray-100);
+  color: var(--navy);
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.curso-chip span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

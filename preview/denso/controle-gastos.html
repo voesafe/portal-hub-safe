@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Gastos — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/controle-gastos.css?v=20260608-readonly-access">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <div class="sidebar-toggle" id="sidebar-toggle">‹</div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"></span><span class="nav-label">Dashboard</span>
+      </a>
+      <a href="vendas.html" class="nav-item">
+        <span class="nav-icon"></span><span class="nav-label">Vendas</span>
+      </a>
+
+      <hr class="nav-divider" data-admin-only>
+      <div class="nav-section-label" data-admin-only>Administração</div>
+      <a href="faturamento.html" class="nav-item" data-admin-only>
+        <span class="nav-icon"></span><span class="nav-label">Faturamento</span>
+      </a>
+      <a href="concorrencia.html" class="nav-item" data-admin-only>
+        <span class="nav-icon"></span><span class="nav-label">Concorrência</span>
+      </a>
+      <a href="admin.html" class="nav-item" data-admin-only>
+        <span class="nav-icon"></span><span class="nav-label">Usuários</span>
+      </a>
+
+      <hr class="nav-divider" data-finance-only>
+      <div class="nav-section-label" data-finance-only>Financeiro</div>
+      <a href="controle-gastos.html" class="nav-item active" data-finance-only>
+        <span class="nav-icon"></span><span class="nav-label">Controle de Gastos</span>
+      </a>
+
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <div>
+          <div class="topbar-title">Controle de Gastos</div>
+          <div class="topbar-subtitle">Custos operacionais por base e custo por hora voada</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-period">
+          <select id="cg-mes" aria-label="Mês"></select>
+          <select id="cg-ano" aria-label="Ano"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="page gastos-page">
+      <div class="gastos-tabs" role="tablist" aria-label="Áreas do controle de gastos">
+        <button class="gastos-tab active" data-tab="visao" role="tab">Visão Geral</button>
+        <button class="gastos-tab" data-tab="fechamento" role="tab">Fechamento Mensal</button>
+        <button class="gastos-tab" data-tab="receitas" role="tab">Receita Total por Base</button>
+        <button class="gastos-tab" data-tab="categorias" role="tab">Categorias</button>
+      </div>
+
+      <section class="gastos-view active" id="view-visao">
+        <div class="gastos-readonly-note" id="cg-readonly-note" hidden>
+          <span class="gastos-readonly-icon" aria-hidden="true">✓</span>
+          <div>
+            <strong>Acesso somente para visualização</strong>
+            <p>Você pode consultar todos os indicadores desta página. Alterações de gastos, receitas e categorias ficam disponíveis apenas para perfis autorizados.</p>
+          </div>
+        </div>
+        <div class="grid-kpis gastos-kpis">
+          <div class="kpi-card">
+            <span class="kpi-label">Gasto total</span>
+            <strong class="kpi-value" id="cg-kpi-total">—</strong>
+            <span class="kpi-sub" id="cg-kpi-total-sub">No mês selecionado</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Horas voadas</span>
+            <strong class="kpi-value" id="cg-kpi-horas">—</strong>
+            <span class="kpi-sub">SJK + CPN</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Custo médio / hora</span>
+            <strong class="kpi-value" id="cg-kpi-custo">—</strong>
+            <span class="kpi-sub" id="cg-kpi-custo-sub">Consolidado</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Receita total SJK</span>
+            <strong class="kpi-value" id="cg-kpi-sjk">—</strong>
+            <span class="kpi-sub" id="cg-kpi-sjk-sub">No mês selecionado</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Receita total CPN</span>
+            <strong class="kpi-value" id="cg-kpi-cpn">—</strong>
+            <span class="kpi-sub" id="cg-kpi-cpn-sub">No mês selecionado</span>
+          </div>
+        </div>
+
+        <div class="gastos-alert" id="cg-alert-horas" hidden>
+          <span class="gastos-alert-icon">!</span>
+          <span>Existem gastos no período, mas as horas voadas ainda não foram preenchidas para todas as bases.</span>
+        </div>
+
+        <div class="gastos-chart-grid">
+          <div class="card gastos-chart-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Gastos mensais por base</div>
+                <div class="gastos-card-sub">Evolução no ano selecionado</div>
+              </div>
+            </div>
+            <div class="gastos-chart-wrap">
+              <canvas id="cg-chart-gastos"></canvas>
+              <div class="gastos-empty" id="cg-empty-gastos" hidden>Sem dados para o ano</div>
+            </div>
+          </div>
+
+          <div class="card gastos-chart-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Distribuição por categoria</div>
+                <div class="gastos-card-sub">No mês selecionado</div>
+              </div>
+            </div>
+            <div class="gastos-chart-wrap">
+              <canvas id="cg-chart-categorias"></canvas>
+              <div class="gastos-empty" id="cg-empty-categorias" hidden>Sem gastos no mês</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card gastos-chart-card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Custo por hora voada</div>
+              <div class="gastos-card-sub">Comparativo mensal entre SJK e CPN</div>
+            </div>
+          </div>
+          <div class="gastos-chart-wrap gastos-chart-wide">
+            <canvas id="cg-chart-custo"></canvas>
+            <div class="gastos-empty" id="cg-empty-custo" hidden>Preencha as horas para visualizar o custo por hora</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="gastos-view" id="view-fechamento">
+        <div class="gastos-section-heading">
+          <div>
+            <h2>Fechamento mensal</h2>
+            <p id="cg-competencia-label">Informe os totais consolidados do mês.</p>
+          </div>
+          <button class="btn btn-primary" id="cg-btn-salvar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+            Salvar mês
+          </button>
+        </div>
+
+        <div class="card gastos-editor-card">
+          <div class="gastos-table-wrap">
+            <table class="gastos-editor-table">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Base SJK</th>
+                  <th>Base CPN</th>
+                </tr>
+              </thead>
+              <tbody id="cg-editor-body"></tbody>
+              <tfoot>
+                <tr class="gastos-total-row">
+                  <th>Total</th>
+                  <td id="cg-editor-total-sjk" data-label="Base SJK">R$ 0,00</td>
+                  <td id="cg-editor-total-cpn" data-label="Base CPN">R$ 0,00</td>
+                </tr>
+                <tr>
+                  <th>Horas voadas</th>
+                  <td data-label="Base SJK"><input class="form-control gastos-hours-input" id="cg-horas-sjk" type="number" min="0" step="0.1" inputmode="decimal" placeholder="0,0"></td>
+                  <td data-label="Base CPN"><input class="form-control gastos-hours-input" id="cg-horas-cpn" type="number" min="0" step="0.1" inputmode="decimal" placeholder="0,0"></td>
+                </tr>
+                <tr class="gastos-cost-row">
+                  <th>Custo por hora</th>
+                  <td id="cg-editor-custo-sjk" data-label="Base SJK">Horas pendentes</td>
+                  <td id="cg-editor-custo-cpn" data-label="Base CPN">Horas pendentes</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="gastos-view" id="view-receitas">
+        <div class="gastos-section-heading">
+          <div>
+            <h2>Receita total por base</h2>
+            <p id="cg-receitas-competencia">Informe a receita geral de cada base no mês selecionado.</p>
+          </div>
+          <button class="btn btn-primary" id="cg-btn-salvar-receitas">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+            Salvar receitas
+          </button>
+        </div>
+
+        <div class="card gastos-receitas-card">
+          <div class="gastos-receitas-grid">
+            <div class="gastos-receita-field">
+              <label for="cg-receita-sjk">Receita total da Base SJK</label>
+              <p>São José dos Campos</p>
+              <label class="gastos-money-field gastos-receita-input-wrap">
+                <span>R$</span>
+                <input class="form-control gastos-money-input" id="cg-receita-sjk" inputmode="decimal" autocomplete="off" placeholder="0,00">
+              </label>
+            </div>
+            <div class="gastos-receita-field">
+              <label for="cg-receita-cpn">Receita total da Base CPN</label>
+              <p>Campinas</p>
+              <label class="gastos-money-field gastos-receita-input-wrap">
+                <span>R$</span>
+                <input class="form-control gastos-money-input" id="cg-receita-cpn" inputmode="decimal" autocomplete="off" placeholder="0,00">
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="gastos-view" id="view-categorias">
+        <div class="gastos-section-heading">
+          <div>
+            <h2>Categorias de gastos</h2>
+            <p>Categorias desativadas permanecem no histórico.</p>
+          </div>
+          <button class="btn btn-primary" id="cg-btn-nova-categoria">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Nova categoria
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="table-wrapper">
+            <table class="table gastos-category-table">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Status</th>
+                  <th style="width:150px">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="cg-categorias-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="cg-modal-categoria">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <h3 id="cg-modal-categoria-title">Nova categoria</h3>
+      <button class="modal-close" id="cg-modal-categoria-close" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="cg-categoria-nome">Nome da categoria</label>
+        <input class="form-control" id="cg-categoria-nome" maxlength="80" placeholder="Ex: Seguro da base">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="cg-modal-categoria-cancelar">Cancelar</button>
+      <button class="btn btn-primary" id="cg-modal-categoria-salvar">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="gastos-loading" id="cg-loading">
+  <div class="gastos-loading-box">
+    <div class="spinner"></div>
+    <span>Carregando controle de gastos</span>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/controle-gastos.js?v=20260608-readonly-access"></script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

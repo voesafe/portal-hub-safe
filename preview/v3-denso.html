@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard denso — Preview SAFE Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
+<style>
+  :root{
+    --navy:#1D2951;--navy-deep:#141d3a;--navy-light:#253463;--blue:#5BAEE2;--blue-dark:#3d8cc4;
+    --teal:#60C0BF;--teal-dark:#44a8a7;--off:#F1F4FA;--gray100:#EEF2F8;--gray200:#DDE4EF;
+    --gray300:#BCC8DC;--gray400:#8EA4C0;--gray500:#5E7A9A;--green:#2ECC71;--orange:#F39C12;
+    --title:'Raleway',sans-serif;--body:'Montserrat',sans-serif;--radius:12px;--shadow:0 2px 10px rgba(29,41,81,.07)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);background:var(--off);color:var(--navy);display:flex;min-height:100vh}
+  a{text-decoration:none;color:inherit}
+  .sidebar{width:230px;background:var(--navy-deep);color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0}
+  .brand{display:flex;align-items:center;gap:11px;padding:20px 20px;border-bottom:1px solid rgba(255,255,255,.07)}
+  .brand-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:var(--title);font-weight:800;color:var(--navy)}
+  .brand-name{font-family:var(--title);font-weight:800}.brand-sub{font-size:.6rem;color:var(--gray300);text-transform:uppercase;letter-spacing:.13em}
+  .nav{flex:1;padding:12px 10px;overflow-y:auto}
+  .nav-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.28);padding:12px 12px 5px}
+  .nav-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:8px;color:rgba(255,255,255,.62);font-size:.83rem;font-weight:500;transition:.15s;margin-bottom:1px}
+  .nav-item i{font-size:1.05rem;color:var(--blue);width:19px;text-align:center}
+  .nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav-item.active{background:rgba(91,174,226,.16);color:#fff;border-left:3px solid var(--teal);padding-left:9px}
+  .nav-item.active i{color:var(--teal)}
+  .side-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:var(--title);font-weight:800;color:#fff;font-size:.82rem}
+  .u-name{font-size:.82rem;font-weight:600}.u-role{font-size:.68rem;color:rgba(255,255,255,.4)}
+  .main{flex:1;min-width:0}
+  .topbar{height:60px;background:#fff;border-bottom:1px solid var(--gray200);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:10}
+  .tb-title{font-family:var(--title);font-size:1.05rem;font-weight:700}
+  .tb-sub{font-size:.73rem;color:var(--gray400)}
+  .tb-right{display:flex;align-items:center;gap:10px}
+  .chip{font-size:.76rem;color:var(--gray500);background:var(--off);border:1px solid var(--gray200);padding:7px 12px;border-radius:8px;display:flex;align-items:center;gap:7px}
+  .page{padding:20px 24px}
+  .welcome{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,var(--navy),var(--navy-light));border-radius:14px;padding:18px 24px;color:#fff;margin-bottom:18px;overflow:hidden;position:relative}
+  .welcome::after{content:'';position:absolute;right:-30px;top:-40px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,var(--blue),transparent 68%);opacity:.25}
+  .welcome h1{font-family:var(--title);font-size:1.4rem;font-weight:800;position:relative}
+  .welcome p{font-size:.82rem;color:var(--gray300);position:relative}
+  .welcome .pill{display:inline-flex;align-items:center;gap:7px;background:rgba(96,192,191,.18);color:#80d4d3;padding:6px 13px;border-radius:100px;font-size:.76rem;font-weight:600;position:relative}
+  .welcome .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--teal)}
+  /* KPIs */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:16px}
+  .kpi{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--teal))}
+  .kpi-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray400)}
+  .kpi-val{font-family:var(--title);font-size:1.7rem;font-weight:800;line-height:1.1;margin-top:6px}
+  .kpi-sub{font-size:.72rem;margin-top:4px;display:flex;align-items:center;gap:4px}
+  .up{color:var(--green)}.down{color:#E74C3C}
+  .kpi-ic{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+  .ic-blue{background:rgba(91,174,226,.12);color:var(--blue-dark)}.ic-teal{background:rgba(96,192,191,.12);color:var(--teal-dark)}
+  .ic-green{background:rgba(46,204,113,.12);color:#27ae60}.ic-orange{background:rgba(243,156,18,.12);color:#d68910}
+  /* grid main */
+  .grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:16px}
+  .card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+  .card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .card-t{font-family:var(--title);font-size:.98rem;font-weight:700}
+  .card-h .chip{font-size:.72rem;padding:5px 10px}
+  /* chart */
+  .chart{width:100%;height:180px}
+  .bars{display:flex;align-items:flex-end;gap:10px;height:180px;padding-top:10px}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+  .bar{width:100%;max-width:32px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--blue),var(--teal))}
+  .bar-lbl{font-size:.68rem;color:var(--gray400);font-weight:600}
+  /* mini modules list */
+  .mlist{display:flex;flex-direction:column;gap:8px}
+  .mrow{display:flex;align-items:center;gap:12px;padding:10px;border-radius:9px;transition:.15s;cursor:pointer}
+  .mrow:hover{background:var(--off)}
+  .mrow .mi{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+  .mrow .mt{font-size:.85rem;font-weight:600}.mrow .ms{font-size:.72rem;color:var(--gray400)}
+  .mrow .arr{margin-left:auto;color:var(--gray300)}
+  /* recent table */
+  .table{width:100%;border-collapse:collapse;font-size:.82rem}
+  .table th{background:var(--navy);color:#fff;font-family:var(--title);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;padding:10px 12px;text-align:left}
+  .table th:first-child{border-radius:8px 0 0 0}.table th:last-child{border-radius:0 8px 0 0}
+  .table td{padding:10px 12px;border-bottom:1px solid var(--gray100)}
+  .badge{padding:3px 10px;border-radius:100px;font-size:.68rem;font-weight:700;text-transform:uppercase}
+  .b-green{background:rgba(46,204,113,.12);color:#27ae60}.b-orange{background:rgba(243,156,18,.12);color:#d68910}.b-blue{background:rgba(91,174,226,.12);color:var(--blue-dark)}
+  .ribbon{position:fixed;bottom:16px;right:16px;background:var(--navy);color:#fff;font-size:.72rem;font-weight:600;padding:8px 14px;border-radius:100px;z-index:50}
+  .ribbon a{color:#7ec3ea}
+  @media(max-width:900px){.sidebar{display:none}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-logo">S</div><div><div class="brand-name">SAFE</div><div class="brand-sub">Hub</div></div></div>
+    <nav class="nav">
+      <div class="nav-label">Principal</div>
+      <a class="nav-item active"><i class="ti ti-home"></i> Início</a>
+      <a class="nav-item"><i class="ti ti-chart-bar"></i> Dashboard</a>
+      <div class="nav-label">Operação</div>
+      <a class="nav-item"><i class="ti ti-calendar"></i> Escala CCO</a>
+      <a class="nav-item"><i class="ti ti-plane"></i> Escala PAV</a>
+      <a class="nav-item"><i class="ti ti-clock"></i> Fechamento</a>
+      <div class="nav-label">Comercial</div>
+      <a class="nav-item"><i class="ti ti-cash"></i> Faturamento</a>
+      <a class="nav-item"><i class="ti ti-target"></i> Concorrência</a>
+      <a class="nav-item"><i class="ti ti-users"></i> Alunos</a>
+    </nav>
+    <div class="side-foot"><div class="avatar">V</div><div><div class="u-name">Victor</div><div class="u-role">Master</div></div></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div><div class="tb-title">Início</div><div class="tb-sub">Portal de acesso aos sistemas SAFE</div></div>
+      <div class="tb-right"><div class="chip"><i class="ti ti-calendar-event"></i> jul 2026</div><div class="chip"><i class="ti ti-bell"></i></div></div>
+    </div>
+
+    <div class="page">
+      <div class="welcome">
+        <div><h1>Olá, Victor.</h1><p>Resumo rápido e atalhos do seu perfil.</p></div>
+        <span class="pill"><span class="dot"></span> Perfil Master</span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="kpi-ic ic-blue"><i class="ti ti-cash"></i></div><div class="kpi-lbl">Faturamento mês</div><div class="kpi-val">R$ 486k</div><div class="kpi-sub up"><i class="ti ti-trending-up"></i> +12,4% vs. jun</div></div>
+        <div class="kpi"><div class="kpi-ic ic-teal"><i class="ti ti-users"></i></div><div class="kpi-lbl">Alunos ativos</div><div class="kpi-val">312</div><div class="kpi-sub up"><i class="ti ti-trending-up"></i> +8 no mês</div></div>
+        <div class="kpi"><div class="kpi-ic ic-green"><i class="ti ti-check"></i></div><div class="kpi-lbl">Matrículas jul</div><div class="kpi-val">27</div><div class="kpi-sub up"><i class="ti ti-trending-up"></i> meta 82%</div></div>
+        <div class="kpi"><div class="kpi-ic ic-orange"><i class="ti ti-plane"></i></div><div class="kpi-lbl">Horas voadas</div><div class="kpi-val">1.940</div><div class="kpi-sub down"><i class="ti ti-trending-down"></i> -3% vs. jun</div></div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-h"><span class="card-t">Faturamento — últimos 6 meses</span><span class="chip">2026</span></div>
+          <div class="bars">
+            <div class="bar-col"><div class="bar" style="height:52%"></div><span class="bar-lbl">Fev</span></div>
+            <div class="bar-col"><div class="bar" style="height:64%"></div><span class="bar-lbl">Mar</span></div>
+            <div class="bar-col"><div class="bar" style="height:58%"></div><span class="bar-lbl">Abr</span></div>
+            <div class="bar-col"><div class="bar" style="height:76%"></div><span class="bar-lbl">Mai</span></div>
+            <div class="bar-col"><div class="bar" style="height:70%"></div><span class="bar-lbl">Jun</span></div>
+            <div class="bar-col"><div class="bar" style="height:92%"></div><span class="bar-lbl">Jul</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="card-t">Atalhos</span></div>
+          <div class="mlist">
+            <div class="mrow"><div class="mi ic-blue"><i class="ti ti-chart-bar"></i></div><div><div class="mt">Dashboard</div><div class="ms">Vendas e metas</div></div><i class="ti ti-chevron-right arr"></i></div>
+            <div class="mrow"><div class="mi ic-teal"><i class="ti ti-calendar"></i></div><div><div class="mt">Escala CCO</div><div class="ms">Operacional</div></div><i class="ti ti-chevron-right arr"></i></div>
+            <div class="mrow"><div class="mi ic-green"><i class="ti ti-users"></i></div><div><div class="mt">Alunos</div><div class="ms">Progresso</div></div><i class="ti ti-chevron-right arr"></i></div>
+            <div class="mrow"><div class="mi ic-orange"><i class="ti ti-target"></i></div><div><div class="mt">Concorrência</div><div class="ms">Mercado</div></div><i class="ti ti-chevron-right arr"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><span class="card-t">Matrículas recentes</span><span class="chip"><i class="ti ti-eye"></i> Ver todas</span></div>
+        <table class="table">
+          <thead><tr><th>Aluno</th><th>Curso</th><th>Base</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Marina Alves</td><td>PP-Avião</td><td>Jundiaí</td><td><span class="badge b-green">Confirmada</span></td></tr>
+            <tr><td>Rafael Menezes</td><td>PC-Avião</td><td>Sorocaba</td><td><span class="badge b-blue">Em análise</span></td></tr>
+            <tr><td>Camila Torres</td><td>IFR</td><td>Bragança</td><td><span class="badge b-orange">Pendente</span></td></tr>
+            <tr><td>João Vitor Lima</td><td>PP-Avião</td><td>Jundiaí</td><td><span class="badge b-green">Confirmada</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="ribbon">Preview · Denso — <a href="index.html">voltar</a></div>
+</body>
+</html>

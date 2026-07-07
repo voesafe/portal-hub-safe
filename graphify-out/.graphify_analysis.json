@@ -1,0 +1,1211 @@
+{
+  "communities": {
+    "0": [
+      "preview_clean_dashboard_kpi_receita_global",
+      "preview_clean_dashboard_performance_por_consultor",
+      "preview_clean_dashboard_visao_geral_page",
+      "preview_clean_debug_diagnostico_page",
+      "preview_clean_debug_inconsistencia_mes_ano",
+      "preview_clean_debug_receita_global_calculo",
+      "preview_clean_faturamento_canais_receita",
+      "preview_clean_faturamento_faturamento_page",
+      "preview_clean_faturamento_modal_lancar_faturamento",
+      "preview_clean_faturamento_total_exclui_vendas_comercial",
+      "preview_clean_vendas_consultores_oficiais",
+      "preview_clean_vendas_modal_nova_venda",
+      "preview_clean_vendas_registro_de_vendas",
+      "preview_clean_vendas_vendas_page",
+      "preview_denso_dashboard_kpi_receita_global",
+      "preview_denso_dashboard_performance_por_consultor",
+      "preview_denso_dashboard_visao_geral_page",
+      "preview_denso_debug_diagnostico_page",
+      "preview_denso_debug_inconsistencia_mes_ano",
+      "preview_denso_debug_receita_global_calculo",
+      "preview_denso_vendas_consultores_oficiais",
+      "preview_denso_vendas_modal_nova_venda",
+      "preview_denso_vendas_registro_de_vendas",
+      "preview_denso_vendas_vendas_page",
+      "preview_refinado_dashboard_kpi_receita_global",
+      "preview_refinado_dashboard_performance_por_consultor",
+      "preview_refinado_dashboard_visao_geral_page",
+      "preview_refinado_debug_diagnostico_page",
+      "preview_refinado_debug_inconsistencia_mes_ano",
+      "preview_refinado_debug_receita_global_calculo",
+      "preview_refinado_vendas_consultores_oficiais",
+      "preview_refinado_vendas_modal_nova_venda",
+      "preview_refinado_vendas_registro_de_vendas",
+      "preview_refinado_vendas_vendas_page"
+    ],
+    "1": [
+      "preview_clean_cadastro_alunos_cadastro_alunos_page",
+      "preview_clean_cadastro_alunos_fila_operacional_s141",
+      "preview_clean_cadastro_alunos_importar_xls_cavok",
+      "preview_clean_controle_gastos_acesso_somente_visualizacao",
+      "preview_clean_controle_gastos_categorias",
+      "preview_clean_controle_gastos_controle_gastos_page",
+      "preview_clean_controle_gastos_fechamento_mensal",
+      "preview_clean_controle_gastos_receita_total_por_base",
+      "preview_clean_controle_gastos_visao_geral",
+      "preview_clean_fechamento_horas_fechamento_horas_page",
+      "preview_clean_fechamento_horas_fechamento_mensal",
+      "preview_clean_fechamento_horas_importar_cavok",
+      "preview_clean_fechamento_horas_visao_geral",
+      "preview_denso_cadastro_alunos_cadastro_alunos_page",
+      "preview_denso_cadastro_alunos_fila_operacional_s141",
+      "preview_denso_cadastro_alunos_importar_xls_cavok",
+      "preview_denso_controle_gastos_acesso_somente_visualizacao",
+      "preview_denso_controle_gastos_categorias",
+      "preview_denso_controle_gastos_controle_gastos_page",
+      "preview_denso_controle_gastos_fechamento_mensal",
+      "preview_denso_controle_gastos_receita_total_por_base",
+      "preview_denso_controle_gastos_visao_geral",
+      "preview_refinado_cadastro_alunos_cadastro_alunos_page",
+      "preview_refinado_cadastro_alunos_fila_operacional_s141",
+      "preview_refinado_cadastro_alunos_importar_xls_cavok",
+      "preview_refinado_controle_gastos_acesso_somente_visualizacao",
+      "preview_refinado_controle_gastos_categorias",
+      "preview_refinado_controle_gastos_controle_gastos_page",
+      "preview_refinado_controle_gastos_fechamento_mensal",
+      "preview_refinado_controle_gastos_receita_total_por_base",
+      "preview_refinado_controle_gastos_visao_geral"
+    ],
+    "2": [
+      "preview_clean_fechamento_horas_atualizar_api_cavok",
+      "preview_clean_horas_voadas_inva_cadastrar_instrutor",
+      "preview_clean_horas_voadas_inva_horas_voadas_inva_page",
+      "preview_clean_horas_voadas_inva_sincronizar_cavok",
+      "preview_clean_safe_minions_resultado_analise",
+      "preview_clean_safe_minions_safe_minions_page",
+      "preview_clean_safe_minions_tipo_inva",
+      "preview_clean_safe_minions_tipo_pc_ifr",
+      "preview_clean_safe_minions_tipo_ppa",
+      "preview_clean_safe_minions_upload_saci",
+      "preview_clean_safe_minions_verificacao_minimos_anac",
+      "preview_denso_horas_voadas_inva_cadastrar_instrutor",
+      "preview_denso_horas_voadas_inva_horas_voadas_inva_page",
+      "preview_denso_horas_voadas_inva_sincronizar_cavok",
+      "preview_denso_safe_minions_resultado_analise",
+      "preview_denso_safe_minions_safe_minions_page",
+      "preview_denso_safe_minions_tipo_inva",
+      "preview_denso_safe_minions_tipo_pc_ifr",
+      "preview_denso_safe_minions_tipo_ppa",
+      "preview_denso_safe_minions_upload_saci",
+      "preview_denso_safe_minions_verificacao_minimos_anac",
+      "preview_refinado_horas_voadas_inva_cadastrar_instrutor",
+      "preview_refinado_horas_voadas_inva_horas_voadas_inva_page",
+      "preview_refinado_horas_voadas_inva_sincronizar_cavok",
+      "preview_refinado_safe_minions_resultado_analise",
+      "preview_refinado_safe_minions_safe_minions_page",
+      "preview_refinado_safe_minions_tipo_inva",
+      "preview_refinado_safe_minions_tipo_pc_ifr",
+      "preview_refinado_safe_minions_tipo_ppa",
+      "preview_refinado_safe_minions_upload_saci",
+      "preview_refinado_safe_minions_verificacao_minimos_anac"
+    ],
+    "3": [
+      "admin_cli",
+      "admin_cli_ajuda",
+      "admin_cli_apiget",
+      "admin_cli_apipost",
+      "admin_cli_c",
+      "admin_cli_cmdadicionar",
+      "admin_cli_cmdlistar",
+      "admin_cli_cmdremover",
+      "admin_cli_cmdresetar",
+      "admin_cli_cmdsenha",
+      "admin_cli_crypto",
+      "admin_cli_erro",
+      "admin_cli_fazerget",
+      "admin_cli_fazerpost",
+      "admin_cli_getrl",
+      "admin_cli_hashsenha",
+      "admin_cli_http",
+      "admin_cli_https",
+      "admin_cli_info",
+      "admin_cli_labelperfil",
+      "admin_cli_main",
+      "admin_cli_ok",
+      "admin_cli_pergunta",
+      "admin_cli_readline",
+      "admin_cli_titulo"
+    ],
+    "4": [
+      "preview_clean_escala_cco_admin_panel_valor_turno",
+      "preview_clean_escala_cco_calendario",
+      "preview_clean_escala_cco_dashboard_metricas",
+      "preview_clean_escala_cco_escala_cco_app",
+      "preview_clean_escala_cco_fechamento_financeiro",
+      "preview_clean_escala_cco_financeiro_exportar_ifood",
+      "preview_clean_escala_cco_ifood_beneficios",
+      "preview_clean_escala_pav_acoes_criticas",
+      "preview_clean_escala_pav_escala_pav_app",
+      "preview_clean_escala_pav_view_cadastro",
+      "preview_clean_escala_pav_view_calendario",
+      "preview_clean_escala_pav_view_financeiro",
+      "preview_denso_escala_pav_acoes_criticas",
+      "preview_denso_escala_pav_escala_pav_app",
+      "preview_denso_escala_pav_view_cadastro",
+      "preview_denso_escala_pav_view_calendario",
+      "preview_denso_escala_pav_view_financeiro",
+      "preview_refinado_escala_pav_acoes_criticas",
+      "preview_refinado_escala_pav_escala_pav_app",
+      "preview_refinado_escala_pav_view_cadastro",
+      "preview_refinado_escala_pav_view_calendario",
+      "preview_refinado_escala_pav_view_financeiro"
+    ],
+    "5": [
+      "preview_clean_access_control_access_control_page",
+      "preview_clean_access_control_catalogo_de_permissoes",
+      "preview_clean_access_control_grupos_de_acesso",
+      "preview_clean_admin_diretorio_de_acessos",
+      "preview_clean_admin_gestao_de_usuarios_page",
+      "preview_clean_admin_identidade_unica_por_email",
+      "preview_clean_admin_modal_novo_usuario",
+      "preview_clean_admin_senha_padrao_cpf",
+      "preview_clean_escala_cco_funcionarios",
+      "preview_clean_rbac_grupos_e_permissoes",
+      "preview_denso_admin_diretorio_de_acessos",
+      "preview_denso_admin_gestao_de_usuarios_page",
+      "preview_denso_admin_identidade_unica_por_email",
+      "preview_denso_admin_modal_novo_usuario",
+      "preview_denso_admin_senha_padrao_cpf",
+      "preview_refinado_admin_diretorio_de_acessos",
+      "preview_refinado_admin_gestao_de_usuarios_page",
+      "preview_refinado_admin_identidade_unica_por_email",
+      "preview_refinado_admin_modal_novo_usuario",
+      "preview_refinado_admin_senha_padrao_cpf"
+    ],
+    "6": [
+      "preview_base_braganca_paulista",
+      "preview_base_jundiai",
+      "preview_base_sorocaba",
+      "preview_index_index",
+      "preview_index_readonly_lock",
+      "preview_index_v1_refinado_card",
+      "preview_index_v2_clean_card",
+      "preview_index_v3_denso_card",
+      "preview_module_alunos",
+      "preview_module_concorrencia",
+      "preview_module_dashboard",
+      "preview_module_escala_pav",
+      "preview_module_faturamento",
+      "preview_module_fechamento_horas",
+      "preview_v1_refinado_hub",
+      "preview_v2_clean_hub",
+      "preview_v3_denso_hub"
+    ],
+    "7": [
+      "preview_module_escala_cco",
+      "preview_pav_a_financeiro_exportar_ifood",
+      "preview_pav_a_financeiro_fechamento",
+      "preview_pav_a_operacional_calendario",
+      "preview_pav_a_pavs_cadastro",
+      "preview_pav_ana_prado",
+      "preview_pav_andre_lima",
+      "preview_pav_base_cpn",
+      "preview_pav_base_sjk",
+      "preview_pav_bruno_dias",
+      "preview_pav_carlos_moraes",
+      "preview_pav_index_index",
+      "preview_pav_marina_reis",
+      "preview_pav_module",
+      "preview_pav_role_financeiro",
+      "preview_pav_role_master",
+      "preview_pav_tiago_souza"
+    ],
+    "8": [
+      "preview_clean_bases_bases_page",
+      "preview_clean_index_login_page",
+      "preview_clean_index_session_redirect",
+      "preview_clean_inicio_bases_safe",
+      "preview_clean_inicio_inicio_page",
+      "preview_clean_inicio_modulos_do_hub",
+      "preview_denso_index_login_page",
+      "preview_denso_index_session_redirect",
+      "preview_denso_inicio_bases_safe",
+      "preview_denso_inicio_inicio_page",
+      "preview_denso_inicio_modulos_do_hub",
+      "preview_refinado_index_login_page",
+      "preview_refinado_index_session_redirect",
+      "preview_refinado_inicio_bases_safe",
+      "preview_refinado_inicio_inicio_page",
+      "preview_refinado_inicio_modulos_do_hub"
+    ],
+    "9": [
+      "acesso_negado",
+      "bases",
+      "bases_base",
+      "index",
+      "index_login",
+      "inicio",
+      "inicio_bases_home",
+      "inicio_catalogo_modulos",
+      "readme",
+      "readme_identidade_unica_email",
+      "readme_safe_minions_desc",
+      "readme_setup_apps_script",
+      "safe_minions",
+      "safe_minions_analise_anac",
+      "safe_minions_tipo_habilitacao"
+    ],
+    "10": [
+      "cadastro_alunos",
+      "cadastro_alunos_aluno",
+      "cadastro_alunos_fila_s141",
+      "cadastro_alunos_import_cavok",
+      "cadastro_alunos_matricula",
+      "fechamento_horas",
+      "fechamento_horas_competencia",
+      "fechamento_horas_cotista",
+      "fechamento_horas_import_cavok",
+      "horas_voadas_inva",
+      "horas_voadas_inva_instrutor",
+      "horas_voadas_inva_sincronizacao",
+      "readme_integracao_cavok"
+    ],
+    "11": [
+      "js_api",
+      "js_api_abrirmodal",
+      "js_api_api",
+      "js_api_btnloading",
+      "js_api_cache",
+      "js_api_escapehtml",
+      "js_api_fecharmodal",
+      "js_api_formatbrl",
+      "js_api_formatdata",
+      "js_api_nomemes",
+      "js_api_skeletontabela",
+      "js_api_toast"
+    ],
+    "12": [
+      "preview_clean_js_api",
+      "preview_clean_js_api_abrirmodal",
+      "preview_clean_js_api_api",
+      "preview_clean_js_api_btnloading",
+      "preview_clean_js_api_cache",
+      "preview_clean_js_api_escapehtml",
+      "preview_clean_js_api_fecharmodal",
+      "preview_clean_js_api_formatbrl",
+      "preview_clean_js_api_formatdata",
+      "preview_clean_js_api_nomemes",
+      "preview_clean_js_api_skeletontabela",
+      "preview_clean_js_api_toast"
+    ],
+    "13": [
+      "preview_denso_js_api",
+      "preview_denso_js_api_abrirmodal",
+      "preview_denso_js_api_api",
+      "preview_denso_js_api_btnloading",
+      "preview_denso_js_api_cache",
+      "preview_denso_js_api_escapehtml",
+      "preview_denso_js_api_fecharmodal",
+      "preview_denso_js_api_formatbrl",
+      "preview_denso_js_api_formatdata",
+      "preview_denso_js_api_nomemes",
+      "preview_denso_js_api_skeletontabela",
+      "preview_denso_js_api_toast"
+    ],
+    "14": [
+      "preview_refinado_js_api",
+      "preview_refinado_js_api_abrirmodal",
+      "preview_refinado_js_api_api",
+      "preview_refinado_js_api_btnloading",
+      "preview_refinado_js_api_cache",
+      "preview_refinado_js_api_escapehtml",
+      "preview_refinado_js_api_fecharmodal",
+      "preview_refinado_js_api_formatbrl",
+      "preview_refinado_js_api_formatdata",
+      "preview_refinado_js_api_nomemes",
+      "preview_refinado_js_api_skeletontabela",
+      "preview_refinado_js_api_toast"
+    ],
+    "15": [
+      "access_control",
+      "access_control_grupo",
+      "access_control_permissao",
+      "admin",
+      "admin_perfil_acesso",
+      "admin_senha_padrao",
+      "admin_usuario",
+      "escala_cco_funcionario",
+      "readme_perfis_acesso"
+    ],
+    "16": [
+      "apps_script_appsscript",
+      "apps_script_appsscript_dependencies",
+      "apps_script_appsscript_exceptionlogging",
+      "apps_script_appsscript_oauthscopes",
+      "apps_script_appsscript_runtimeversion",
+      "apps_script_appsscript_timezone",
+      "apps_script_appsscript_webapp",
+      "apps_script_appsscript_webapp_access",
+      "apps_script_appsscript_webapp_executeas"
+    ],
+    "17": [
+      "dashboard",
+      "dashboard_kpi_receita_global",
+      "dashboard_kpi_vendas",
+      "debug",
+      "debug_diagnostico_receita",
+      "faturamento",
+      "faturamento_canal",
+      "faturamento_total_anual",
+      "vendas_venda"
+    ],
+    "18": [
+      "escala_cco",
+      "escala_cco_calendario",
+      "escala_cco_exportacao_ifood",
+      "escala_cco_financeiro",
+      "escala_cco_usuarios_view",
+      "escala_pav",
+      "escala_pav_app",
+      "escala_pav_css_scoping",
+      "readme_escala_cco_integracao"
+    ],
+    "19": [
+      "preview_denso_escala_cco_admin_panel_valor_turno",
+      "preview_denso_escala_cco_calendario",
+      "preview_denso_escala_cco_dashboard_metricas",
+      "preview_denso_escala_cco_escala_cco_app",
+      "preview_denso_escala_cco_fechamento_financeiro",
+      "preview_denso_escala_cco_financeiro_exportar_ifood",
+      "preview_denso_escala_cco_funcionarios",
+      "preview_denso_escala_cco_ifood_beneficios"
+    ],
+    "20": [
+      "preview_refinado_escala_cco_admin_panel_valor_turno",
+      "preview_refinado_escala_cco_calendario",
+      "preview_refinado_escala_cco_dashboard_metricas",
+      "preview_refinado_escala_cco_escala_cco_app",
+      "preview_refinado_escala_cco_fechamento_financeiro",
+      "preview_refinado_escala_cco_financeiro_exportar_ifood",
+      "preview_refinado_escala_cco_funcionarios",
+      "preview_refinado_escala_cco_ifood_beneficios"
+    ],
+    "21": [
+      "concorrencia",
+      "concorrencia_concorrente",
+      "concorrencia_preco_safe",
+      "readme_credenciais_padrao",
+      "vendas",
+      "vendas_consultor_pac",
+      "vendas_curso_multiselect"
+    ],
+    "22": [
+      "js_vendas",
+      "js_vendas_aplicarmascarabrl",
+      "js_vendas_cursos_vendas",
+      "js_vendas_getinputbrl",
+      "js_vendas_pacotes_legados_cursos",
+      "js_vendas_setinputbrl",
+      "js_vendas_vendas"
+    ],
+    "23": [
+      "preview_clean_js_vendas",
+      "preview_clean_js_vendas_aplicarmascarabrl",
+      "preview_clean_js_vendas_cursos_vendas",
+      "preview_clean_js_vendas_getinputbrl",
+      "preview_clean_js_vendas_pacotes_legados_cursos",
+      "preview_clean_js_vendas_setinputbrl",
+      "preview_clean_js_vendas_vendas"
+    ],
+    "24": [
+      "preview_denso_js_vendas",
+      "preview_denso_js_vendas_aplicarmascarabrl",
+      "preview_denso_js_vendas_cursos_vendas",
+      "preview_denso_js_vendas_getinputbrl",
+      "preview_denso_js_vendas_pacotes_legados_cursos",
+      "preview_denso_js_vendas_setinputbrl",
+      "preview_denso_js_vendas_vendas"
+    ],
+    "25": [
+      "preview_refinado_js_vendas",
+      "preview_refinado_js_vendas_aplicarmascarabrl",
+      "preview_refinado_js_vendas_cursos_vendas",
+      "preview_refinado_js_vendas_getinputbrl",
+      "preview_refinado_js_vendas_pacotes_legados_cursos",
+      "preview_refinado_js_vendas_setinputbrl",
+      "preview_refinado_js_vendas_vendas"
+    ],
+    "26": [
+      "preview_clean_js_preview_guard",
+      "preview_clean_js_preview_guard_buildbar",
+      "preview_clean_js_preview_guard_flash",
+      "preview_clean_js_preview_guard_getaction",
+      "preview_clean_js_preview_guard_urlfor",
+      "preview_clean_js_preview_guard_xmlhttprequest_send"
+    ],
+    "27": [
+      "preview_denso_js_preview_guard",
+      "preview_denso_js_preview_guard_buildbar",
+      "preview_denso_js_preview_guard_flash",
+      "preview_denso_js_preview_guard_getaction",
+      "preview_denso_js_preview_guard_urlfor",
+      "preview_denso_js_preview_guard_xmlhttprequest_send"
+    ],
+    "28": [
+      "preview_refinado_js_preview_guard",
+      "preview_refinado_js_preview_guard_buildbar",
+      "preview_refinado_js_preview_guard_flash",
+      "preview_refinado_js_preview_guard_getaction",
+      "preview_refinado_js_preview_guard_urlfor",
+      "preview_refinado_js_preview_guard_xmlhttprequest_send"
+    ],
+    "29": [
+      "controle_gastos",
+      "controle_gastos_categoria",
+      "controle_gastos_custo_hora",
+      "controle_gastos_gasto_mensal",
+      "controle_gastos_receita_base"
+    ],
+    "30": [
+      "preview_denso_fechamento_horas_atualizar_api_cavok",
+      "preview_denso_fechamento_horas_fechamento_horas_page",
+      "preview_denso_fechamento_horas_fechamento_mensal",
+      "preview_denso_fechamento_horas_importar_cavok",
+      "preview_denso_fechamento_horas_visao_geral"
+    ],
+    "31": [
+      "preview_refinado_fechamento_horas_atualizar_api_cavok",
+      "preview_refinado_fechamento_horas_fechamento_horas_page",
+      "preview_refinado_fechamento_horas_fechamento_mensal",
+      "preview_refinado_fechamento_horas_importar_cavok",
+      "preview_refinado_fechamento_horas_visao_geral"
+    ],
+    "32": [
+      "preview_clean_progresso_alunos_newzenler",
+      "preview_clean_progresso_alunos_por_aluno",
+      "preview_clean_progresso_alunos_por_curso",
+      "preview_clean_progresso_alunos_progresso_alunos_page"
+    ],
+    "33": [
+      "preview_clean_rbac_grupos_e_permissoes__preview_denso_access_control",
+      "preview_denso_access_control_access_control_page",
+      "preview_denso_access_control_catalogo_de_permissoes",
+      "preview_denso_access_control_grupos_de_acesso"
+    ],
+    "34": [
+      "preview_clean_rbac_grupos_e_permissoes__preview_refinado_access_control",
+      "preview_refinado_access_control_access_control_page",
+      "preview_refinado_access_control_catalogo_de_permissoes",
+      "preview_refinado_access_control_grupos_de_acesso"
+    ],
+    "35": [
+      "preview_denso_faturamento_canais_receita",
+      "preview_denso_faturamento_faturamento_page",
+      "preview_denso_faturamento_modal_lancar_faturamento",
+      "preview_denso_faturamento_total_exclui_vendas_comercial"
+    ],
+    "36": [
+      "preview_denso_progresso_alunos_newzenler",
+      "preview_denso_progresso_alunos_por_aluno",
+      "preview_denso_progresso_alunos_por_curso",
+      "preview_denso_progresso_alunos_progresso_alunos_page"
+    ],
+    "37": [
+      "preview_refinado_faturamento_canais_receita",
+      "preview_refinado_faturamento_faturamento_page",
+      "preview_refinado_faturamento_modal_lancar_faturamento",
+      "preview_refinado_faturamento_total_exclui_vendas_comercial"
+    ],
+    "38": [
+      "preview_refinado_progresso_alunos_newzenler",
+      "preview_refinado_progresso_alunos_por_aluno",
+      "preview_refinado_progresso_alunos_por_curso",
+      "preview_refinado_progresso_alunos_progresso_alunos_page"
+    ],
+    "39": [
+      "preview_clean_concorrencia_concorrencia_page",
+      "preview_clean_concorrencia_modal_nova_concorrente",
+      "preview_clean_concorrencia_modal_preco_safe"
+    ],
+    "40": [
+      "preview_denso_concorrencia_concorrencia_page",
+      "preview_denso_concorrencia_modal_nova_concorrente",
+      "preview_denso_concorrencia_modal_preco_safe"
+    ],
+    "41": [
+      "preview_refinado_concorrencia_concorrencia_page",
+      "preview_refinado_concorrencia_modal_nova_concorrente",
+      "preview_refinado_concorrencia_modal_preco_safe"
+    ],
+    "42": [
+      "progresso_alunos",
+      "progresso_alunos_aluno",
+      "progresso_alunos_curso"
+    ],
+    "43": [
+      "assets_icons_apple_touch_icon_icon",
+      "concept_safe_hub_brand"
+    ],
+    "44": [
+      "assets_safe_minions_xlsx_full_min",
+      "assets_safe_minions_xlsx_full_min_make_xlsx_lib"
+    ],
+    "45": [
+      "js_access_control",
+      "js_access_control_accesscontrol"
+    ],
+    "46": [
+      "js_admin",
+      "js_admin_admin"
+    ],
+    "47": [
+      "js_auth",
+      "js_auth_auth"
+    ],
+    "48": [
+      "js_bases",
+      "js_bases_bases"
+    ],
+    "49": [
+      "js_cadastro_alunos",
+      "js_cadastro_alunos_cadastroalunos"
+    ],
+    "50": [
+      "js_concorrencia",
+      "js_concorrencia_concorrencia"
+    ],
+    "51": [
+      "js_config",
+      "js_config_config"
+    ],
+    "52": [
+      "js_controle_gastos",
+      "js_controle_gastos_controlegastos"
+    ],
+    "53": [
+      "js_dashboard",
+      "js_dashboard_dashboard"
+    ],
+    "54": [
+      "js_fechamento_horas",
+      "js_fechamento_horas_fechamentohoras"
+    ],
+    "55": [
+      "js_horas_voadas_inva",
+      "js_horas_voadas_inva_horasvoadasinva"
+    ],
+    "56": [
+      "js_inicio",
+      "js_inicio_inicio"
+    ],
+    "57": [
+      "js_progresso_alunos",
+      "js_progresso_alunos_progressoalunos"
+    ],
+    "58": [
+      "preview_clean_assets_safe_minions_xlsx_full_min",
+      "preview_clean_assets_safe_minions_xlsx_full_min_make_xlsx_lib"
+    ],
+    "59": [
+      "preview_clean_js_access_control",
+      "preview_clean_js_access_control_accesscontrol"
+    ],
+    "60": [
+      "preview_clean_js_admin",
+      "preview_clean_js_admin_admin"
+    ],
+    "61": [
+      "preview_clean_js_auth",
+      "preview_clean_js_auth_auth"
+    ],
+    "62": [
+      "preview_clean_js_bases",
+      "preview_clean_js_bases_bases"
+    ],
+    "63": [
+      "preview_clean_js_cadastro_alunos",
+      "preview_clean_js_cadastro_alunos_cadastroalunos"
+    ],
+    "64": [
+      "preview_clean_js_concorrencia",
+      "preview_clean_js_concorrencia_concorrencia"
+    ],
+    "65": [
+      "preview_clean_js_config",
+      "preview_clean_js_config_config"
+    ],
+    "66": [
+      "preview_clean_js_controle_gastos",
+      "preview_clean_js_controle_gastos_controlegastos"
+    ],
+    "67": [
+      "preview_clean_js_dashboard",
+      "preview_clean_js_dashboard_dashboard"
+    ],
+    "68": [
+      "preview_clean_js_fechamento_horas",
+      "preview_clean_js_fechamento_horas_fechamentohoras"
+    ],
+    "69": [
+      "preview_clean_js_horas_voadas_inva",
+      "preview_clean_js_horas_voadas_inva_horasvoadasinva"
+    ],
+    "70": [
+      "preview_clean_js_inicio",
+      "preview_clean_js_inicio_inicio"
+    ],
+    "71": [
+      "preview_clean_js_progresso_alunos",
+      "preview_clean_js_progresso_alunos_progressoalunos"
+    ],
+    "72": [
+      "preview_denso_assets_safe_minions_xlsx_full_min",
+      "preview_denso_assets_safe_minions_xlsx_full_min_make_xlsx_lib"
+    ],
+    "73": [
+      "preview_denso_js_access_control",
+      "preview_denso_js_access_control_accesscontrol"
+    ],
+    "74": [
+      "preview_denso_js_admin",
+      "preview_denso_js_admin_admin"
+    ],
+    "75": [
+      "preview_denso_js_auth",
+      "preview_denso_js_auth_auth"
+    ],
+    "76": [
+      "preview_denso_js_bases",
+      "preview_denso_js_bases_bases"
+    ],
+    "77": [
+      "preview_denso_js_cadastro_alunos",
+      "preview_denso_js_cadastro_alunos_cadastroalunos"
+    ],
+    "78": [
+      "preview_denso_js_concorrencia",
+      "preview_denso_js_concorrencia_concorrencia"
+    ],
+    "79": [
+      "preview_denso_js_config",
+      "preview_denso_js_config_config"
+    ],
+    "80": [
+      "preview_denso_js_controle_gastos",
+      "preview_denso_js_controle_gastos_controlegastos"
+    ],
+    "81": [
+      "preview_denso_js_dashboard",
+      "preview_denso_js_dashboard_dashboard"
+    ],
+    "82": [
+      "preview_denso_js_fechamento_horas",
+      "preview_denso_js_fechamento_horas_fechamentohoras"
+    ],
+    "83": [
+      "preview_denso_js_horas_voadas_inva",
+      "preview_denso_js_horas_voadas_inva_horasvoadasinva"
+    ],
+    "84": [
+      "preview_denso_js_inicio",
+      "preview_denso_js_inicio_inicio"
+    ],
+    "85": [
+      "preview_denso_js_progresso_alunos",
+      "preview_denso_js_progresso_alunos_progressoalunos"
+    ],
+    "86": [
+      "preview_refinado_assets_safe_minions_xlsx_full_min",
+      "preview_refinado_assets_safe_minions_xlsx_full_min_make_xlsx_lib"
+    ],
+    "87": [
+      "preview_refinado_js_access_control",
+      "preview_refinado_js_access_control_accesscontrol"
+    ],
+    "88": [
+      "preview_refinado_js_admin",
+      "preview_refinado_js_admin_admin"
+    ],
+    "89": [
+      "preview_refinado_js_auth",
+      "preview_refinado_js_auth_auth"
+    ],
+    "90": [
+      "preview_refinado_js_bases",
+      "preview_refinado_js_bases_bases"
+    ],
+    "91": [
+      "preview_refinado_js_cadastro_alunos",
+      "preview_refinado_js_cadastro_alunos_cadastroalunos"
+    ],
+    "92": [
+      "preview_refinado_js_concorrencia",
+      "preview_refinado_js_concorrencia_concorrencia"
+    ],
+    "93": [
+      "preview_refinado_js_config",
+      "preview_refinado_js_config_config"
+    ],
+    "94": [
+      "preview_refinado_js_controle_gastos",
+      "preview_refinado_js_controle_gastos_controlegastos"
+    ],
+    "95": [
+      "preview_refinado_js_dashboard",
+      "preview_refinado_js_dashboard_dashboard"
+    ],
+    "96": [
+      "preview_refinado_js_fechamento_horas",
+      "preview_refinado_js_fechamento_horas_fechamentohoras"
+    ],
+    "97": [
+      "preview_refinado_js_horas_voadas_inva",
+      "preview_refinado_js_horas_voadas_inva_horasvoadasinva"
+    ],
+    "98": [
+      "preview_refinado_js_inicio",
+      "preview_refinado_js_inicio_inicio"
+    ],
+    "99": [
+      "preview_refinado_js_progresso_alunos",
+      "preview_refinado_js_progresso_alunos_progressoalunos"
+    ],
+    "100": [
+      "assets_icons_pwa_desktop_1024_icon"
+    ],
+    "101": [
+      "assets_icons_pwa_desktop_512_icon"
+    ],
+    "102": [
+      "assets_icons_pwa_mobile_192_icon"
+    ],
+    "103": [
+      "assets_icons_pwa_mobile_maskable_512_icon"
+    ],
+    "104": [
+      "assets_img_logo_logo"
+    ],
+    "105": [
+      "assets_img_safe_logo_horizontal_logo"
+    ],
+    "106": [
+      "assets_safe_minions_minion_minion_mascot"
+    ],
+    "107": [
+      "concept_safe_hub_brand__preview_clean_assets_icons_apple_touch_icon"
+    ],
+    "108": [
+      "concept_safe_hub_brand__preview_denso_assets_icons_apple_touch_icon"
+    ],
+    "109": [
+      "concept_safe_hub_brand__preview_refinado_assets_icons_apple_touch_icon"
+    ],
+    "110": [
+      "favicon_favicon"
+    ],
+    "111": [
+      "preview_clean_acesso_negado_acesso_negado_page"
+    ],
+    "112": [
+      "preview_clean_assets_icons_apple_touch_icon_icon"
+    ],
+    "113": [
+      "preview_clean_assets_icons_pwa_desktop_1024_icon"
+    ],
+    "114": [
+      "preview_clean_assets_icons_pwa_desktop_512_icon"
+    ],
+    "115": [
+      "preview_clean_assets_icons_pwa_mobile_192_icon"
+    ],
+    "116": [
+      "preview_clean_assets_icons_pwa_mobile_maskable_512_icon"
+    ],
+    "117": [
+      "preview_clean_assets_img_logo_logo"
+    ],
+    "118": [
+      "preview_clean_assets_img_safe_logo_horizontal_logo"
+    ],
+    "119": [
+      "preview_clean_assets_safe_minions_minion_minion_mascot"
+    ],
+    "120": [
+      "preview_clean_favicon_favicon"
+    ],
+    "121": [
+      "preview_clean_js_preview_guard_xmlhttprequest_open"
+    ],
+    "122": [
+      "preview_clean_preview_guard_js"
+    ],
+    "123": [
+      "preview_clean_preview_guard_js__preview_denso_dashboard"
+    ],
+    "124": [
+      "preview_clean_preview_guard_js__preview_refinado_dashboard"
+    ],
+    "125": [
+      "preview_denso_acesso_negado_acesso_negado_page"
+    ],
+    "126": [
+      "preview_denso_assets_icons_apple_touch_icon_icon"
+    ],
+    "127": [
+      "preview_denso_assets_icons_pwa_desktop_1024_icon"
+    ],
+    "128": [
+      "preview_denso_assets_icons_pwa_desktop_512_icon"
+    ],
+    "129": [
+      "preview_denso_assets_icons_pwa_mobile_192_icon"
+    ],
+    "130": [
+      "preview_denso_assets_icons_pwa_mobile_maskable_512_icon"
+    ],
+    "131": [
+      "preview_denso_assets_img_logo_logo"
+    ],
+    "132": [
+      "preview_denso_assets_img_safe_logo_horizontal_logo"
+    ],
+    "133": [
+      "preview_denso_assets_safe_minions_minion_minion_mascot"
+    ],
+    "134": [
+      "preview_denso_bases_bases_page"
+    ],
+    "135": [
+      "preview_denso_favicon_favicon"
+    ],
+    "136": [
+      "preview_denso_js_preview_guard_xmlhttprequest_open"
+    ],
+    "137": [
+      "preview_refinado_acesso_negado_acesso_negado_page"
+    ],
+    "138": [
+      "preview_refinado_assets_icons_apple_touch_icon_icon"
+    ],
+    "139": [
+      "preview_refinado_assets_icons_pwa_desktop_1024_icon"
+    ],
+    "140": [
+      "preview_refinado_assets_icons_pwa_desktop_512_icon"
+    ],
+    "141": [
+      "preview_refinado_assets_icons_pwa_mobile_192_icon"
+    ],
+    "142": [
+      "preview_refinado_assets_icons_pwa_mobile_maskable_512_icon"
+    ],
+    "143": [
+      "preview_refinado_assets_img_logo_logo"
+    ],
+    "144": [
+      "preview_refinado_assets_img_safe_logo_horizontal_logo"
+    ],
+    "145": [
+      "preview_refinado_assets_safe_minions_minion_minion_mascot"
+    ],
+    "146": [
+      "preview_refinado_bases_bases_page"
+    ],
+    "147": [
+      "preview_refinado_favicon_favicon"
+    ],
+    "148": [
+      "preview_refinado_js_preview_guard_xmlhttprequest_open"
+    ]
+  },
+  "cohesion": {
+    "0": 0.06417112299465241,
+    "1": 0.06451612903225806,
+    "2": 0.06451612903225806,
+    "3": 0.22,
+    "4": 0.1038961038961039,
+    "5": 0.14210526315789473,
+    "6": 0.25,
+    "7": 0.27205882352941174,
+    "8": 0.125,
+    "9": 0.17142857142857143,
+    "10": 0.16666666666666666,
+    "11": 0.16666666666666666,
+    "12": 0.16666666666666666,
+    "13": 0.16666666666666666,
+    "14": 0.16666666666666666,
+    "15": 0.2222222222222222,
+    "16": 0.2222222222222222,
+    "17": 0.2777777777777778,
+    "18": 0.2222222222222222,
+    "19": 0.25,
+    "20": 0.25,
+    "21": 0.2857142857142857,
+    "22": 0.2857142857142857,
+    "23": 0.2857142857142857,
+    "24": 0.2857142857142857,
+    "25": 0.2857142857142857,
+    "26": 0.4666666666666667,
+    "27": 0.4666666666666667,
+    "28": 0.4666666666666667,
+    "29": 0.4,
+    "30": 0.4,
+    "31": 0.4,
+    "32": 0.5,
+    "33": 0.5,
+    "34": 0.5,
+    "35": 0.5,
+    "36": 0.5,
+    "37": 0.5,
+    "38": 0.5,
+    "39": 0.6666666666666666,
+    "40": 0.6666666666666666,
+    "41": 0.6666666666666666,
+    "42": 0.6666666666666666,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0,
+    "88": 1.0,
+    "89": 1.0,
+    "90": 1.0,
+    "91": 1.0,
+    "92": 1.0,
+    "93": 1.0,
+    "94": 1.0,
+    "95": 1.0,
+    "96": 1.0,
+    "97": 1.0,
+    "98": 1.0,
+    "99": 1.0,
+    "100": 1.0,
+    "101": 1.0,
+    "102": 1.0,
+    "103": 1.0,
+    "104": 1.0,
+    "105": 1.0,
+    "106": 1.0,
+    "107": 1.0,
+    "108": 1.0,
+    "109": 1.0,
+    "110": 1.0,
+    "111": 1.0,
+    "112": 1.0,
+    "113": 1.0,
+    "114": 1.0,
+    "115": 1.0,
+    "116": 1.0,
+    "117": 1.0,
+    "118": 1.0,
+    "119": 1.0,
+    "120": 1.0,
+    "121": 1.0,
+    "122": 1.0,
+    "123": 1.0,
+    "124": 1.0,
+    "125": 1.0,
+    "126": 1.0,
+    "127": 1.0,
+    "128": 1.0,
+    "129": 1.0,
+    "130": 1.0,
+    "131": 1.0,
+    "132": 1.0,
+    "133": 1.0,
+    "134": 1.0,
+    "135": 1.0,
+    "136": 1.0,
+    "137": 1.0,
+    "138": 1.0,
+    "139": 1.0,
+    "140": 1.0,
+    "141": 1.0,
+    "142": 1.0,
+    "143": 1.0,
+    "144": 1.0,
+    "145": 1.0,
+    "146": 1.0,
+    "147": 1.0,
+    "148": 1.0
+  },
+  "gods": [
+    {
+      "id": "readme",
+      "label": "README — SAFE Hub",
+      "degree": 20
+    },
+    {
+      "id": "preview_v1_refinado_hub",
+      "label": "SAFE Hub — Variante Refinado (Início)",
+      "degree": 12
+    },
+    {
+      "id": "preview_v2_clean_hub",
+      "label": "SAFE Hub — Variante Clean / SaaS (Início)",
+      "degree": 12
+    },
+    {
+      "id": "preview_pav_a_financeiro_fechamento",
+      "label": "PAV · Fechamento Financeiro",
+      "degree": 10
+    },
+    {
+      "id": "admin_cli_cmdsenha",
+      "label": "cmdSenha()",
+      "degree": 9
+    },
+    {
+      "id": "admin_cli_cmdremover",
+      "label": "cmdRemover()",
+      "degree": 9
+    },
+    {
+      "id": "preview_v3_denso_hub",
+      "label": "SAFE Hub — Variante Dashboard Denso (Início)",
+      "degree": 9
+    },
+    {
+      "id": "preview_pav_a_operacional_calendario",
+      "label": "PAV · Calendário Operacional",
+      "degree": 9
+    },
+    {
+      "id": "preview_pav_a_pavs_cadastro",
+      "label": "PAV · Cadastro de PAVs",
+      "degree": 9
+    },
+    {
+      "id": "admin_cli_cmdadicionar",
+      "label": "cmdAdicionar()",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Escala PAV — Seletor Operacional (preview)",
+      "target": "Trava de gravação (somente leitura)",
+      "source_files": [
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/pav/index.html",
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/index.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "semantically_similar_to",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; semantically similar concepts with no structural link; peripheral node `Trava de gravação (somente leitura)` unexpectedly reaches hub `Escala PAV — Seletor Operacional (preview)`"
+    },
+    {
+      "source": "Escala CCO (page)",
+      "target": "Escala PAV (page)",
+      "source_files": [
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/escala-cco.html",
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/escala-pav.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "semantically_similar_to",
+      "why": "inferred connection - not explicitly stated in source; semantically similar concepts with no structural link"
+    },
+    {
+      "source": "Métricas de cotistas / horas por aeronave",
+      "target": "Custo por hora voada",
+      "source_files": [
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/fechamento-horas.html",
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/controle-gastos.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "Análise de mínimos ANAC IS 141-007",
+      "target": "Instrutor INVA cadastrado (CLT/Eventual)",
+      "source_files": [
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/safe-minions.html",
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/horas-voadas-inva.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "KPI Receita Global (Vendas + Faturamento)",
+      "target": "Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale)",
+      "source_files": [
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/clean/dashboard.html",
+        "/Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/clean/debug.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `KPI Receita Global (Vendas + Faturamento)` unexpectedly reaches hub `Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale)`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `README — SAFE Hub` connect `Community 9` to `Community 10`, `Community 15`, `Community 17`, `Community 18`, `Community 21`, `Community 29`?",
+      "why": "High betweenness centrality (0.010) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Fechamento Mensal Tab (Horas por Aeronave)` connect `Community 1` to `Community 2`?",
+      "why": "High betweenness centrality (0.006) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Atualizar pela API CAVOK` connect `Community 2` to `Community 1`?",
+      "why": "High betweenness centrality (0.006) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `https`, `http`, `readline` to the rest of the system?",
+      "why": "253 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.06417112299465241 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 2` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

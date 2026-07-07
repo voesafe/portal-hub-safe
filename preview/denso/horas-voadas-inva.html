@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horas Voadas INVA Mês — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/horas-voadas-inva.css?v=20260610">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Horas Voadas INVA Mês</div>
+          <div class="topbar-subtitle">Instrutores e horas sincronizadas com o CAVOK</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" id="btn-atualizar" type="button">Atualizar dados</button>
+        <button class="btn btn-primary" id="btn-sincronizar" type="button">Sincronizar CAVOK</button>
+      </div>
+    </div>
+
+    <div class="page horas-inva-page">
+      <div class="horas-inva-tabs" role="tablist" aria-label="Seções de horas voadas">
+        <button class="horas-inva-tab active" type="button" role="tab" aria-selected="true" data-view="dashboard">
+          Dashboard
+        </button>
+        <button class="horas-inva-tab" type="button" role="tab" aria-selected="false" data-view="cadastro">
+          Cadastrar instrutor
+        </button>
+      </div>
+
+      <section class="horas-inva-view active" id="dashboard">
+        <div class="horas-inva-kpis">
+          <article class="kpi-card">
+            <span class="kpi-label">Instrutores</span>
+            <strong class="kpi-value" id="kpi-instrutores">—</strong>
+            <span class="kpi-sub">Cadastrados na planilha</span>
+          </article>
+          <article class="kpi-card">
+            <span class="kpi-label">Horas acumuladas</span>
+            <strong class="kpi-value" id="kpi-horas">—</strong>
+            <span class="kpi-sub">Total retornado pelo sistema</span>
+          </article>
+          <article class="kpi-card">
+            <span class="kpi-label">Instrutores CLT</span>
+            <strong class="kpi-value" id="kpi-clt">—</strong>
+            <span class="kpi-sub">Vínculo CLT</span>
+          </article>
+          <article class="kpi-card">
+            <span class="kpi-label">Eventuais</span>
+            <strong class="kpi-value" id="kpi-eventuais">—</strong>
+            <span class="kpi-sub">Instrutores eventuais</span>
+          </article>
+        </div>
+
+        <div class="horas-inva-grid">
+          <article class="card horas-inva-chart-card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Horas por instrutor</h2>
+                <p class="horas-inva-card-subtitle">Comparativo das horas registradas no backend.</p>
+              </div>
+            </div>
+            <div class="horas-inva-chart">
+              <canvas id="hours-chart"></canvas>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header horas-inva-table-header">
+              <div>
+                <h2 class="card-title">Lista de instrutores</h2>
+                <p class="horas-inva-card-subtitle" id="ultima-atualizacao">Aguardando atualização.</p>
+              </div>
+              <input class="form-control horas-inva-search" id="busca-instrutor" type="search" placeholder="Buscar instrutor">
+            </div>
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Horas</th>
+                  </tr>
+                </thead>
+                <tbody id="instrutores-tbody">
+                  <tr><td colspan="3" class="horas-inva-empty">Carregando dados...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="horas-inva-view" id="cadastro">
+        <article class="card horas-inva-form-card">
+          <div class="horas-inva-form-heading">
+            <span class="horas-inva-form-icon" aria-hidden="true">+</span>
+            <div>
+              <h2>Novo instrutor</h2>
+              <p>O cadastro será gravado na planilha já conectada ao Apps Script.</p>
+            </div>
+          </div>
+          <form id="form-instrutor">
+            <div class="form-group">
+              <label class="form-label" for="instrutor-nome">Nome completo</label>
+              <input class="form-control" type="text" id="instrutor-nome" required placeholder="Ex.: João Silva">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="instrutor-tipo">Tipo de instrutor</label>
+                <select class="form-control" id="instrutor-tipo" required>
+                  <option value="">Selecione...</option>
+                  <option value="Eventual">Eventual</option>
+                  <option value="CLT">CLT</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="instrutor-saldo">Banco de horas inicial</label>
+                <input class="form-control" type="number" id="instrutor-saldo" min="0" step="0.1" placeholder="Ex.: 150,5">
+              </div>
+            </div>
+            <div class="horas-inva-form-actions">
+              <button class="btn btn-ghost" id="btn-cancelar-cadastro" type="button">Cancelar</button>
+              <button class="btn btn-primary" id="btn-salvar-instrutor" type="submit">Cadastrar instrutor</button>
+            </div>
+          </form>
+        </article>
+      </section>
+
+      <div class="dashboard-loading-overlay active" id="horas-inva-loading">
+        <div class="dashboard-loading-card">
+          <img class="dashboard-loading-logo" src="assets/img/logo.png" alt="">
+          <span class="dashboard-loading-text" id="horas-inva-loading-text">Carregando horas voadas...</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/horas-voadas-inva.js?v=20260610"></script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

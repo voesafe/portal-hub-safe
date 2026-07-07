@@ -1,3 +1,5 @@
 
 # Ferramentas locais de preview (Claude)
 .claude/
+
+.DS_Store

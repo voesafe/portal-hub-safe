@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faturamento — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/faturamento.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <div class="sidebar-toggle" id="sidebar-toggle">‹</div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">◈</span><span class="nav-label">Dashboard</span></a>
+      <a href="vendas.html" class="nav-item"><span class="nav-icon">◎</span><span class="nav-label">Vendas</span></a>
+      <hr class="nav-divider">
+      <div class="nav-section-label">Administração</div>
+      <a href="faturamento.html" class="nav-item active"><span class="nav-icon">◉</span><span class="nav-label">Faturamento</span></a>
+      <a href="concorrencia.html" class="nav-item"><span class="nav-icon">◐</span><span class="nav-label">Concorrência</span></a>
+      <a href="admin.html" class="nav-item"><span class="nav-icon">◑</span><span class="nav-label">Usuários</span></a>
+
+      <hr class="nav-divider" data-finance-only>
+      <div class="nav-section-label" data-finance-only>Financeiro</div>
+      <a href="controle-gastos.html" class="nav-item" data-finance-only>
+        <span class="nav-icon"></span><span class="nav-label">Controle de Gastos</span>
+      </a>
+
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="btn-logout">
+        <div class="sidebar-avatar">T</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Thiago</div>
+          <div class="sidebar-user-role">Administrador</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <div>
+          <div class="topbar-title">Faturamento</div>
+          <div class="topbar-subtitle">Consolidado por canal de receita</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-period">
+          <select id="sel-ano"><option value="2025">2025</option><option value="2026" selected>2026</option></select>
+        </div>
+        <button class="btn btn-primary" id="btn-editar" data-write-only>Lançar Valores</button>
+      </div>
+    </div>
+
+    <div class="page">
+
+      <!-- Gráfico anual -->
+      <div class="card mb-24">
+        <div class="card-header">
+          <div class="card-title">Faturamento mensal por canal</div>
+        </div>
+        <div style="height:300px;position:relative">
+          <canvas id="chart-fat"></canvas>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Detalhamento por mês</div>
+        </div>
+        <div class="table-wrapper">
+          <table class="table table-fat" id="tabela-fat">
+            <thead>
+              <tr>
+                <th>Mês</th>
+                <th>Lojinha</th>
+                <th>Safe Academy</th>
+                <th>Azul Pontos</th>
+                <th>Lito Academy</th>
+                <th>Vendas Comercial</th>
+                <th style="background:var(--navy-light)">Total</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-fat">
+              <tr><td colspan="7" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal lançar valores -->
+<div class="modal-overlay" id="modal-fat">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Lançar Faturamento</h3>
+      <button class="modal-close" onclick="fecharModal('modal-fat')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Mês</label>
+          <select class="form-control" id="fat-mes">
+            <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+            <option value="3">Março</option><option value="4">Abril</option>
+            <option value="5">Maio</option><option value="6">Junho</option>
+            <option value="7">Julho</option><option value="8">Agosto</option>
+            <option value="9">Setembro</option><option value="10">Outubro</option>
+            <option value="11">Novembro</option><option value="12">Dezembro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ano</label>
+          <select class="form-control" id="fat-ano">
+            <option value="2025">2025</option><option value="2026" selected>2026</option>
+          </select>
+        </div>
+      </div>
+      <p class="text-sm text-muted mb-16">Edite os valores dos canais. Para remover um lançamento, deixe o campo em branco ou coloque <strong>0</strong> e salve.</p>
+      <div class="form-group">
+        <label class="form-label">Lojinha (R$)</label>
+        <input type="text" inputmode="numeric" class="form-control" id="fat-lojinha" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Safe Academy (R$)</label>
+        <input type="text" inputmode="numeric" class="form-control" id="fat-academy" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Azul Pontos (R$)</label>
+        <input type="text" inputmode="numeric" class="form-control" id="fat-azul" placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lito Academy (R$)</label>
+        <input type="text" inputmode="numeric" class="form-control" id="fat-lito" placeholder="0,00">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="fecharModal('modal-fat')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-fat">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script>
+// ============================================================
+// Faturamento — lógica completa
+// ============================================================
+let chartFat   = null;
+let resumoAtual = {};
+
+const MESES_LABELS = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                      'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MESES_CURTOS = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const CANAIS       = ['Lojinha','Safe Academy','Azul Pontos','Lito Academy','Vendas Comercial'];
+// Canais que compõem o Total (exclui Vendas Comercial, que é coluna informativa)
+const CANAIS_TOTAL = ['Lojinha','Safe Academy','Azul Pontos','Lito Academy'];
+const CORES        = ['#5BAEE2','#60C0BF','#1D2951','#80B8B8','#3d8cc4'];
+
+// ── Carregar ────────────────────────────────────────────────
+async function carregarFaturamento() {
+  const tbody = document.getElementById('tbody-fat');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted" style="padding:32px">Carregando...</td></tr>`;
+
+  const ano = document.getElementById('sel-ano').value;
+  const res = await API.getResumoFaturamento(ano);
+
+  if (!res.ok) { toast(res.error || 'Erro ao carregar.', 'error'); return; }
+
+  // Garante que todos os 12 meses existem no objeto retornado
+  resumoAtual = {};
+  for (let m = 1; m <= 12; m++) {
+    resumoAtual[m] = { total: 0 };
+    CANAIS.forEach(c => { resumoAtual[m][c] = 0; });
+    if (res.data[m]) {
+      CANAIS.forEach(c => { resumoAtual[m][c] = Number(res.data[m][c]) || 0; });
+      // Total = soma apenas dos 4 canais manuais (não inclui Vendas Comercial)
+      resumoAtual[m].total = CANAIS_TOTAL.reduce((s, c) => s + (resumoAtual[m][c] || 0), 0);
+    }
+  }
+
+  // Carrega também os IDs dos registros para poder excluir
+  await carregarIdsRegistros(ano);
+
+  renderTabelaFat(resumoAtual);
+  renderChartFat(resumoAtual);
+}
+
+// Busca os registros com ID para mapear mes/canal → id (usado na exclusão)
+let registrosIds = {}; // { "mes-canal_normalizado": id }
+async function carregarIdsRegistros(ano) {
+  registrosIds = {};
+  const res = await API.getFaturamento(null, ano);
+  if (!res.ok) return;
+  (res.data || []).forEach(r => {
+    const mesNum = Number(r.mes);
+    // Normaliza o canal: lowercase + trim para garantir que bate com CANAIS_TOTAL
+    const canalNorm = String(r.canal || '').trim().toLowerCase();
+    registrosIds[`${mesNum}-${canalNorm}`] = r.id;
+  });
+}
+
+// ── Tabela ──────────────────────────────────────────────────
+function renderTabelaFat(dados) {
+  const tbody = document.getElementById('tbody-fat');
+  if (!tbody) return;
+
+  const ehAdmin = Auth.eAdminCompleto();
+
+  // Mostra meses que têm qualquer valor (incluindo só Vendas Comercial)
+  const linhas = [];
+  for (let m = 1; m <= 12; m++) {
+    const d = dados[m];
+    const temQualquerValor = CANAIS.some(c => d[c] > 0);
+    if (!d || !temQualquerValor) continue;
+
+    // Células simples — sem botões de lixeira
+    const celulasCanais = CANAIS.map(c => {
+      const temValor = d[c] > 0;
+      if (!temValor) return `<td style="white-space:nowrap"><span style="color:var(--gray-300)">—</span></td>`;
+      return `<td style="white-space:nowrap">${formatBRL(d[c])}</td>`;
+    });
+
+    // Lápis na coluna Total — abre modal com todos os valores do mês para editar
+    const btnEditar = ehAdmin
+      ? `<button class="btn-acao btn-editar-fat" onclick="abrirEdicaoMes(${m})" title="Editar mês" style="margin-left:6px;vertical-align:middle">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>`
+      : '';
+
+    linhas.push(`
+      <tr>
+        <td style="font-weight:600;white-space:nowrap">${MESES_LABELS[m]}</td>
+        ${celulasCanais.join('')}
+        <td style="font-weight:700;color:var(--navy);white-space:nowrap">${formatBRL(d.total)}${btnEditar}</td>
+      </tr>
+    `);
+  }
+
+  if (!linhas.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted" style="padding:32px">
+      Nenhum dado para este ano
+    </td></tr>`;
+    return;
+  }
+
+  // Linha de total anual
+  const totaisCanais = CANAIS.map(c =>
+    Object.values(dados).reduce((s, d) => s + (d[c] || 0), 0)
+  );
+  const totalGeral = CANAIS_TOTAL.map(c => totaisCanais[CANAIS.indexOf(c)]).reduce((s, v) => s + v, 0);
+
+  linhas.push(`
+    <tr style="background:var(--off-white);border-top:2px solid var(--gray-200)">
+      <td style="font-family:var(--font-title);font-weight:800;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--gray-500)">Total Anual</td>
+      ${totaisCanais.map(v => `<td style="font-weight:700;color:var(--navy);white-space:nowrap">${formatBRL(v)}</td>`).join('')}
+      <td style="font-family:var(--font-title);font-weight:800;color:var(--navy);white-space:nowrap">${formatBRL(totalGeral)}</td>
+    </tr>
+  `);
+
+  tbody.innerHTML = linhas.join('');
+}
+
+// ── Excluir canal individual ────────────────────────────────
+function confirmarExclusaoCanal(mes, canal, id) {
+  const nomeMes = MESES_LABELS[mes];
+  const ano = document.getElementById('sel-ano').value;
+  if (!confirm(`Excluir o lançamento de "${canal}" em ${nomeMes}/${ano}?\nEsta ação não pode ser desfeita.`)) return;
+  excluirCanal(id, canal);
+}
+
+async function excluirCanal(id, canal) {
+  const r = await API.excluirFaturamento(id);
+  if (!r.ok) { toast(r.error || `Erro ao excluir ${canal}`, 'error'); return; }
+  toast(`Lançamento de ${canal} excluído.`, 'success');
+  await carregarFaturamento();
+}
+
+// ── Editar mês pelo botão da coluna Total ──────────────────
+function abrirEdicaoMes(mes) {
+  document.getElementById('fat-mes').value = mes;
+  document.getElementById('fat-ano').value = document.getElementById('sel-ano').value;
+
+  const d = resumoAtual[mes] || {};
+  setInputBRL('fat-lojinha', d['Lojinha']      || 0);
+  setInputBRL('fat-academy', d['Safe Academy'] || 0);
+  setInputBRL('fat-azul',    d['Azul Pontos']  || 0);
+  setInputBRL('fat-lito',    d['Lito Academy'] || 0);
+
+  abrirModal('modal-fat');
+}
+
+// ── Gráfico ─────────────────────────────────────────────────
+function renderChartFat(dados) {
+  const ctx = document.getElementById('chart-fat');
+  if (!ctx) return;
+
+  // Só inclui meses que têm algum valor
+  const mesesComDados = [];
+  const mesesLabels   = [];
+  for (let m = 1; m <= 12; m++) {
+    const d = dados[m] || {};
+    const temQualquerValor = CANAIS.some(c => Number(d[c]) > 0);
+    if (temQualquerValor) {
+      mesesComDados.push(m);
+      mesesLabels.push(MESES_CURTOS[m]);
+    }
+  }
+
+  if (!mesesComDados.length) {
+    if (chartFat) { chartFat.destroy(); chartFat = null; }
+    ctx.parentElement.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--gray-300);gap:8px">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".35"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-4"/></svg>
+        <p style="font-size:.82rem;font-weight:500;color:var(--gray-400)">Nenhum dado para este ano</p>
+      </div>`;
+    return;
+  }
+
+  const datasets = CANAIS.map((c, i) => ({
+    label: c,
+    data:  mesesComDados.map(m => dados[m][c] || 0),
+    backgroundColor: CORES[i],
+    borderRadius: 4,
+    borderSkipped: false
+  }));
+
+  if (chartFat) chartFat.destroy();
+  chartFat = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: mesesLabels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Montserrat', size: 11 }, padding: 12, boxWidth: 12, borderRadius: 3 } },
+        tooltip: { callbacks: { label: c => `${c.dataset.label}: ${formatBRL(c.parsed.y)}` } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 11 }, color: '#5E7A9A' } },
+        y: { stacked: true, grid: { color: 'rgba(0,0,0,.04)' },
+          ticks: { font: { family: 'Montserrat', size: 10 }, color: '#5E7A9A',
+            callback: v => 'R$' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v) } }
+      }
+    }
+  });
+}
+
+// ── Máscara BRL para inputs ─────────────────────────────────
+function aplicarMascaraBRL(input) {
+  input.addEventListener('input', () => {
+    let raw = input.value.replace(/\D/g, '');
+    if (!raw) { input.value = ''; return; }
+    const num = Number(raw) / 100;
+    input.value = num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  });
+  input.addEventListener('focus', () => {
+    if (!input.value) input.value = '';
+  });
+}
+
+function setInputBRL(id, valor) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (!valor) { el.value = ''; return; }
+  el.value = Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function getInputBRL(id) {
+  const el = document.getElementById(id);
+  if (!el || !el.value) return 0;
+  // Remove separadores de milhar (.) e troca vírgula decimal por ponto
+  return Number(el.value.replace(/\./g, '').replace(',', '.')) || 0;
+}
+
+// Aplicar máscaras nos inputs do modal ao carregar
+document.addEventListener('DOMContentLoaded', () => {
+  ['fat-lojinha','fat-academy','fat-azul','fat-lito'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) aplicarMascaraBRL(el);
+  });
+});
+document.getElementById('btn-editar')?.addEventListener('click', () => {
+  if (!Auth.podeEditar()) { toast('Este acesso é somente leitura.', 'warning'); return; }
+
+  const mes = CONFIG.MES_ATUAL;
+  document.getElementById('fat-mes').value = mes;
+  document.getElementById('fat-ano').value = document.getElementById('sel-ano').value;
+
+  const d = resumoAtual[mes] || {};
+  setInputBRL('fat-lojinha', d['Lojinha']      || 0);
+  setInputBRL('fat-academy', d['Safe Academy'] || 0);
+  setInputBRL('fat-azul',    d['Azul Pontos']  || 0);
+  setInputBRL('fat-lito',    d['Lito Academy'] || 0);
+
+  abrirModal('modal-fat');
+});
+
+// Ao trocar mês no modal, pré-carrega os valores daquele mês
+document.getElementById('fat-mes')?.addEventListener('change', () => {
+  const mes = Number(document.getElementById('fat-mes').value);
+  const d   = resumoAtual[mes] || {};
+  setInputBRL('fat-lojinha', d['Lojinha']      || 0);
+  setInputBRL('fat-academy', d['Safe Academy'] || 0);
+  setInputBRL('fat-azul',    d['Azul Pontos']  || 0);
+  setInputBRL('fat-lito',    d['Lito Academy'] || 0);
+});
+
+// ── Salvar ──────────────────────────────────────────────────
+document.getElementById('btn-salvar-fat')?.addEventListener('click', async () => {
+  if (!Auth.podeEditar()) { toast('Este acesso é somente leitura.', 'warning'); return; }
+
+  const btn = document.getElementById('btn-salvar-fat');
+  const mes  = document.getElementById('fat-mes').value;
+  const ano  = document.getElementById('fat-ano').value;
+  btnLoading(btn, true);
+
+  const canaisSalvar = [
+    ['Lojinha',      getInputBRL('fat-lojinha')],
+    ['Safe Academy', getInputBRL('fat-academy')],
+    ['Azul Pontos',  getInputBRL('fat-azul')],
+    ['Lito Academy', getInputBRL('fat-lito')]
+  ];
+
+  let ok = true;
+  for (const [canal, valor] of canaisSalvar) {
+    // Salva mesmo se valor for 0 (para zerar um lançamento anterior)
+    const r = await API.salvarFaturamento(mes, ano, canal, valor || 0);
+    if (!r.ok) { ok = false; toast(r.error || 'Erro ao salvar ' + canal, 'error'); break; }
+  }
+
+  btnLoading(btn, false);
+  if (ok) {
+    toast('Faturamento salvo!', 'success');
+    fecharModal('modal-fat');
+    await carregarFaturamento();
+  }
+});
+
+// ── Filtro de ano ───────────────────────────────────────────
+document.getElementById('sel-ano')?.addEventListener('change', carregarFaturamento);
+
+// ── Sidebar ─────────────────────────────────────────────────
+document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+  document.getElementById('main').classList.toggle('sidebar-collapsed');
+});
+document.getElementById('hamburger')?.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebar-overlay').classList.toggle('active');
+});
+document.getElementById('sidebar-overlay')?.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('active');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!Auth.proteger(true)) return;
+  Auth.preencherUI();
+  carregarFaturamento();
+});
+</script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

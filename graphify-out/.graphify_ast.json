@@ -1,0 +1,4044 @@
+{
+  "nodes": [
+    {
+      "id": "admin_cli",
+      "label": "admin-cli.js",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_https",
+      "label": "https",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_http",
+      "label": "http",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_readline",
+      "label": "readline",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_crypto",
+      "label": "crypto",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_getrl",
+      "label": "getRl()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L30",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_pergunta",
+      "label": "pergunta()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L37",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_hashsenha",
+      "label": "hashSenha()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L41",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_fazerget",
+      "label": "fazerGet()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L46",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_fazerpost",
+      "label": "fazerPost()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L69",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_apipost",
+      "label": "apiPost()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L108",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_apiget",
+      "label": "apiGet()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L118",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_c",
+      "label": "c",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L129",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_ok",
+      "label": "ok()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L140",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_erro",
+      "label": "erro()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L141",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_info",
+      "label": "info()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L142",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_titulo",
+      "label": "titulo()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L143",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_labelperfil",
+      "label": "labelPerfil()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L145",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_cmdlistar",
+      "label": "cmdListar()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L154",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_cmdadicionar",
+      "label": "cmdAdicionar()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L195",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_cmdsenha",
+      "label": "cmdSenha()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L230",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_cmdresetar",
+      "label": "cmdResetar()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L261",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_cmdremover",
+      "label": "cmdRemover()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L286",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_ajuda",
+      "label": "ajuda()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L319",
+      "_origin": "ast"
+    },
+    {
+      "id": "admin_cli_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "admin-cli.js",
+      "source_location": "L335",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript",
+      "label": "appsscript.json",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_timezone",
+      "label": "timeZone",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_dependencies",
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_exceptionlogging",
+      "label": "exceptionLogging",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_oauthscopes",
+      "label": "oauthScopes",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_runtimeversion",
+      "label": "runtimeVersion",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_webapp",
+      "label": "webapp",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_webapp_executeas",
+      "label": "executeAs",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "apps_script_appsscript_webapp_access",
+      "label": "access",
+      "file_type": "code",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "assets_safe_minions_xlsx_full_min",
+      "label": "xlsx.full.min.js",
+      "file_type": "code",
+      "source_file": "assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "label": "make_xlsx_lib()",
+      "file_type": "code",
+      "source_file": "assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_access_control",
+      "label": "access-control.js",
+      "file_type": "code",
+      "source_file": "js/access-control.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_access_control_accesscontrol",
+      "label": "AccessControl",
+      "file_type": "code",
+      "source_file": "js/access-control.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_admin",
+      "label": "admin.js",
+      "file_type": "code",
+      "source_file": "js/admin.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_admin_admin",
+      "label": "Admin",
+      "file_type": "code",
+      "source_file": "js/admin.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api",
+      "label": "api.js",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_cache",
+      "label": "Cache",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_api",
+      "label": "API",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_toast",
+      "label": "toast()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L270",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_escapehtml",
+      "label": "escapeHtml()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L296",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_formatbrl",
+      "label": "formatBRL()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L305",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_formatdata",
+      "label": "formatData()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L309",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_nomemes",
+      "label": "nomeMes()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L315",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_abrirmodal",
+      "label": "abrirModal()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L317",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_fecharmodal",
+      "label": "fecharModal()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L318",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_btnloading",
+      "label": "btnLoading()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L320",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_api_skeletontabela",
+      "label": "skeletonTabela()",
+      "file_type": "code",
+      "source_file": "js/api.js",
+      "source_location": "L332",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_auth",
+      "label": "auth.js",
+      "file_type": "code",
+      "source_file": "js/auth.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_auth_auth",
+      "label": "Auth",
+      "file_type": "code",
+      "source_file": "js/auth.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_bases",
+      "label": "bases.js",
+      "file_type": "code",
+      "source_file": "js/bases.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_bases_bases",
+      "label": "Bases",
+      "file_type": "code",
+      "source_file": "js/bases.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_cadastro_alunos",
+      "label": "cadastro-alunos.js",
+      "file_type": "code",
+      "source_file": "js/cadastro-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_cadastro_alunos_cadastroalunos",
+      "label": "CadastroAlunos",
+      "file_type": "code",
+      "source_file": "js/cadastro-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_concorrencia",
+      "label": "concorrencia.js",
+      "file_type": "code",
+      "source_file": "js/concorrencia.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_concorrencia_concorrencia",
+      "label": "Concorrencia",
+      "file_type": "code",
+      "source_file": "js/concorrencia.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_config",
+      "label": "config.js",
+      "file_type": "code",
+      "source_file": "js/config.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_config_config",
+      "label": "CONFIG",
+      "file_type": "code",
+      "source_file": "js/config.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_controle_gastos",
+      "label": "controle-gastos.js",
+      "file_type": "code",
+      "source_file": "js/controle-gastos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_controle_gastos_controlegastos",
+      "label": "ControleGastos",
+      "file_type": "code",
+      "source_file": "js/controle-gastos.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_dashboard",
+      "label": "dashboard.js",
+      "file_type": "code",
+      "source_file": "js/dashboard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_dashboard_dashboard",
+      "label": "Dashboard",
+      "file_type": "code",
+      "source_file": "js/dashboard.js",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_fechamento_horas",
+      "label": "fechamento-horas.js",
+      "file_type": "code",
+      "source_file": "js/fechamento-horas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_fechamento_horas_fechamentohoras",
+      "label": "FechamentoHoras",
+      "file_type": "code",
+      "source_file": "js/fechamento-horas.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_horas_voadas_inva",
+      "label": "horas-voadas-inva.js",
+      "file_type": "code",
+      "source_file": "js/horas-voadas-inva.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_horas_voadas_inva_horasvoadasinva",
+      "label": "HorasVoadasInva",
+      "file_type": "code",
+      "source_file": "js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_inicio",
+      "label": "inicio.js",
+      "file_type": "code",
+      "source_file": "js/inicio.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_inicio_inicio",
+      "label": "Inicio",
+      "file_type": "code",
+      "source_file": "js/inicio.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_progresso_alunos",
+      "label": "progresso-alunos.js",
+      "file_type": "code",
+      "source_file": "js/progresso-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_progresso_alunos_progressoalunos",
+      "label": "ProgressoAlunos",
+      "file_type": "code",
+      "source_file": "js/progresso-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_vendas",
+      "label": "vendas.js",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_vendas_cursos_vendas",
+      "label": "CURSOS_VENDAS",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_vendas_pacotes_legados_cursos",
+      "label": "PACOTES_LEGADOS_CURSOS",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L26",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_vendas_vendas",
+      "label": "Vendas",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_vendas_aplicarmascarabrl",
+      "label": "aplicarMascaraBRL()",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L765",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_vendas_setinputbrl",
+      "label": "setInputBRL()",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L773",
+      "_origin": "ast"
+    },
+    {
+      "id": "js_vendas_getinputbrl",
+      "label": "getInputBRL()",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L784",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_assets_safe_minions_xlsx_full_min",
+      "label": "xlsx.full.min.js",
+      "file_type": "code",
+      "source_file": "preview/clean/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "label": "make_xlsx_lib()",
+      "file_type": "code",
+      "source_file": "preview/clean/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_access_control",
+      "label": "access-control.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/access-control.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_access_control_accesscontrol",
+      "label": "AccessControl",
+      "file_type": "code",
+      "source_file": "preview/clean/js/access-control.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_admin",
+      "label": "admin.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/admin.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_admin_admin",
+      "label": "Admin",
+      "file_type": "code",
+      "source_file": "preview/clean/js/admin.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api",
+      "label": "api.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_cache",
+      "label": "Cache",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_api",
+      "label": "API",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_toast",
+      "label": "toast()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L270",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_escapehtml",
+      "label": "escapeHtml()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L296",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_formatbrl",
+      "label": "formatBRL()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L305",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_formatdata",
+      "label": "formatData()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L309",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_nomemes",
+      "label": "nomeMes()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L315",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_abrirmodal",
+      "label": "abrirModal()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L317",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_fecharmodal",
+      "label": "fecharModal()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L318",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_btnloading",
+      "label": "btnLoading()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L320",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_api_skeletontabela",
+      "label": "skeletonTabela()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L332",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_auth",
+      "label": "auth.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/auth.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_auth_auth",
+      "label": "Auth",
+      "file_type": "code",
+      "source_file": "preview/clean/js/auth.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_bases",
+      "label": "bases.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/bases.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_bases_bases",
+      "label": "Bases",
+      "file_type": "code",
+      "source_file": "preview/clean/js/bases.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_cadastro_alunos",
+      "label": "cadastro-alunos.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/cadastro-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_cadastro_alunos_cadastroalunos",
+      "label": "CadastroAlunos",
+      "file_type": "code",
+      "source_file": "preview/clean/js/cadastro-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_concorrencia",
+      "label": "concorrencia.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/concorrencia.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_concorrencia_concorrencia",
+      "label": "Concorrencia",
+      "file_type": "code",
+      "source_file": "preview/clean/js/concorrencia.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_config",
+      "label": "config.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/config.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_config_config",
+      "label": "CONFIG",
+      "file_type": "code",
+      "source_file": "preview/clean/js/config.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_controle_gastos",
+      "label": "controle-gastos.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/controle-gastos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_controle_gastos_controlegastos",
+      "label": "ControleGastos",
+      "file_type": "code",
+      "source_file": "preview/clean/js/controle-gastos.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_dashboard",
+      "label": "dashboard.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/dashboard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_dashboard_dashboard",
+      "label": "Dashboard",
+      "file_type": "code",
+      "source_file": "preview/clean/js/dashboard.js",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_fechamento_horas",
+      "label": "fechamento-horas.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/fechamento-horas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_fechamento_horas_fechamentohoras",
+      "label": "FechamentoHoras",
+      "file_type": "code",
+      "source_file": "preview/clean/js/fechamento-horas.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_horas_voadas_inva",
+      "label": "horas-voadas-inva.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/horas-voadas-inva.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_horas_voadas_inva_horasvoadasinva",
+      "label": "HorasVoadasInva",
+      "file_type": "code",
+      "source_file": "preview/clean/js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_inicio",
+      "label": "inicio.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/inicio.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_inicio_inicio",
+      "label": "Inicio",
+      "file_type": "code",
+      "source_file": "preview/clean/js/inicio.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_preview_guard",
+      "label": "preview-guard.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_preview_guard_getaction",
+      "label": "getAction()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_preview_guard_xmlhttprequest_open",
+      "label": ".open()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L56",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_preview_guard_xmlhttprequest_send",
+      "label": ".send()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L57",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_preview_guard_flash",
+      "label": "flash()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L73",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_preview_guard_urlfor",
+      "label": "urlFor()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L87",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_preview_guard_buildbar",
+      "label": "buildBar()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L91",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_progresso_alunos",
+      "label": "progresso-alunos.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/progresso-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_progresso_alunos_progressoalunos",
+      "label": "ProgressoAlunos",
+      "file_type": "code",
+      "source_file": "preview/clean/js/progresso-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_vendas",
+      "label": "vendas.js",
+      "file_type": "code",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_vendas_cursos_vendas",
+      "label": "CURSOS_VENDAS",
+      "file_type": "code",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_vendas_pacotes_legados_cursos",
+      "label": "PACOTES_LEGADOS_CURSOS",
+      "file_type": "code",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L26",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_vendas_vendas",
+      "label": "Vendas",
+      "file_type": "code",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_vendas_aplicarmascarabrl",
+      "label": "aplicarMascaraBRL()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L769",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_vendas_setinputbrl",
+      "label": "setInputBRL()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L777",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_clean_js_vendas_getinputbrl",
+      "label": "getInputBRL()",
+      "file_type": "code",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L788",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_assets_safe_minions_xlsx_full_min",
+      "label": "xlsx.full.min.js",
+      "file_type": "code",
+      "source_file": "preview/denso/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "label": "make_xlsx_lib()",
+      "file_type": "code",
+      "source_file": "preview/denso/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_access_control",
+      "label": "access-control.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/access-control.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_access_control_accesscontrol",
+      "label": "AccessControl",
+      "file_type": "code",
+      "source_file": "preview/denso/js/access-control.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_admin",
+      "label": "admin.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/admin.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_admin_admin",
+      "label": "Admin",
+      "file_type": "code",
+      "source_file": "preview/denso/js/admin.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api",
+      "label": "api.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_cache",
+      "label": "Cache",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_api",
+      "label": "API",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_toast",
+      "label": "toast()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L270",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_escapehtml",
+      "label": "escapeHtml()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L296",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_formatbrl",
+      "label": "formatBRL()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L305",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_formatdata",
+      "label": "formatData()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L309",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_nomemes",
+      "label": "nomeMes()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L315",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_abrirmodal",
+      "label": "abrirModal()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L317",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_fecharmodal",
+      "label": "fecharModal()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L318",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_btnloading",
+      "label": "btnLoading()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L320",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_api_skeletontabela",
+      "label": "skeletonTabela()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L332",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_auth",
+      "label": "auth.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/auth.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_auth_auth",
+      "label": "Auth",
+      "file_type": "code",
+      "source_file": "preview/denso/js/auth.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_bases",
+      "label": "bases.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/bases.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_bases_bases",
+      "label": "Bases",
+      "file_type": "code",
+      "source_file": "preview/denso/js/bases.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_cadastro_alunos",
+      "label": "cadastro-alunos.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/cadastro-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_cadastro_alunos_cadastroalunos",
+      "label": "CadastroAlunos",
+      "file_type": "code",
+      "source_file": "preview/denso/js/cadastro-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_concorrencia",
+      "label": "concorrencia.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/concorrencia.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_concorrencia_concorrencia",
+      "label": "Concorrencia",
+      "file_type": "code",
+      "source_file": "preview/denso/js/concorrencia.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_config",
+      "label": "config.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/config.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_config_config",
+      "label": "CONFIG",
+      "file_type": "code",
+      "source_file": "preview/denso/js/config.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_controle_gastos",
+      "label": "controle-gastos.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/controle-gastos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_controle_gastos_controlegastos",
+      "label": "ControleGastos",
+      "file_type": "code",
+      "source_file": "preview/denso/js/controle-gastos.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_dashboard",
+      "label": "dashboard.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/dashboard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_dashboard_dashboard",
+      "label": "Dashboard",
+      "file_type": "code",
+      "source_file": "preview/denso/js/dashboard.js",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_fechamento_horas",
+      "label": "fechamento-horas.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/fechamento-horas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_fechamento_horas_fechamentohoras",
+      "label": "FechamentoHoras",
+      "file_type": "code",
+      "source_file": "preview/denso/js/fechamento-horas.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_horas_voadas_inva",
+      "label": "horas-voadas-inva.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/horas-voadas-inva.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_horas_voadas_inva_horasvoadasinva",
+      "label": "HorasVoadasInva",
+      "file_type": "code",
+      "source_file": "preview/denso/js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_inicio",
+      "label": "inicio.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/inicio.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_inicio_inicio",
+      "label": "Inicio",
+      "file_type": "code",
+      "source_file": "preview/denso/js/inicio.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_preview_guard",
+      "label": "preview-guard.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_preview_guard_getaction",
+      "label": "getAction()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_preview_guard_xmlhttprequest_open",
+      "label": ".open()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L56",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_preview_guard_xmlhttprequest_send",
+      "label": ".send()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L57",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_preview_guard_flash",
+      "label": "flash()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L73",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_preview_guard_urlfor",
+      "label": "urlFor()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L87",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_preview_guard_buildbar",
+      "label": "buildBar()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L91",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_progresso_alunos",
+      "label": "progresso-alunos.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/progresso-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_progresso_alunos_progressoalunos",
+      "label": "ProgressoAlunos",
+      "file_type": "code",
+      "source_file": "preview/denso/js/progresso-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_vendas",
+      "label": "vendas.js",
+      "file_type": "code",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_vendas_cursos_vendas",
+      "label": "CURSOS_VENDAS",
+      "file_type": "code",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_vendas_pacotes_legados_cursos",
+      "label": "PACOTES_LEGADOS_CURSOS",
+      "file_type": "code",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L26",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_vendas_vendas",
+      "label": "Vendas",
+      "file_type": "code",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_vendas_aplicarmascarabrl",
+      "label": "aplicarMascaraBRL()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L769",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_vendas_setinputbrl",
+      "label": "setInputBRL()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L777",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_denso_js_vendas_getinputbrl",
+      "label": "getInputBRL()",
+      "file_type": "code",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L788",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_assets_safe_minions_xlsx_full_min",
+      "label": "xlsx.full.min.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "label": "make_xlsx_lib()",
+      "file_type": "code",
+      "source_file": "preview/refinado/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_access_control",
+      "label": "access-control.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/access-control.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_access_control_accesscontrol",
+      "label": "AccessControl",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/access-control.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_admin",
+      "label": "admin.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/admin.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_admin_admin",
+      "label": "Admin",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/admin.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api",
+      "label": "api.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_cache",
+      "label": "Cache",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_api",
+      "label": "API",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_toast",
+      "label": "toast()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L270",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_escapehtml",
+      "label": "escapeHtml()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L296",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_formatbrl",
+      "label": "formatBRL()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L305",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_formatdata",
+      "label": "formatData()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L309",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_nomemes",
+      "label": "nomeMes()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L315",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_abrirmodal",
+      "label": "abrirModal()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L317",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_fecharmodal",
+      "label": "fecharModal()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L318",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_btnloading",
+      "label": "btnLoading()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L320",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_api_skeletontabela",
+      "label": "skeletonTabela()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L332",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_auth",
+      "label": "auth.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/auth.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_auth_auth",
+      "label": "Auth",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/auth.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_bases",
+      "label": "bases.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/bases.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_bases_bases",
+      "label": "Bases",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/bases.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_cadastro_alunos",
+      "label": "cadastro-alunos.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/cadastro-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_cadastro_alunos_cadastroalunos",
+      "label": "CadastroAlunos",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/cadastro-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_concorrencia",
+      "label": "concorrencia.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/concorrencia.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_concorrencia_concorrencia",
+      "label": "Concorrencia",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/concorrencia.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_config",
+      "label": "config.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/config.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_config_config",
+      "label": "CONFIG",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/config.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_controle_gastos",
+      "label": "controle-gastos.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/controle-gastos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_controle_gastos_controlegastos",
+      "label": "ControleGastos",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/controle-gastos.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_dashboard",
+      "label": "dashboard.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/dashboard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_dashboard_dashboard",
+      "label": "Dashboard",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/dashboard.js",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_fechamento_horas",
+      "label": "fechamento-horas.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/fechamento-horas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_fechamento_horas_fechamentohoras",
+      "label": "FechamentoHoras",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/fechamento-horas.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_horas_voadas_inva",
+      "label": "horas-voadas-inva.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/horas-voadas-inva.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_horas_voadas_inva_horasvoadasinva",
+      "label": "HorasVoadasInva",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_inicio",
+      "label": "inicio.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/inicio.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_inicio_inicio",
+      "label": "Inicio",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/inicio.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_preview_guard",
+      "label": "preview-guard.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_preview_guard_getaction",
+      "label": "getAction()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_preview_guard_xmlhttprequest_open",
+      "label": ".open()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L56",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_preview_guard_xmlhttprequest_send",
+      "label": ".send()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L57",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_preview_guard_flash",
+      "label": "flash()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L73",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_preview_guard_urlfor",
+      "label": "urlFor()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L87",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_preview_guard_buildbar",
+      "label": "buildBar()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L91",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_progresso_alunos",
+      "label": "progresso-alunos.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/progresso-alunos.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_progresso_alunos_progressoalunos",
+      "label": "ProgressoAlunos",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/progresso-alunos.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_vendas",
+      "label": "vendas.js",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_vendas_cursos_vendas",
+      "label": "CURSOS_VENDAS",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_vendas_pacotes_legados_cursos",
+      "label": "PACOTES_LEGADOS_CURSOS",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L26",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_vendas_vendas",
+      "label": "Vendas",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_vendas_aplicarmascarabrl",
+      "label": "aplicarMascaraBRL()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L769",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_vendas_setinputbrl",
+      "label": "setInputBRL()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L777",
+      "_origin": "ast"
+    },
+    {
+      "id": "preview_refinado_js_vendas_getinputbrl",
+      "label": "getInputBRL()",
+      "file_type": "code",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L788",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "admin_cli",
+      "target": "ref_https",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_https",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "ref_http",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_http",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "ref_readline",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_readline",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "ref_crypto",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_crypto",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_getrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_pergunta",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_hashsenha",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_fazerget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_fazerpost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_apipost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_apiget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L118",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_c",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L129",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_ok",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_erro",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L141",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_info",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_titulo",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L143",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_labelperfil",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L145",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_cmdlistar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L154",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_cmdadicionar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L195",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_cmdsenha",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_cmdresetar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L261",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_cmdremover",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L286",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_ajuda",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L319",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli",
+      "target": "admin_cli_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L335",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_pergunta",
+      "target": "admin_cli_getrl",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_fazerpost",
+      "target": "admin_cli_fazerget",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_apipost",
+      "target": "admin_cli_fazerpost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_apiget",
+      "target": "admin_cli_fazerget",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdlistar",
+      "target": "admin_cli_titulo",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdlistar",
+      "target": "admin_cli_info",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdlistar",
+      "target": "admin_cli_apiget",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L158",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdlistar",
+      "target": "admin_cli_erro",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L159",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdlistar",
+      "target": "admin_cli_labelperfil",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L178",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdadicionar",
+      "target": "admin_cli_titulo",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L196",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdadicionar",
+      "target": "admin_cli_pergunta",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdadicionar",
+      "target": "admin_cli_info",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L201",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdadicionar",
+      "target": "admin_cli_erro",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L206",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdadicionar",
+      "target": "admin_cli_apipost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L219",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdadicionar",
+      "target": "admin_cli_ok",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L222",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdsenha",
+      "target": "admin_cli_pergunta",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L232",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdsenha",
+      "target": "admin_cli_titulo",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L234",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdsenha",
+      "target": "admin_cli_erro",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L239",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdsenha",
+      "target": "admin_cli_apiget",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L243",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdsenha",
+      "target": "admin_cli_info",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L251",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdsenha",
+      "target": "admin_cli_apipost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L252",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdsenha",
+      "target": "admin_cli_ok",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L257",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdresetar",
+      "target": "admin_cli_erro",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L263",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdresetar",
+      "target": "admin_cli_apiget",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L268",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdresetar",
+      "target": "admin_cli_info",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L276",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdresetar",
+      "target": "admin_cli_apipost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L277",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdresetar",
+      "target": "admin_cli_ok",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L282",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdremover",
+      "target": "admin_cli_pergunta",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L288",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdremover",
+      "target": "admin_cli_apiget",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L291",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdremover",
+      "target": "admin_cli_erro",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L292",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdremover",
+      "target": "admin_cli_titulo",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L299",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdremover",
+      "target": "admin_cli_info",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdremover",
+      "target": "admin_cli_apipost",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L310",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_cmdremover",
+      "target": "admin_cli_ok",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_ajuda",
+      "target": "admin_cli_titulo",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L320",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_main",
+      "target": "admin_cli_cmdlistar",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L340",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_main",
+      "target": "admin_cli_cmdadicionar",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L341",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_main",
+      "target": "admin_cli_cmdsenha",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L342",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_main",
+      "target": "admin_cli_cmdresetar",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L343",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_main",
+      "target": "admin_cli_cmdremover",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L344",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_main",
+      "target": "admin_cli_ajuda",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L345",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_cli_main",
+      "target": "admin_cli_erro",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin-cli.js",
+      "source_location": "L348",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript",
+      "target": "apps_script_appsscript_timezone",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript",
+      "target": "apps_script_appsscript_dependencies",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript",
+      "target": "apps_script_appsscript_exceptionlogging",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript",
+      "target": "apps_script_appsscript_oauthscopes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript_oauthscopes",
+      "target": "ref_https_www_googleapis_com_auth_spreadsheets",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "apps_script_appsscript_oauthscopes",
+      "target": "ref_https_www_googleapis_com_auth_script_external_request",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "apps_script_appsscript_oauthscopes",
+      "target": "ref_https_www_googleapis_com_auth_script_send_mail",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "apps_script_appsscript",
+      "target": "apps_script_appsscript_runtimeversion",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript",
+      "target": "apps_script_appsscript_webapp",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript_webapp",
+      "target": "apps_script_appsscript_webapp_executeas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_script_appsscript_webapp",
+      "target": "apps_script_appsscript_webapp_access",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps-script/appsscript.json",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "assets_safe_minions_xlsx_full_min",
+      "target": "assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "js_access_control",
+      "target": "js_access_control_accesscontrol",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/access-control.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_admin",
+      "target": "js_admin_admin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/admin.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_cache",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_api",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_toast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L270",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_escapehtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L296",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_formatbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L305",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_formatdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_nomemes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_abrirmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L317",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_fecharmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L318",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_btnloading",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L320",
+      "weight": 1.0
+    },
+    {
+      "source": "js_api",
+      "target": "js_api_skeletontabela",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/api.js",
+      "source_location": "L332",
+      "weight": 1.0
+    },
+    {
+      "source": "js_auth",
+      "target": "js_auth_auth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/auth.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_bases",
+      "target": "js_bases_bases",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/bases.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_cadastro_alunos",
+      "target": "js_cadastro_alunos_cadastroalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/cadastro-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_concorrencia",
+      "target": "js_concorrencia_concorrencia",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/concorrencia.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_config",
+      "target": "js_config_config",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/config.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controle_gastos",
+      "target": "js_controle_gastos_controlegastos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/controle-gastos.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_dashboard",
+      "target": "js_dashboard_dashboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/dashboard.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "js_fechamento_horas",
+      "target": "js_fechamento_horas_fechamentohoras",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/fechamento-horas.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_horas_voadas_inva",
+      "target": "js_horas_voadas_inva_horasvoadasinva",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_inicio",
+      "target": "js_inicio_inicio",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/inicio.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_progresso_alunos",
+      "target": "js_progresso_alunos_progressoalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/progresso-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_vendas",
+      "target": "js_vendas_cursos_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_vendas",
+      "target": "js_vendas_pacotes_legados_cursos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "js_vendas",
+      "target": "js_vendas_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "js_vendas",
+      "target": "js_vendas_aplicarmascarabrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L765",
+      "weight": 1.0
+    },
+    {
+      "source": "js_vendas",
+      "target": "js_vendas_setinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L773",
+      "weight": 1.0
+    },
+    {
+      "source": "js_vendas",
+      "target": "js_vendas_getinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L784",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_assets_safe_minions_xlsx_full_min",
+      "target": "preview_clean_assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_access_control",
+      "target": "preview_clean_js_access_control_accesscontrol",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/access-control.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_admin",
+      "target": "preview_clean_js_admin_admin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/admin.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_cache",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_api",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_toast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L270",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_escapehtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L296",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_formatbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L305",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_formatdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_nomemes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_abrirmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L317",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_fecharmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L318",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_btnloading",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L320",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_api",
+      "target": "preview_clean_js_api_skeletontabela",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/api.js",
+      "source_location": "L332",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_auth",
+      "target": "preview_clean_js_auth_auth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/auth.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_bases",
+      "target": "preview_clean_js_bases_bases",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/bases.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_cadastro_alunos",
+      "target": "preview_clean_js_cadastro_alunos_cadastroalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/cadastro-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_concorrencia",
+      "target": "preview_clean_js_concorrencia_concorrencia",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/concorrencia.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_config",
+      "target": "preview_clean_js_config_config",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/config.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_controle_gastos",
+      "target": "preview_clean_js_controle_gastos_controlegastos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/controle-gastos.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_dashboard",
+      "target": "preview_clean_js_dashboard_dashboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/dashboard.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_fechamento_horas",
+      "target": "preview_clean_js_fechamento_horas_fechamentohoras",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/fechamento-horas.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_horas_voadas_inva",
+      "target": "preview_clean_js_horas_voadas_inva_horasvoadasinva",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_inicio",
+      "target": "preview_clean_js_inicio_inicio",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/inicio.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_preview_guard",
+      "target": "preview_clean_js_preview_guard_getaction",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_preview_guard",
+      "target": "preview_clean_js_preview_guard_flash",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_preview_guard",
+      "target": "preview_clean_js_preview_guard_urlfor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_preview_guard",
+      "target": "preview_clean_js_preview_guard_buildbar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_preview_guard_xmlhttprequest_send",
+      "target": "preview_clean_js_preview_guard_getaction",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_preview_guard_xmlhttprequest_send",
+      "target": "preview_clean_js_preview_guard_flash",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_preview_guard_buildbar",
+      "target": "preview_clean_js_preview_guard_urlfor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/preview-guard.js",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_progresso_alunos",
+      "target": "preview_clean_js_progresso_alunos_progressoalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/progresso-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_vendas",
+      "target": "preview_clean_js_vendas_cursos_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_vendas",
+      "target": "preview_clean_js_vendas_pacotes_legados_cursos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_vendas",
+      "target": "preview_clean_js_vendas_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_vendas",
+      "target": "preview_clean_js_vendas_aplicarmascarabrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L769",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_vendas",
+      "target": "preview_clean_js_vendas_setinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L777",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_clean_js_vendas",
+      "target": "preview_clean_js_vendas_getinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/clean/js/vendas.js",
+      "source_location": "L788",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_assets_safe_minions_xlsx_full_min",
+      "target": "preview_denso_assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_access_control",
+      "target": "preview_denso_js_access_control_accesscontrol",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/access-control.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_admin",
+      "target": "preview_denso_js_admin_admin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/admin.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_cache",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_api",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_toast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L270",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_escapehtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L296",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_formatbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L305",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_formatdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_nomemes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_abrirmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L317",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_fecharmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L318",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_btnloading",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L320",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_api",
+      "target": "preview_denso_js_api_skeletontabela",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/api.js",
+      "source_location": "L332",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_auth",
+      "target": "preview_denso_js_auth_auth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/auth.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_bases",
+      "target": "preview_denso_js_bases_bases",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/bases.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_cadastro_alunos",
+      "target": "preview_denso_js_cadastro_alunos_cadastroalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/cadastro-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_concorrencia",
+      "target": "preview_denso_js_concorrencia_concorrencia",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/concorrencia.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_config",
+      "target": "preview_denso_js_config_config",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/config.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_controle_gastos",
+      "target": "preview_denso_js_controle_gastos_controlegastos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/controle-gastos.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_dashboard",
+      "target": "preview_denso_js_dashboard_dashboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/dashboard.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_fechamento_horas",
+      "target": "preview_denso_js_fechamento_horas_fechamentohoras",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/fechamento-horas.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_horas_voadas_inva",
+      "target": "preview_denso_js_horas_voadas_inva_horasvoadasinva",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_inicio",
+      "target": "preview_denso_js_inicio_inicio",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/inicio.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_preview_guard",
+      "target": "preview_denso_js_preview_guard_getaction",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_preview_guard",
+      "target": "preview_denso_js_preview_guard_flash",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_preview_guard",
+      "target": "preview_denso_js_preview_guard_urlfor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_preview_guard",
+      "target": "preview_denso_js_preview_guard_buildbar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_preview_guard_xmlhttprequest_send",
+      "target": "preview_denso_js_preview_guard_getaction",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_preview_guard_xmlhttprequest_send",
+      "target": "preview_denso_js_preview_guard_flash",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_preview_guard_buildbar",
+      "target": "preview_denso_js_preview_guard_urlfor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/preview-guard.js",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_progresso_alunos",
+      "target": "preview_denso_js_progresso_alunos_progressoalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/progresso-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_vendas",
+      "target": "preview_denso_js_vendas_cursos_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_vendas",
+      "target": "preview_denso_js_vendas_pacotes_legados_cursos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_vendas",
+      "target": "preview_denso_js_vendas_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_vendas",
+      "target": "preview_denso_js_vendas_aplicarmascarabrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L769",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_vendas",
+      "target": "preview_denso_js_vendas_setinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L777",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_denso_js_vendas",
+      "target": "preview_denso_js_vendas_getinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/denso/js/vendas.js",
+      "source_location": "L788",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_assets_safe_minions_xlsx_full_min",
+      "target": "preview_refinado_assets_safe_minions_xlsx_full_min_make_xlsx_lib",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/assets/safe-minions/xlsx.full.min.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_access_control",
+      "target": "preview_refinado_js_access_control_accesscontrol",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/access-control.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_admin",
+      "target": "preview_refinado_js_admin_admin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/admin.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_cache",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_api",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_toast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L270",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_escapehtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L296",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_formatbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L305",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_formatdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_nomemes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_abrirmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L317",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_fecharmodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L318",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_btnloading",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L320",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_api",
+      "target": "preview_refinado_js_api_skeletontabela",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/api.js",
+      "source_location": "L332",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_auth",
+      "target": "preview_refinado_js_auth_auth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/auth.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_bases",
+      "target": "preview_refinado_js_bases_bases",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/bases.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_cadastro_alunos",
+      "target": "preview_refinado_js_cadastro_alunos_cadastroalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/cadastro-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_concorrencia",
+      "target": "preview_refinado_js_concorrencia_concorrencia",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/concorrencia.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_config",
+      "target": "preview_refinado_js_config_config",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/config.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_controle_gastos",
+      "target": "preview_refinado_js_controle_gastos_controlegastos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/controle-gastos.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_dashboard",
+      "target": "preview_refinado_js_dashboard_dashboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/dashboard.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_fechamento_horas",
+      "target": "preview_refinado_js_fechamento_horas_fechamentohoras",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/fechamento-horas.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_horas_voadas_inva",
+      "target": "preview_refinado_js_horas_voadas_inva_horasvoadasinva",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/horas-voadas-inva.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_inicio",
+      "target": "preview_refinado_js_inicio_inicio",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/inicio.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_preview_guard",
+      "target": "preview_refinado_js_preview_guard_getaction",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_preview_guard",
+      "target": "preview_refinado_js_preview_guard_flash",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_preview_guard",
+      "target": "preview_refinado_js_preview_guard_urlfor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_preview_guard",
+      "target": "preview_refinado_js_preview_guard_buildbar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_preview_guard_xmlhttprequest_send",
+      "target": "preview_refinado_js_preview_guard_getaction",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_preview_guard_xmlhttprequest_send",
+      "target": "preview_refinado_js_preview_guard_flash",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_preview_guard_buildbar",
+      "target": "preview_refinado_js_preview_guard_urlfor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/preview-guard.js",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_progresso_alunos",
+      "target": "preview_refinado_js_progresso_alunos_progressoalunos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/progresso-alunos.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_vendas",
+      "target": "preview_refinado_js_vendas_cursos_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_vendas",
+      "target": "preview_refinado_js_vendas_pacotes_legados_cursos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_vendas",
+      "target": "preview_refinado_js_vendas_vendas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_vendas",
+      "target": "preview_refinado_js_vendas_aplicarmascarabrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L769",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_vendas",
+      "target": "preview_refinado_js_vendas_setinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L777",
+      "weight": 1.0
+    },
+    {
+      "source": "preview_refinado_js_vendas",
+      "target": "preview_refinado_js_vendas_getinputbrl",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "preview/refinado/js/vendas.js",
+      "source_location": "L788",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

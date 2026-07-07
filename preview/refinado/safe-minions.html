@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.webmanifest?v=20260706">
+<meta name="theme-color" content="#19213f">
+<link rel="icon" type="image/png" href="favicon.png?v=20260706">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+<link rel="stylesheet" href="css/safe-theme.css?pv=2">
+<link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+<link rel="stylesheet" href="css/safe-minions.css?v=20260615-inva">
+<title>SAFE MINIONS — SAFE Hub</title>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">SAFE MINIONS</div>
+          <div class="topbar-subtitle">Verificação de mínimos ANAC · IS 141-007</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page safe-minions-page">
+      <div class="safe-minions-content">
+        <div id="upload-section">
+          <span class="section-label">Tipo de habilitação</span>
+          <div class="tipo-selector" role="group" aria-label="Tipo de habilitação">
+            <button class="tipo-btn ativo" type="button" data-tipo="ppa" onclick="selecionarTipo('ppa')">
+              PPA
+              <span class="tipo-label">Piloto Privado de Avião</span>
+            </button>
+            <button class="tipo-btn" type="button" data-tipo="pc" onclick="selecionarTipo('pc')">
+              PC / IFR
+              <span class="tipo-label">Piloto Comercial + Instrumentos</span>
+            </button>
+            <button class="tipo-btn" type="button" data-tipo="inva" onclick="selecionarTipo('inva')">
+              INVA
+              <span class="tipo-label">Instrutor de Voo de Avião</span>
+            </button>
+          </div>
+
+          <label class="upload-section" id="drop-area">
+            <input type="file" id="file-input" accept=".xlt,.xltx,.xlsx,.xls">
+            <span class="upload-icon" aria-hidden="true">↥</span>
+            <h2>Arraste o arquivo SACI aqui</h2>
+            <p>ou clique para selecionar · .xlt · .xltx · .xlsx · .xls</p>
+          </label>
+        </div>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p style="color:var(--texto-leve);font-size:13px;">Processando extrato SACI...</p>
+        </div>
+
+        <div id="resultado"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<img src="assets/safe-minions/minion.png" alt="" class="easter-egg" id="minion-banana" title="Banana" role="button" tabindex="0">
+<audio id="banana-audio" src="assets/safe-minions/banana.m4a" preload="none"></audio>
+
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="assets/safe-minions/xlsx.full.min.js"></script>
+<script>
+const acessoSafeMinions = Auth.protegerSafeMinions();
+if (!acessoSafeMinions) {
+  document.documentElement.hidden = true;
+} else {
+  Auth.preencherUI();
+}
+
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+document.getElementById('hamburger')?.addEventListener('click', () => {
+  sidebar?.classList.add('mobile-open');
+  sidebarOverlay?.classList.add('active');
+});
+sidebarOverlay?.addEventListener('click', () => {
+  sidebar?.classList.remove('mobile-open');
+  sidebarOverlay.classList.remove('active');
+});
+
+// ─── ESTADO ───────────────────────────────────────────────────
+let tipoAtual = 'ppa';
+
+function selecionarTipo(tipo) {
+  tipoAtual = tipo;
+  document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('ativo'));
+  document.querySelector(`[data-tipo="${tipo}"]`).classList.add('ativo');
+}
+
+// ─── DRAG & DROP ──────────────────────────────────────────────
+const dropArea = document.getElementById('drop-area');
+const fileInput = document.getElementById('file-input');
+
+dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('drag-over'); });
+dropArea.addEventListener('dragleave', () => dropArea.classList.remove('drag-over'));
+dropArea.addEventListener('drop', e => {
+  e.preventDefault(); dropArea.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) processarArquivo(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) processarArquivo(e.target.files[0]); });
+
+// ─── PROCESSAMENTO ────────────────────────────────────────────
+function processarArquivo(file) {
+  document.getElementById('upload-section').style.display = 'none';
+  document.getElementById('loading').classList.add('ativo');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let rows = [];
+      const conteudo = e.target.result;
+
+      if (arquivoEhHtmlSaci(conteudo)) {
+        // O SACI exporta alguns .xls/.xlt como HTML, apesar da extensão.
+        rows = parseXLTHtml(decodificarHtmlSaci(conteudo));
+      } else {
+        // Excel real (.xltx / .xlsx)
+        const wb = XLSX.read(conteudo, { type: 'array', cellDates: false });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true });
+        rows = data.slice(1)
+          .filter(r => r[0] && !String(r[0]).includes('TOTAL') && r.some(c => c != null))
+          .map(r => ({
+            data: formatarData(r[0]),
+            matricula: String(r[1] || '').trim(),
+            habilitacao: String(r[2] || '').trim(),
+            modelo: String(r[3] || '').trim(),
+            participante: String(r[4] || '').trim(),
+            pousos: parseInt(r[5]) || 0,
+            origem: String(r[6] || '').trim(),
+            destino: String(r[7] || '').trim(),
+            observacao: String(r[8] || '').trim(),
+            funcao: normalizarFuncao(String(r[9] || '').trim()),
+            diurno: parseTime(r[10]),
+            noturno: parseTime(r[11]),
+            naveg: parseTime(r[12]),
+            inst: parseTime(r[13]),
+            capota: parseTime(r[14]),
+            simulador: parseTime(r[15]),
+            milhas: parseNumeroDecimal(r[16]),
+            status: String(r[19] || '').trim().toUpperCase()
+          }));
+      }
+
+      document.getElementById('loading').classList.remove('ativo');
+
+      const ativos = rows.filter(r => r.status !== 'EXCLUSÃO SOLICITADA' && r.status !== 'EXCLUSAO SOLICITADA');
+      const resultado = tipoAtual === 'ppa'  ? analisarPPA(ativos)
+                      : tipoAtual === 'inva' ? analisarINVA(ativos)
+                      : analisarPC(ativos);
+      renderizarResultado(resultado, ativos, rows);
+
+    } catch(err) {
+      document.getElementById('loading').classList.remove('ativo');
+      document.getElementById('upload-section').style.display = 'block';
+      alert('Erro ao ler o arquivo: ' + err.message);
+      console.error(err);
+    }
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+// ─── PARSER XLT (HTML) ────────────────────────────────────────
+function arquivoEhHtmlSaci(buffer) {
+  const inicio = new Uint8Array(buffer, 0, Math.min(buffer.byteLength, 4096));
+  const amostra = new TextDecoder('windows-1252').decode(inicio);
+  return /<table[\s>]/i.test(amostra) && /<tr[\s>]/i.test(amostra);
+}
+
+function decodificarHtmlSaci(buffer) {
+  return new TextDecoder('windows-1252').decode(new Uint8Array(buffer));
+}
+
+function parseXLTHtml(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const rows = doc.querySelectorAll('tr');
+  const result = [];
+  let isFirst = true;
+  rows.forEach(tr => {
+    if (isFirst) { isFirst = false; return; }
+    const cells = tr.querySelectorAll('td');
+    if (cells.length < 20) return;
+    const get = i => cells[i] ? cells[i].textContent.trim() : '';
+    result.push({
+      data: get(0), matricula: get(1), habilitacao: get(2), modelo: get(3),
+      participante: get(4), pousos: parseInt(get(5)) || 0,
+      origem: get(6), destino: get(7), observacao: get(8),
+      funcao: normalizarFuncao(get(9)),
+      diurno: parseTime(get(10)), noturno: parseTime(get(11)),
+      naveg: parseTime(get(12)), inst: parseTime(get(13)),
+      capota: parseTime(get(14)), simulador: parseTime(get(15)),
+      milhas: parseNumeroDecimal(get(16)),
+      status: get(19).toUpperCase()
+    });
+  });
+  return result.filter(r => r.data && !r.data.includes('TOTAL'));
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────
+function formatarData(val) {
+  if (!val) return '';
+  // Serial numérico do Excel (dias desde 1900-01-01)
+  if (typeof val === 'number') {
+    const d = new Date(Math.round((val - 25569) * 86400 * 1000));
+    const dd = String(d.getUTCDate()).padStart(2,'0');
+    const mm = String(d.getUTCMonth()+1).padStart(2,'0');
+    const yyyy = d.getUTCFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  }
+  return String(val).trim();
+}
+
+function normalizarFuncao(f) {
+  // Remove todos os caracteres não-ASCII e normaliza para comparação
+  // Necessário pois o SACI exporta com encoding corrompido (ex: "Instru鈬o" = "Instrução")
+  const fl = f.toLowerCase().replace(/[^\x00-\x7F]/g, '_');
+  if (/instru.{0,5}o\s+solo/i.test(fl) || fl.includes('solo')) return 'PI_SOLO';
+  if (/instru/i.test(fl)) return 'PI';
+  if (/comando/i.test(fl)) return 'PIC';
+  if (/co.?piloto|copiloto/i.test(fl)) return 'COPILOTO';
+  return f;
+}
+
+function parseTime(val) {
+  if (!val) return 0;
+  const s = String(val).trim();
+  if (!s || s === '0' || s === '00:00') return 0;
+  // HH:MM
+  const m1 = s.match(/^(\d+):(\d{2})$/);
+  if (m1) return parseInt(m1[1]) * 60 + parseInt(m1[2]);
+  // HH:MM:SS
+  const m2 = s.match(/^(\d+):(\d{2}):(\d{2})$/);
+  if (m2) return parseInt(m2[1]) * 60 + parseInt(m2[2]);
+  // Fração de dia Excel (0.0208... = 30min)
+  const n = parseFloat(s);
+  if (!isNaN(n) && n > 0 && n < 5) return Math.round(n * 24 * 60);
+  return 0;
+}
+
+function parseNumeroDecimal(val) {
+  if (typeof val === 'number') return Number.isFinite(val) ? val : 0;
+  let s = String(val || '').trim().replace(/\s/g, '');
+  if (!s) return 0;
+  if (s.includes(',') && s.includes('.')) {
+    s = s.lastIndexOf(',') > s.lastIndexOf('.')
+      ? s.replace(/\./g, '').replace(',', '.')
+      : s.replace(/,/g, '');
+  } else if (s.includes(',')) {
+    s = s.replace(',', '.');
+  }
+  const numero = Number(s);
+  return Number.isFinite(numero) ? numero : 0;
+}
+
+function normalizarTextoComparacao(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase();
+}
+
+function fmt(min) {
+  if (min < 0) min = 0;
+  return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
+}
+
+function fmtH(min) {
+  return `${(min/60).toFixed(1)}h`;
+}
+
+function sum(arr, fn) { return arr.reduce((a, r) => a + fn(r), 0); }
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[ch]);
+}
+
+// ─── ANÁLISE PPA ──────────────────────────────────────────────
+function analisarPPA(rows) {
+  const dc   = rows.filter(r => r.funcao === 'PI');
+  const solo = rows.filter(r => r.funcao === 'PI_SOLO');
+
+  const totalGeral  = sum(rows, r => r.diurno + r.noturno);
+  const totalDC     = sum(dc,   r => r.diurno + r.noturno);
+  const dcNoturno   = sum(dc,   r => r.noturno);
+  const totalSolo   = sum(solo, r => r.diurno + r.noturno);
+  const navSolo     = sum(solo, r => r.naveg);
+  const fstd        = sum(rows, r => r.simulador);
+  const fstdCred    = Math.min(fstd, 300); // até 5h
+
+  // Nav 150nm: qualquer função (DC ou solo), trechos do mesmo dia somados, 2 aeródromos além da partida
+  const nav150 = verificarNav150(rows);
+
+  const minimos = [
+    { nome: 'Total de horas do curso', atual: totalGeral, min: 2100, unit: 'h' },
+    { nome: 'Duplo comando', atual: totalDC, min: 1200, unit: 'h' },
+    { nome: 'Duplo comando noturno', atual: dcNoturno, min: 180, unit: 'h' },
+    { nome: 'Voo solo', atual: totalSolo, min: 600, unit: 'h' },
+    { nome: 'Navegação solo', atual: navSolo, min: 300, unit: 'h' },
+    { nome: 'FSTD (crédito, opcional)', atual: fstdCred, real: fstd, min: null, max: 300, unit: 'h', info: true },
+    { nome: 'Navegação 150nm', atual: nav150.milhas, min: 150, unit: 'nm', nav: nav150 },
+  ];
+
+  return { tipo: 'PPA', label: 'Piloto Privado de Avião', minimos, totais: { totalGeral, totalDC, dcNoturno, totalSolo, navSolo } };
+}
+
+// ─── ANÁLISE PC/IFR ───────────────────────────────────────────
+function analisarPC(rows) {
+  const pic  = rows.filter(r => r.funcao === 'PIC');
+  const pi   = rows.filter(r => r.funcao === 'PI');
+
+  const picDiurno  = sum(pic, r => r.diurno);
+  const picNoturno = sum(pic, r => r.noturno);
+  const picTotal   = picDiurno + picNoturno;
+  const picNaveg   = sum(pic, r => r.naveg);
+  const totalGeral = sum(rows, r => r.diurno + r.noturno);
+
+  // IFR em aeronave inclui instrumento real e capota; simulador tem crédito separado.
+  const ifrAeronave = sum(pi.filter(r => r.simulador === 0), r => r.inst + r.capota);
+  const fstd        = sum(rows, r => r.simulador);
+  const fstdCred    = Math.min(fstd, 1200); // até 20h
+  const totalIFR    = ifrAeronave + fstdCred;
+
+  // Nav 300nm: considera somente os trechos identificados como a missão de 300nm.
+  const nav300 = verificarNav300(pic);
+
+  const minimos = [
+    { nome: 'Total PIC', atual: picTotal, min: 4200, unit: 'h' },
+    { nome: 'Navegação como PIC', atual: picNaveg, min: 3000, unit: 'h' },
+    { nome: 'Noturno como PIC', atual: picNoturno, min: 300, unit: 'h' },
+    { nome: 'IFR duplo comando (total)', atual: totalIFR, min: 2400, unit: 'h' },
+    { nome: 'IFR em aeronave (mín. 20h das 40h)', atual: ifrAeronave, min: 1200, unit: 'h' },
+    { nome: 'FSTD IFR (máx. 20h aproveitável)', atual: fstdCred, real: fstd, min: null, max: 1200, unit: 'h', info: true },
+    { nome: 'Navegação 300nm', atual: nav300.milhas, min: 300, unit: 'nm', nav: nav300 },
+  ];
+
+  return { tipo: 'PC/IFR', label: 'Piloto Comercial + Voo por Instrumento', minimos, totais: { picTotal, picDiurno, picNaveg, picNoturno, totalIFR, ifrAeronave, fstdCred, totalGeral } };
+}
+
+// ─── ANÁLISE INVA ─────────────────────────────────────────────
+// Conta o duplo comando (instrução) somente APÓS o último voo de
+// cheque, identificado pela palavra "CHEQUE" na observação.
+function analisarINVA(rows) {
+  const parseDataBR = s => {
+    const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(String(s || '').trim());
+    return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null;
+  };
+
+  // Último voo de cheque = linha mais recente com "CHEQUE" na observação
+  let cheque = null; // { data, dataObj, observacao }
+  rows.forEach(r => {
+    if (!/cheque/i.test(r.observacao || '')) return;
+    const dt = parseDataBR(r.data);
+    if (!dt) return;
+    if (!cheque || dt > cheque.dataObj) cheque = { data: r.data, dataObj: dt, observacao: r.observacao };
+  });
+
+  // Duplo comando (instrução) estritamente APÓS a data do cheque
+  const apos = rows.filter(r => {
+    if (r.funcao !== 'PI') return false;
+    const dt = parseDataBR(r.data);
+    return cheque && dt && dt > cheque.dataObj;
+  });
+
+  const totalDC    = sum(apos, r => r.diurno + r.noturno);
+  const totalGeral = sum(rows, r => r.diurno + r.noturno);
+
+  const minimos = [
+    { nome: 'Duplo comando após o último cheque', atual: totalDC, min: 1800, unit: 'h', full: true }, // 30h
+  ];
+
+  return {
+    tipo: 'INVA',
+    label: 'Instrutor de Voo de Avião',
+    minimos,
+    cheque,
+    totais: { totalGeral, totalDC, voosApos: apos.length }
+  };
+}
+
+// ─── VERIFICAR NAVEGAÇÃO ──────────────────────────────────────
+function verificarNav(rows, minNm) {
+  // Voos com milhas suficientes
+  const candidatos = rows.filter(r => r.milhas >= minNm);
+  if (!candidatos.length) return { ok: false, milhas: 0, aerodromos: 0, detalhe: 'Nenhum voo com milhas suficientes' };
+
+  for (const r of candidatos) {
+    const icaos = extrairICAOs(r.observacao);
+    const aeroAlemPartida = icaos.filter(i => i !== r.origem);
+    const aerosUnicos = [...new Set(aeroAlemPartida.filter(i => i !== r.destino || r.origem !== r.destino))];
+    if (aerosUnicos.length >= 2) {
+      return { ok: true, milhas: r.milhas, aerodromos: aerosUnicos.length, detalhe: `${r.data} · ${r.milhas}nm · Aeródromos: ${aerosUnicos.join(', ')}`, voo: r };
+    }
+    // Fallback: conta pousos (origem + volta = 2 intermediários se pousos >= 3... mas verificamos ICAOs primeiro)
+    // Se obs tem só 1 ICAO intermediário mas pousos >= 3, pode ter 2 aeródromos
+    if (r.pousos >= 3 && aeroAlemPartida.length >= 1) {
+      return { ok: false, milhas: r.milhas, aerodromos: aeroAlemPartida.length, detalhe: `${r.data} · ${r.milhas}nm · Apenas ${aeroAlemPartida.length} aeródromo(s) além da partida detectado(s) (necessário: 2)`, voo: r };
+    }
+  }
+
+  const melhor = candidatos.reduce((a,b) => a.milhas > b.milhas ? a : b);
+  const icaos = extrairICAOs(melhor.observacao);
+  const aeros = [...new Set(icaos.filter(i => i !== melhor.origem))];
+  return { ok: false, milhas: melhor.milhas, aerodromos: aeros.length, detalhe: `${melhor.data} · ${melhor.milhas}nm · Apenas ${aeros.length} aeródromo(s) além da partida detectado(s) (necessário: 2)`, voo: melhor };
+}
+
+function verificarNav150(rows) {
+  // Agrupa todos os registros por dia (qualquer função), soma milhas e coleta aeródromos
+  const porDia = {};
+  rows.forEach(r => {
+    if (!r.milhas || r.milhas === 0) return;
+    if (!porDia[r.data]) porDia[r.data] = [];
+    porDia[r.data].push(r);
+  });
+
+  let melhorInfo = null;
+
+  for (const [dia, voos] of Object.entries(porDia)) {
+    const totalNm = voos.reduce((a, v) => a + v.milhas, 0);
+    const todosIcaos = [];
+    voos.forEach(v => {
+      if (v.origem) todosIcaos.push(v.origem);
+      if (v.destino) todosIcaos.push(v.destino);
+      extrairICAOs(v.observacao).forEach(i => todosIcaos.push(i));
+    });
+    const partida = voos[0].origem;
+    const aeroAlem = [...new Set(todosIcaos.filter(i => i && i !== partida && i.length === 4))];
+    const esteOk = totalNm >= 150 && aeroAlem.length >= 2;
+    const melhorOkAtual = melhorInfo && melhorInfo.totalNm >= 150 && melhorInfo.aeroAlem.length >= 2;
+    if (!melhorInfo ||
+        (esteOk && !melhorOkAtual) ||
+        (esteOk && melhorOkAtual && totalNm > melhorInfo.totalNm) ||
+        (!esteOk && !melhorOkAtual && totalNm > melhorInfo.totalNm)) {
+      melhorInfo = { dia, totalNm, partida, aeroAlem, voos };
+    }
+  }
+
+  if (!melhorInfo) return { ok: false, milhas: 0, aerodromos: 0, detalhe: 'Nenhum voo de navegação encontrado' };
+
+  const ok = melhorInfo.totalNm >= 150 && melhorInfo.aeroAlem.length >= 2;
+  return {
+    ok,
+    milhas: Math.round(melhorInfo.totalNm),
+    aerodromos: melhorInfo.aeroAlem.length,
+    detalhe: `${melhorInfo.dia} · ${melhorInfo.totalNm.toFixed(0)}nm · Aeródromos: ${melhorInfo.aeroAlem.join(', ') || 'não identificados'}`,
+    voos: melhorInfo.voos
+  };
+}
+
+function verificarNav300(rows) {
+  const trechosMissao = rows.filter(r => {
+    const obs = normalizarTextoComparacao(r.observacao);
+    // O SACI exporta a missão ora como "NAV 300NM", ora como "NAVEGACAO 300 NM".
+    // Aceita o radical "NAV" seguido (com letras/ponto/espaco opcionais) de "300 NM".
+    return /NAV[A-Z]*\.?\s*300\s*NM/.test(obs);
+  });
+
+  if (!trechosMissao.length) {
+    return { ok: false, milhas: 0, aerodromos: 0, detalhe: 'Nenhuma missão de navegação 300nm identificada' };
+  }
+
+  // Uma missão pode possuir várias etapas, registradas separadamente no mesmo dia.
+  const porDia = {};
+  trechosMissao.forEach(r => {
+    const dKey = r.data;
+    if (!porDia[dKey]) porDia[dKey] = [];
+    porDia[dKey].push(r);
+  });
+
+  let melhorInfo = null;
+
+  for (const [dia, voos] of Object.entries(porDia)) {
+    const totalNm = voos.reduce((a, v) => a + v.milhas, 0);
+    const todosIcaos = [];
+    voos.forEach(v => {
+      todosIcaos.push(v.origem);
+      todosIcaos.push(v.destino);
+      extrairICAOs(v.observacao).forEach(i => todosIcaos.push(i));
+    });
+    const primeiraEtapa = voos.find(v => /ETAPA\s*1/.test(normalizarTextoComparacao(v.observacao)));
+    const partida = primeiraEtapa?.origem || voos[0].origem;
+    const aeroAlem = [...new Set(todosIcaos.filter(i => i && i !== partida && i.length === 4))];
+    const esteOk = totalNm >= 300 && aeroAlem.length >= 2;
+    const melhorOkAtual = melhorInfo && melhorInfo.totalNm >= 300 && melhorInfo.aeroAlem.length >= 2;
+    if (!melhorInfo ||
+        (esteOk && !melhorOkAtual) ||
+        (esteOk && melhorOkAtual && totalNm > melhorInfo.totalNm) ||
+        (!esteOk && !melhorOkAtual && totalNm > melhorInfo.totalNm)) {
+      melhorInfo = { dia, totalNm, partida, aeroAlem, voos };
+    }
+  }
+
+  if (!melhorInfo) return { ok: false, milhas: 0, aerodromos: 0, detalhe: 'Nenhum voo de navegação encontrado' };
+
+  const ok = melhorInfo.totalNm >= 300 && melhorInfo.aeroAlem.length >= 2;
+  return {
+    ok,
+    milhas: Math.round(melhorInfo.totalNm),
+    aerodromos: melhorInfo.aeroAlem.length,
+    detalhe: `${melhorInfo.dia} · ${melhorInfo.totalNm.toFixed(0)}nm · Aeródromos: ${melhorInfo.aeroAlem.join(', ') || 'não identificados'}`,
+    voos: melhorInfo.voos
+  };
+}
+
+function extrairICAOs(obs) {
+  if (!obs) return [];
+  return [...new Set((normalizarTextoComparacao(obs).match(/\bS[A-Z]{3}\b/g) || []))];
+}
+
+// ─── RENDER ───────────────────────────────────────────────────
+function renderizarResultado(analise, ativos, todos) {
+  const aprovado = analise.minimos
+    .filter(m => m.min !== null)
+    .every(m => m.nav ? m.nav.ok : m.atual >= m.min);
+
+  const el = document.getElementById('resultado');
+  el.style.display = 'block';
+
+  // Totais para resumo
+  const t = analise.totais;
+  let resumoItems = '';
+  if (analise.tipo === 'PPA') {
+    resumoItems = `
+      <div class="resumo-item"><span class="val">${fmt(t.totalGeral)}</span><span class="label">Total Horas</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.totalDC)}</span><span class="label">Duplo Comando</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.totalSolo)}</span><span class="label">Solo</span></div>
+      <div class="resumo-item"><span class="val">${ativos.length}</span><span class="label">Registros</span></div>
+    `;
+  } else if (analise.tipo === 'INVA') {
+    resumoItems = `
+      <div class="resumo-item"><span class="val">${fmt(t.totalGeral)}</span><span class="label">Total Horas</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.totalDC)}</span><span class="label">DC após cheque</span></div>
+      <div class="resumo-item"><span class="val">${fmt(1800)}</span><span class="label">Mínimo Exigido</span></div>
+      <div class="resumo-item"><span class="val">${t.voosApos != null ? t.voosApos : ativos.length}</span><span class="label">Voos após cheque</span></div>
+    `;
+  } else {
+    resumoItems = `
+      <div class="resumo-item"><span class="val">${fmt(t.totalGeral)}</span><span class="label">Total Horas</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.picTotal)}</span><span class="label">Horas PIC</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.totalIFR)}</span><span class="label">Horas IFR</span></div>
+      <div class="resumo-item"><span class="val">${ativos.length}</span><span class="label">Registros</span></div>
+    `;
+  }
+
+  // Cards de mínimos
+  let cardsHtml = '';
+  analise.minimos.forEach(m => {
+    if (m.nav) {
+      // Card especial navegação
+      const ok = m.nav.ok;
+      const cls = ok ? 'ok' : 'erro';
+      const badge = ok ? '✅ OK' : '❌ DÉFICIT';
+      cardsHtml += `
+        <div class="minimo-card ${cls} full">
+          <div class="mc-header">
+            <span class="mc-nome">${escapeHtml(m.nome)}</span>
+            <span class="mc-badge">${badge}</span>
+          </div>
+          <div class="mc-valores">
+            <span class="mc-atual">${m.nav.milhas}nm</span>
+            <span class="mc-minimo">/ mín. ${m.min}nm</span>
+          </div>
+          <div class="nav-detail">
+            <span class="${ok ? 'nav-ok' : 'nav-erro'}">${escapeHtml(m.nav.detalhe)}</span><br>
+            <span>Aeródromos além da partida: ${m.nav.aerodromos} ${m.nav.aerodromos >= 2 ? '✅' : '❌ (necessário: 2)'}</span>
+          </div>
+        </div>`;
+      return;
+    }
+
+    if (m.info) {
+      const fstdOk = m.real >= m.max;
+      const cls = fstdOk ? 'ok' : 'aviso';
+      const badge = fstdOk ? '✅ OK' : 'ℹ️ INFO';
+      const pct = Math.min(100, (m.real / m.max) * 100);
+      cardsHtml += `
+        <div class="minimo-card ${cls}">
+          <div class="mc-header">
+            <span class="mc-nome">${escapeHtml(m.nome)}</span>
+            <span class="mc-badge">${badge}</span>
+          </div>
+          <div class="mc-valores">
+            <span class="mc-atual">${fmt(m.real)}</span>
+            <span class="mc-minimo">registradas</span>
+          </div>
+          <div style="font-size:12px;margin-top:4px;color:var(--texto-leve)">
+            ${fmt(m.atual)} aproveitadas · máx. ${fmt(m.max)}
+          </div>
+          <div class="mc-barra-wrap"><div class="mc-barra" style="width:${pct}%"></div></div>
+        </div>`;
+      return;
+    }
+
+    const ok = m.atual >= m.min;
+    const cls = ok ? 'ok' : 'erro';
+    const badge = ok ? '✅ OK' : '❌ DÉFICIT';
+    const pct = Math.min(100, (m.atual / m.min) * 100);
+    const deficit = m.min - m.atual;
+    cardsHtml += `
+      <div class="minimo-card ${cls}${m.full ? ' full' : ''}">
+        <div class="mc-header">
+          <span class="mc-nome">${escapeHtml(m.nome)}</span>
+          <span class="mc-badge">${badge}</span>
+        </div>
+        <div class="mc-valores">
+          <span class="mc-atual">${fmt(m.atual)}</span>
+          <span class="mc-minimo">/ mín. ${fmt(m.min)}</span>
+        </div>
+        ${!ok ? `<div class="mc-deficit">Faltam ${fmt(deficit)} (${fmtH(deficit)})</div>` : ''}
+        <div class="mc-barra-wrap"><div class="mc-barra" style="width:${pct}%"></div></div>
+      </div>`;
+  });
+
+  // Tabela de registros
+  let linhasTabela = todos.map(r => {
+    const excluido = r.status === 'EXCLUSÃO SOLICITADA' || r.status === 'EXCLUSAO SOLICITADA';
+    const cls = excluido ? 'excluido' : '';
+    const obs = String(r.observacao || '');
+    const obsCurta = obs.substring(0, 50) + (obs.length > 50 ? '...' : '');
+    return `<tr>
+      <td class="${cls}">${escapeHtml(r.data)}</td>
+      <td class="${cls}">${escapeHtml(r.funcao)}</td>
+      <td class="${cls}">${fmt(r.diurno)}</td>
+      <td class="${cls}">${fmt(r.noturno)}</td>
+      <td class="${cls}">${fmt(r.naveg)}</td>
+      <td class="${cls}">${fmt(r.inst)}</td>
+      <td class="${cls}">${fmt(r.simulador)}</td>
+      <td class="${cls}">${r.milhas > 0 ? r.milhas+'nm' : '-'}</td>
+      <td class="${cls}">${r.pousos}</td>
+      <td class="${cls}" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(obs)}">${escapeHtml(obsCurta)}</td>
+    </tr>`;
+  }).join('');
+
+  // Nota de auditoria do corte (apenas INVA)
+  let chequeInfo = '';
+  if (analise.tipo === 'INVA') {
+    if (analise.cheque) {
+      chequeInfo = `
+        <div class="inva-cheque-info">
+          <div class="ici-titulo">✂️ Corte: último voo de cheque em <strong>${escapeHtml(analise.cheque.data)}</strong></div>
+          <div class="ici-obs">${escapeHtml(analise.cheque.observacao)}</div>
+          <div class="ici-nota">Contabilizando duplo comando (instrução) apenas <strong>após</strong> esta data.</div>
+        </div>`;
+    } else {
+      chequeInfo = `
+        <div class="inva-cheque-info inva-cheque-alerta">
+          <div class="ici-titulo">⚠️ Nenhum voo de cheque encontrado no extrato</div>
+          <div class="ici-nota">Não foi possível determinar o corte. Verifique se a observação do cheque contém a palavra "CHEQUE".</div>
+        </div>`;
+    }
+  }
+
+  el.innerHTML = `
+    <div class="resultado-header">
+      <h2>Resultado da Análise</h2>
+      <span class="tipo-badge">${escapeHtml(analise.label)}</span>
+    </div>
+    <div class="resultado-body">
+      <div class="resumo-geral">${resumoItems}</div>
+      <div class="status-geral ${aprovado ? 'aprovado' : 'reprovado'}">
+        <span class="status-icon">${aprovado ? '✅' : '❌'}</span>
+        ${aprovado ? 'Aluno cumpre todos os mínimos ANAC para ' + escapeHtml(analise.label) : 'Aluno NÃO cumpre todos os mínimos ANAC para ' + escapeHtml(analise.label)}
+      </div>
+      ${chequeInfo}
+      <div class="minimos-grid">${cardsHtml}</div>
+      <div class="registros-section">
+        <div class="registros-toggle" id="toggle-tabela" onclick="toggleTabela()">
+          <span class="toggle-icon">▼</span>
+          Ver todos os registros (${todos.length} total · ${todos.length - ativos.length} excluídos)
+        </div>
+        <div class="registros-tabela-wrap" id="tabela-wrap">
+          <table>
+            <thead><tr>
+              <th>Data</th><th>Função</th><th>Diurno</th><th>Noturno</th>
+              <th>Naveg.</th><th>Inst.</th><th>Sim.</th><th>Milhas</th>
+              <th>Pousos</th><th>Observação</th>
+            </tr></thead>
+            <tbody>${linhasTabela}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <button class="nova-analise-btn" onclick="novaAnalise()">↩ Nova Análise</button>
+  `;
+}
+
+function toggleTabela() {
+  const wrap = document.getElementById('tabela-wrap');
+  const toggle = document.getElementById('toggle-tabela');
+  wrap.classList.toggle('aberto');
+  toggle.classList.toggle('aberto');
+}
+
+function novaAnalise() {
+  document.getElementById('resultado').style.display = 'none';
+  document.getElementById('resultado').innerHTML = '';
+  document.getElementById('upload-section').style.display = 'block';
+  document.getElementById('file-input').value = '';
+}
+
+const minionBanana = document.getElementById('minion-banana');
+const bananaAudio = document.getElementById('banana-audio');
+let ultimoBanana = 0;
+
+function tocarBanana() {
+  if (!bananaAudio) return;
+  const agora = Date.now();
+  if (agora - ultimoBanana < 900) return;
+  ultimoBanana = agora;
+  bananaAudio.currentTime = 0;
+  bananaAudio.play().catch(() => {
+    // Alguns navegadores só liberam áudio depois de um clique do usuário.
+  });
+}
+
+minionBanana.addEventListener('mouseenter', tocarBanana);
+minionBanana.addEventListener('click', tocarBanana);
+minionBanana.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    tocarBanana();
+  }
+});
+</script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

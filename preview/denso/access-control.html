@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Acesso — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/access-control.css?v=20260706-rbac-effective-v1">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Controle de Acesso</div>
+          <div class="topbar-subtitle">Grupos, permissões e acesso efetivo</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary" id="btn-novo-grupo">+ Novo grupo</button>
+      </div>
+    </div>
+
+    <div class="page access-page">
+      <div class="access-overview">
+        <div>
+          <span>Grupos ativos</span>
+          <strong id="access-kpi-grupos">—</strong>
+        </div>
+        <div>
+          <span>Permissões catalogadas</span>
+          <strong id="access-kpi-permissoes">—</strong>
+        </div>
+        <div>
+          <span>Usuários em grupos</span>
+          <strong id="access-kpi-usuarios">—</strong>
+        </div>
+      </div>
+
+      <div class="access-layout">
+        <section class="access-panel">
+          <div class="access-panel-header">
+            <div>
+              <h2>Grupos de acesso</h2>
+              <p>Use grupos como padrão e permissões individuais apenas para exceções.</p>
+            </div>
+            <input class="form-control" id="grupo-busca" type="search" placeholder="Buscar grupo">
+          </div>
+          <div class="access-groups" id="access-groups">
+            <div class="access-empty">Carregando grupos...</div>
+          </div>
+        </section>
+
+        <section class="access-panel">
+          <div class="access-panel-header">
+            <div>
+              <h2>Catálogo de permissões</h2>
+              <p>Permissões oficiais disponíveis para grupos e usuários.</p>
+            </div>
+          </div>
+          <div class="access-permission-list" id="access-permission-list">
+            <div class="access-empty">Carregando permissões...</div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal-grupo">
+  <div class="modal access-modal">
+    <div class="modal-header">
+      <h3 id="modal-grupo-titulo">Novo grupo</h3>
+      <button class="modal-close" type="button" onclick="fecharModal('modal-grupo')" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="grupo-nome">Nome do grupo</label>
+          <input class="form-control" id="grupo-nome" type="text" placeholder="Ex.: Financeiro">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="grupo-id">Identificador</label>
+          <input class="form-control" id="grupo-id" type="text" placeholder="financeiro">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="grupo-descricao">Descrição</label>
+        <textarea class="form-control" id="grupo-descricao" rows="2" placeholder="Resumo objetivo do acesso deste grupo"></textarea>
+      </div>
+      <label class="access-checkbox">
+        <input id="grupo-ativo" type="checkbox" checked>
+        <span>Grupo ativo</span>
+      </label>
+
+      <div class="access-permissions-editor">
+        <div class="access-editor-heading">
+          <strong>Permissões do grupo</strong>
+          <button class="btn btn-ghost btn-sm" type="button" id="btn-limpar-permissoes">Limpar seleção</button>
+        </div>
+        <div id="grupo-permissoes"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" type="button" onclick="fecharModal('modal-grupo')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-grupo" type="button">Salvar grupo</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/config.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/api.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/auth.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/access-control.js?v=20260705-rbac-v6"></script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escala PAV — Operacional</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800;900&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
+<style>
+  :root{--navy:#1D2951;--blue:#5BAEE2;--teal:#60C0BF;--bg:#F4F7FC;--muted:#8EA4C0;--line:#DDE4EF;--h:'Raleway',sans-serif;--b:'Montserrat',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--b);background:var(--bg);color:var(--navy);min-height:100vh;padding:48px 24px}
+  .wrap{max-width:940px;margin:0 auto}
+  .eyebrow{text-align:center;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:700}
+  h1{font-family:var(--h);font-size:2rem;text-align:center;margin:8px 0 6px;font-weight:800}
+  .sub{color:var(--muted);text-align:center;max-width:560px;margin:0 auto 36px;font-size:.95rem;line-height:1.6}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(29,41,81,.14)}
+  .thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;background:#F4F7FC;color:var(--blue);border-bottom:1px solid var(--line)}
+  .cb{padding:18px 20px;flex:1;display:flex;flex-direction:column}
+  .cb h3{font-family:var(--h);font-size:1.12rem;margin-bottom:6px}
+  .cb p{font-size:.83rem;color:var(--muted);line-height:1.5;flex:1}
+  .go{margin-top:14px;font-size:.82rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:6px}
+  .note{margin-top:36px;text-align:center;font-size:.8rem;color:var(--muted);line-height:1.6}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Escala PAV · conceito Operacional</div>
+  <h1>As 3 abas no estilo escolhido</h1>
+  <p class="sub">Mockups com dados fictícios. As tabs do topo navegam entre elas. Nada aqui afeta o Hub.</p>
+  <div class="grid">
+    <a class="card" href="a-operacional.html"><div class="thumb"><i class="ti ti-calendar"></i></div><div class="cb"><h3>Calendário</h3><p>Grade mensal, KPIs e escalas por base (CPN/SJK) com pills coloridas.</p><span class="go">Abrir →</span></div></a>
+    <a class="card" href="a-financeiro.html"><div class="thumb"><i class="ti ti-cash"></i></div><div class="cb"><h3>Financeiro</h3><p>Fechamento do mês: KPIs e tabela de valores por PAV com total geral.</p><span class="go">Abrir →</span></div></a>
+    <a class="card" href="a-pavs.html"><div class="thumb"><i class="ti ti-users"></i></div><div class="cb"><h3>PAVs</h3><p>Cadastro da equipe por base, com dados, status e ações.</p><span class="go">Abrir →</span></div></a>
+  </div>
+  <p class="note">Aprovando, eu implemento na página real (mantendo login, permissões e backend) → branch → você valida → commit/push.</p>
+</div>
+</body></html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/admin.css?v=20260705-rbac-v3">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <div class="sidebar-toggle" id="sidebar-toggle">‹</div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">◈</span><span class="nav-label">Dashboard</span></a>
+      <a href="vendas.html" class="nav-item"><span class="nav-icon">◎</span><span class="nav-label">Vendas</span></a>
+      <hr class="nav-divider">
+      <div class="nav-section-label">Administração</div>
+      <a href="faturamento.html" class="nav-item"><span class="nav-icon">◉</span><span class="nav-label">Faturamento</span></a>
+      <a href="concorrencia.html" class="nav-item"><span class="nav-icon">◐</span><span class="nav-label">Concorrência</span></a>
+      <a href="admin.html" class="nav-item active"><span class="nav-icon">◑</span><span class="nav-label">Usuários</span></a>
+
+      <hr class="nav-divider" data-finance-only>
+      <div class="nav-section-label" data-finance-only>Financeiro</div>
+      <a href="controle-gastos.html" class="nav-item" data-finance-only>
+        <span class="nav-icon"></span><span class="nav-label">Controle de Gastos</span>
+      </a>
+
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="btn-logout">
+        <div class="sidebar-avatar">T</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Thiago</div>
+          <div class="sidebar-user-role">Administrador</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <div>
+          <div class="topbar-title">Gestão de Usuários</div>
+          <div class="topbar-subtitle">Diretório central de acessos do SAFE Hub</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" id="btn-forcar-relogin" data-master-only>Forçar relogin geral</button>
+        <button class="btn btn-primary" id="btn-novo-usuario" data-write-only>+ Novo acesso</button>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="usuarios-policy">
+        <div class="usuarios-policy-icon" aria-hidden="true">@</div>
+        <div>
+          <strong>Identidade única por e-mail</strong>
+          <p>Todos os colaboradores entram no SAFE Hub com seu e-mail. Identificadores antigos continuam apenas como referências internas dos sistemas.</p>
+        </div>
+      </div>
+
+      <div class="usuarios-kpis">
+        <div class="usuarios-kpi"><span>Total de identidades</span><strong id="kpi-total">—</strong></div>
+        <div class="usuarios-kpi"><span>Acessos ativos</span><strong id="kpi-ativos">—</strong></div>
+        <div class="usuarios-kpi"><span>Sistemas integrados</span><strong id="kpi-sistemas">—</strong></div>
+        <div class="usuarios-kpi usuarios-kpi-alerta"><span>Ação necessária</span><strong id="kpi-pendentes">—</strong></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header usuarios-card-header">
+          <div class="usuarios-card-heading">
+            <div class="card-title">Diretório de acessos</div>
+            <div class="usuarios-subtitle">Cadastros do Hub e dos sistemas integrados</div>
+          </div>
+          <span class="usuarios-count" id="usuarios-contagem">0 de 0</span>
+          <div class="usuarios-tabs" role="tablist" aria-label="Situação dos usuários">
+            <button class="usuarios-tab active" id="tab-ativos" type="button" role="tab" aria-selected="true" data-tab="ativos">
+              Ativos <span id="tab-ativos-count">0</span>
+            </button>
+            <button class="usuarios-tab" id="tab-inativos" type="button" role="tab" aria-selected="false" data-tab="inativos">
+              Inativos <span id="tab-inativos-count">0</span>
+            </button>
+          </div>
+          <div class="usuarios-filtros">
+            <input class="form-control" id="filtro-busca" name="safe-admin-user-search" type="search" placeholder="Buscar por nome ou e-mail" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly data-1p-ignore data-lpignore="true" data-form-type="other">
+            <select class="form-control" id="filtro-origem">
+              <option value="">Todos os sistemas</option>
+              <option value="hub">Hub / Comercial</option>
+              <option value="cco">Escala CCO</option>
+            </select>
+            <select class="form-control" id="filtro-cadastro">
+              <option value="">Todos os cadastros</option>
+              <option value="completo">Cadastros completos</option>
+              <option value="pendente">Ação necessária</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="table table-usuarios">
+            <thead>
+              <tr>
+                <th class="col-nome">Usuário</th>
+                <th>Sistema</th>
+                <th class="col-perfil">Perfil</th>
+                <th>Cadastro</th>
+                <th style="width:190px"></th>
+              </tr>
+            </thead>
+            <tbody id="tabela-usuarios">
+              <tr><td colspan="5" class="text-center text-muted" style="padding:40px">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Card: alterar senha -->
+      <div class="card mt-24">
+        <div class="card-header">
+          <div class="card-title">Alterar minha senha</div>
+        </div>
+        <div style="max-width:400px">
+          <div class="form-group">
+            <label class="form-label">Senha atual</label>
+            <input type="password" class="form-control" id="senha-atual" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nova senha</label>
+            <input type="password" class="form-control" id="senha-nova" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirmar nova senha</label>
+            <input type="password" class="form-control" id="senha-confirmar" placeholder="••••••••">
+          </div>
+          <button class="btn btn-navy" id="btn-alterar-senha">Alterar Senha</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Usuário -->
+<div class="modal-overlay" id="modal-usuario">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-u-titulo">Novo Usuário</h3>
+      <button class="modal-close" onclick="fecharModal('modal-usuario')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="usuario-form-section">
+        <div class="usuario-form-section-title">Identidade</div>
+        <div class="usuario-form-section-desc">Dados usados para login, senha padrão e identificação do colaborador.</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Sistema de origem</label>
+            <select class="form-control" id="u-origem">
+              <option value="hub">Hub / Comercial</option>
+              <option value="cco">Escala CCO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-control" id="u-ativo">
+              <option value="true">Ativo</option>
+              <option value="false">Inativo</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nome completo</label>
+          <input type="text" class="form-control" id="u-nome" placeholder="Nome completo">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">E-mail de acesso</label>
+            <input type="email" class="form-control" id="u-email" placeholder="nome@voesafe.com.br" autocomplete="off">
+            <small class="form-help">Este será o login informado na tela de entrada.</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CPF</label>
+            <input type="text" class="form-control" id="u-cpf" placeholder="Somente números" inputmode="numeric">
+            <small class="form-help">A senha padrão do usuário será o CPF sem pontuação.</small>
+          </div>
+        </div>
+        <input type="hidden" id="u-pac">
+        <select id="u-perfil" hidden>
+          <option value="pac">Consultor (PAC)</option>
+          <option value="admin">Administrador completo</option>
+          <option value="master">Master TI</option>
+          <option value="admin_readonly">Administrador somente visualização</option>
+          <option value="financeiro">Financeiro</option>
+          <option value="controle_gastos_visualizacao">Controle de Gastos — somente visualização</option>
+          <option value="escala_minions">Escala CCO/INVA + SAFE MINIONS — acesso exclusivo</option>
+        </select>
+      </div>
+
+      <div class="usuario-form-section">
+        <div class="usuario-form-section-title">Controle de acesso</div>
+        <div class="usuario-form-section-desc">Use grupos para o padrão do cargo e permissões avulsas somente para exceções.</div>
+        <div class="form-group" id="grupo-perfil-cco" hidden>
+          <label class="form-label">Perfil no CCO</label>
+          <select class="form-control" id="u-role-cco">
+            <option value="user">Operador CCO</option>
+            <option value="financeiro">Financeiro CCO</option>
+            <option value="admin">Administrador CCO</option>
+          </select>
+        </div>
+        <label class="usuario-superadmin" id="grupo-superadmin">
+          <input type="checkbox" id="u-superadmin">
+          <span>
+            <strong>Superadmin</strong>
+            <small>Acesso total ao sistema, incluindo permissões atuais e futuras.</small>
+          </span>
+        </label>
+        <div class="usuario-access-summary" id="u-access-summary" hidden>
+          <div class="usuario-access-summary-icon" aria-hidden="true"></div>
+          <div>
+            <strong id="u-access-summary-title">Consultor comercial</strong>
+            <p id="u-access-summary-description">Acesso às rotinas comerciais vinculadas ao próprio usuário.</p>
+            <div class="usuario-access-tags" id="u-access-summary-tags"></div>
+          </div>
+        </div>
+        <div class="usuario-rbac" id="usuario-rbac">
+          <div class="usuario-rbac-header">
+            <div>
+              <strong>Grupos e permissões</strong>
+              <p>Superadmin ignora estas seleções. Para os demais usuários, o acesso efetivo vem da soma dos grupos e permissões avulsas.</p>
+            </div>
+            <a href="access-control.html" target="_blank" rel="noopener noreferrer">Gerenciar grupos</a>
+          </div>
+          <div class="usuario-rbac-grid">
+            <section class="usuario-rbac-panel">
+              <label class="form-label" for="u-busca-grupos">Grupos do usuário</label>
+              <input class="form-control" id="u-busca-grupos" type="search" placeholder="Buscar grupo">
+              <div class="usuario-rbac-list" id="u-grupos-acesso"></div>
+            </section>
+            <section class="usuario-rbac-panel">
+              <label class="form-label" for="u-busca-permissoes">Permissões avulsas</label>
+              <input class="form-control" id="u-busca-permissoes" type="search" placeholder="Buscar permissão">
+              <div class="usuario-rbac-list" id="u-permissoes-avulsas"></div>
+            </section>
+          </div>
+          <div class="usuario-rbac-effective" id="u-rbac-efetivo"></div>
+        </div>
+      </div>
+
+      <div id="campos-cco" class="campos-cco" hidden>
+        <div class="usuario-form-section-title">Dados operacionais do CCO</div>
+        <div class="usuario-form-section-desc">Informações necessárias para escala e rotinas da operação.</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Iniciais</label>
+            <input type="text" class="form-control" id="u-iniciais" maxlength="2" placeholder="TS">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nascimento</label>
+            <input type="text" class="form-control" id="u-nascimento" placeholder="dd/mm/aaaa">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Telefone</label>
+            <input type="text" class="form-control" id="u-telefone" placeholder="Somente números">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cor na escala</label>
+            <input type="color" class="form-control usuario-color" id="u-cor" value="#5BAEE2">
+          </div>
+        </div>
+        <label class="usuario-checkbox">
+          <input type="checkbox" id="u-visivel-escala" checked>
+          <span>Disponível para inclusão na escala</span>
+        </label>
+      </div>
+
+      <div class="usuario-form-section usuario-form-security">
+        <div class="usuario-form-section-title">E-mail e senha</div>
+        <div class="usuario-form-section-desc">A senha padrão é o CPF cadastrado. O usuário pode alterar a senha depois do login.</div>
+        <label class="usuario-checkbox usuario-welcome-email" id="grupo-email-boas-vindas">
+          <input type="checkbox" id="u-enviar-boas-vindas" checked>
+          <span>
+            Enviar e-mail de boas-vindas ao salvar
+            <small>Inclui link de acesso, e-mail de login e senha padrão.</small>
+          </span>
+        </label>
+        <div class="usuario-security-actions" id="acoes-usuario-existente" hidden>
+          <button class="btn btn-ghost btn-sm" id="btn-reenviar-boas-vindas" type="button">Reenviar e-mail de boas-vindas</button>
+          <button class="btn btn-ghost btn-sm" id="btn-resetar-senha-padrao" type="button">Resetar senha para CPF</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="fecharModal('modal-usuario')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-usuario">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/config.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/api.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/auth.js?v=20260706-rbac-effective-v1"></script>
+<script src="js/admin.js?v=20260706-admin-perf-v1"></script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAV · Operacional Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
+<style>
+  :root{--navy:#1D2951;--blue:#5BAEE2;--blue-d:#3d8cc4;--teal:#60C0BF;--teal-d:#3f9d9c;
+    --bg:#F4F7FC;--card:#fff;--line:#E6ECF5;--line2:#DDE4EF;--ink:#1D2951;--muted:#7488a6;--muted2:#9aa9c2;
+    --cpn:#3d8cc4;--cpn-bg:#eaf3fb;--sjk:#3f9d9c;--sjk-bg:#e7f5f4;
+    --h:'Raleway',sans-serif;--b:'Montserrat',sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--b);background:var(--bg);color:var(--ink);min-height:100vh}
+  a{text-decoration:none;color:inherit}
+  /* topbar */
+  .top{height:60px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-ic{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:18px}
+  .brand b{font-family:var(--h);font-weight:800;letter-spacing:.02em;font-size:15px}
+  .brand span{font-size:11px;color:var(--muted2);display:block;margin-top:-2px}
+  .tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:11px}
+  .tab{display:flex;align-items:center;gap:7px;padding:8px 15px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+  .tab.active{background:var(--card);color:var(--navy);box-shadow:0 1px 4px rgba(29,41,81,.1)}
+  .top-r{display:flex;align-items:center;gap:10px}
+  .icon-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--muted);background:var(--card)}
+  .user{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+  .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  /* page */
+  .wrap{padding:24px;max-width:1240px;margin:0 auto}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .head h1{font-family:var(--h);font-size:1.5rem;font-weight:800}
+  .head .sub{font-size:.82rem;color:var(--muted);margin-top:2px}
+  .monthnav{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line2);border-radius:11px;padding:6px 8px}
+  .monthnav button{width:32px;height:32px;border-radius:8px;background:var(--bg);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:16px;border:none;cursor:pointer}
+  .monthnav button:hover{color:var(--blue-d)}
+  .monthnav .lbl{font-family:var(--h);font-weight:700;font-size:.95rem;min-width:130px;text-align:center;text-transform:capitalize}
+  .actions{display:flex;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:9px;font-size:.82rem;font-weight:600;border:1px solid var(--line2);background:var(--card);color:var(--navy);cursor:pointer}
+  .btn:hover{border-color:var(--blue)}
+  .btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .btn.primary:hover{background:#151d3a}
+  /* kpis */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
+  .kpi .k-ic{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+  .kpi .k-l{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted2)}
+  .kpi .k-v{font-family:var(--h);font-size:1.7rem;font-weight:800;margin-top:6px}
+  .kpi .k-s{font-size:.72rem;color:var(--muted);margin-top:2px}
+  .b1{background:var(--cpn-bg);color:var(--cpn)}.b2{background:var(--sjk-bg);color:var(--sjk)}.b3{background:#eef0fb;color:#5a54c9}
+  /* calendar */
+  .cal{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .cal-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .cal-top .t{font-family:var(--h);font-weight:700;font-size:1rem}
+  .legend{display:flex;gap:16px}
+  .lg{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--muted)}
+  .lg .d{width:10px;height:10px;border-radius:3px}
+  .wd{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg)}
+  .wd div{padding:10px;text-align:center;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted2)}
+  .days{display:grid;grid-template-columns:repeat(7,1fr)}
+  .day{min-height:112px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:5px}
+  .day:nth-child(7n){border-right:none}
+  .day.out{background:#fafbfd}
+  .day.wknd{background:#fbfcfe}
+  .daynum{font-size:.8rem;font-weight:700;color:var(--muted);align-self:flex-start}
+  .day.out .daynum{color:#cfd8e6}
+  .day.today .daynum{background:var(--navy);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem}
+  .pill{display:flex;align-items:center;gap:6px;padding:4px 7px;border-radius:8px;font-size:.72rem;font-weight:600}
+  .pill .av{width:18px;height:18px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;flex-shrink:0}
+  .pill.cpn{background:var(--cpn-bg);color:var(--cpn)}.pill.cpn .av{background:var(--cpn)}
+  .pill.sjk{background:var(--sjk-bg);color:var(--sjk)}.pill.sjk .av{background:var(--sjk)}
+  .ghost{margin-top:auto;font-size:.68rem;color:#c3cddc;display:flex;align-items:center;gap:4px}
+  .ribbon{position:fixed;bottom:14px;right:14px;z-index:99;display:flex;align-items:center;gap:8px;background:#141d3a;color:#fff;padding:7px 8px 7px 14px;border-radius:100px;box-shadow:0 10px 30px rgba(20,26,40,.4);font-size:12px;font-weight:600}
+  .ribbon a{padding:5px 11px;border-radius:100px;font-weight:700;color:#9fb0cf}
+  .ribbon a.on{background:#5BAEE2;color:#141d3a}
+</style></head>
+<body>
+  <div class="top">
+    <div class="brand"><div class="brand-ic"><i class="ti ti-plane-tilt"></i></div><div><b>Safe · PAV</b><span>Escala de base</span></div></div>
+    <div class="tabs"><a class="tab active" href="a-operacional.html"><i class="ti ti-calendar"></i> Calendário</a><a class="tab" href="a-financeiro.html"><i class="ti ti-cash"></i> Financeiro</a><a class="tab" href="a-pavs.html"><i class="ti ti-users"></i> PAVs</a></div>
+    <div class="top-r"><div class="icon-btn"><i class="ti ti-sun"></i></div><div class="user"><span>Victor</span><div class="avatar">V</div></div></div>
+  </div>
+
+  <div class="wrap">
+    <div class="head">
+      <div><h1>Escala de PAV</h1><div class="sub">Planejamento mensal por base · CPN e SJK</div></div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div class="monthnav"><button>‹</button><span class="lbl">Julho 2026</span><button>›</button></div>
+        <div class="actions"><button class="btn"><i class="ti ti-bolt"></i> Escalar semana</button><button class="btn primary"><i class="ti ti-device-floppy"></i> Salvar escala</button></div>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="k-ic b1"><i class="ti ti-users"></i></div><div class="k-l">PAVs no mês</div><div class="k-v">6</div><div class="k-s">3 CPN · 3 SJK</div></div>
+      <div class="kpi"><div class="k-ic b2"><i class="ti ti-calendar-check"></i></div><div class="k-l">Dias escalados</div><div class="k-v">52</div><div class="k-s">de 54 dias úteis</div></div>
+      <div class="kpi"><div class="k-ic b3"><i class="ti ti-cash"></i></div><div class="k-l">Valor a pagar</div><div class="k-v">R$ 7.850</div><div class="k-s">fechamento de julho</div></div>
+    </div>
+
+    <div class="cal">
+      <div class="cal-top"><div class="t">Calendário de escalas</div><div class="legend"><div class="lg"><span class="d" style="background:var(--cpn)"></span> CPN · Campinas</div><div class="lg"><span class="d" style="background:var(--sjk)"></span> SJK · S.J. Campos</div></div></div>
+      <div class="wd"><div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div></div>
+      <div class="days" id="days"></div>
+    </div>
+  </div>
+
+  <div class="ribbon">Operacional · <a class="on" href="a-operacional.html">Calendário</a><a href="a-financeiro.html">Financeiro</a><a href="a-pavs.html">PAVs</a></div>
+<script>
+var CPN=[['Carlos Moraes','CM'],['André Lima','AL'],['Bruno Dias','BD']];
+var SJK=[['Ana Prado','AP'],['Marina Reis','MR'],['Tiago Souza','TS']];
+var y=2026,m=6; // julho (0-based)
+var first=new Date(y,m,1).getDay(), dim=new Date(y,m+1,0).getDate(), prevDim=new Date(y,m,0).getDate();
+var html='',cell=0;
+for(var i=first-1;i>=0;i--){html+='<div class="day out"><span class="daynum">'+(prevDim-i)+'</span></div>';cell++;}
+for(var d=1;d<=dim;d++){
+  var wd=new Date(y,m,d).getDay();
+  var cls='day'+(wd===0||wd===6?' wknd':'')+(d===6?' today':'');
+  var body='';
+  if(wd!==0){ // sem escala aos domingos
+    var c=CPN[(d)%3], s=SJK[(d+1)%3];
+    body='<div class="pill cpn"><span class="av">'+c[1]+'</span>'+c[0].split(' ')[0]+'</div>'+
+         '<div class="pill sjk"><span class="av">'+s[1]+'</span>'+s[0].split(' ')[0]+'</div>';
+  } else { body='<div class="ghost"><i class="ti ti-minus"></i> sem escala</div>'; }
+  html+='<div class="'+cls+'"><span class="daynum">'+d+'</span>'+body+'</div>';cell++;
+}
+var rest=(7-(cell%7))%7;for(var k=1;k<=rest;k++){html+='<div class="day out"><span class="daynum">'+k+'</span></div>';}
+document.getElementById('days').innerHTML=html;
+</script>
+</body></html>

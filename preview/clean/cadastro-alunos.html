@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Aluno — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css?pv=2">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/cadastro-alunos.css?v=20260704-cadastro-alunos-v5">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Cadastro de Aluno</div>
+          <div class="topbar-subtitle">Fila S141 e sincronização operacional no Trello</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" id="btn-recarregar-alunos" type="button">Atualizar</button>
+        <label class="btn btn-primary cadastro-upload-btn" for="arquivo-cavok">
+          Importar XLS do CAVOK
+        </label>
+        <input id="arquivo-cavok" class="cadastro-upload-input" type="file" accept=".xls,.xlsx">
+      </div>
+    </div>
+
+    <div class="page cadastro-alunos-page">
+      <section class="card cadastro-import-card" id="cadastro-import-card" hidden>
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Importação concluída</h2>
+            <p class="cadastro-card-subtitle">Resumo do último XLS processado pelo Hub.</p>
+          </div>
+        </div>
+        <div class="cadastro-import-summary" id="cadastro-import-summary"></div>
+      </section>
+
+      <section class="card cadastro-fila-card">
+        <div class="card-header cadastro-table-header">
+          <div>
+            <h2 class="card-title">Fila operacional</h2>
+            <p class="cadastro-card-subtitle" id="cadastro-lista-subtitle">Carregando alunos...</p>
+          </div>
+          <div class="cadastro-table-tools">
+            <label class="cadastro-sort-label" for="cadastro-ordenacao">
+              <span>Ordenar por</span>
+              <select class="form-control cadastro-sort" id="cadastro-ordenacao">
+                <option value="matricula_desc" selected>Matrícula mais recente</option>
+                <option value="matricula_asc">Matrícula mais antiga</option>
+                <option value="nome_asc">Nome A-Z</option>
+                <option value="data_desc">Data de matrícula</option>
+                <option value="status_asc">Status</option>
+              </select>
+            </label>
+            <input class="form-control cadastro-search" id="cadastro-busca" type="search" placeholder="Buscar por matrícula, nome, CPF ou curso">
+          </div>
+        </div>
+
+        <div class="cadastro-tabs" role="tablist" aria-label="Filtro de alunos">
+          <button class="cadastro-tab active" type="button" data-filtro="ativos">Ativos <span id="count-ativos">0</span></button>
+          <button class="cadastro-tab" type="button" data-filtro="pendentes">Pendentes <span id="count-pendentes">0</span></button>
+          <button class="cadastro-tab" type="button" data-filtro="trello">Prontos Trello <span id="count-trello">0</span></button>
+          <button class="cadastro-tab" type="button" data-filtro="concluidos">Concluídos <span id="count-concluidos">0</span></button>
+          <button class="cadastro-tab" type="button" data-filtro="atencao">Atenção <span id="count-atencao">0</span></button>
+          <button class="cadastro-tab" type="button" data-filtro="inativos">Inativos <span id="count-inativos">0</span></button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="table table-cadastro-alunos">
+            <thead>
+              <tr>
+                <th>Matrícula</th>
+                <th>Aluno</th>
+                <th>CPF</th>
+                <th>Curso</th>
+                <th>Base</th>
+                <th>Data matrícula</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="cadastro-alunos-tbody">
+              <tr><td colspan="8" class="text-center text-muted" style="padding:32px">Carregando alunos...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="dashboard-loading-overlay" id="cadastro-loading">
+        <div class="dashboard-loading-card">
+          <img class="dashboard-loading-logo" src="assets/img/logo.png" alt="">
+          <span class="dashboard-loading-text" id="cadastro-loading-text">Processando alunos...</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="assets/safe-minions/xlsx.full.min.js"></script>
+<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/api.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/auth.js?v=20260704-cadastro-alunos-v1"></script>
+<script src="js/cadastro-alunos.js?v=20260704-cadastro-alunos-v4"></script>
+  <script src="js/preview-guard.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview de Redesign — SAFE Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1D2951;--navy-deep:#141d3a;--blue:#5BAEE2;--teal:#60C0BF;
+    --off:#F4F7FC;--gray400:#8EA4C0;--gray200:#DDE4EF;
+    --title:'Raleway',sans-serif;--body:'Montserrat',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);background:var(--off);color:var(--navy);min-height:100vh;padding:48px 24px}
+  .wrap{max-width:960px;margin:0 auto}
+  .head{text-align:center;margin-bottom:8px}
+  .eyebrow{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:700}
+  h1{font-family:var(--title);font-size:2rem;margin:8px 0 6px}
+  .sub{color:var(--gray400);font-size:.95rem;max-width:520px;margin:0 auto 40px;text-align:center}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .card{background:#fff;border-radius:16px;border:1px solid var(--gray200);overflow:hidden;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(29,41,81,.14)}
+  .thumb{height:130px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .thumb i{font-size:2.4rem}
+  .t1{background:linear-gradient(120deg,#1D2951,#253463)}
+  .t2{background:#fff;border-bottom:1px solid var(--gray200)}
+  .t3{background:linear-gradient(120deg,#141d3a,#1D2951)}
+  .cbody{padding:18px 20px;flex:1;display:flex;flex-direction:column}
+  .tag{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:100px;margin-bottom:10px;width:fit-content}
+  .tag-rec{background:rgba(96,192,191,.14);color:#3a8f8e}
+  .tag-alt{background:rgba(91,174,226,.14);color:#3d8cc4}
+  .cbody h3{font-family:var(--title);font-size:1.15rem;margin-bottom:6px}
+  .cbody p{font-size:.85rem;color:var(--gray400);line-height:1.5;flex:1}
+  .go{margin-top:14px;font-size:.82rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:6px}
+  .note{margin-top:40px;text-align:center;font-size:.8rem;color:var(--gray400);line-height:1.6}
+  .badge-safe{display:inline-flex;align-items:center;gap:8px;background:rgba(96,192,191,.12);color:#3a8f8e;padding:6px 14px;border-radius:100px;font-size:.78rem;font-weight:600;margin-bottom:24px}
+  /* mini sidebar mock inside thumb */
+  .mini-bar{position:absolute;left:0;top:0;bottom:0;width:26%;background:rgba(0,0,0,.18)}
+  .mini-lines{position:absolute;right:12%;top:24px;display:flex;flex-direction:column;gap:7px}
+  .mini-lines span{height:8px;border-radius:4px;background:rgba(255,255,255,.5)}
+  .thumb-swatch{display:flex;gap:6px;position:absolute;bottom:12px;right:14px}
+  .thumb-swatch i{width:16px;height:16px;border-radius:5px;font-size:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <span class="eyebrow">SAFE Hub · Preview isolado</span>
+    <h1>Três direções de redesign</h1>
+  </div>
+  <p class="sub"><strong>Hub completo</strong> em 3 modelos, com <strong>dados reais</strong> — ambiente de teste isolado. Faça login uma vez (mesma senha do Hub) e navegue tudo. Salvar/excluir fica <strong>travado</strong>: impossível afetar a produção. Use o seletor no canto de cada tela pra alternar entre os modelos na mesma página.</p>
+
+  <div style="text-align:center"><span class="badge-safe">● Dados reais · gravação desativada (somente leitura)</span></div>
+
+  <div class="grid">
+    <a class="card" href="refinado/index.html">
+      <div class="thumb t1">
+        <div class="mini-bar"></div>
+        <div class="mini-lines"><span style="width:90px"></span><span style="width:64px"></span><span style="width:80px"></span></div>
+        <div class="thumb-swatch"><i style="background:#5BAEE2"></i><i style="background:#60C0BF"></i></div>
+      </div>
+      <div class="cbody">
+        <span class="tag tag-rec">Recomendado</span>
+        <h3>1 · Refinado</h3>
+        <p>Sua identidade atual, elevada: sidebar com profundidade, sombras suaves, hover polido. Menor risco, migração gradual. Aplicado ao Hub inteiro.</p>
+        <span class="go">Entrar no Hub →</span>
+      </div>
+    </a>
+
+    <a class="card" href="clean/index.html">
+      <div class="thumb t2">
+        <div class="mini-bar" style="background:#EEF2F8"></div>
+        <div class="mini-lines" style="right:14%"><span style="width:96px;background:#DDE4EF"></span><span style="width:60px;background:#DDE4EF"></span><span style="width:78px;background:#DDE4EF"></span></div>
+        <div class="thumb-swatch"><i style="background:#fff;border:1px solid #DDE4EF"></i><i style="background:#5BAEE2"></i></div>
+      </div>
+      <div class="cbody">
+        <span class="tag tag-alt">Alternativa</span>
+        <h3>2 · Clean / SaaS</h3>
+        <p>Sidebar clara, tipografia grande, muito respiro, cards flat. Cara de produto moderno (Linear/Notion). Aplicado ao Hub inteiro.</p>
+        <span class="go">Entrar no Hub →</span>
+      </div>
+    </a>
+
+    <a class="card" href="denso/index.html">
+      <div class="thumb t3">
+        <div class="mini-bar"></div>
+        <div class="mini-lines" style="right:8%"><span style="width:40px;background:#60C0BF"></span><span style="width:70px;background:rgba(255,255,255,.5)"></span><span style="width:52px;background:#5BAEE2"></span><span style="width:66px;background:rgba(255,255,255,.4)"></span></div>
+        <div class="thumb-swatch"><i style="background:#60C0BF"></i><i style="background:#F39C12"></i><i style="background:#5BAEE2"></i></div>
+      </div>
+      <div class="cbody">
+        <span class="tag tag-alt">Alternativa</span>
+        <h3>3 · Dashboard denso</h3>
+        <p>Compacto, sidebar escura, tabelas densas, menos respiro. Cara de painel de controle, mais dado por tela. Aplicado ao Hub inteiro.</p>
+        <span class="go">Entrar no Hub →</span>
+      </div>
+    </a>
+  </div>
+
+  <p class="note">Depois de escolher, eu desenvolvo a direção por completo e migramos página por página, reaproveitando o design system existente.<br>Rodando em <strong>localhost</strong> · pasta <code>preview/</code></p>
+</div>
+</body>
+</html>
