@@ -6,11 +6,6 @@
 var CADASTRO_ALUNOS_SHEET_ID = '1aNLtIIvalqPG7FkKncD5j16Pmgy5ly-34coaa4Gyyp8';
 var CADASTRO_ALUNOS_SHEET_NAME = 'Planilha Alunos';
 
-// Fuso da planilha, capturado ao carregar o contexto. Usado para formatar
-// a data de matrícula no mesmo fuso em que o Sheets a armazenou, evitando o
-// deslocamento de -1 dia quando o fuso do script difere do fuso da planilha.
-var CADASTRO_ALUNOS_TZ_ = null;
-
 var CADASTRO_ALUNOS_EXTRA_HEADERS = [
   'HUB_STATUS',
   'CURSO_OPERACIONAL',
@@ -269,7 +264,6 @@ function sincronizarTrelloCadastroAluno(id, usuario, token) {
 
 function carregarContextoCadastroAlunos_() {
   var ss = SpreadsheetApp.openById(obterCadastroAlunosSheetId_());
-  CADASTRO_ALUNOS_TZ_ = ss.getSpreadsheetTimeZone();
   var sheet = ss.getSheetByName(CADASTRO_ALUNOS_SHEET_NAME);
   if (!sheet) throw new Error('Aba de alunos não encontrada: ' + CADASTRO_ALUNOS_SHEET_NAME);
   var headerInfo = detectarHeaderCadastroAlunos_(sheet);
@@ -280,8 +274,15 @@ function carregarContextoCadastroAlunos_() {
   var lastCol = sheet.getLastColumn();
   var rows = [];
   if (lastRow > headerInfo.row) {
-    var values = sheet.getRange(headerInfo.row + 1, 1, lastRow - headerInfo.row, lastCol).getValues();
+    var range = sheet.getRange(headerInfo.row + 1, 1, lastRow - headerInfo.row, lastCol);
+    var values = range.getValues();
+    // A coluna de data de matrícula é lida como valor exibido (getDisplayValues)
+    // para evitar deslocamento de fuso: a planilha está sem timezone e o Sheets
+    // grava datas como meia-noite UTC, o que fazia o dia recuar na formatação.
+    var colData = headerInfo.indices.dataMatricula;
+    var displays = colData ? range.getDisplayValues() : null;
     values.forEach(function(row, idx) {
+      if (displays) row[colData - 1] = displays[idx][colData - 1];
       if (row.join('').trim() !== '') rows.push({ row: row, rowNumber: headerInfo.row + 1 + idx });
     });
   }
@@ -613,9 +614,10 @@ function formatarCpfCadastroAluno_(cpf) {
 function formatarDataCadastroAluno_(valor) {
   if (!valor) return '';
   if (Object.prototype.toString.call(valor) === '[object Date]') {
-    // Formata no fuso da planilha (não no do script) para não recuar 1 dia.
-    var tz = CADASTRO_ALUNOS_TZ_ || Session.getScriptTimeZone();
-    return Utilities.formatDate(valor, tz, 'dd/MM/yyyy');
+    // Fallback: a planilha está sem timezone configurado, então o Sheets
+    // grava datas como meia-noite UTC. Formatar em UTC recupera o dia certo.
+    // (Normalmente não chega aqui: a data já vem como display value string.)
+    return Utilities.formatDate(valor, 'UTC', 'dd/MM/yyyy');
   }
   return String(valor).trim();
 }
