@@ -213,11 +213,6 @@ const Auth = {
     return this.normalizarPerfil(perfil) === 'master';
   },
 
-  perfilEhConsultor(perfil) {
-    const p = this.normalizarPerfil(perfil);
-    return p === '' || p === 'pac';
-  },
-
   perfilSomenteLeitura(perfil) {
     const p = this.normalizarPerfil(perfil);
     return p === 'admin_readonly' || p === 'admin_visualizacao' ||

@@ -56,20 +56,16 @@ const Vendas = {
     await this.carregar();
   },
 
+  // Consultores comerciais oficiais. Lista fixa e definida no select do HTML
+  // (Thiago, Marlon, Adauto) — não é derivada dos usuários de login para
+  // evitar que perfis administrativos com código PAC apareçam como consultores.
   async carregarPacs() {
     const campoPac = document.getElementById('f-pac');
     if (!campoPac) return;
 
-    const fallback = Array.from(campoPac.options).map(o => ({
+    this.pacs = Array.from(campoPac.options).map(o => ({
       nome: o.textContent.trim(), pac: o.value, perfil: 'pac'
     }));
-
-    try {
-      const res = await API.getUsuariosLogin();
-      this.pacs = res.ok && Array.isArray(res.data) && res.data.length
-        ? res.data.filter(u => u.pac && Auth.perfilEhConsultor(u.perfil))
-        : fallback;
-    } catch { this.pacs = fallback; }
 
     this.preencherSelectPacs();
     this.preencherFiltroPacs();
