@@ -517,7 +517,8 @@ html, body {
 /* ── Page Content ──────────────────────────────────────────── */
 .page {
   padding: 24px;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   position: relative;
 }
 
