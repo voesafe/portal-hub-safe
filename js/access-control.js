@@ -69,18 +69,30 @@ const AccessControl = {
     });
   },
 
+  setCarregando(ativo, texto = 'Carregando controle de acesso...') {
+    const overlay = document.getElementById('access-control-loading');
+    const label = document.getElementById('access-control-loading-text');
+    if (label) label.textContent = texto;
+    overlay?.classList.toggle('active', ativo);
+  },
+
   async carregar() {
-    const res = await API.getControleAcesso();
-    if (!res.ok) {
-      this.renderErroBackend(res.error || 'Erro ao carregar controle de acesso.');
-      toast(res.error || 'Erro ao carregar controle de acesso.', 'error');
-      return;
+    this.setCarregando(true);
+    try {
+      const res = await API.getControleAcesso();
+      if (!res.ok) {
+        this.renderErroBackend(res.error || 'Erro ao carregar controle de acesso.');
+        toast(res.error || 'Erro ao carregar controle de acesso.', 'error');
+        return;
+      }
+      this.grupos = res.data?.grupos || [];
+      this.permissoes = res.data?.permissoes || [];
+      this.renderResumo();
+      this.renderGrupos();
+      this.renderCatalogo();
+    } finally {
+      this.setCarregando(false);
     }
-    this.grupos = res.data?.grupos || [];
-    this.permissoes = res.data?.permissoes || [];
-    this.renderResumo();
-    this.renderGrupos();
-    this.renderCatalogo();
   },
 
   renderErroBackend(mensagem) {

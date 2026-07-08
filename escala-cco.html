@@ -799,6 +799,13 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 <!-- APP -->
 <div id="appScreen">
 
+  <div class="dashboard-loading-overlay active" id="escala-cco-loading" style="position:fixed">
+    <div class="dashboard-loading-card">
+      <img class="dashboard-loading-logo" src="assets/img/logo.png" alt="">
+      <span class="dashboard-loading-text">Carregando escala CCO...</span>
+    </div>
+  </div>
+
   <!-- Drawer overlay -->
   <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 
@@ -1643,6 +1650,8 @@ window.addEventListener("DOMContentLoaded",async ()=>{
     sessionStorage.removeItem("cco_session");
     alert(ex.message||"Não foi possível abrir a Escala CCO.");
     Auth.logout();
+  } finally {
+    document.getElementById("escala-cco-loading")?.classList.remove("active");
   }
 });
 

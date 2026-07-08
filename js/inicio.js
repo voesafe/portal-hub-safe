@@ -297,6 +297,10 @@ const Inicio = {
     this.renderizarBases(bases);
   },
 
+  setCarregando(ativo) {
+    document.getElementById('inicio-loading')?.classList.toggle('active', ativo);
+  },
+
   async iniciar() {
     if (!Auth.proteger()) return;
 
@@ -316,6 +320,7 @@ const Inicio = {
       .filter(modulo => modulo.permitido)
       .map(modulo => this.renderizarModulo(modulo))
       .join('');
+    this.setCarregando(false);
     const secaoBases = document.getElementById('home-bases')?.closest('.home-section');
     if (Auth.eUsuarioExclusivoControleGastos() || Auth.eUsuarioExclusivoEscalaMinions()) {
       if (secaoBases) secaoBases.hidden = true;

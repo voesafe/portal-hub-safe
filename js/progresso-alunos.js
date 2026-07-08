@@ -19,7 +19,11 @@ const ProgressoAlunos = {
     this._bindTabs();
     this._bindCurso();
     this._bindAluno();
-    await this._carregarCursos();
+    try {
+      await this._carregarCursos();
+    } finally {
+      document.getElementById('progresso-alunos-loading')?.classList.remove('active');
+    }
   },
 
   _bindHamburger() {

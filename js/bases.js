@@ -39,15 +39,27 @@ const Bases = {
     });
   },
 
+  setCarregando(ativo, texto = 'Carregando bases...') {
+    const overlay = document.getElementById('bases-loading');
+    const label = document.getElementById('bases-loading-text');
+    if (label) label.textContent = texto;
+    overlay?.classList.toggle('active', ativo);
+  },
+
   async carregar() {
-    const res = await API.getBases(false);
-    if (!res.ok) {
-      document.getElementById('bases-grid').innerHTML =
-        `<div class="bases-empty">${this.escape(res.error || 'Nao foi possivel carregar as bases.')}</div>`;
-      return;
+    this.setCarregando(true);
+    try {
+      const res = await API.getBases(false);
+      if (!res.ok) {
+        document.getElementById('bases-grid').innerHTML =
+          `<div class="bases-empty">${this.escape(res.error || 'Nao foi possivel carregar as bases.')}</div>`;
+        return;
+      }
+      this.itens = res.data || [];
+      this.renderizar();
+    } finally {
+      this.setCarregando(false);
     }
-    this.itens = res.data || [];
-    this.renderizar();
   },
 
   escape(valor) {

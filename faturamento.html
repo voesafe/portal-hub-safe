@@ -108,6 +108,13 @@
           </table>
         </div>
       </div>
+
+      <div class="dashboard-loading-overlay active" id="faturamento-loading">
+        <div class="dashboard-loading-card">
+          <img class="dashboard-loading-logo" src="assets/img/logo.png" alt="">
+          <span class="dashboard-loading-text">Carregando faturamento...</span>
+        </div>
+      </div>
     </div>
   </main>
 </div>
@@ -486,7 +493,9 @@ document.getElementById('sidebar-overlay')?.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
   if (!Auth.proteger(true)) return;
   Auth.preencherUI();
-  carregarFaturamento();
+  carregarFaturamento().finally(() => {
+    document.getElementById('faturamento-loading')?.classList.remove('active');
+  });
 });
 </script>
 </body>

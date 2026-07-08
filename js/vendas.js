@@ -47,13 +47,25 @@ const Vendas = {
   async init() {
     Auth.proteger();
     Auth.preencherUI();
+    this.setCarregando(true);
     this.setLoadingTabela(true);
-    await this.carregarPacs();
-    this.initFiltros();
-    this.initForm();
-    this.initExportacao();
-    this.initSidebar();
-    await this.carregar();
+    try {
+      await this.carregarPacs();
+      this.initFiltros();
+      this.initForm();
+      this.initExportacao();
+      this.initSidebar();
+      await this.carregar();
+    } finally {
+      this.setCarregando(false);
+    }
+  },
+
+  setCarregando(ativo, texto = 'Carregando vendas...') {
+    const overlay = document.getElementById('vendas-loading');
+    const label = document.getElementById('vendas-loading-text');
+    if (label) label.textContent = texto;
+    overlay?.classList.toggle('active', ativo);
   },
 
   // Consultores comerciais oficiais. Lista fixa e definida no select do HTML

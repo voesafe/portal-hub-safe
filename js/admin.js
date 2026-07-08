@@ -63,30 +63,43 @@ const Admin = {
     });
   },
 
+  setCarregando(ativo, texto = 'Carregando usuários...') {
+    const overlay = document.getElementById('admin-loading');
+    const label = document.getElementById('admin-loading-text');
+    if (label) label.textContent = texto;
+    overlay?.classList.toggle('active', ativo);
+  },
+
   async carregar(opcoes = {}) {
     const usarCache = opcoes.usarCache !== false;
     const cache = usarCache ? this.lerCacheUsuarios() : null;
     if (cache) {
       this.aplicarUsuarios(cache);
-    }
-
-    const [res, acessoRes] = await Promise.all([
-      API.getUsuarios(),
-      API.getControleAcesso()
-    ]);
-    if (!res.ok) {
-      toast(res.error || 'Erro ao carregar usuários.', 'error');
-      return;
-    }
-    if (acessoRes.ok) {
-      this.controleAcesso = acessoRes.data || { grupos: [], permissoes: [] };
     } else {
-      toast(acessoRes.error || 'Não foi possível carregar grupos e permissões.', 'warning');
+      this.setCarregando(true);
     }
 
-    this.aplicarUsuarios(res.data || {});
-    this.gravarCacheUsuarios(res.data || {});
-    if (res.data?.aviso) toast(res.data.aviso, 'warning', 6000);
+    try {
+      const [res, acessoRes] = await Promise.all([
+        API.getUsuarios(),
+        API.getControleAcesso()
+      ]);
+      if (!res.ok) {
+        toast(res.error || 'Erro ao carregar usuários.', 'error');
+        return;
+      }
+      if (acessoRes.ok) {
+        this.controleAcesso = acessoRes.data || { grupos: [], permissoes: [] };
+      } else {
+        toast(acessoRes.error || 'Não foi possível carregar grupos e permissões.', 'warning');
+      }
+
+      this.aplicarUsuarios(res.data || {});
+      this.gravarCacheUsuarios(res.data || {});
+      if (res.data?.aviso) toast(res.data.aviso, 'warning', 6000);
+    } finally {
+      this.setCarregando(false);
+    }
   },
 
   normalizarOrigem(origem) {
