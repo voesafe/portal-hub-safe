@@ -42,6 +42,7 @@ var ACCESS_PERMISSIONS = [
   ['fechamento_horas.reabrir_mes', 'Fechamento de Horas', 'Reabrir mês'],
   ['fechamento_horas.visualizar_historico', 'Fechamento de Horas', 'Visualizar histórico'],
   ['escala_cco.visualizar_calendario', 'Escala CCO', 'Visualizar calendário'],
+  ['escala_cco.editar_propria_escala', 'Escala CCO', 'Editar a própria escala/disponibilidade'],
   ['escala_cco.editar_escala', 'Escala CCO', 'Editar escala'],
   ['escala_cco.visualizar_financeiro', 'Escala CCO', 'Visualizar financeiro'],
   ['escala_cco.exportar_ifood', 'Escala CCO', 'Exportar iFood'],
@@ -84,33 +85,40 @@ var ACCESS_PERMISSIONS = [
   ['auth.alterar_propria_senha', 'Autenticação', 'Alterar própria senha']
 ];
 
+// ── Cargos oficiais (matriz definida pela SAFE em 2026-07) ──
+// Estes grupos são a fonte de verdade: sincronizarGruposPadrao_ reconcilia
+// nome/descrição e o conjunto EXATO de permissões de cada um no banco.
 var ACCESS_DEFAULT_GROUPS = [
   {
     id: 'comercial',
-    nome: 'Comercial',
-    descricao: 'Rotina comercial com vendas próprias e consulta operacional.',
+    nome: 'Consultor Comercial',
+    descricao: 'Vendas próprias, dashboard próprio e concorrência.',
     legacyPerfis: ['pac'],
     permissoes: [
       'inicio.visualizar',
+      'auth.alterar_propria_senha',
       'dashboard_vendas.visualizar_proprio',
       'vendas.visualizar_proprias',
       'vendas.criar_propria',
       'vendas.editar_propria',
       'vendas.excluir_propria',
       'concorrencia.visualizar',
+      'concorrencia.visualizar_precos_safe',
       'concorrencia.criar_concorrente',
       'concorrencia.editar_concorrente',
-      'bases.visualizar',
-      'auth.alterar_propria_senha'
+      'concorrencia.excluir_concorrente',
+      'concorrencia.editar_precos_safe',
+      'bases.visualizar'
     ]
   },
   {
     id: 'comercial_gerencia',
-    nome: 'Comercial Gerência',
-    descricao: 'Gestão comercial, dashboard geral e manutenção de concorrência.',
+    nome: 'Gerente Comercial',
+    descricao: 'Gestão comercial completa: vendas de todos, faturamento, concorrência e fechamento.',
     legacyPerfis: ['admin'],
     permissoes: [
       'inicio.visualizar',
+      'auth.alterar_propria_senha',
       'dashboard_vendas.visualizar_proprio',
       'dashboard_vendas.visualizar_todos',
       'dashboard_vendas.visualizar_receita_global',
@@ -126,28 +134,28 @@ var ACCESS_DEFAULT_GROUPS = [
       'faturamento.visualizar',
       'faturamento.visualizar_resumo',
       'concorrencia.visualizar',
+      'concorrencia.visualizar_precos_safe',
       'concorrencia.criar_concorrente',
       'concorrencia.editar_concorrente',
       'concorrencia.excluir_concorrente',
-      'concorrencia.visualizar_precos_safe',
       'concorrencia.editar_precos_safe',
-      'escala_cco.visualizar_calendario',
       'fechamento_horas.visualizar',
+      'fechamento_horas.visualizar_historico',
       'fechamento_horas.editar',
       'fechamento_horas.importar_cavok',
       'fechamento_horas.fechar_mes',
       'fechamento_horas.reabrir_mes',
-      'bases.visualizar',
-      'auth.alterar_propria_senha'
+      'bases.visualizar'
     ]
   },
   {
     id: 'financeiro',
     nome: 'Financeiro',
-    descricao: 'Controle financeiro, fechamento e exportações.',
+    descricao: 'Faturamento, controle de gastos, fechamento e financeiro da Escala PAV.',
     legacyPerfis: ['financeiro'],
     permissoes: [
       'inicio.visualizar',
+      'auth.alterar_propria_senha',
       'faturamento.visualizar',
       'faturamento.visualizar_resumo',
       'faturamento.lancar_valores',
@@ -161,56 +169,133 @@ var ACCESS_DEFAULT_GROUPS = [
       'controle_gastos.editar_categoria',
       'controle_gastos.ativar_inativar_categoria',
       'fechamento_horas.visualizar',
+      'fechamento_horas.visualizar_historico',
       'fechamento_horas.editar',
       'fechamento_horas.importar_cavok',
       'fechamento_horas.fechar_mes',
       'fechamento_horas.reabrir_mes',
+      'escala_pav.visualizar_calendario',
       'escala_pav.visualizar_financeiro',
-      'escala_pav.exportar_ifood',
-      'auth.alterar_propria_senha'
+      'bases.visualizar'
     ]
   },
   {
-    id: 'controle_gastos_leitura',
-    nome: 'Controle de Gastos - Leitura',
-    descricao: 'Acesso exclusivo e somente leitura ao Controle de Gastos.',
-    legacyPerfis: ['controle_gastos_visualizacao'],
-    permissoes: ['inicio.visualizar', 'controle_gastos.visualizar', 'auth.alterar_propria_senha']
-  },
-  {
-    id: 'operacoes_escala',
-    nome: 'Operações / Escala',
-    descricao: 'Escalas, horas INVA e SAFE MINIONS.',
-    legacyPerfis: ['escala_minions'],
+    id: 'consultor_cco',
+    nome: 'Consultor CCO',
+    descricao: 'Vê a Escala CCO e edita a própria escala/disponibilidade; Horas INVA e SAFE MINIONS em leitura.',
+    legacyPerfis: [],
     permissoes: [
       'inicio.visualizar',
+      'auth.alterar_propria_senha',
       'escala_cco.visualizar_calendario',
+      'escala_cco.editar_propria_escala',
+      'horas_inva.visualizar',
+      'safe_minions.visualizar',
+      'bases.visualizar'
+    ]
+  },
+  {
+    id: 'gerente_cco',
+    nome: 'Gerente CCO',
+    descricao: 'Gestão completa da Escala CCO, Horas INVA e SAFE MINIONS.',
+    legacyPerfis: [],
+    permissoes: [
+      'inicio.visualizar',
+      'auth.alterar_propria_senha',
+      'escala_cco.visualizar_calendario',
+      'escala_cco.editar_propria_escala',
+      'escala_cco.editar_escala',
+      'escala_cco.visualizar_financeiro',
+      'escala_cco.exportar_ifood',
+      'escala_cco.editar_valor_turno',
+      'escala_cco.gerenciar_funcionarios',
       'horas_inva.visualizar',
       'horas_inva.sincronizar_cavok',
       'horas_inva.cadastrar_instrutor',
       'safe_minions.visualizar',
       'safe_minions.processar_arquivo_local',
-      'auth.alterar_propria_senha'
+      'bases.visualizar'
+    ]
+  },
+  {
+    id: 'operacoes_escala',
+    nome: 'Operações',
+    descricao: 'Escala CCO e PAV, Horas INVA, SAFE MINIONS, cadastro e progresso de alunos.',
+    legacyPerfis: ['escala_minions'],
+    permissoes: [
+      'inicio.visualizar',
+      'auth.alterar_propria_senha',
+      'escala_cco.visualizar_calendario',
+      'escala_cco.editar_propria_escala',
+      'escala_cco.editar_escala',
+      'escala_cco.visualizar_financeiro',
+      'escala_cco.exportar_ifood',
+      'escala_cco.editar_valor_turno',
+      'escala_cco.gerenciar_funcionarios',
+      'escala_pav.visualizar_calendario',
+      'escala_pav.visualizar_financeiro',
+      'escala_pav.editar_escala',
+      'escala_pav.exportar_ifood',
+      'escala_pav.gerenciar_pavs',
+      'escala_pav.inativar_reativar_pav',
+      'horas_inva.visualizar',
+      'horas_inva.sincronizar_cavok',
+      'horas_inva.cadastrar_instrutor',
+      'progresso_alunos.visualizar',
+      'progresso_alunos.buscar_aluno',
+      'progresso_alunos.visualizar_detalhe',
+      'cadastro_alunos.visualizar',
+      'safe_minions.visualizar',
+      'safe_minions.processar_arquivo_local',
+      'bases.visualizar'
     ]
   },
   {
     id: 'somente_leitura',
-    nome: 'Somente Leitura',
-    descricao: 'Consulta administrativa sem ações de escrita.',
+    nome: 'DIRETORIA',
+    descricao: 'Visão geral em leitura de todos os módulos operacionais e comerciais.',
     legacyPerfis: ['admin_readonly', 'admin_visualizacao'],
     permissoes: [
       'inicio.visualizar',
+      'auth.alterar_propria_senha',
+      'dashboard_vendas.visualizar_proprio',
       'dashboard_vendas.visualizar_todos',
+      'dashboard_vendas.visualizar_receita_global',
+      'dashboard_vendas.visualizar_ranking_pac',
+      'vendas.visualizar_proprias',
       'vendas.visualizar_todas',
       'faturamento.visualizar',
       'faturamento.visualizar_resumo',
       'concorrencia.visualizar',
+      'concorrencia.visualizar_precos_safe',
       'controle_gastos.visualizar',
       'fechamento_horas.visualizar',
-      'bases.visualizar',
-      'auth.alterar_propria_senha'
+      'fechamento_horas.visualizar_historico',
+      'escala_cco.visualizar_calendario',
+      'escala_pav.visualizar_calendario',
+      'escala_pav.visualizar_financeiro',
+      'horas_inva.visualizar',
+      'progresso_alunos.visualizar',
+      'progresso_alunos.buscar_aluno',
+      'progresso_alunos.visualizar_detalhe',
+      'safe_minions.visualizar',
+      'bases.visualizar'
     ]
+  },
+  {
+    // Legado — mantido para não quebrar usuários antigos; não é um cargo oferecido.
+    id: 'controle_gastos_leitura',
+    nome: 'Controle de Gastos - Leitura (legado)',
+    descricao: 'Acesso exclusivo e somente leitura ao Controle de Gastos.',
+    legacyPerfis: ['controle_gastos_visualizacao'],
+    permissoes: ['inicio.visualizar', 'controle_gastos.visualizar', 'auth.alterar_propria_senha']
   }
+];
+
+// Cargos oferecidos na tela de criação (na ordem). O legado fica de fora.
+var ACCESS_CARGOS_OFERECIDOS = [
+  'comercial', 'comercial_gerencia', 'financeiro',
+  'consultor_cco', 'gerente_cco', 'operacoes_escala', 'somente_leitura'
 ];
 
 function garantirEstruturaControleAcesso_() {
@@ -320,33 +405,58 @@ function sincronizarCatalogoPermissoes_() {
 function sincronizarGruposPadrao_() {
   var groupsSheet = getSheet(SHEETS.ACCESS_GROUPS);
   var groupPermsSheet = getSheet(SHEETS.ACCESS_GROUP_PERMISSIONS);
+
+  // 1) Upsert dos grupos padrão (nome/descrição são reconciliados com o código).
   var gruposData = groupsSheet.getDataRange().getValues();
-  var relacoesData = groupPermsSheet.getDataRange().getValues();
-  var grupos = {};
-  var relacoes = {};
-  var novosGrupos = [];
-  var novasRelacoes = [];
+  var linhaPorGrupo = {};
   for (var i = 1; i < gruposData.length; i++) {
-    grupos[String(gruposData[i][0])] = i + 1;
-  }
-  for (var r = 1; r < relacoesData.length; r++) {
-    relacoes[String(relacoesData[r][0]) + '|' + String(relacoesData[r][1])] = true;
+    linhaPorGrupo[String(gruposData[i][0])] = i + 1; // linha 1-based
   }
   ACCESS_DEFAULT_GROUPS.forEach(function(grupo) {
-    if (!grupos[grupo.id]) {
-      grupos[grupo.id] = true;
-      novosGrupos.push([grupo.id, grupo.nome, grupo.descricao, true, true, new Date(), new Date()]);
+    var linha = linhaPorGrupo[grupo.id];
+    if (linha) {
+      groupsSheet.getRange(linha, 2).setValue(grupo.nome);
+      groupsSheet.getRange(linha, 3).setValue(grupo.descricao);
+    } else {
+      groupsSheet.appendRow([grupo.id, grupo.nome, grupo.descricao, true, true, new Date(), new Date()]);
     }
-    grupo.permissoes.forEach(function(permissao) {
-      var chave = grupo.id + '|' + permissao;
-      if (relacoes[chave]) return;
-      relacoes[chave] = true;
-      novasRelacoes.push([grupo.id, permissao, new Date()]);
+  });
+
+  // 2) Reconciliar as permissões de cada grupo PADRÃO para o conjunto EXATO
+  //    definido no código (adiciona faltantes, remove sobras). Grupos criados
+  //    pelo usuário não são tocados.
+  var relacoesData = groupPermsSheet.getDataRange().getValues();
+  var linhaPorRelacao = {}; // "gid|pid" -> linha 1-based
+  var existentesPorGrupo = {}; // gid -> { pid: true }
+  for (var r = 1; r < relacoesData.length; r++) {
+    var gid = String(relacoesData[r][0] || '').trim();
+    var pid = String(relacoesData[r][1] || '').trim();
+    if (!gid || !pid) continue;
+    linhaPorRelacao[gid + '|' + pid] = r + 1;
+    if (!existentesPorGrupo[gid]) existentesPorGrupo[gid] = {};
+    existentesPorGrupo[gid][pid] = true;
+  }
+
+  var linhasParaRemover = [];
+  var novasRelacoes = [];
+  ACCESS_DEFAULT_GROUPS.forEach(function(grupo) {
+    var desejado = {};
+    grupo.permissoes.forEach(function(p) { desejado[p] = true; });
+    var existentes = existentesPorGrupo[grupo.id] || {};
+    // sobras: existe no banco mas não no código
+    Object.keys(existentes).forEach(function(pid) {
+      if (!desejado[pid]) linhasParaRemover.push(linhaPorRelacao[grupo.id + '|' + pid]);
+    });
+    // faltantes: está no código mas não no banco
+    grupo.permissoes.forEach(function(pid) {
+      if (!existentes[pid]) novasRelacoes.push([grupo.id, pid, new Date()]);
     });
   });
-  if (novosGrupos.length) {
-    groupsSheet.getRange(groupsSheet.getLastRow() + 1, 1, novosGrupos.length, novosGrupos[0].length).setValues(novosGrupos);
-  }
+
+  // Remove de baixo para cima para não invalidar os índices.
+  linhasParaRemover.sort(function(a, b) { return b - a; }).forEach(function(rowIdx) {
+    if (rowIdx) groupPermsSheet.deleteRow(rowIdx);
+  });
   if (novasRelacoes.length) {
     groupPermsSheet.getRange(groupPermsSheet.getLastRow() + 1, 1, novasRelacoes.length, novasRelacoes[0].length).setValues(novasRelacoes);
   }
@@ -542,7 +652,8 @@ function carregarAcessosUsuarios_() {
   var gruposData = gruposSheet.getDataRange().getValues();
   var permissoesData = permissoesSheet.getDataRange().getValues();
   var gruposPorUsuario = {};
-  var permissoesPorUsuario = {};
+  var permissoesPorUsuario = {};   // exceções concedidas (GRANT)
+  var negadasPorUsuario = {};      // exceções negadas (DENY)
 
   for (var i = 1; i < gruposData.length; i++) {
     var userId = String(gruposData[i][0] || '').trim();
@@ -556,16 +667,16 @@ function carregarAcessosUsuarios_() {
     var usuarioId = String(permissoesData[p][0] || '').trim();
     var permissaoId = String(permissoesData[p][1] || '').trim();
     var tipo = String(permissoesData[p][2] || 'GRANT').trim().toUpperCase();
-    if (!usuarioId || !permissaoId || tipo === 'DENY') continue;
-    if (!permissoesPorUsuario[usuarioId]) permissoesPorUsuario[usuarioId] = [];
-    if (permissoesPorUsuario[usuarioId].indexOf(permissaoId) === -1) {
-      permissoesPorUsuario[usuarioId].push(permissaoId);
-    }
+    if (!usuarioId || !permissaoId) continue;
+    var alvo = tipo === 'DENY' ? negadasPorUsuario : permissoesPorUsuario;
+    if (!alvo[usuarioId]) alvo[usuarioId] = [];
+    if (alvo[usuarioId].indexOf(permissaoId) === -1) alvo[usuarioId].push(permissaoId);
   }
 
   return {
     gruposPorUsuario: gruposPorUsuario,
-    permissoesPorUsuario: permissoesPorUsuario
+    permissoesPorUsuario: permissoesPorUsuario,
+    negadasPorUsuario: negadasPorUsuario
   };
 }
 
@@ -601,36 +712,54 @@ function calcularPermissoesEfetivasUsuario_(userId, superadmin) {
   var permissoesPorGrupo = carregarPermissoesPorGrupo_();
   var efetivas = {};
 
+  // Base: permissões vindas dos grupos (cargos) do usuário.
   (acessos.gruposPorUsuario[usuarioId] || []).forEach(function(groupId) {
     (permissoesPorGrupo[groupId] || []).forEach(function(permissaoId) {
       efetivas[permissaoId] = true;
     });
   });
 
+  // Exceções concedidas (GRANT): adicionam permissões por cima do cargo.
   (acessos.permissoesPorUsuario[usuarioId] || []).forEach(function(permissaoId) {
     efetivas[permissaoId] = true;
+  });
+
+  // Exceções negadas (DENY): removem permissões que o cargo concederia.
+  (acessos.negadasPorUsuario[usuarioId] || []).forEach(function(permissaoId) {
+    delete efetivas[permissaoId];
   });
 
   return Object.keys(efetivas);
 }
 
-function salvarAcessosUsuario_(userId, grupos, permissoesAvulsas, usuarioExecutor) {
+function salvarAcessosUsuario_(userId, grupos, permissoesAvulsas, usuarioExecutor, permissoesNegadas) {
   garantirEstruturaControleAcesso_();
   if (!userId) throw new Error('Usuário obrigatório para salvar acessos.');
   var gruposNormalizados = normalizarListaIdsAcesso_(grupos);
-  var permissoesNormalizadas = normalizarListaIdsAcesso_(permissoesAvulsas);
+  var concedidas = normalizarListaIdsAcesso_(permissoesAvulsas);
+  var negadas = normalizarListaIdsAcesso_(permissoesNegadas);
+  // Uma permissão não pode ser concedida e negada ao mesmo tempo: negar vence.
+  negadas.forEach(function(id) {
+    var pos = concedidas.indexOf(id);
+    if (pos !== -1) concedidas.splice(pos, 1);
+  });
   validarIdsAcesso_(SHEETS.ACCESS_GROUPS, gruposNormalizados, 'grupo de acesso');
-  validarIdsAcesso_(SHEETS.PERMISSIONS_CATALOG, permissoesNormalizadas, 'permissão');
+  validarIdsAcesso_(SHEETS.PERMISSIONS_CATALOG, concedidas, 'permissão');
+  validarIdsAcesso_(SHEETS.PERMISSIONS_CATALOG, negadas, 'permissão');
 
   substituirVinculosUsuario_(getSheet(SHEETS.USER_GROUPS), userId, gruposNormalizados, function(id) {
     return [userId, id, new Date(), new Date()];
   });
-  substituirVinculosUsuario_(getSheet(SHEETS.USER_PERMISSIONS), userId, permissoesNormalizadas, function(id) {
-    return [userId, id, 'GRANT', new Date()];
+  // GRANT e DENY na mesma tabela, numa única substituição de vínculos do usuário.
+  var linhasPermissoes = concedidas.map(function(id) { return { id: id, tipo: 'GRANT' }; })
+    .concat(negadas.map(function(id) { return { id: id, tipo: 'DENY' }; }));
+  substituirVinculosUsuario_(getSheet(SHEETS.USER_PERMISSIONS), userId, linhasPermissoes, function(item) {
+    return [userId, item.id, item.tipo, new Date()];
   });
   registrarAuditoriaAcesso_(userId, 'USUARIO_ACESSOS_ATUALIZADOS', JSON.stringify({
     grupos: gruposNormalizados.length,
-    permissoesAvulsas: permissoesNormalizadas.length
+    permissoesAvulsas: concedidas.length,
+    permissoesNegadas: negadas.length
   }), usuarioExecutor);
 }
 

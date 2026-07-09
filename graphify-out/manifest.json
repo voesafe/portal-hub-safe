@@ -25,8 +25,8 @@
     "semantic_hash": "50e5a50872bb70aa4b148351c87814e9"
   },
   "js/admin.js": {
-    "mtime": 1783609346.7875037,
-    "ast_hash": "daf08f42d3ce5a79d478a479be69ab29",
+    "mtime": 1783619454.077926,
+    "ast_hash": "55c9d767d7d1b9d93312f2fc3eb907f1",
     "semantic_hash": ""
   },
   "js/api.js": {
@@ -35,8 +35,8 @@
     "semantic_hash": "14c2d2d54666d2a6a18c0f27539766a4"
   },
   "js/auth.js": {
-    "mtime": 1783608833.1007524,
-    "ast_hash": "4c0e6a635818adbe51adb763a08d93c1",
+    "mtime": 1783619427.8457086,
+    "ast_hash": "b8d655650ee66f369494d72e0b722bf7",
     "semantic_hash": ""
   },
   "js/bases.js": {
@@ -55,7 +55,7 @@
     "semantic_hash": "2c033fed3e82d078a6dca67516122ad3"
   },
   "js/config.js": {
-    "mtime": 1783609212.0330784,
+    "mtime": 1783612639.360083,
     "ast_hash": "63c66f0749b7db9b3b9d0111e14994d2",
     "semantic_hash": ""
   },
@@ -80,7 +80,7 @@
     "semantic_hash": "025ea7d2d1f3d2093811129c21ab2b2f"
   },
   "js/inicio.js": {
-    "mtime": 1783610567.1028523,
+    "mtime": 1783612639.3605847,
     "ast_hash": "b5d747ca865e1d520b18d911dab4cf79",
     "semantic_hash": ""
   },
@@ -365,9 +365,9 @@
     "semantic_hash": "b27be7f22becce7d02d2708b1131c1b9"
   },
   "admin.html": {
-    "mtime": 1783527970.7899487,
-    "ast_hash": "3233244b8c1f91167067ff831e69083d",
-    "semantic_hash": "3233244b8c1f91167067ff831e69083d"
+    "mtime": 1783619025.3740752,
+    "ast_hash": "5515b76c1389ea33422942fdc22628de",
+    "semantic_hash": ""
   },
   "bases.html": {
     "mtime": 1783528008.5865295,
@@ -975,7 +975,7 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1783609564.6301584,
+    "mtime": 1783612639.3518753,
     "ast_hash": "3b8a4dd50cad09e5f58e362a8c2ae81a",
     "semantic_hash": ""
   }

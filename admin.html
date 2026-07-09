@@ -248,24 +248,17 @@
         <div class="usuario-rbac" id="usuario-rbac">
           <div class="usuario-rbac-header">
             <div>
-              <strong>Grupos e permissões</strong>
-              <p>Superadmin ignora estas seleções. Para os demais usuários, o acesso efetivo vem da soma dos grupos e permissões avulsas.</p>
+              <strong>Cargo e acessos</strong>
+              <p>Escolha um cargo para preencher os acessos. Ajuste <b>Ver</b>/<b>Editar</b> por módulo — o que você mudar é gravado como exceção sobre o cargo.</p>
             </div>
-            <a href="access-control.html" target="_blank" rel="noopener noreferrer">Gerenciar grupos</a>
+            <a href="access-control.html" target="_blank" rel="noopener noreferrer">Gerenciar cargos</a>
           </div>
-          <div class="usuario-rbac-grid">
-            <section class="usuario-rbac-panel">
-              <label class="form-label" for="u-busca-grupos">Grupos do usuário</label>
-              <input class="form-control" id="u-busca-grupos" type="search" placeholder="Buscar grupo">
-              <div class="usuario-rbac-list" id="u-grupos-acesso"></div>
-            </section>
-            <section class="usuario-rbac-panel">
-              <label class="form-label" for="u-busca-permissoes">Permissões avulsas</label>
-              <input class="form-control" id="u-busca-permissoes" type="search" placeholder="Buscar permissão">
-              <div class="usuario-rbac-list" id="u-permissoes-avulsas"></div>
-            </section>
+          <div class="form-group">
+            <label class="form-label" for="u-cargo">Cargo</label>
+            <select class="form-control" id="u-cargo"></select>
           </div>
-          <div class="usuario-rbac-effective" id="u-rbac-efetivo"></div>
+          <div class="acesso-matriz" id="u-matriz-acesso" role="table" aria-label="Acessos por módulo"></div>
+          <div class="acesso-resumo" id="u-acesso-resumo"></div>
         </div>
       </div>
 
