@@ -7,25 +7,12 @@
   <link rel="manifest" href="manifest.webmanifest?v=20260706">
   <meta name="application-name" content="SAFE">
   <meta name="apple-mobile-web-app-title" content="SAFE">
-  <meta name="theme-color" content="#eef2f8">
+  <meta name="theme-color" content="#1D2951">
   <link rel="icon" type="image/png" href="favicon.png?v=20260706">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/safe-theme.css">
   <style>
-    :root {
-      --ink:        #1D2951;              /* navy — texto principal */
-      --ink-soft:   rgba(29,41,81,.55);   /* texto secundário */
-      --ink-faint:  rgba(29,41,81,.35);   /* texto terciário / ícones */
-      --field-bg:   #f2f5fa;              /* fundo dos inputs */
-      --field-brd:  rgba(29,41,81,.10);   /* borda dos inputs */
-      --hairline:   rgba(29,41,81,.08);   /* divisórias */
-    }
-
     body {
-      background:
-        radial-gradient(1100px 700px at 88% -10%, rgba(91,174,226,.14), transparent 60%),
-        radial-gradient(900px 600px at -5% 110%, rgba(96,192,191,.14), transparent 55%),
-        linear-gradient(165deg, #eef2f8 0%, #f7f9fc 45%, #eef4f6 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -36,38 +23,45 @@
       padding: 24px 16px;
     }
 
-    /* Plano de fundo decorativo */
-    .bg-decor { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-    .bg-circle { position: absolute; border-radius: 50%; opacity: .10; filter: blur(8px); }
-    .bg-circle-1 { width: 620px; height: 620px; background: var(--blue); top: -220px; right: -170px; }
-    .bg-circle-2 { width: 420px; height: 420px; background: var(--teal); bottom: -170px; left: -120px; }
-    .bg-lines {
-      position: absolute; inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 62px, rgba(29,41,81,.022) 62px, rgba(29,41,81,.022) 63px),
-        repeating-linear-gradient(90deg, transparent, transparent 62px, rgba(29,41,81,.022) 62px, rgba(29,41,81,.022) 63px);
-      mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 78%);
-      -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 78%);
+    /* ---- Fundo (gradiente SAFE) ------------------------------------------
+       Para trocar por uma imagem da SAFE depois, basta descomentar o
+       background-image em .bg-layer e apontar para o arquivo desejado. */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: -2;
+      background:
+        linear-gradient(135deg,
+          #141d3a 0%,
+          #1D2951 24%,
+          #294080 50%,
+          #3d8cc4 78%,
+          #60C0BF 100%);
+      /* background-image: url('assets/img/login-bg.jpg');
+         background-size: cover; background-position: center; */
     }
+    /* Camada opcional de escurecimento — garante contraste caso vire imagem */
+    .bg-overlay {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(120% 120% at 50% 20%, transparent 40%, rgba(10,15,40,.35) 100%);
+    }
+    /* Manchas de luz difusas para dar profundidade ao vidro */
+    .bg-blob { position: fixed; border-radius: 50%; filter: blur(90px); opacity: .5; z-index: -1; pointer-events: none; }
+    .bg-blob-1 { width: 460px; height: 460px; background: var(--blue);  top: -120px; right: -80px; }
+    .bg-blob-2 { width: 380px; height: 380px; background: var(--teal);  bottom: -140px; left: -100px; }
 
-    /* Card */
+    /* ---- Card de vidro (glassmorphism) ----------------------------------- */
     .login-card {
       position: relative; z-index: 1;
-      background: #ffffff;
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-lg);
-      padding: clamp(30px, 5vh, 52px) clamp(24px, 5vw, 46px);
-      width: 100%; max-width: 430px;
+      background: rgba(255,255,255,.09);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 24px;
+      padding: clamp(30px, 5vh, 48px) clamp(24px, 5vw, 42px);
+      width: 100%; max-width: 420px;
       box-shadow:
-        0 1px 2px rgba(29,41,81,.04),
-        0 20px 60px rgba(29,41,81,.12);
+        0 30px 80px rgba(10,15,40,.45),
+        inset 0 1px 0 rgba(255,255,255,.25);
       animation: fadeUp .5s cubic-bezier(.4,0,.2,1);
-    }
-    /* Faixa de marca no topo do card */
-    .login-card::before {
-      content: ""; position: absolute; inset: 0 0 auto 0; height: 4px;
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-      background: linear-gradient(90deg, var(--blue), var(--teal));
     }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
@@ -75,96 +69,98 @@
     }
 
     .login-logo {
-      display: flex; flex-direction: column; align-items: center;
-      margin-bottom: 30px;
+      display: flex; justify-content: center;
+      margin-bottom: 22px;
     }
     .login-logo img {
-      width: min(240px, 82%); height: auto;
+      width: 76px; height: 76px; border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.25), 0 10px 28px rgba(0,0,0,.35);
     }
 
     .login-title {
-      font-family: var(--font-title); font-size: 1.15rem;
-      font-weight: 800; color: var(--ink); margin-bottom: 6px;
+      font-family: var(--font-title); font-size: 1.55rem;
+      font-weight: 800; color: #fff; margin-bottom: 6px;
       text-align: center; letter-spacing: -.01em;
     }
     .login-sub {
-      font-size: .82rem; color: var(--ink-soft);
+      font-size: .88rem; color: rgba(255,255,255,.7);
       margin-bottom: 30px; text-align: center;
     }
 
-    .login-label {
-      font-size: .72rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .08em; color: var(--ink-soft);
-      margin-bottom: 7px; display: block;
+    /* rótulos acessíveis, ocultos visualmente (estilo placeholder) */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
 
     /* Input wrapper com ícone */
-    .input-wrap {
-      position: relative; margin-bottom: 18px;
-    }
+    .input-wrap { position: relative; margin-bottom: 16px; }
     .input-wrap .input-icon {
-      position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-      color: var(--ink-faint); display: flex; align-items: center;
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      color: rgba(255,255,255,.6); display: flex; align-items: center;
       pointer-events: none; transition: color .2s;
     }
     .input-wrap .input-icon svg { width: 17px; height: 17px; }
-    .input-wrap:focus-within .input-icon { color: var(--blue); }
+    .input-wrap:focus-within .input-icon { color: #fff; }
 
     .login-input {
-      width: 100%; padding: 13px 16px 13px 44px;
-      background: var(--field-bg);
-      border: 1.5px solid var(--field-brd);
-      border-radius: var(--radius-sm);
-      color: var(--ink); font-size: .95rem;
+      width: 100%; padding: 14px 16px 14px 46px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 12px;
+      color: #fff; font-size: .95rem;
       font-family: var(--font-body); outline: none;
       transition: var(--transition);
     }
     .login-input:focus {
-      border-color: var(--blue);
-      background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(91,174,226,.16);
+      border-color: rgba(255,255,255,.55);
+      background: rgba(255,255,255,.16);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.14);
     }
-    .login-input::placeholder { color: var(--ink-faint); }
+    .login-input::placeholder { color: rgba(255,255,255,.55); }
+    /* Preenchimento automático do navegador não quebra o visual de vidro */
+    .login-input:-webkit-autofill,
+    .login-input:-webkit-autofill:focus {
+      -webkit-text-fill-color: #fff;
+      caret-color: #fff;
+      transition: background-color 9999s ease-out 0s;
+      box-shadow: 0 0 0 1000px rgba(41,64,128,.55) inset;
+    }
 
     /* Toggle senha */
     .input-wrap .toggle-senha {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      color: var(--ink-faint); cursor: pointer; display: flex;
-      align-items: center; padding: 5px;
-      transition: color .2s;
+      color: rgba(255,255,255,.6); cursor: pointer; display: flex;
+      align-items: center; padding: 5px; transition: color .2s;
     }
-    .input-wrap .toggle-senha:hover { color: var(--blue); }
+    .input-wrap .toggle-senha:hover { color: #fff; }
     .input-wrap .toggle-senha svg { width: 17px; height: 17px; }
-
-    .login-input-senha { padding-right: 44px; }
+    .login-input-senha { padding-right: 46px; }
 
     .login-btn {
       width: 100%; padding: 14px;
       background: linear-gradient(135deg, var(--blue), var(--teal));
-      color: var(--white); border-radius: var(--radius-sm);
+      color: #fff; border-radius: 12px;
       font-family: var(--font-title); font-size: .96rem;
       font-weight: 700; letter-spacing: .03em;
       transition: var(--transition);
       display: flex; align-items: center; justify-content: center;
-      gap: 8px; margin-top: 10px;
-      box-shadow: 0 6px 18px rgba(91,174,226,.28);
+      gap: 8px; margin-top: 12px;
+      box-shadow: 0 8px 24px rgba(41,64,128,.4);
     }
     .login-btn:hover:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 10px 26px rgba(91,174,226,.4);
+      box-shadow: 0 12px 30px rgba(96,192,191,.45);
     }
     .login-btn:active:not(:disabled) { transform: translateY(0); }
     .login-btn:disabled { opacity: .65; pointer-events: none; }
-    .login-btn .spinner {
-      width: 18px; height: 18px;
-      border-width: 2px;
-    }
+    .login-btn .spinner { width: 18px; height: 18px; border-width: 2px; }
 
     .login-error {
-      background: rgba(231,76,60,.09);
-      border: 1px solid rgba(231,76,60,.22);
-      border-radius: var(--radius-sm);
-      padding: 11px 14px; color: #c0392b;
+      background: rgba(231,76,60,.18);
+      border: 1px solid rgba(231,76,60,.4);
+      border-radius: 12px;
+      padding: 11px 14px; color: #ffdad4;
       font-size: .82rem; margin-top: 16px;
       display: none; align-items: center; gap: 8px;
     }
@@ -172,37 +168,38 @@
     .login-error svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     .login-footer {
-      margin-top: 30px; padding-top: 20px;
-      border-top: 1px solid var(--hairline);
+      margin-top: 28px; padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.14);
       text-align: center; font-size: .72rem;
-      color: var(--ink-faint);
+      color: rgba(255,255,255,.5);
     }
 
     @media (max-width: 480px), (max-height: 720px) {
       body { align-items: flex-start; }
-      .login-logo { margin-bottom: 24px; }
-      .login-logo img { width: min(210px, 72%); }
-      .login-footer { margin-top: 24px; padding-top: 16px; }
+      .login-logo { margin-bottom: 18px; }
+      .login-logo img { width: 64px; height: 64px; }
+      .login-title { font-size: 1.4rem; }
+      .login-sub { margin-bottom: 24px; }
+      .login-footer { margin-top: 22px; padding-top: 16px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="bg-decor">
-    <div class="bg-circle bg-circle-1"></div>
-    <div class="bg-circle bg-circle-2"></div>
-    <div class="bg-lines"></div>
-  </div>
+  <div class="bg-layer"></div>
+  <div class="bg-overlay"></div>
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
 
   <div class="login-card">
     <div class="login-logo">
-      <img src="assets/img/safe-logo-horizontal.png" alt="SAFE Escola de Aviação">
+      <img src="assets/img/logo.png" alt="SAFE Escola de Aviação">
     </div>
 
-    <div class="login-title">Acesso ao SAFE Hub</div>
-    <div class="login-sub">Use seu e-mail corporativo e sua senha</div>
+    <div class="login-title">Bem-vindo ao SAFE Hub</div>
+    <div class="login-sub">Entre com seu e-mail corporativo</div>
 
-    <label class="login-label" for="inp-email">E-mail</label>
+    <label class="sr-only" for="inp-email">E-mail</label>
     <div class="input-wrap">
       <span class="input-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -219,7 +216,7 @@
       >
     </div>
 
-    <label class="login-label" for="inp-senha">Senha</label>
+    <label class="sr-only" for="inp-senha">Senha</label>
     <div class="input-wrap">
       <span class="input-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -231,7 +228,7 @@
         type="password"
         class="login-input login-input-senha"
         id="inp-senha"
-        placeholder="••••••••"
+        placeholder="Senha"
         autocomplete="current-password"
       >
       <button class="toggle-senha" id="toggle-senha" type="button" title="Mostrar/ocultar senha">
