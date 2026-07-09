@@ -1,18 +1,13 @@
-# Graph Report - portal-hub-safe  (2026-07-09)
+# Graph Report - .  (2026-07-08)
 
 ## Corpus Check
-- 72 files · ~482,723 words
+- 18 files · ~482,050 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 653 nodes · 598 edges · 170 communities (53 shown, 117 thin omitted)
-- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 85 edges (avg confidence: 0.78)
-- Token cost: 0 input · 0 output
-
-## Graph Freshness
-- Built from commit: `fe1b91f7`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
+- 633 nodes · 601 edges · 153 communities (47 shown, 106 thin omitted)
+- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 87 edges (avg confidence: 0.77)
+- Token cost: 150,230 input · 0 output
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Dashboard Financeiro Consolidado (Vendas + Faturamento)|Dashboard Financeiro Consolidado (Vendas + Faturamento)]]
@@ -156,28 +151,11 @@
 - [[_COMMUNITY_Preview Refinado — Bases Page|Preview Refinado — Bases Page]]
 - [[_COMMUNITY_Preview Refinado — Favicon|Preview Refinado — Favicon]]
 - [[_COMMUNITY_Progresso de Alunos Page|Progresso de Alunos Page]]
-- [[_COMMUNITY_SETUP — Passo a passo completo|SETUP — Passo a passo completo]]
-- [[_COMMUNITY_vendas.js|vendas.js]]
-- [[_COMMUNITY_CLAUDE.md — Regras do Projeto SAFE Hub|CLAUDE.md — Regras do Projeto SAFE Hub]]
-- [[_COMMUNITY_inicio.js|inicio.js]]
-- [[_COMMUNITY_Dashboard  Visão Geral (page)|Dashboard / Visão Geral (page)]]
-- [[_COMMUNITY_Concorrência (page)|Concorrência (page)]]
-- [[_COMMUNITY_bases.js|bases.js]]
-- [[_COMMUNITY_admin.js|admin.js]]
-- [[_COMMUNITY_fechamento-horas.js|fechamento-horas.js]]
-- [[_COMMUNITY_controle-gastos.js|controle-gastos.js]]
-- [[_COMMUNITY_Credenciais padrão (ThiagoMarlonAdauto)|Credenciais padrão (Thiago/Marlon/Adauto)]]
-- [[_COMMUNITY_Integração da Escala CCO (mapeamento de papéis adminfinanceirouser)|Integração da Escala CCO (mapeamento de papéis admin/financeiro/user)]]
-- [[_COMMUNITY_Identidade única por e-mail unificando Hub e CCO|Identidade única por e-mail unificando Hub e CCO]]
-- [[_COMMUNITY_Integração direta com API CAVOK (gatilhos diários)|Integração direta com API CAVOK (gatilhos diários)]]
-- [[_COMMUNITY_Perfis de acesso (Consultor PAC, Admin, Financeiro, Master TI, CCO)|Perfis de acesso (Consultor PAC, Admin, Financeiro, Master TI, CCO)]]
-- [[_COMMUNITY_SAFE MINIONS processa arquivos localmente no navegador|SAFE MINIONS processa arquivos localmente no navegador]]
-- [[_COMMUNITY_Setup do backend Apps Script (idempotente)|Setup do backend Apps Script (idempotente)]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `SAFE Hub — Variante Refinado (Início)` - 12 edges
-2. `SAFE Hub — Variante Clean / SaaS (Início)` - 12 edges
-3. `SETUP — Passo a passo completo` - 11 edges
+1. `README — SAFE Hub` - 18 edges
+2. `SAFE Hub — Variante Refinado (Início)` - 12 edges
+3. `SAFE Hub — Variante Clean / SaaS (Início)` - 12 edges
 4. `PAV · Fechamento Financeiro` - 10 edges
 5. `cmdSenha()` - 9 edges
 6. `cmdRemover()` - 9 edges
@@ -187,16 +165,16 @@
 10. `cmdAdicionar()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Escala PAV — Seletor Operacional (preview)` --semantically_similar_to--> `Trava de gravação (somente leitura)`  [INFERRED] [semantically similar]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/pav/index.html → /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/index.html
 - `api() — fetch wrapper to container-bound GAS backend` --semantically_similar_to--> `gasRequest() — GET wrapper to container-bound GAS backend`  [INFERRED] [semantically similar]
-  escala-pav.html → escala-cco.html
-- `carregarEscala()` --semantically_similar_to--> `loadMonth()`  [INFERRED] [semantically similar]
-  escala-pav.html → escala-cco.html
-- `carregarFinanceiro()` --semantically_similar_to--> `computeFinForMonth()`  [INFERRED] [semantically similar]
-  escala-pav.html → escala-cco.html
-- `api() — fetch wrapper to container-bound GAS backend` --semantically_similar_to--> `gasWrite() — write wrapper to container-bound GAS backend`  [INFERRED] [semantically similar]
-  escala-pav.html → escala-cco.html
-- `Gestão de Usuários page (admin.html)` --conceptually_related_to--> `RBAC — grupos e permissões efetivas`  [INFERRED]
-  admin.html → access-control.html
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/escala-pav.html → /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/escala-cco.html
+- `KPI Receita Global (Vendas + Faturamento)` --conceptually_related_to--> `Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale)`  [INFERRED]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/denso/dashboard.html → /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/clean/debug.html
+- `Escala PAV App` --semantically_similar_to--> `Escala CCO App (Centro de Controle de Operações)`  [INFERRED] [semantically similar]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/denso/escala-pav.html → /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/clean/escala-cco.html
+- `viewFinanceiro (Fechamento Financeiro PAV)` --semantically_similar_to--> `Fechamento Financeiro (Total Pago no Mês/Ano)`  [INFERRED] [semantically similar]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/denso/escala-pav.html → /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/preview/clean/escala-cco.html
 
 ## Import Cycles
 - None detected.
@@ -211,6 +189,8 @@
 - **Seleção de direção de redesign do Hub (3 variantes + seletor)** — preview_index_index, preview_v1_refinado_hub, preview_v2_clean_hub, preview_v3_denso_hub [INFERRED 0.90]
 - **Fluxo das 3 abas do módulo Escala PAV** — preview_pav_index_index, preview_pav_a_operacional_calendario, preview_pav_a_financeiro_fechamento, preview_pav_a_pavs_cadastro [EXTRACTED 0.95]
 - **Alocação de PAVs às bases CPN/SJK** — preview_pav_carlos_moraes, preview_pav_ana_prado, preview_pav_base_cpn, preview_pav_base_sjk [INFERRED 0.80]
+- **Receita Global: cálculo (Dashboard) e verificação (Debug) contra Faturamento** — dashboard_kpi_receita_global, faturamento_total_anual, debug_diagnostico_receita [EXTRACTED 1.00]
+- **Integração de dados externos CAVOK em múltiplos módulos do Hub** — cadastro_alunos_import_cavok, fechamento_horas_import_cavok, horas_voadas_inva_sincronizacao [INFERRED 0.85]
 - **Fluxo de controle de acesso: grupos/permissões editados em Controle de Acesso, aplicados a usuários em Admin, e impõem redirecionamento em Acesso Negado** — preview_denso_access_control_grupos_de_acesso, preview_clean_admin_modal_novo_usuario, preview_clean_acesso_negado_acesso_negado_page [INFERRED 0.80]
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_denso_debug_receita_global_calculo, preview_denso_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_denso_escala_pav_view_calendario, preview_denso_escala_pav_view_financeiro, preview_denso_escala_pav_view_cadastro [INFERRED 0.80]
@@ -218,23 +198,23 @@
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_refinado_debug_receita_global_calculo, preview_refinado_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_refinado_escala_pav_view_calendario, preview_refinado_escala_pav_view_financeiro, preview_refinado_escala_pav_view_cadastro [INFERRED 0.80]
 
-## Communities (170 total, 117 thin omitted)
+## Communities (153 total, 106 thin omitted)
 
 ### Community 0 - "Dashboard Financeiro Consolidado (Vendas + Faturamento)"
-Cohesion: 0.18
-Nodes (11): Cadastro de Aluno (page), Aluno, Fila operacional S141 / sincronização Trello, Importação de XLS do CAVOK, Matrícula, Horas Voadas INVA Mês (page), Instrutor INVA cadastrado (CLT/Eventual), Sincronização de horas com o CAVOK (+3 more)
+Cohesion: 0.05
+Nodes (38): Acesso Restrito (page), Cadastro de Aluno (page), Aluno, Fila operacional S141 / sincronização Trello, Importação de XLS do CAVOK, Matrícula, Concorrência (page), Escola concorrente (+30 more)
 
 ### Community 1 - "Cadastro de Alunos e Controle de Gastos"
 Cohesion: 0.06
 Nodes (34): KPI Receita Global (Vendas + Faturamento), Performance por Consultor (PAC) Chart, Dashboard / Visão Geral Page, Diagnóstico SAFE Hub Page, Detecção de Inconsistência MES/ANO vs DATA, Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale), Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page (+26 more)
 
 ### Community 2 - "SAFE Minions — Verificação de Mínimos ANAC"
-Cohesion: 0.11
-Nodes (19): Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab, Visão Geral Tab (Gastos), Visão Geral Tab (Horas por Mês), Acesso Somente Visualização (rationale) (+11 more)
+Cohesion: 0.06
+Nodes (31): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab (+23 more)
 
 ### Community 3 - "CLI de Administração (admin-cli.js)"
-Cohesion: 0.09
-Nodes (23): Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos, Tipo PPA — Piloto Privado de Avião, Upload de Extrato SACI (.xlt/.xltx/.xlsx/.xls) (+15 more)
+Cohesion: 0.06
+Nodes (31): Atualizar pela API CAVOK, Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Sincronizar CAVOK (Instrutores/Horas), Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos (+23 more)
 
 ### Community 4 - "Escala CCO e PAV — Apps Operacionais"
 Cohesion: 0.22
@@ -253,12 +233,12 @@ Cohesion: 0.14
 Nodes (20): Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel, Diretório de Acessos Table, Gestão de Usuários (Admin) Page, Identidade Única por E-mail (concept), Modal Novo/Editar Usuário, Senha Padrão = CPF (rationale) (+12 more)
 
 ### Community 8 - "Login e Página Inicial (Bases SAFE)"
-Cohesion: 0.24
-Nodes (18): Base Bragança Paulista, Base Jundiaí, Base Sorocaba, Preview de Redesign — SAFE Hub (Seletor), Trava de gravação (somente leitura), Redesign 1 · Refinado (card), Redesign 2 · Clean / SaaS (card), Redesign 3 · Dashboard denso (card) (+10 more)
+Cohesion: 0.25
+Nodes (17): Base Bragança Paulista, Base Jundiaí, Base Sorocaba, Preview de Redesign — SAFE Hub (Seletor), Trava de gravação (somente leitura), Redesign 1 · Refinado (card), Redesign 2 · Clean / SaaS (card), Redesign 3 · Dashboard denso (card) (+9 more)
 
 ### Community 9 - "Acesso Restrito, Login e Catálogo de Módulos"
-Cohesion: 0.30
-Nodes (16): Exportar iFood (fechamento PAV), PAV · Fechamento Financeiro, PAV · Calendário Operacional, PAV · Cadastro de PAVs, Ana Prado (PAV · SJK), André Lima (PAV · CPN), Base CPN · Campinas, Base SJK · São José dos Campos (+8 more)
+Cohesion: 0.27
+Nodes (17): Módulo Escala CCO, Exportar iFood (fechamento PAV), PAV · Fechamento Financeiro, PAV · Calendário Operacional, PAV · Cadastro de PAVs, Ana Prado (PAV · SJK), André Lima (PAV · CPN), Base CPN · Campinas (+9 more)
 
 ### Community 10 - "Cadastro de Alunos e Fechamento de Horas"
 Cohesion: 0.12
@@ -317,8 +297,8 @@ Cohesion: 0.40
 Nodes (5): Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fechamento Mensal Tab (Horas por Aeronave), Importar Relatório Cavok (XLS/XLSX), Visão Geral Tab (Horas por Mês)
 
 ### Community 28 - "preview-guard.js — Trava de Preview Read-only"
-Cohesion: 0.10
-Nodes (20): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fechamento Mensal Tab (Horas por Aeronave), Importar Relatório Cavok (XLS/XLSX), Sincronizar CAVOK (Instrutores/Horas) (+12 more)
+Cohesion: 0.83
+Nodes (4): Confiabilidade do grafo, CLAUDE.md — Regras do Projeto SAFE Hub, Transparência de comandos, Uso obrigatório do Graphify
 
 ### Community 30 - "Fechamento de Horas — Sincronização CAVOK"
 Cohesion: 0.50
@@ -360,49 +340,25 @@ Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
 Cohesion: 0.67
 Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
 
-### Community 153 - "SETUP — Passo a passo completo"
-Cohesion: 0.11
-Nodes (18): 1. Configurar o Google Sheets, 2. Configurar o Apps Script, 3. Configurar o frontend, 4. Migrar dados históricos (opcional), 5. Deploy no GitHub Pages, Atualizações automáticas CAVOK, Configurar a Escala CCO, Configurar o Fechamento de Horas (+10 more)
-
-### Community 154 - "vendas.js"
-Cohesion: 0.29
-Nodes (3): CURSOS_VENDAS, PACOTES_LEGADOS_CURSOS, Vendas
-
-### Community 155 - "CLAUDE.md — Regras do Projeto SAFE Hub"
-Cohesion: 0.33
-Nodes (5): Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09, CLAUDE.md — Regras do Projeto SAFE Hub, Confiabilidade do grafo, Transparência de comandos, Uso obrigatório do Graphify
-
-### Community 156 - "inicio.js"
-Cohesion: 0.40
-Nodes (4): Acesso Restrito (page), Login (page), Login por e-mail corporativo, Inicio
-
-### Community 157 - "Dashboard / Visão Geral (page)"
-Cohesion: 0.40
-Nodes (5): Dashboard / Visão Geral (page), KPI Receita Global (Vendas + Faturamento), KPIs de vendas (ticket médio, leads, ranking cursos, performance por consultor), Diagnóstico (page), Diagnóstico de divergência KPI x Faturamento
-
-### Community 158 - "Concorrência (page)"
-Cohesion: 0.67
-Nodes (3): Concorrência (page), Escola concorrente, Preço SAFE comparativo
-
 ## Knowledge Gaps
-- **263 isolated node(s):** `https`, `http`, `readline`, `crypto`, `c` (+258 more)
+- **240 isolated node(s):** `https`, `http`, `readline`, `crypto`, `c` (+235 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **117 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **106 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Horas Voadas INVA Mês Page` connect `CLI de Administração (admin-cli.js)` to `preview-guard.js — Trava de Preview Read-only`?**
+- **Why does `Fechamento Mensal Tab (Horas por Aeronave)` connect `SAFE Minions — Verificação de Mínimos ANAC` to `CLI de Administração (admin-cli.js)`?**
+  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **Why does `Atualizar pela API CAVOK` connect `CLI de Administração (admin-cli.js)` to `SAFE Minions — Verificação de Mínimos ANAC`?**
   _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **What connects `https`, `http`, `readline` to the rest of the system?**
-  _271 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _248 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Dashboard Financeiro Consolidado (Vendas + Faturamento)` be split into smaller, more focused modules?**
+  _Cohesion score 0.04717853839037928 - nodes in this community are weakly interconnected._
 - **Should `Cadastro de Alunos e Controle de Gastos` be split into smaller, more focused modules?**
   _Cohesion score 0.06417112299465241 - nodes in this community are weakly interconnected._
 - **Should `SAFE Minions — Verificação de Mínimos ANAC` be split into smaller, more focused modules?**
-  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Should `CLI de Administração (admin-cli.js)` be split into smaller, more focused modules?**
-  _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
-- **Should `Controle de Acesso e Gestão de Usuários (RBAC)` be split into smaller, more focused modules?**
-  _Cohesion score 0.1038961038961039 - nodes in this community are weakly interconnected._
-- **Should `Bases SAFE e Seletor de Redesign (Preview)` be split into smaller, more focused modules?**
-  _Cohesion score 0.1038961038961039 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._

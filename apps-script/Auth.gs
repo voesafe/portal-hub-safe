@@ -4,7 +4,7 @@
 // Login por e-mail (coluna D = row[3])
 // ============================================================
 
-var SAFE_AUTH_VERSION = '2026.07.06-rbac-effective';
+var SAFE_AUTH_VERSION = '2026.07.09-rbac-enforcement';
 var SAFE_SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 var SAFE_SESSION_EPOCH_KEY = 'SAFE_SESSION_EPOCH_MS';
 var SAFE_SESSION_TIMEZONE = 'America/Sao_Paulo';
@@ -44,12 +44,42 @@ function login(email, senha) {
 
     var usuarioCco = autenticarUsuarioCcoPorEmail(identificador, senha);
     if (!usuarioCco) return null;
-    usuarioCco.permissoesEfetivas = [];
+    usuarioCco.permissoesEfetivas = permissoesEfetivasCco_(usuarioCco.perfil);
     usuarioCco.token = criarTokenSessao(usuarioCco);
     return usuarioCco;
   } catch(e) {
     throw new Error('Erro no login: ' + e.message);
   }
+}
+
+/**
+ * Permissões efetivas para usuários de origem CCO (gerenciados no sistema CCO,
+ * não no RBAC do Hub). Mapeia o papel CCO para as permissões que liberam a
+ * navegação no Hub. A autoridade de escrita da Escala CCO é do backend próprio
+ * da Escala; aqui controlamos apenas o que aparece/abre no Hub.
+ */
+function permissoesEfetivasCco_(perfil) {
+  var p = normalizarPerfil(perfil);
+  var base = [
+    'inicio.visualizar',
+    'escala_cco.visualizar_calendario',
+    'safe_minions.visualizar',
+    'bases.visualizar',
+    'auth.alterar_propria_senha'
+  ];
+  if (p === 'cco_financeiro') {
+    return base.concat(['escala_cco.visualizar_financeiro', 'escala_cco.exportar_ifood']);
+  }
+  if (p === 'cco_admin') {
+    return base.concat([
+      'escala_cco.visualizar_financeiro',
+      'escala_cco.exportar_ifood',
+      'escala_cco.editar_escala',
+      'escala_cco.editar_valor_turno',
+      'escala_cco.gerenciar_funcionarios'
+    ]);
+  }
+  return base;
 }
 
 /**
@@ -154,7 +184,7 @@ function validarTokenSessao(token) {
     var usuarioCco = buscarUsuarioCco(sessao.pac);
     if (!usuarioCco) return null;
     usuarioCco.token = token;
-    usuarioCco.permissoesEfetivas = [];
+    usuarioCco.permissoesEfetivas = permissoesEfetivasCco_(usuarioCco.perfil || sessao.perfil);
     return usuarioCco;
   }
 

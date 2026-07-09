@@ -91,14 +91,16 @@ function doGet(e) {
       case 'newzenler-cursos': {
         var uNzCursos = validarTokenSessao(token);
         if (!uNzCursos) return jsonError('Sessão expirada. Entre novamente.');
-        if (!usuarioEhSuperadmin(uNzCursos) && !perfilEhAdminCompleto(uNzCursos.perfil)) return jsonError('Acesso negado.');
+        if (!usuarioEhSuperadmin(uNzCursos) && !perfilEhAdminCompleto(uNzCursos.perfil) &&
+            !usuarioTemPermissao(uNzCursos, 'progresso_alunos.visualizar')) return jsonError('Acesso negado.');
         return jsonSuccess(newzenlerListarCursos());
       }
 
       case 'newzenler-progresso': {
         var uNzProg = validarTokenSessao(token);
         if (!uNzProg) return jsonError('Sessão expirada. Entre novamente.');
-        if (!usuarioEhSuperadmin(uNzProg) && !perfilEhAdminCompleto(uNzProg.perfil)) return jsonError('Acesso negado.');
+        if (!usuarioEhSuperadmin(uNzProg) && !perfilEhAdminCompleto(uNzProg.perfil) &&
+            !usuarioTemPermissao(uNzProg, 'progresso_alunos.visualizar')) return jsonError('Acesso negado.');
         return jsonSuccess(newzenlerProgressoDetalhado({
           courseId:  p.courseId  || '',
           nameLike:  p.nameLike  || '',
@@ -111,7 +113,8 @@ function doGet(e) {
       case 'newzenler-buscar-alunos': {
         var uNzBusca = validarTokenSessao(token);
         if (!uNzBusca) return jsonError('Sessão expirada. Entre novamente.');
-        if (!usuarioEhSuperadmin(uNzBusca) && !perfilEhAdminCompleto(uNzBusca.perfil)) return jsonError('Acesso negado.');
+        if (!usuarioEhSuperadmin(uNzBusca) && !perfilEhAdminCompleto(uNzBusca.perfil) &&
+            !usuarioTemAlgumaPermissao(uNzBusca, ['progresso_alunos.buscar_aluno', 'progresso_alunos.visualizar'])) return jsonError('Acesso negado.');
         if (!p.query) return jsonError('Informe um nome ou e-mail para buscar.');
         return jsonSuccess(newzenlerBuscarAlunos(p.query));
       }
@@ -119,7 +122,8 @@ function doGet(e) {
       case 'newzenler-progresso-aluno': {
         var uNzPa = validarTokenSessao(token);
         if (!uNzPa) return jsonError('Sessão expirada. Entre novamente.');
-        if (!usuarioEhSuperadmin(uNzPa) && !perfilEhAdminCompleto(uNzPa.perfil)) return jsonError('Acesso negado.');
+        if (!usuarioEhSuperadmin(uNzPa) && !perfilEhAdminCompleto(uNzPa.perfil) &&
+            !usuarioTemAlgumaPermissao(uNzPa, ['progresso_alunos.visualizar_detalhe', 'progresso_alunos.visualizar'])) return jsonError('Acesso negado.');
         if (!p.email) return jsonError('E-mail do aluno obrigatório.');
         return jsonSuccess(newzenlerProgressoAluno(p.email));
       }
@@ -164,14 +168,17 @@ function doPost(e) {
       // ── Vendas ─────────────────────────────────────────────
       case 'criar-venda': {
         var uCriarV = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uCriarV) && perfilSomenteLeitura(uCriarV.perfil)) return jsonError('Acesso somente leitura');
-        if (!usuarioEhSuperadmin(uCriarV) && !perfilEhAdminCompleto(uCriarV.perfil)) dados.pac = uCriarV.pac;
+        if (!usuarioEhSuperadmin(uCriarV) && perfilSomenteLeitura(uCriarV.perfil) &&
+            !usuarioTemAlgumaPermissao(uCriarV, ['vendas.criar_propria', 'vendas.criar_para_qualquer_pac'])) return jsonError('Acesso somente leitura');
+        if (!usuarioEhSuperadmin(uCriarV) && !perfilEhAdminCompleto(uCriarV.perfil) &&
+            !usuarioTemPermissao(uCriarV, 'vendas.criar_para_qualquer_pac')) dados.pac = uCriarV.pac;
         return jsonSuccess(criarVenda(dados));
       }
 
       case 'editar-venda': {
         var uEditarV = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uEditarV) && perfilSomenteLeitura(uEditarV.perfil)) return jsonError('Acesso somente leitura');
+        if (!usuarioEhSuperadmin(uEditarV) && perfilSomenteLeitura(uEditarV.perfil) &&
+            !usuarioTemAlgumaPermissao(uEditarV, ['vendas.editar_propria', 'vendas.editar_todas'])) return jsonError('Acesso somente leitura');
         if (!dados.id) return jsonError('ID obrigatório');
         var atualizado = atualizarVenda(dados.id, dados, uEditarV.pac, usuarioEhSuperadmin(uEditarV) ? 'master' : uEditarV.perfil);
         if (!atualizado) return jsonError('Venda não encontrada');
@@ -180,7 +187,8 @@ function doPost(e) {
 
       case 'excluir-venda': {
         var uExcluirV = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uExcluirV) && perfilSomenteLeitura(uExcluirV.perfil)) return jsonError('Acesso somente leitura');
+        if (!usuarioEhSuperadmin(uExcluirV) && perfilSomenteLeitura(uExcluirV.perfil) &&
+            !usuarioTemAlgumaPermissao(uExcluirV, ['vendas.excluir_propria', 'vendas.excluir_todas'])) return jsonError('Acesso somente leitura');
         if (!dados.id) return jsonError('ID obrigatório');
         return jsonSuccess(excluirVenda(dados.id, uExcluirV.pac, usuarioEhSuperadmin(uExcluirV) ? 'master' : uExcluirV.perfil));
       }
@@ -188,13 +196,15 @@ function doPost(e) {
       // ── Faturamento ────────────────────────────────────────
       case 'salvar-faturamento': {
         var uSalvarFat = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uSalvarFat) && !perfilEhAdminCompleto(uSalvarFat.perfil)) return jsonError('Acesso negado');
+        if (!usuarioEhSuperadmin(uSalvarFat) && !perfilEhAdminCompleto(uSalvarFat.perfil) &&
+            !usuarioTemAlgumaPermissao(uSalvarFat, ['faturamento.lancar_valores', 'faturamento.editar_valores'])) return jsonError('Acesso negado');
         return jsonSuccess(salvarFaturamento(dados.mes, dados.ano, dados.canal, dados.valor));
       }
 
       case 'excluir-faturamento': {
         var uExcluirFat = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uExcluirFat) && !perfilEhAdminCompleto(uExcluirFat.perfil)) return jsonError('Acesso negado');
+        if (!usuarioEhSuperadmin(uExcluirFat) && !perfilEhAdminCompleto(uExcluirFat.perfil) &&
+            !usuarioTemPermissao(uExcluirFat, 'faturamento.excluir_lancamento')) return jsonError('Acesso negado');
         if (!dados.id) return jsonError('ID obrigatório');
         return jsonSuccess(excluirFaturamento(dados.id));
       }
@@ -282,20 +292,23 @@ function doPost(e) {
       // ── Concorrência — PAC pode criar/editar, só admin pode excluir ──
       case 'criar-concorrente': {
         var uCriarC = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uCriarC) && perfilSomenteLeitura(uCriarC.perfil)) return jsonError('Acesso somente leitura');
+        if (!usuarioEhSuperadmin(uCriarC) && perfilSomenteLeitura(uCriarC.perfil) &&
+            !usuarioTemPermissao(uCriarC, 'concorrencia.criar_concorrente')) return jsonError('Acesso somente leitura');
         return jsonSuccess(criarConcorrente(dados, uCriarC.pac));
       }
 
       case 'editar-concorrente': {
         var uEditarC = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uEditarC) && perfilSomenteLeitura(uEditarC.perfil)) return jsonError('Acesso somente leitura');
+        if (!usuarioEhSuperadmin(uEditarC) && perfilSomenteLeitura(uEditarC.perfil) &&
+            !usuarioTemAlgumaPermissao(uEditarC, ['concorrencia.editar_concorrente', 'concorrencia.editar_precos_safe'])) return jsonError('Acesso somente leitura');
         if (!dados.id) return jsonError('ID obrigatório');
         return jsonSuccess(editarConcorrente(dados.id, dados));
       }
 
       case 'excluir-concorrente': {
         var uExcluirC = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uExcluirC) && !perfilEhAdminCompleto(uExcluirC.perfil)) return jsonError('Acesso negado');
+        if (!usuarioEhSuperadmin(uExcluirC) && !perfilEhAdminCompleto(uExcluirC.perfil) &&
+            !usuarioTemPermissao(uExcluirC, 'concorrencia.excluir_concorrente')) return jsonError('Acesso negado');
         if (!dados.id) return jsonError('ID obrigatório');
         return jsonSuccess(excluirConcorrente(dados.id));
       }
@@ -303,7 +316,8 @@ function doPost(e) {
       // ── Preços SAFE — só admin completo edita ─────────────
       case 'salvar-preco-safe': {
         var uPreco = exigirSessao(token);
-        if (!usuarioEhSuperadmin(uPreco) && !perfilEhAdminCompleto(uPreco.perfil)) return jsonError('Acesso negado');
+        if (!usuarioEhSuperadmin(uPreco) && !perfilEhAdminCompleto(uPreco.perfil) &&
+            !usuarioTemPermissao(uPreco, 'concorrencia.editar_precos_safe')) return jsonError('Acesso negado');
         if (!dados.curso) return jsonError('Curso obrigatório');
         return jsonSuccess(salvarPrecoSafe(dados));
       }

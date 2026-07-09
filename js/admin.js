@@ -374,6 +374,27 @@ const Admin = {
     setTimeout(() => Auth.logout(), 1200);
   },
 
+  // O acesso efetivo é 100% RBAC (grupos + permissões avulsas). O `perfil`
+  // legado é mantido apenas como ESPELHO para badges/rótulos e para os
+  // guardas de escrita legados do backend — por isso é derivado dos grupos,
+  // nunca escolhido à mão. Ordem = do mais privilegiado ao menos.
+  GRUPO_PARA_PERFIL: [
+    ['comercial_gerencia', 'admin'],
+    ['financeiro', 'financeiro'],
+    ['operacoes_escala', 'escala_minions'],
+    ['somente_leitura', 'admin_readonly'],
+    ['controle_gastos_leitura', 'controle_gastos_visualizacao'],
+    ['comercial', 'pac']
+  ],
+
+  perfilDerivadoDosGrupos(gruposSelecionados) {
+    const set = new Set((gruposSelecionados || []).map(g => String(g)));
+    for (const [grupoId, perfil] of this.GRUPO_PARA_PERFIL) {
+      if (set.has(grupoId)) return perfil;
+    }
+    return 'pac';
+  },
+
   perfisAcesso() {
     return {
       pac: {
@@ -645,15 +666,20 @@ const Admin = {
   dadosFormularioUsuario() {
     const origem = document.getElementById('u-origem').value;
     const superadmin = origem === 'hub' && document.getElementById('u-superadmin').checked;
+    const gruposSelecionados = Array.from(this.acessosSelecionados.grupos);
     // Superadmin ignora grupos e avulsas no acesso efetivo; enviamos listas vazias
     // para o backend limpar vínculos antigos e não deixar dados mortos gravados.
+    // `perfil` (legado) é ESPELHO derivado dos grupos — o acesso real é RBAC.
+    const perfil = origem === 'cco'
+      ? document.getElementById('u-perfil').value
+      : (superadmin ? 'master' : this.perfilDerivadoDosGrupos(gruposSelecionados));
     return {
       id: this.editandoId,
       origem,
       nome: document.getElementById('u-nome').value.trim(),
       pac: document.getElementById('u-pac').value.trim(),
       email: document.getElementById('u-email').value.trim(),
-      perfil: document.getElementById('u-perfil').value,
+      perfil,
       roleOrigem: document.getElementById('u-role-cco').value,
       ativo: document.getElementById('u-ativo').value === 'true',
       superadmin,
