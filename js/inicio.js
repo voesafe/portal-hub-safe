@@ -45,16 +45,8 @@ const Inicio = {
   },
 
   modulos() {
-    const acessoHubPrincipal =
-      !Auth.eUsuarioExclusivoCco() &&
-      !Auth.eUsuarioExclusivoControleGastos() &&
-      !Auth.eUsuarioExclusivoEscalaMinions();
-    const acessoAdmin = Auth.eAdmin();
-    const acessoMaster = Auth.perfilEhMaster(Auth.getPerfil());
-    const acessoSuperadmin = Auth.eSuperadmin();
-    const acessoSafeMinions = Auth.podeAcessarSafeMinions();
-    const acessoCadastroAlunos = Auth.podeAcessarCadastroAlunos();
-
+    // Gating 100% RBAC: cada card usa a permissão de visualização da página
+    // (mesma fonte do menu lateral, via Auth.PAGINAS).
     return [
       {
         titulo: 'Dashboard de Vendas',
@@ -62,7 +54,7 @@ const Inicio = {
         href: 'dashboard.html',
         icone: 'dashboard',
         tom: 'blue',
-        permitido: acessoHubPrincipal
+        permitido: Auth.podeVer('dashboard.html')
       },
       {
         titulo: 'Vendas',
@@ -70,7 +62,7 @@ const Inicio = {
         href: 'vendas.html',
         icone: 'vendas',
         tom: 'teal',
-        permitido: acessoHubPrincipal
+        permitido: Auth.podeVer('vendas.html')
       },
       {
         titulo: 'Escala CCO',
@@ -78,7 +70,7 @@ const Inicio = {
         href: 'escala-cco.html',
         icone: 'escala',
         tom: 'navy',
-        permitido: Auth.podeAcessarEscalaCco()
+        permitido: Auth.podeVer('escala-cco.html')
       },
       {
         titulo: 'Escala PAV de Base',
@@ -86,7 +78,7 @@ const Inicio = {
         href: 'escala-pav.html',
         icone: 'escala',
         tom: 'teal',
-        permitido: Auth.podeAcessarEscalaPav()
+        permitido: Auth.podeVer('escala-pav.html')
       },
       {
         titulo: 'Horas Voadas INVA Mês',
@@ -94,7 +86,7 @@ const Inicio = {
         href: 'horas-voadas-inva.html',
         icone: 'horas',
         tom: 'blue',
-        permitido: Auth.podeAcessarHorasVoadasInva()
+        permitido: Auth.podeVer('horas-voadas-inva.html')
       },
       {
         titulo: 'Faturamento',
@@ -102,7 +94,7 @@ const Inicio = {
         href: 'faturamento.html',
         icone: 'faturamento',
         tom: 'amber',
-        permitido: acessoMaster
+        permitido: Auth.podeVer('faturamento.html')
       },
       {
         titulo: 'Concorrência',
@@ -110,7 +102,7 @@ const Inicio = {
         href: 'concorrencia.html',
         icone: 'concorrencia',
         tom: 'violet',
-        permitido: acessoAdmin
+        permitido: Auth.podeVer('concorrencia.html')
       },
       {
         titulo: 'Controle de Gastos',
@@ -118,7 +110,7 @@ const Inicio = {
         href: 'controle-gastos.html',
         icone: 'gastos',
         tom: 'teal',
-        permitido: Auth.podeAcessarFinanceiro()
+        permitido: Auth.podeVer('controle-gastos.html')
       },
       {
         titulo: 'Fechamento de Horas',
@@ -126,7 +118,7 @@ const Inicio = {
         href: 'fechamento-horas.html',
         icone: 'horas',
         tom: 'blue',
-        permitido: Auth.podeAcessarFechamentoHoras()
+        permitido: Auth.podeVer('fechamento-horas.html')
       },
       {
         titulo: 'SAFE MINIONS',
@@ -134,7 +126,7 @@ const Inicio = {
         href: 'safe-minions.html',
         icone: 'minions',
         tom: 'navy',
-        permitido: acessoSafeMinions
+        permitido: Auth.podeVer('safe-minions.html')
       },
       {
         titulo: 'Cadastro de Alunos',
@@ -142,7 +134,7 @@ const Inicio = {
         href: 'cadastro-alunos.html',
         icone: 'aluno',
         tom: 'blue',
-        permitido: acessoCadastroAlunos
+        permitido: Auth.podeVer('cadastro-alunos.html')
       },
       {
         titulo: 'Usuários',
@@ -150,7 +142,7 @@ const Inicio = {
         href: 'admin.html',
         icone: 'usuarios',
         tom: 'violet',
-        permitido: acessoSuperadmin
+        permitido: Auth.podeVer('admin.html')
       },
       {
         titulo: 'Controle de Acesso',
@@ -158,7 +150,7 @@ const Inicio = {
         href: 'access-control.html',
         icone: 'acesso',
         tom: 'navy',
-        permitido: acessoSuperadmin
+        permitido: Auth.podeVer('access-control.html')
       },
       {
         titulo: 'Planilha Administrativa',
@@ -167,7 +159,7 @@ const Inicio = {
         destinoRestrito: 'planilha-administrativa',
         icone: 'planilha',
         tom: 'teal',
-        permitido: acessoMaster,
+        permitido: Auth.temPermissao('planilha_admin.abrir'),
         externo: true
       }
     ];
@@ -322,7 +314,7 @@ const Inicio = {
       .join('');
     this.setCarregando(false);
     const secaoBases = document.getElementById('home-bases')?.closest('.home-section');
-    if (Auth.eUsuarioExclusivoControleGastos() || Auth.eUsuarioExclusivoEscalaMinions()) {
+    if (!Auth.podeVer('bases.html')) {
       if (secaoBases) secaoBases.hidden = true;
     } else {
       await this.carregarBases();
