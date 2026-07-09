@@ -78,15 +78,25 @@ const Auth = {
 
   estaLogado() { return !!this.getSessao(); },
 
+  // "Gestor" = enxerga dados de todos (escopo de dados, NÃO é guarda de página).
+  // Base agora é RBAC (permissões efetivas), com fallback ao perfil legado.
   eAdmin() {
-    const s = this.getSessao();
-    return s && (this.eSuperadmin() || this.perfilEhAdmin(s.perfil));
+    if (!this.estaLogado()) return false;
+    if (this.eSuperadmin()) return true;
+    if (this.temAlgumaPermissao([
+      'vendas.visualizar_todas',
+      'dashboard_vendas.visualizar_todos',
+      'usuarios.visualizar'
+    ])) return true;
+    return this.perfilEhAdmin(this.getPerfil());
   },
 
   eAdminCompleto() {
-    const s = this.getSessao();
-    const p = this.normalizarPerfil(s?.perfil);
-    return s && (this.eSuperadmin() || p === 'admin' || p === 'master');
+    if (!this.estaLogado()) return false;
+    if (this.eSuperadmin()) return true;
+    if (this.temAlgumaPermissao(['vendas.visualizar_todas', 'faturamento.visualizar'])) return true;
+    const p = this.normalizarPerfil(this.getPerfil());
+    return p === 'admin' || p === 'master';
   },
 
   eSuperadmin() {
@@ -110,76 +120,130 @@ const Auth = {
     return Array.isArray(permissoes) && permissoes.some(id => this.temPermissao(id));
   },
 
+  // ══════════════════════════════════════════════════════════
+  // RBAC — Controle de acesso por permissões efetivas
+  // ----------------------------------------------------------
+  // Fonte ÚNICA de verdade: `permissoesEfetivas` da sessão (vinda
+  // dos grupos + permissões avulsas calculados no backend).
+  // Cada página é liberada por permissões de VISUALIZAÇÃO (`ver`)
+  // e cada ação de escrita por permissões de EDIÇÃO (`editar`).
+  // Superadmin/Master ignoram tudo (bypass em temPermissao/eSuperadmin).
+  // ══════════════════════════════════════════════════════════
+  PAGINAS: {
+    'inicio.html':            { ver: ['inicio.visualizar'], publica: true },
+    'dashboard.html':         { ver: ['dashboard_vendas.visualizar_proprio', 'dashboard_vendas.visualizar_todos'] },
+    'vendas.html':            { ver: ['vendas.visualizar_proprias', 'vendas.visualizar_todas'],
+                                editar: ['vendas.criar_propria', 'vendas.criar_para_qualquer_pac', 'vendas.editar_propria', 'vendas.editar_todas', 'vendas.excluir_propria', 'vendas.excluir_todas'] },
+    'faturamento.html':       { ver: ['faturamento.visualizar', 'faturamento.visualizar_resumo'],
+                                editar: ['faturamento.lancar_valores', 'faturamento.editar_valores', 'faturamento.excluir_lancamento'] },
+    'concorrencia.html':      { ver: ['concorrencia.visualizar'],
+                                editar: ['concorrencia.criar_concorrente', 'concorrencia.editar_concorrente', 'concorrencia.excluir_concorrente', 'concorrencia.editar_precos_safe'] },
+    'controle-gastos.html':   { ver: ['controle_gastos.visualizar'],
+                                editar: ['controle_gastos.editar_gastos', 'controle_gastos.editar_receitas', 'controle_gastos.editar_horas_voadas', 'controle_gastos.criar_categoria', 'controle_gastos.editar_categoria', 'controle_gastos.ativar_inativar_categoria'] },
+    'fechamento-horas.html':  { ver: ['fechamento_horas.visualizar'],
+                                editar: ['fechamento_horas.editar', 'fechamento_horas.importar_cavok', 'fechamento_horas.fechar_mes', 'fechamento_horas.reabrir_mes'] },
+    'escala-cco.html':        { ver: ['escala_cco.visualizar_calendario'],
+                                editar: ['escala_cco.editar_escala', 'escala_cco.editar_valor_turno', 'escala_cco.gerenciar_funcionarios'] },
+    'escala-pav.html':        { ver: ['escala_pav.visualizar_calendario', 'escala_pav.visualizar_financeiro'],
+                                editar: ['escala_pav.editar_escala', 'escala_pav.gerenciar_pavs', 'escala_pav.inativar_reativar_pav'] },
+    'horas-voadas-inva.html': { ver: ['horas_inva.visualizar'],
+                                editar: ['horas_inva.sincronizar_cavok', 'horas_inva.cadastrar_instrutor'] },
+    'progresso-alunos.html':  { ver: ['progresso_alunos.visualizar'] },
+    'cadastro-alunos.html':   { ver: ['cadastro_alunos.visualizar'],
+                                editar: ['cadastro_alunos.importar_xls_cavok', 'cadastro_alunos.marcar_s141', 'cadastro_alunos.sincronizar_trello', 'cadastro_alunos.inativar', 'cadastro_alunos.reativar'] },
+    'safe-minions.html':      { ver: ['safe_minions.visualizar'],
+                                editar: ['safe_minions.processar_arquivo_local'] },
+    'bases.html':             { ver: ['bases.visualizar'],
+                                editar: ['bases.criar', 'bases.editar', 'bases.inativar_reativar'] },
+    'admin.html':             { ver: ['usuarios.visualizar', 'usuarios.criar', 'usuarios.editar'],
+                                editar: ['usuarios.criar', 'usuarios.editar', 'usuarios.inativar_reativar', 'usuarios.redefinir_senha'] },
+    'access-control.html':    { ver: ['usuarios.gerenciar_grupos', 'usuarios.gerenciar_permissoes'],
+                                editar: ['usuarios.gerenciar_grupos', 'usuarios.gerenciar_permissoes'] }
+  },
+
+  ROTULOS_PAGINA: {
+    'dashboard.html': 'Dashboard de Vendas',
+    'vendas.html': 'Vendas',
+    'faturamento.html': 'Faturamento',
+    'concorrencia.html': 'Concorrência',
+    'controle-gastos.html': 'Controle de Gastos',
+    'fechamento-horas.html': 'Fechamento de Horas',
+    'escala-cco.html': 'Escala CCO',
+    'escala-pav.html': 'Escala PAV de Base',
+    'horas-voadas-inva.html': 'Horas Voadas INVA Mês',
+    'progresso-alunos.html': 'Progresso de Alunos',
+    'cadastro-alunos.html': 'Cadastro de Aluno',
+    'safe-minions.html': 'SAFE MINIONS',
+    'bases.html': 'Bases',
+    'admin.html': 'Gestão de Usuários',
+    'access-control.html': 'Controle de Acesso'
+  },
+
+  paginaAtual() {
+    try { return (window.location.pathname.split('/').pop() || 'inicio.html').toLowerCase(); }
+    catch { return ''; }
+  },
+
+  rotuloPagina(pagina) {
+    return this.ROTULOS_PAGINA[pagina || this.paginaAtual()] || 'esta página';
+  },
+
+  configPagina(pagina) {
+    return this.PAGINAS[pagina || this.paginaAtual()] || null;
+  },
+
+  // Pode VER a página (aparece no menu / passa no guarda de rota).
+  podeVer(pagina) {
+    if (this.eSuperadmin()) return true;
+    const cfg = this.configPagina(pagina);
+    if (!cfg) return this.estaLogado();   // sem regra = liberado a logados
+    if (cfg.publica) return this.estaLogado();
+    return this.temAlgumaPermissao(cfg.ver || []);
+  },
+
+  // Pode EDITAR na página atual (ou informada): tem alguma permissão de escrita.
+  podeEditar(pagina) {
+    if (!this.estaLogado()) return false;
+    if (this.eSuperadmin()) return true;
+    const cfg = this.configPagina(pagina);
+    if (!cfg) return !this.perfilSomenteLeitura(this.getPerfil());
+    return this.temAlgumaPermissao(cfg.editar || []);
+  },
+
+  eSomenteLeitura(pagina) {
+    if (!this.estaLogado()) return true;
+    if (this.eSuperadmin()) return false;
+    const cfg = this.configPagina(pagina);
+    if (!cfg || !Array.isArray(cfg.editar) || !cfg.editar.length) {
+      return this.perfilSomenteLeitura(this.getPerfil());
+    }
+    return !this.temAlgumaPermissao(cfg.editar);
+  },
+
+  // ── Wrappers de acesso por página (nomes mantidos p/ compatibilidade) ──
+  podeAcessarEscalaCco()       { return this.podeVer('escala-cco.html'); },
+  podeAcessarEscalaPav()       { return this.podeVer('escala-pav.html'); },
+  podeAcessarHorasVoadasInva() { return this.podeVer('horas-voadas-inva.html'); },
+  podeAcessarSafeMinions()     { return this.podeVer('safe-minions.html'); },
+  podeAcessarProgressoAlunos() { return this.podeVer('progresso-alunos.html'); },
+  podeAcessarCadastroAlunos()  { return this.podeVer('cadastro-alunos.html'); },
+  podeAcessarFinanceiro()      { return this.podeVer('controle-gastos.html'); },
+  podeAcessarFechamentoHoras() { return this.podeVer('fechamento-horas.html'); },
+  podeEditarFinanceiro()       { return this.podeEditar('controle-gastos.html'); },
+  podeGerenciarBases()         { return this.podeEditar('bases.html'); },
+
+  // ── Perfil "exclusivo": mantido só para comportamentos internos de
+  //    algumas páginas (ex.: escala-cco.html, controle-gastos.js). NÃO
+  //    comanda mais o menu nem os guardas de rota. ──
   perfilEhCco(perfil) {
     return this.normalizarPerfil(perfil).startsWith('cco_');
   },
-
-  perfilPodeAcessarEscalaCco(perfil) {
-    const p = this.normalizarPerfil(perfil);
-    return p === 'admin' || p === 'master' || p === 'escala_minions' || this.perfilEhCco(p);
-  },
-
-  podeAcessarEscalaCco() {
-    if (this.eSuperadmin()) return true;
-    return this.perfilPodeAcessarEscalaCco(this.getPerfil());
-  },
-
-  perfilPodeAcessarEscalaPav(perfil) {
-    const p = this.normalizarPerfil(perfil);
-    return p === 'master' || p === 'financeiro';
-  },
-
-  podeAcessarEscalaPav() {
-    if (this.eSuperadmin()) return true;
-    return this.perfilPodeAcessarEscalaPav(this.getPerfil()) ||
-      this.temAlgumaPermissao([
-        'escala_pav.visualizar_calendario',
-        'escala_pav.editar_escala',
-        'escala_pav.visualizar_financeiro',
-        'escala_pav.exportar_ifood',
-        'escala_pav.gerenciar_pavs',
-        'escala_pav.inativar_reativar_pav'
-      ]);
-  },
-
-  perfilPodeAcessarHorasVoadasInva(perfil) {
-    const p = this.normalizarPerfil(perfil);
-    return p === 'admin' || p === 'master' || p === 'escala_minions';
-  },
-
-  podeAcessarHorasVoadasInva() {
-    if (this.eSuperadmin()) return true;
-    return this.perfilPodeAcessarHorasVoadasInva(this.getPerfil());
-  },
-
-  perfilPodeAcessarSafeMinions(perfil) {
-    const p = this.normalizarPerfil(perfil);
-    return p === 'escala_minions' || this.perfilEhMaster(perfil) || this.perfilEhCco(perfil);
-  },
-
-  podeAcessarSafeMinions() {
-    if (this.eSuperadmin()) return true;
-    return this.perfilPodeAcessarSafeMinions(this.getPerfil());
-  },
-
-  podeAcessarProgressoAlunos() {
-    if (this.eSuperadmin()) return true;
-    return this.eAdminCompleto();
-  },
-
-  podeAcessarCadastroAlunos() {
-    if (this.eSuperadmin()) return true;
-    return this.perfilEhMaster(this.getPerfil());
-  },
-
   eUsuarioExclusivoCco() {
     return this.perfilEhCco(this.getPerfil());
   },
-
   eUsuarioExclusivoControleGastos() {
     return this.normalizarPerfil(this.getPerfil()) === 'controle_gastos_visualizacao';
   },
-
   eUsuarioExclusivoEscalaMinions() {
     return this.normalizarPerfil(this.getPerfil()) === 'escala_minions';
   },
@@ -188,17 +252,7 @@ const Auth = {
     return 'inicio.html';
   },
 
-  eSomenteLeitura() {
-    const s = this.getSessao();
-    return s && this.perfilSomenteLeitura(s.perfil);
-  },
-
-  podeEditar() { return this.estaLogado() && !this.eSomenteLeitura(); },
-
-  podeGerenciarBases() {
-    return this.estaLogado() && this.eAdminCompleto();
-  },
-
+  // ── Helpers de perfil mantidos APENAS para exibição (badges/rótulos) ──
   normalizarPerfil(perfil) {
     return String(perfil || '').trim().toLowerCase().replace(/-/g, '_');
   },
@@ -217,39 +271,6 @@ const Auth = {
     const p = this.normalizarPerfil(perfil);
     return p === 'admin_readonly' || p === 'admin_visualizacao' ||
       p === 'financeiro' || p === 'controle_gastos_visualizacao';
-  },
-
-  perfilPodeAcessarFinanceiro(perfil, email) {
-    const p = this.normalizarPerfil(perfil);
-    if (p === 'master') return true;
-    if (p === 'controle_gastos_visualizacao') return true;
-    return p === 'financeiro' &&
-      String(email || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
-  },
-
-  podeAcessarFinanceiro() {
-    if (this.eSuperadmin()) return true;
-    return this.perfilPodeAcessarFinanceiro(this.getPerfil(), this.getEmail());
-  },
-
-  podeEditarFinanceiro() {
-    if (this.eSuperadmin()) return true;
-    const p = this.normalizarPerfil(this.getPerfil());
-    if (p === 'master') return true;
-    return p === 'financeiro' &&
-      String(this.getEmail() || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
-  },
-
-  perfilPodeAcessarFechamentoHoras(perfil, email) {
-    const p = this.normalizarPerfil(perfil);
-    if (p === 'master' || p === 'admin') return true;
-    return p === 'financeiro' &&
-      String(email || '').trim().toLowerCase() === 'elaine.souza@voesafe.com.br';
-  },
-
-  podeAcessarFechamentoHoras() {
-    if (this.eSuperadmin()) return true;
-    return this.perfilPodeAcessarFechamentoHoras(this.getPerfil(), this.getEmail());
   },
 
   descricaoPerfil(perfil) {
@@ -316,132 +337,43 @@ const Auth = {
     return false;
   },
 
+  // Guarda base: valida login e, por defesa em profundidade, aplica a
+  // permissão de visualização da própria página (se ela estiver no mapa).
+  // `adminOnly` foi mantido só por compatibilidade de assinatura — o acesso
+  // agora é 100% RBAC via PAGINAS.
   proteger(adminOnly = false) {
     if (!this.estaLogado()) return this.irParaLogin();
-    const destino = window.location.pathname.split('/').pop();
-    if (this.eUsuarioExclusivoCco() &&
-        destino !== 'inicio.html' &&
-        destino !== 'escala-cco.html' &&
-        destino !== 'safe-minions.html' &&
-        destino !== 'bases.html' &&
-        destino !== 'acesso-negado.html') {
-      window.location.replace('inicio.html');
-      return false;
-    }
-    if (this.eUsuarioExclusivoControleGastos() &&
-        destino !== 'inicio.html' &&
-        destino !== 'controle-gastos.html' &&
-        destino !== 'acesso-negado.html') {
-      window.location.replace('inicio.html');
-      return false;
-    }
-    if (this.eUsuarioExclusivoEscalaMinions() &&
-        destino !== 'inicio.html' &&
-        destino !== 'escala-cco.html' &&
-        destino !== 'horas-voadas-inva.html' &&
-        destino !== 'safe-minions.html' &&
-        destino !== 'acesso-negado.html') {
-      window.location.replace('inicio.html');
-      return false;
-    }
-    if (adminOnly && !this.eAdmin()) {
-      const recursos = {
-        'admin.html': 'Usuários',
-        'faturamento.html': 'Faturamento',
-        'concorrencia.html': 'Concorrência'
-      };
-      return this.negarAcesso(recursos[destino] || 'Administração', destino);
+    const destino = this.paginaAtual();
+    if (this.PAGINAS[destino] && !this.podeVer(destino)) {
+      return this.negarAcesso(this.rotuloPagina(destino), destino);
     }
     return true;
   },
 
-  protegerEscalaCco() {
+  // Guarda genérico por página, dirigido pelo mapa RBAC.
+  protegerPagina(pagina, rotulo) {
     if (!this.estaLogado()) return this.irParaLogin();
-    if (!this.podeAcessarEscalaCco()) {
-      return this.negarAcesso('Escala CCO', 'escala-cco.html');
+    if (!this.podeVer(pagina)) {
+      return this.negarAcesso(rotulo || this.rotuloPagina(pagina), pagina);
     }
     return true;
   },
 
-  protegerEscalaPav() {
-    if (!this.estaLogado()) return this.irParaLogin();
-    if (!this.podeAcessarEscalaPav()) {
-      return this.negarAcesso('Escala PAV de Base', 'escala-pav.html');
-    }
-    return true;
-  },
-
-  protegerHorasVoadasInva() {
-    if (!this.estaLogado()) return this.irParaLogin();
-    if (!this.podeAcessarHorasVoadasInva()) {
-      return this.negarAcesso('Horas Voadas INVA Mês', 'horas-voadas-inva.html');
-    }
-    return true;
-  },
+  protegerEscalaCco()       { return this.protegerPagina('escala-cco.html', 'Escala CCO'); },
+  protegerEscalaPav()       { return this.protegerPagina('escala-pav.html', 'Escala PAV de Base'); },
+  protegerHorasVoadasInva() { return this.protegerPagina('horas-voadas-inva.html', 'Horas Voadas INVA Mês'); },
+  protegerSafeMinions()     { return this.protegerPagina('safe-minions.html', 'SAFE MINIONS'); },
+  protegerProgressoAlunos() { return this.protegerPagina('progresso-alunos.html', 'Progresso de Alunos'); },
+  protegerCadastroAlunos()  { return this.protegerPagina('cadastro-alunos.html', 'Cadastro de Aluno'); },
+  protegerFinanceiro()      { return this.protegerPagina('controle-gastos.html', 'Controle de Gastos'); },
+  protegerFechamentoHoras() { return this.protegerPagina('fechamento-horas.html', 'Fechamento de Horas / Cotistas'); },
+  protegerGestaoUsuarios()  { return this.protegerPagina('admin.html', 'Gestão central de usuários'); },
+  protegerControleAcesso()  { return this.protegerPagina('access-control.html', 'Controle de Acesso'); },
 
   protegerMaster() {
     if (!this.proteger()) return false;
-    if (!this.perfilEhMaster(this.getPerfil())) {
+    if (!this.eSuperadmin() && !this.perfilEhMaster(this.getPerfil())) {
       return this.negarAcesso('SAFE MINIONS', 'safe-minions.html');
-    }
-    return true;
-  },
-
-  protegerSafeMinions() {
-    if (!this.proteger()) return false;
-    if (!this.podeAcessarSafeMinions()) {
-      return this.negarAcesso('SAFE MINIONS', 'safe-minions.html');
-    }
-    return true;
-  },
-
-  protegerProgressoAlunos() {
-    if (!this.proteger()) return false;
-    if (!this.podeAcessarProgressoAlunos()) {
-      return this.negarAcesso('Progresso de Alunos', 'progresso-alunos.html');
-    }
-    return true;
-  },
-
-  protegerCadastroAlunos() {
-    if (!this.proteger()) return false;
-    if (!this.podeAcessarCadastroAlunos()) {
-      return this.negarAcesso('Cadastro de Aluno', 'cadastro-alunos.html');
-    }
-    return true;
-  },
-
-  protegerGestaoUsuarios() {
-    if (!this.proteger()) return false;
-    if (!this.eSuperadmin()) {
-      return this.negarAcesso('Gestão central de usuários', 'admin.html');
-    }
-    return true;
-  },
-
-  protegerControleAcesso() {
-    if (!this.proteger()) return false;
-    if (!this.eSuperadmin()) {
-      return this.negarAcesso('Controle de Acesso', 'access-control.html');
-    }
-    return true;
-  },
-
-  protegerFinanceiro() {
-    if (!this.proteger()) return false;
-    if (!this.podeAcessarFinanceiro()) {
-      return this.negarAcesso('Controle de Gastos', 'controle-gastos.html');
-    }
-    return true;
-  },
-
-  protegerFechamentoHoras() {
-    if (!this.proteger()) return false;
-    if (!this.podeAcessarFechamentoHoras()) {
-      return this.negarAcesso(
-        'Fechamento de Horas / Cotistas',
-        'fechamento-horas.html'
-      );
     }
     return true;
   },
@@ -536,161 +468,77 @@ const Auth = {
       `;
     };
 
-    const acessoEscalaCco = this.podeAcessarEscalaCco();
-    const acessoHorasVoadasInva = this.podeAcessarHorasVoadasInva();
-    const acessoEscalaPav = this.podeAcessarEscalaPav();
-    const secaoEscala = secao(
-      'escala',
-      'Escala',
-      'escala',
-      item('escala-cco.html', 'Escala CCO', 'escala', {
-        permitido: acessoEscalaCco
-      }) +
-      item('escala-pav.html', 'Escala PAV de Base', 'escala', {
-        permitido: acessoEscalaPav
-      }) +
-      item('horas-voadas-inva.html', 'Horas Voadas INVA Mês', 'horas', {
-        permitido: acessoHorasVoadasInva
-      }),
-      ['escala-cco.html', 'escala-pav.html', 'horas-voadas-inva.html']
-    );
+    // Sidebar 100% RBAC: cada item aparece só se o usuário PODE VER a página;
+    // seção sem nenhum item permitido não é renderizada.
+    const ver = (pagina) => this.podeVer(pagina);
+    // Monta uma seção só quando há ao menos um item permitido dentro dela.
+    const secaoSeTiver = (id, label, icone, itensDef, paginas) => {
+      const conteudo = itensDef
+        .filter(def => ver(def.pagina))
+        .map(def => item(def.href || def.pagina, def.label, def.icone, def.opcoes || { permitido: true }))
+        .join('');
+      return conteudo ? secao(id, label, icone, conteudo, paginas) : '';
+    };
 
-    const acessoExclusivoGastos = this.eUsuarioExclusivoControleGastos();
-    const acessoExclusivoEscalaMinions = this.eUsuarioExclusivoEscalaMinions();
-    const acessoHubPrincipal = !this.eUsuarioExclusivoCco() && !acessoExclusivoGastos;
-    const dashboardPermitido = acessoHubPrincipal;
-    const dashboardDestino = dashboardPermitido
-      ? 'dashboard.html'
-      : this.urlAcessoNegado('Dashboard', 'dashboard.html');
-
-    const secoes = acessoExclusivoGastos ? [
+    const secoes = [
       `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
         <span class="nav-icon" aria-hidden="true">${this.iconSvg('inicio')}</span>
         <span>Início</span>
-      </a>`,
-      secao(
-        'financeiro',
-        'Financeiro',
-        'financeiro',
-        item('controle-gastos.html', 'Controle de Gastos', 'gastos'),
-        ['controle-gastos.html']
-      )
-    ] : acessoExclusivoEscalaMinions ? [
-      `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
-        <span class="nav-icon" aria-hidden="true">${this.iconSvg('inicio')}</span>
-        <span>Início</span>
-      </a>`,
-      secaoEscala,
-      secao(
-        'administracao',
-        'Administração',
-        'administracao',
-        item('safe-minions.html', 'SAFE MINIONS', 'minions'),
-        ['safe-minions.html']
-      )
-    ] : [
-      `<a href="inicio.html" class="menu-dashboard${path === 'inicio.html' ? ' active' : ''}">
-        <span class="nav-icon" aria-hidden="true">${this.iconSvg('inicio')}</span>
-        <span>Início</span>
-      </a>`,
-      `<a href="${dashboardDestino}" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}${dashboardPermitido ? '' : ' restricted'}">
-        <span class="nav-icon" aria-hidden="true">${this.iconSvg('dashboard')}</span>
-        <span>Dashboard de Vendas</span>
-        ${dashboardPermitido ? '' : `<span class="nav-lock" aria-label="Acesso restrito" title="Acesso restrito">${this.iconSvg('lock')}</span>`}
-      </a>`,
-      secao(
-        'comercial',
-        'Comercial',
-        'comercial',
-        item('vendas.html', 'Vendas', 'vendas', {
-          permitido: acessoHubPrincipal
-        }),
-        ['vendas.html']
-      ),
-      secaoEscala
+      </a>`
     ];
 
-    const acessoMaster = this.perfilEhMaster(this.getPerfil());
-    const acessoSuperadmin = this.eSuperadmin();
-    const acessoSafeMinions = this.podeAcessarSafeMinions();
-    const acessoCadastroAlunos = this.podeAcessarCadastroAlunos();
-    const acessoAdmin = this.eAdmin();
-    const acessoFinanceiro = this.podeAcessarFinanceiro();
-    const acessoFechamento = this.podeAcessarFechamentoHoras();
-    const acessoProgressoAlunos = this.podeAcessarProgressoAlunos();
+    if (ver('dashboard.html')) {
+      secoes.push(`<a href="dashboard.html" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}">
+        <span class="nav-icon" aria-hidden="true">${this.iconSvg('dashboard')}</span>
+        <span>Dashboard de Vendas</span>
+      </a>`);
+    }
 
-    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
-      'portal-aluno',
-      'Portal do Aluno',
-      'academico',
-      item('progresso-alunos.html', 'Progresso de Alunos', 'academico', {
-        permitido: acessoProgressoAlunos
-      }),
-      ['progresso-alunos.html']
-    ));
+    secoes.push(secaoSeTiver('comercial', 'Comercial', 'comercial', [
+      { pagina: 'vendas.html', label: 'Vendas', icone: 'vendas' }
+    ], ['vendas.html']));
 
-    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
-      'administracao',
-      'Administração',
-      'administracao',
-      item('safe-minions.html', 'SAFE MINIONS', 'minions', {
-        permitido: acessoSafeMinions
-      }) +
-        item('cadastro-alunos.html', 'Cadastro de Aluno', 'aluno', {
-          permitido: acessoCadastroAlunos
-        }) +
-        item(
-          'https://docs.google.com/spreadsheets/d/1zUHGTAC8TUhD6v1k-7OLeDQRlj99J0BMbimScZD2SoI/edit?gid=1905416248#gid=1905416248',
-          'Planilha',
-          'planilha',
-          {
-            externo: true,
-            permitido: acessoMaster,
-            destino: 'planilha-administrativa'
-          }
-        ),
-      ['safe-minions.html', 'cadastro-alunos.html']
-    ));
+    secoes.push(secaoSeTiver('escala', 'Escala', 'escala', [
+      { pagina: 'escala-cco.html', label: 'Escala CCO', icone: 'escala' },
+      { pagina: 'escala-pav.html', label: 'Escala PAV de Base', icone: 'escala' },
+      { pagina: 'horas-voadas-inva.html', label: 'Horas Voadas INVA Mês', icone: 'horas' }
+    ], ['escala-cco.html', 'escala-pav.html', 'horas-voadas-inva.html']));
 
-    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
-      'financeiro',
-      'Financeiro',
-      'financeiro',
-      item('faturamento.html', 'Faturamento', 'faturamento', {
-        permitido: acessoAdmin
-      }) +
-        item('concorrencia.html', 'Concorrência', 'concorrencia', {
-          permitido: acessoAdmin
-        }) +
-        item('controle-gastos.html', 'Controle de Gastos', 'gastos', {
-          permitido: acessoFinanceiro
-        }) +
-        item('fechamento-horas.html', 'Fechamento de Horas / Cotistas', 'horas', {
-          permitido: acessoFechamento
-        }),
-      [
-        'faturamento.html',
-        'concorrencia.html',
-        'controle-gastos.html',
-        'fechamento-horas.html'
-      ]
-    ));
+    secoes.push(secaoSeTiver('portal-aluno', 'Portal do Aluno', 'academico', [
+      { pagina: 'progresso-alunos.html', label: 'Progresso de Alunos', icone: 'academico' }
+    ], ['progresso-alunos.html']));
 
-    if (!acessoExclusivoGastos && !acessoExclusivoEscalaMinions) secoes.push(secao(
-      'suporte',
-      'Suporte',
-      'suporte',
-      item('bases.html', 'Bases', 'bases') +
-        item('admin.html', 'Usuários', 'usuarios', {
-          permitido: acessoSuperadmin
-        }) +
-        item('access-control.html', 'Controle de Acesso', 'acesso', {
-          permitido: acessoSuperadmin
-        }),
-      ['bases.html', 'admin.html', 'access-control.html']
-    ));
+    // Administração — inclui a Planilha administrativa (permissão própria).
+    const itensAdm = [
+      ver('safe-minions.html') ? item('safe-minions.html', 'SAFE MINIONS', 'minions', { permitido: true }) : '',
+      ver('cadastro-alunos.html') ? item('cadastro-alunos.html', 'Cadastro de Aluno', 'aluno', { permitido: true }) : '',
+      this.temPermissao('planilha_admin.abrir')
+        ? item(
+            'https://docs.google.com/spreadsheets/d/1zUHGTAC8TUhD6v1k-7OLeDQRlj99J0BMbimScZD2SoI/edit?gid=1905416248#gid=1905416248',
+            'Planilha', 'planilha',
+            { externo: true, permitido: true, destino: 'planilha-administrativa' }
+          )
+        : ''
+    ].join('');
+    if (itensAdm) {
+      secoes.push(secao('administracao', 'Administração', 'administracao', itensAdm,
+        ['safe-minions.html', 'cadastro-alunos.html']));
+    }
 
-    nav.innerHTML = secoes.join('');
+    secoes.push(secaoSeTiver('financeiro', 'Financeiro', 'financeiro', [
+      { pagina: 'faturamento.html', label: 'Faturamento', icone: 'faturamento' },
+      { pagina: 'concorrencia.html', label: 'Concorrência', icone: 'concorrencia' },
+      { pagina: 'controle-gastos.html', label: 'Controle de Gastos', icone: 'gastos' },
+      { pagina: 'fechamento-horas.html', label: 'Fechamento de Horas / Cotistas', icone: 'horas' }
+    ], ['faturamento.html', 'concorrencia.html', 'controle-gastos.html', 'fechamento-horas.html']));
+
+    secoes.push(secaoSeTiver('suporte', 'Suporte', 'suporte', [
+      { pagina: 'bases.html', label: 'Bases', icone: 'bases' },
+      { pagina: 'admin.html', label: 'Usuários', icone: 'usuarios' },
+      { pagina: 'access-control.html', label: 'Controle de Acesso', icone: 'acesso' }
+    ], ['bases.html', 'admin.html', 'access-control.html']));
+
+    nav.innerHTML = secoes.filter(Boolean).join('');
 
     let fechar = brand.querySelector('.sidebar-close');
     if (!fechar) {

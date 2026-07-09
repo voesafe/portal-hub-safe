@@ -446,6 +446,30 @@ function usuarioEhSuperadmin(usuario) {
   return normalizarPerfil(usuario.perfil) === 'master';
 }
 
+/**
+ * Verifica uma permissão efetiva do usuário da sessão. Superadmin sempre passa.
+ * A sessão já carrega `permissoesEfetivas` (validarTokenSessao/anexar...).
+ */
+function usuarioTemPermissao(usuario, permissaoId) {
+  if (!usuario) return false;
+  if (usuarioEhSuperadmin(usuario)) return true;
+  var id = String(permissaoId || '').trim();
+  if (!id) return false;
+  var lista = Array.isArray(usuario.permissoesEfetivas) ? usuario.permissoesEfetivas : [];
+  for (var i = 0; i < lista.length; i++) {
+    if (String(lista[i]).trim() === id) return true;
+  }
+  return false;
+}
+
+function usuarioTemAlgumaPermissao(usuario, permissoes) {
+  if (!Array.isArray(permissoes)) return false;
+  for (var i = 0; i < permissoes.length; i++) {
+    if (usuarioTemPermissao(usuario, permissoes[i])) return true;
+  }
+  return false;
+}
+
 function listarControleAcesso() {
   garantirEstruturaControleAcesso_();
   var catalogo = listarCatalogoPermissoes_();

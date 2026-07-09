@@ -10,7 +10,10 @@ const CONFIG = {
   CAVOK_FECHAMENTO_API_ENABLED: true,
 
   APP_NAME:    'SAFE Hub',
-  APP_VERSION: '2026.07.06-rbac-effective-v1',
+  APP_VERSION: '2026.07.09-rbac-enforcement-v2',
+  // Trocar SESSION_VERSION invalida TODAS as sessões salvas no navegador,
+  // forçando novo login (necessário para recarregar as permissões efetivas).
+  SESSION_VERSION: '2026.07.09-rbac-enforcement-v2',
   API_TIMEOUT_MS: 30000,
 
   MESES: [
