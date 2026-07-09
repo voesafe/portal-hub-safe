@@ -3,11 +3,72 @@
 // SAFE Hub
 // ============================================================
 
+// ── Matriz de acesso (fonte única, espelhada no backend AccessControl.gs) ──
+// Cada módulo mapeia (nível Ver/Editar, escopo próprias/todos) → permissões.
+const RBAC_PERMS_BASE = ['inicio.visualizar', 'auth.alterar_propria_senha'];
+const RBAC_CARGOS_OFERECIDOS = [
+  'comercial', 'comercial_gerencia', 'financeiro',
+  'consultor_cco', 'gerente_cco', 'operacoes_escala', 'somente_leitura'
+];
+const RBAC_MODULOS = [
+  { id: 'dashboard', nome: 'Dashboard de Vendas', nota: 'indicadores comerciais', viewOnly: true, escopo: true,
+    escLabels: ['Só o próprio', 'De todos'],
+    ver: { proprias: ['dashboard_vendas.visualizar_proprio'],
+           todas: ['dashboard_vendas.visualizar_proprio', 'dashboard_vendas.visualizar_todos', 'dashboard_vendas.visualizar_receita_global', 'dashboard_vendas.visualizar_ranking_pac'] } },
+  { id: 'vendas', nome: 'Vendas', nota: 'cadastro e acompanhamento', escopo: true,
+    escLabels: ['Só as próprias', 'De todos'],
+    ver: { proprias: ['vendas.visualizar_proprias'], todas: ['vendas.visualizar_proprias', 'vendas.visualizar_todas'] },
+    editar: { proprias: ['vendas.criar_propria', 'vendas.editar_propria', 'vendas.excluir_propria'],
+              todas: ['vendas.criar_propria', 'vendas.criar_para_qualquer_pac', 'vendas.editar_propria', 'vendas.editar_todas', 'vendas.excluir_propria', 'vendas.excluir_todas'] } },
+  { id: 'faturamento', nome: 'Faturamento', nota: 'canais e receitas',
+    ver: ['faturamento.visualizar', 'faturamento.visualizar_resumo'],
+    editar: ['faturamento.lancar_valores', 'faturamento.editar_valores', 'faturamento.excluir_lancamento'] },
+  { id: 'concorrencia', nome: 'Concorrência', nota: 'preços e mercado',
+    ver: ['concorrencia.visualizar', 'concorrencia.visualizar_precos_safe'],
+    editar: ['concorrencia.criar_concorrente', 'concorrencia.editar_concorrente', 'concorrencia.excluir_concorrente', 'concorrencia.editar_precos_safe'] },
+  { id: 'controle_gastos', nome: 'Controle de Gastos', nota: 'despesas e receitas',
+    ver: ['controle_gastos.visualizar'],
+    editar: ['controle_gastos.editar_gastos', 'controle_gastos.editar_receitas', 'controle_gastos.editar_horas_voadas', 'controle_gastos.criar_categoria', 'controle_gastos.editar_categoria', 'controle_gastos.ativar_inativar_categoria'] },
+  { id: 'fechamento', nome: 'Fechamento de Horas', nota: 'cotistas e fechamento',
+    ver: ['fechamento_horas.visualizar', 'fechamento_horas.visualizar_historico'],
+    editar: ['fechamento_horas.editar', 'fechamento_horas.importar_cavok', 'fechamento_horas.fechar_mes', 'fechamento_horas.reabrir_mes'] },
+  { id: 'escala_cco', nome: 'Escala CCO', nota: 'escala da equipe CCO', escopo: true,
+    escLabels: ['Só a própria', 'De todos'],
+    ver: { proprias: ['escala_cco.visualizar_calendario'], todas: ['escala_cco.visualizar_calendario'] },
+    editar: { proprias: ['escala_cco.editar_propria_escala'],
+              todas: ['escala_cco.editar_propria_escala', 'escala_cco.editar_escala', 'escala_cco.visualizar_financeiro', 'escala_cco.exportar_ifood', 'escala_cco.editar_valor_turno', 'escala_cco.gerenciar_funcionarios'] } },
+  { id: 'escala_pav', nome: 'Escala PAV de Base', nota: 'PAV das bases',
+    ver: ['escala_pav.visualizar_calendario', 'escala_pav.visualizar_financeiro'],
+    editar: ['escala_pav.editar_escala', 'escala_pav.exportar_ifood', 'escala_pav.gerenciar_pavs', 'escala_pav.inativar_reativar_pav'] },
+  { id: 'horas_inva', nome: 'Horas Voadas INVA', nota: 'instrutores / CAVOK',
+    ver: ['horas_inva.visualizar'],
+    editar: ['horas_inva.sincronizar_cavok', 'horas_inva.cadastrar_instrutor'] },
+  { id: 'progresso', nome: 'Progresso de Alunos', nota: 'acompanhamento acadêmico', viewOnly: true,
+    ver: ['progresso_alunos.visualizar', 'progresso_alunos.buscar_aluno', 'progresso_alunos.visualizar_detalhe'] },
+  { id: 'cadastro_alunos', nome: 'Cadastro de Alunos', nota: 'fila S141 / Trello',
+    ver: ['cadastro_alunos.visualizar'],
+    editar: ['cadastro_alunos.importar_xls_cavok', 'cadastro_alunos.marcar_s141', 'cadastro_alunos.sincronizar_trello', 'cadastro_alunos.inativar', 'cadastro_alunos.reativar'] },
+  { id: 'safe_minions', nome: 'SAFE MINIONS', nota: 'mínimos ANAC',
+    ver: ['safe_minions.visualizar'],
+    editar: ['safe_minions.processar_arquivo_local'] },
+  { id: 'bases', nome: 'Bases', nota: 'endereços e contatos',
+    ver: ['bases.visualizar'],
+    editar: ['bases.criar', 'bases.editar', 'bases.inativar_reativar'] },
+  { id: 'usuarios', nome: 'Usuários', nota: 'gestão de acessos',
+    ver: ['usuarios.visualizar'],
+    editar: ['usuarios.criar', 'usuarios.editar', 'usuarios.inativar_reativar', 'usuarios.redefinir_senha'] },
+  { id: 'controle_acesso', nome: 'Controle de Acesso', nota: 'grupos e permissões', viewOnly: true,
+    ver: ['usuarios.gerenciar_grupos', 'usuarios.gerenciar_permissoes'] },
+  { id: 'planilha', nome: 'Planilha Administrativa', nota: 'base integrada', viewOnly: true,
+    ver: ['planilha_admin.abrir'] }
+];
+
 const Admin = {
   usuarios: [],
   contagemEmails: new Map(),
   controleAcesso: { grupos: [], permissoes: [] },
-  acessosSelecionados: { grupos: new Set(), permissoes: new Set() },
+  matrizAcesso: {},   // { moduloId: { n: 0|1|2, s: 'proprias'|'todas' } }
+  cargoAtual: '',     // id do cargo (grupo) base selecionado
   editandoId: null,
   abaAtual: 'ativos',
   CACHE_USUARIOS_KEY: 'safe-admin-usuarios-cache-v1',
@@ -110,8 +171,21 @@ const Admin = {
     return this.normalizarOrigem(origem) === 'cco' ? 'CCO' : 'Hub';
   },
 
+  // Nome do cargo (grupo oficial) do usuário, quando houver.
+  nomeCargoUsuario(usuario) {
+    const grupos = (usuario?.grupos || []).map(String);
+    const cargoId = grupos.find(g => RBAC_CARGOS_OFERECIDOS.includes(g));
+    if (!cargoId) return '';
+    const grupo = (this.controleAcesso.grupos || []).find(g => String(g.id) === cargoId);
+    return grupo?.nome || cargoId;
+  },
+
   labelPerfil(usuario) {
     if (this.eSuperadminUsuario(usuario)) return 'Superadmin';
+    if (this.normalizarOrigem(usuario.origem) !== 'cco') {
+      const cargo = this.nomeCargoUsuario(usuario);
+      if (cargo) return cargo;
+    }
     const perfil = usuario.perfil;
     if (Auth.perfilEhMaster(perfil)) return 'Master TI';
     if (Auth.normalizarPerfil(perfil) === 'financeiro') return 'Financeiro';
@@ -143,10 +217,11 @@ const Admin = {
   resumoAcessoUsuario(usuario) {
     if (this.normalizarOrigem(usuario.origem) === 'cco') return 'Acesso gerenciado no CCO';
     if (this.eSuperadminUsuario(usuario)) return 'Acesso total ao Hub';
-    const grupos = Array.isArray(usuario.grupos) ? usuario.grupos.length : 0;
-    const permissoes = Array.isArray(usuario.permissoesAvulsas) ? usuario.permissoesAvulsas.length : 0;
-    if (!grupos && !permissoes) return 'Sem grupos ou permissões avulsas';
-    return `${grupos} grupo(s) · ${permissoes} permissão(ões) avulsa(s)`;
+    const grupos = (usuario.grupos || []).map(String);
+    if (!grupos.length) return 'Sem cargo definido';
+    const excecoes = (Array.isArray(usuario.permissoesAvulsas) ? usuario.permissoesAvulsas.length : 0)
+      + (Array.isArray(usuario.permissoesNegadas) ? usuario.permissoesNegadas.length : 0);
+    return excecoes ? `Cargo + ${excecoes} exceção(ões)` : 'Cargo padrão';
   },
 
   eSuperadminUsuario(usuario) {
@@ -330,30 +405,25 @@ const Admin = {
     document.getElementById('btn-resetar-senha-padrao')?.addEventListener('click', () => this.resetarSenhaPadrao());
     document.getElementById('btn-forcar-relogin')?.addEventListener('click', () => this.forcarReloginGlobal());
     document.getElementById('u-origem')?.addEventListener('change', () => this.atualizarCamposOrigem());
-    document.getElementById('u-perfil')?.addEventListener('change', () => this.atualizarResumoAcesso());
     document.getElementById('u-superadmin')?.addEventListener('change', () => this.atualizarResumoAcesso());
-    document.getElementById('u-busca-grupos')?.addEventListener('input', () => this.renderSeletoresAcesso());
-    document.getElementById('u-busca-permissoes')?.addEventListener('input', () => this.renderSeletoresAcesso());
-    document.getElementById('u-grupos-acesso')?.addEventListener('change', event => {
-      const input = event.target.closest('input[data-access-group]');
-      if (!input) return;
-      this.alternarSet(this.acessosSelecionados.grupos, input.dataset.accessGroup, input.checked);
-      // Re-renderiza para ocultar/reexibir as permissões que o grupo passa a cobrir.
-      this.renderSeletoresAcesso();
-      this.atualizarResumoAcesso();
+    document.getElementById('u-cargo')?.addEventListener('change', event => this.aplicarCargo(event.target.value));
+    document.getElementById('u-matriz-acesso')?.addEventListener('click', event => {
+      const nivelBtn = event.target.closest('.acesso-seg button');
+      const escBtn = event.target.closest('.acesso-escopo');
+      const row = event.target.closest('.acesso-row');
+      if (!row) return;
+      const mid = row.dataset.mid;
+      const estado = this.matrizAcesso[mid] || { n: 0, s: 'proprias' };
+      if (nivelBtn) {
+        estado.n = Number(nivelBtn.dataset.lvl);
+      } else if (escBtn) {
+        estado.s = estado.s === 'todas' ? 'proprias' : 'todas';
+      } else {
+        return;
+      }
+      this.matrizAcesso[mid] = estado;
+      this.renderMatrizAcesso();
     });
-    document.getElementById('u-permissoes-avulsas')?.addEventListener('change', event => {
-      const input = event.target.closest('input[data-access-permission]');
-      if (!input) return;
-      this.alternarSet(this.acessosSelecionados.permissoes, input.dataset.accessPermission, input.checked);
-      this.atualizarResumoAcesso();
-    });
-  },
-
-  alternarSet(set, valor, ativo) {
-    if (!valor) return;
-    if (ativo) set.add(valor);
-    else set.delete(valor);
   },
 
   async forcarReloginGlobal() {
@@ -395,78 +465,12 @@ const Admin = {
     return 'pac';
   },
 
-  perfisAcesso() {
-    return {
-      pac: {
-        titulo: 'Consultor comercial',
-        descricao: 'Acesso às rotinas comerciais vinculadas ao próprio usuário.',
-        tags: ['Dashboard', 'Vendas próprias', 'Consulta de bases']
-      },
-      admin: {
-        titulo: 'Administrador completo',
-        descricao: 'Acesso administrativo amplo aos módulos operacionais e comerciais.',
-        tags: ['Vendas', 'Faturamento', 'Concorrência', 'Escala CCO']
-      },
-      master: {
-        titulo: 'Master TI',
-        descricao: 'Controle integral do SAFE Hub, incluindo usuários e configurações.',
-        tags: ['Todos os módulos', 'Gestão de usuários', 'Configurações']
-      },
-      admin_readonly: {
-        titulo: 'Administrador somente visualização',
-        descricao: 'Consulta administrativa sem permissão para criar, editar ou excluir registros.',
-        tags: ['Dashboard', 'Vendas', 'Faturamento', 'Concorrência', 'Somente leitura']
-      },
-      financeiro: {
-        titulo: 'Financeiro operacional',
-        descricao: 'Perfil financeiro autorizado para lançamentos e fechamentos.',
-        tags: ['Controle de Gastos', 'Fechamento de Horas', 'Edição']
-      },
-      controle_gastos_visualizacao: {
-        titulo: 'Controle de Gastos · Somente visualização',
-        descricao: 'Acesso exclusivo aos indicadores do Controle de Gastos, sem alterar valores, receitas ou categorias.',
-        tags: ['Apenas Controle de Gastos', 'Visão Geral', 'Sem edição']
-      },
-      escala_minions: {
-        titulo: 'Escala CCO/INVA + SAFE MINIONS',
-        descricao: 'Acesso exclusivo à Escala CCO, Horas Voadas INVA Mês e SAFE MINIONS. Nenhum outro módulo do Hub fica visível.',
-        tags: ['Escala CCO', 'Horas Voadas INVA', 'SAFE MINIONS']
-      }
-    };
-  },
-
   atualizarResumoAcesso() {
-    const origem = document.getElementById('u-origem').value;
-    const resumo = document.getElementById('u-access-summary');
-    if (!resumo) return;
-    resumo.hidden = true;
-    if (origem === 'cco') {
-      this.atualizarEstadoRbac();
-      return;
-    }
-
     const superadmin = document.getElementById('u-superadmin')?.checked;
     document.getElementById('grupo-superadmin')?.classList.toggle('is-active', !!superadmin);
-    if (superadmin) {
-      document.getElementById('u-access-summary-title').textContent = 'Superadmin';
-      document.getElementById('u-access-summary-description').textContent = 'Acesso total ao SAFE Hub, incluindo usuários, grupos, permissões e módulos futuros.';
-      document.getElementById('u-access-summary-tags').innerHTML = ['Acesso total', 'Ignora grupos', 'Inclui novas permissões']
-        .map(tag => `<span>${this.escape(tag)}</span>`)
-        .join('');
-      resumo.classList.remove('restricted');
-      this.atualizarEstadoRbac();
-      return;
-    }
-
-    const perfil = document.getElementById('u-perfil').value;
-    const dados = this.perfisAcesso()[perfil] || this.perfisAcesso().pac;
-    document.getElementById('u-access-summary-title').textContent = dados.titulo;
-    document.getElementById('u-access-summary-description').textContent = dados.descricao;
-    document.getElementById('u-access-summary-tags').innerHTML = dados.tags
-      .map(tag => `<span>${this.escape(tag)}</span>`)
-      .join('');
-    resumo.classList.toggle('restricted', perfil === 'controle_gastos_visualizacao' || perfil === 'escala_minions');
-    this.atualizarEstadoRbac();
+    const rbac = document.getElementById('usuario-rbac');
+    if (rbac) rbac.dataset.superadmin = superadmin ? '1' : '0';
+    this.renderMatrizAcesso();
   },
 
   atualizarCamposOrigem() {
@@ -481,123 +485,127 @@ const Admin = {
     this.atualizarResumoAcesso();
   },
 
-  permissoesDosGruposSelecionados() {
-    const cobertas = new Set();
+  // ── Helpers da matriz de acesso ──────────────────────────
+  moduloPorId(mid) {
+    return RBAC_MODULOS.find(m => m.id === mid) || null;
+  },
+
+  // Permissões de um módulo dado nível (1=Ver, 2=Editar) e escopo.
+  permsDoModulo(m, n, s) {
+    if (!m || !n) return [];
+    const pick = campo => Array.isArray(campo) ? campo : (s === 'todas' ? campo.todas : campo.proprias);
+    let out = pick(m.ver).slice();
+    if (n === 2 && m.editar) out = out.concat(pick(m.editar));
+    return out;
+  },
+
+  // Permissões dos grupos (cargos) do usuário, via dados do backend.
+  permsDoGrupo(grupoId) {
+    const g = (this.controleAcesso.grupos || []).find(item => String(item.id) === String(grupoId));
+    return (g?.permissoes || []).map(String);
+  },
+
+  // Converte o estado atual da matriz em um conjunto de permissões.
+  matrizParaPermissoes() {
+    const set = new Set(RBAC_PERMS_BASE);
+    RBAC_MODULOS.forEach(m => {
+      const st = this.matrizAcesso[m.id] || { n: 0 };
+      this.permsDoModulo(m, st.n, st.s).forEach(p => set.add(p));
+    });
+    return set;
+  },
+
+  // Deduz o estado da matriz (nível/escopo por módulo) de um conjunto de permissões.
+  inferirMatriz(permSet) {
+    const has = list => Array.isArray(list) && list.some(p => permSet.has(p));
+    const matriz = {};
+    RBAC_MODULOS.forEach(m => {
+      let n = 0, s = 'proprias';
+      if (m.escopo) {
+        const verTodasOnly = m.ver.todas.filter(p => m.ver.proprias.indexOf(p) === -1);
+        const escVer = has(verTodasOnly);
+        if (m.editar) {
+          const edTodasOnly = m.editar.todas.filter(p => m.editar.proprias.indexOf(p) === -1);
+          if (has(m.editar.proprias) || has(m.editar.todas)) {
+            n = 2; s = (has(edTodasOnly) || escVer) ? 'todas' : 'proprias';
+          } else if (has(m.ver.proprias) || has(m.ver.todas)) {
+            n = 1; s = escVer ? 'todas' : 'proprias';
+          }
+        } else if (has(m.ver.proprias) || has(m.ver.todas)) {
+          n = 1; s = escVer ? 'todas' : 'proprias';
+        }
+      } else {
+        if (m.editar && has(m.editar)) n = 2;
+        else if (has(m.ver)) n = 1;
+      }
+      matriz[m.id] = { n, s };
+    });
+    return matriz;
+  },
+
+  // Preenche os cargos disponíveis no select.
+  popularCargos() {
+    const sel = document.getElementById('u-cargo');
+    if (!sel) return;
     const grupos = this.controleAcesso.grupos || [];
-    this.acessosSelecionados.grupos.forEach(groupId => {
-      const grupo = grupos.find(item => String(item.id) === String(groupId));
-      (grupo?.permissoes || []).forEach(permissaoId => cobertas.add(String(permissaoId)));
-    });
-    return cobertas;
-  },
-
-  renderSeletoresAcesso() {
-    const gruposEl = document.getElementById('u-grupos-acesso');
-    const permissoesEl = document.getElementById('u-permissoes-avulsas');
-    if (!gruposEl || !permissoesEl) return;
-
-    // Permissões já garantidas pelos grupos selecionados não aparecem como avulsas:
-    // elas são redundantes. Também as removemos da seleção avulsa para não salvar duplicado.
-    const cobertasPorGrupo = this.permissoesDosGruposSelecionados();
-    cobertasPorGrupo.forEach(id => this.acessosSelecionados.permissoes.delete(id));
-
-    const buscaGrupos = document.getElementById('u-busca-grupos')?.value.trim().toLowerCase() || '';
-    const buscaPermissoes = document.getElementById('u-busca-permissoes')?.value.trim().toLowerCase() || '';
-    const grupos = (this.controleAcesso.grupos || [])
-      .filter(grupo => grupo.ativo !== false)
-      .filter(grupo => !buscaGrupos || [grupo.nome, grupo.descricao, grupo.id].join(' ').toLowerCase().includes(buscaGrupos));
-    const permissoes = (this.controleAcesso.permissoes || [])
-      .filter(permissao => !cobertasPorGrupo.has(String(permissao.id)))
-      .filter(permissao => !buscaPermissoes || [permissao.modulo, permissao.nome, permissao.id].join(' ').toLowerCase().includes(buscaPermissoes));
-
-    gruposEl.innerHTML = grupos.length
-      ? grupos.map(grupo => `
-          <label class="usuario-rbac-option">
-            <input type="checkbox" data-access-group="${this.escapeAtributo(grupo.id)}" ${this.acessosSelecionados.grupos.has(String(grupo.id)) ? 'checked' : ''}>
-            <span>
-              <strong>${this.escape(grupo.nome || grupo.id)}</strong>
-              <small>${this.escape(grupo.descricao || grupo.id)}</small>
-            </span>
-          </label>
-        `).join('')
-      : '<div class="usuario-rbac-empty">Nenhum grupo encontrado.</div>';
-
-    const permissoesPorModulo = permissoes.reduce((acc, permissao) => {
-      const modulo = permissao.modulo || 'Outras permissões';
-      if (!acc[modulo]) acc[modulo] = [];
-      acc[modulo].push(permissao);
-      return acc;
-    }, {});
-
-    const nota = cobertasPorGrupo.size
-      ? `<div class="usuario-rbac-note">${cobertasPorGrupo.size} permissão(ões) já vêm dos grupos selecionados e ficam ocultas aqui. Use avulsas apenas para acessos extras.</div>`
-      : '';
-    permissoesEl.innerHTML = nota + (Object.keys(permissoesPorModulo).length
-      ? Object.keys(permissoesPorModulo).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(modulo => `
-          <div class="usuario-rbac-module">
-            <div class="usuario-rbac-module-title">${this.escape(modulo)}</div>
-            ${permissoesPorModulo[modulo].map(permissao => `
-              <label class="usuario-rbac-option compact">
-                <input type="checkbox" data-access-permission="${this.escapeAtributo(permissao.id)}" ${this.acessosSelecionados.permissoes.has(String(permissao.id)) ? 'checked' : ''}>
-                <span>${this.escape(permissao.nome || permissao.id)}</span>
-              </label>
-            `).join('')}
-          </div>
-        `).join('')
-      : '<div class="usuario-rbac-empty">Nenhuma permissão avulsa disponível.</div>');
-
-    this.atualizarEstadoRbac();
-  },
-
-  atualizarEstadoRbac() {
-    const origem = document.getElementById('u-origem')?.value || 'hub';
-    const superadmin = document.getElementById('u-superadmin')?.checked;
-    const bloqueado = origem === 'cco' || !!superadmin;
-    document.getElementById('usuario-rbac')?.classList.toggle('is-disabled', bloqueado);
-    document.querySelectorAll('#usuario-rbac input').forEach(input => {
-      input.disabled = bloqueado;
-    });
-    this.atualizarAcessoEfetivo();
-  },
-
-  // União das permissões dos grupos selecionados com as avulsas marcadas.
-  acessoEfetivoSelecionado() {
-    const efetivas = new Set(this.permissoesDosGruposSelecionados());
-    this.acessosSelecionados.permissoes.forEach(id => efetivas.add(String(id)));
-    return efetivas;
-  },
-
-  atualizarAcessoEfetivo() {
-    const el = document.getElementById('u-rbac-efetivo');
-    if (!el) return;
-    const catalogo = this.controleAcesso.permissoes || [];
-    const superadmin = document.getElementById('u-superadmin')?.checked;
-
-    if (superadmin) {
-      el.innerHTML = `<strong>Acesso efetivo</strong>`
-        + `<span class="usuario-rbac-effective-total">Acesso total (superadmin) · ${catalogo.length} permissões</span>`;
-      return;
-    }
-
-    const efetivas = this.acessoEfetivoSelecionado();
-    if (!efetivas.size) {
-      el.innerHTML = `<strong>Acesso efetivo</strong>`
-        + `<span class="usuario-rbac-effective-empty">Nenhuma permissão — o usuário não verá nenhum módulo.</span>`;
-      return;
-    }
-
-    const porModulo = {};
-    catalogo.forEach(permissao => {
-      if (!efetivas.has(String(permissao.id))) return;
-      const modulo = permissao.modulo || 'Outros';
-      porModulo[modulo] = (porModulo[modulo] || 0) + 1;
-    });
-    const chips = Object.keys(porModulo)
-      .sort((a, b) => a.localeCompare(b, 'pt-BR'))
-      .map(modulo => `<span>${this.escape(modulo)} <b>${porModulo[modulo]}</b></span>`)
+    const nomeDe = id => (grupos.find(g => String(g.id) === id)?.nome) || id;
+    sel.innerHTML = RBAC_CARGOS_OFERECIDOS
+      .map(id => `<option value="${this.escapeAtributo(id)}">${this.escape(nomeDe(id))}</option>`)
       .join('');
-    el.innerHTML = `<strong>Acesso efetivo · ${efetivas.size} permissão(ões)</strong>`
-      + `<div class="usuario-rbac-effective-chips">${chips}</div>`;
+  },
+
+  // Troca de cargo: preenche a matriz com o acesso padrão do cargo.
+  aplicarCargo(cargoId) {
+    this.cargoAtual = cargoId;
+    this.matrizAcesso = this.inferirMatriz(new Set(this.permsDoGrupo(cargoId)));
+    this.renderMatrizAcesso();
+  },
+
+  renderMatrizAcesso() {
+    const cont = document.getElementById('u-matriz-acesso');
+    if (!cont) return;
+    const superadmin = document.getElementById('u-superadmin')?.checked;
+
+    cont.innerHTML = RBAC_MODULOS.map(m => {
+      const st = this.matrizAcesso[m.id] || { n: 0, s: 'proprias' };
+      const seg = [
+        `<button type="button" data-lvl="0" class="${st.n === 0 ? 'is-active' : ''}">—</button>`,
+        `<button type="button" data-lvl="1" class="${st.n === 1 ? 'is-active' : ''}">Ver</button>`,
+        m.viewOnly ? '' : `<button type="button" data-lvl="2" class="${st.n === 2 ? 'is-active' : ''}">Editar</button>`
+      ].join('');
+      const escopo = m.escopo
+        ? `<button type="button" class="acesso-escopo" data-escopo="${st.s}" ${st.n === 0 ? 'hidden' : ''}>${st.s === 'todas' ? m.escLabels[1] : m.escLabels[0]}</button>`
+        : '';
+      return `
+        <div class="acesso-row ${st.n === 0 ? 'is-off' : ''}" data-mid="${m.id}" role="row">
+          <div class="acesso-row-info">
+            <div class="acesso-row-nome">${this.escape(m.nome)}</div>
+            <div class="acesso-row-nota">${this.escape(m.nota)}</div>
+          </div>
+          <div class="acesso-row-controls">
+            <div class="acesso-seg">${seg}</div>
+            ${escopo}
+          </div>
+        </div>`;
+    }).join('');
+
+    // Resumo + exceções em relação ao cargo escolhido.
+    const resumo = document.getElementById('u-acesso-resumo');
+    if (resumo) {
+      if (superadmin) {
+        resumo.innerHTML = '<b>Superadmin</b> — acesso total ao Hub. O cargo e os ajustes acima são ignorados.';
+      } else {
+        const desejado = this.matrizParaPermissoes();
+        const base = new Set(this.permsDoGrupo(this.cargoAtual));
+        const extras = [...desejado].filter(p => !base.has(p)).length;
+        const removidas = [...base].filter(p => !desejado.has(p)).length;
+        const liberados = RBAC_MODULOS.filter(m => (this.matrizAcesso[m.id]?.n || 0) > 0).length;
+        const exc = (extras + removidas)
+          ? ` · <b>${extras + removidas}</b> exceção(ões) sobre o cargo`
+          : ' · sem exceções (igual ao cargo)';
+        resumo.innerHTML = `<b>${liberados}</b> módulo(s) liberado(s)${exc}.`;
+      }
+    }
   },
 
   abrirForm(usuario = null) {
@@ -615,10 +623,22 @@ const Admin = {
     document.getElementById('u-ativo').value = usuario ? String(this.estaAtivo(usuario.ativo)) : 'true';
     document.getElementById('u-superadmin').checked = this.eSuperadminUsuario(usuario);
     document.getElementById('u-enviar-boas-vindas').checked = !usuario;
-    this.acessosSelecionados = {
-      grupos: new Set((usuario?.grupos || []).map(String)),
-      permissoes: new Set((usuario?.permissoesAvulsas || []).map(String))
-    };
+
+    // Cargo base + matriz. Deduz o acesso efetivo do usuário (grupos + exceções).
+    this.popularCargos();
+    const gruposUsuario = (usuario?.grupos || []).map(String);
+    this.cargoAtual = gruposUsuario.find(g => RBAC_CARGOS_OFERECIDOS.includes(g)) || RBAC_CARGOS_OFERECIDOS[0];
+    document.getElementById('u-cargo').value = this.cargoAtual;
+    if (usuario) {
+      const efetivas = new Set();
+      gruposUsuario.forEach(gid => this.permsDoGrupo(gid).forEach(p => efetivas.add(p)));
+      (usuario.permissoesAvulsas || []).forEach(p => efetivas.add(String(p)));
+      (usuario.permissoesNegadas || []).forEach(p => efetivas.delete(String(p)));
+      this.matrizAcesso = this.inferirMatriz(efetivas);
+    } else {
+      this.matrizAcesso = this.inferirMatriz(new Set(this.permsDoGrupo(this.cargoAtual)));
+    }
+
     document.getElementById('u-iniciais').value = usuario?.initials || '';
     document.getElementById('u-cpf').value = usuario?.cpf || '';
     document.getElementById('u-nascimento').value = usuario?.birthdate || '';
@@ -628,7 +648,7 @@ const Admin = {
 
     document.getElementById('u-pac').disabled = !!usuario;
     this.atualizarCamposOrigem();
-    this.renderSeletoresAcesso();
+    this.renderMatrizAcesso();
     abrirModal('modal-usuario');
   },
 
@@ -666,13 +686,25 @@ const Admin = {
   dadosFormularioUsuario() {
     const origem = document.getElementById('u-origem').value;
     const superadmin = origem === 'hub' && document.getElementById('u-superadmin').checked;
-    const gruposSelecionados = Array.from(this.acessosSelecionados.grupos);
-    // Superadmin ignora grupos e avulsas no acesso efetivo; enviamos listas vazias
-    // para o backend limpar vínculos antigos e não deixar dados mortos gravados.
-    // `perfil` (legado) é ESPELHO derivado dos grupos — o acesso real é RBAC.
+
+    // Acesso = cargo (grupo) + exceções: avulsas (adiciona) e negadas (remove),
+    // calculadas comparando a matriz atual com o padrão do cargo escolhido.
+    let grupos, avulsas, negadas;
+    if (origem === 'hub' && !superadmin) {
+      const desejado = this.matrizParaPermissoes();
+      const base = new Set(this.permsDoGrupo(this.cargoAtual));
+      grupos = this.cargoAtual ? [this.cargoAtual] : [];
+      avulsas = [...desejado].filter(p => !base.has(p));
+      negadas = [...base].filter(p => !desejado.has(p));
+    } else if (origem === 'hub') {
+      // Superadmin ignora tudo; limpa vínculos.
+      grupos = []; avulsas = []; negadas = [];
+    }
+
+    // `perfil` (legado) é ESPELHO derivado do cargo — o acesso real é RBAC.
     const perfil = origem === 'cco'
       ? document.getElementById('u-perfil').value
-      : (superadmin ? 'master' : this.perfilDerivadoDosGrupos(gruposSelecionados));
+      : (superadmin ? 'master' : this.perfilDerivadoDosGrupos(grupos || []));
     return {
       id: this.editandoId,
       origem,
@@ -683,8 +715,9 @@ const Admin = {
       roleOrigem: document.getElementById('u-role-cco').value,
       ativo: document.getElementById('u-ativo').value === 'true',
       superadmin,
-      grupos: origem === 'hub' ? (superadmin ? [] : Array.from(this.acessosSelecionados.grupos)) : undefined,
-      permissoesAvulsas: origem === 'hub' ? (superadmin ? [] : Array.from(this.acessosSelecionados.permissoes)) : undefined,
+      grupos: origem === 'hub' ? grupos : undefined,
+      permissoesAvulsas: origem === 'hub' ? avulsas : undefined,
+      permissoesNegadas: origem === 'hub' ? negadas : undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),
       birthdate: document.getElementById('u-nascimento').value.trim(),

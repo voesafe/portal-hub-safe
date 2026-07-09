@@ -143,7 +143,7 @@ const Auth = {
     'fechamento-horas.html':  { ver: ['fechamento_horas.visualizar'],
                                 editar: ['fechamento_horas.editar', 'fechamento_horas.importar_cavok', 'fechamento_horas.fechar_mes', 'fechamento_horas.reabrir_mes'] },
     'escala-cco.html':        { ver: ['escala_cco.visualizar_calendario'],
-                                editar: ['escala_cco.editar_escala', 'escala_cco.editar_valor_turno', 'escala_cco.gerenciar_funcionarios'] },
+                                editar: ['escala_cco.editar_propria_escala', 'escala_cco.editar_escala', 'escala_cco.editar_valor_turno', 'escala_cco.gerenciar_funcionarios'] },
     'escala-pav.html':        { ver: ['escala_pav.visualizar_calendario', 'escala_pav.visualizar_financeiro'],
                                 editar: ['escala_pav.editar_escala', 'escala_pav.gerenciar_pavs', 'escala_pav.inativar_reativar_pav'] },
     'horas-voadas-inva.html': { ver: ['horas_inva.visualizar'],

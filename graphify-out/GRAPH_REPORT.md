@@ -1,16 +1,16 @@
 # Graph Report - portal-hub-safe  (2026-07-09)
 
 ## Corpus Check
-- 72 files · ~482,723 words
+- 72 files · ~483,148 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 653 nodes · 598 edges · 170 communities (53 shown, 117 thin omitted)
+- 656 nodes · 601 edges · 169 communities (53 shown, 116 thin omitted)
 - Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 85 edges (avg confidence: 0.78)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fe1b91f7`
+- Built from commit: `5899d2ec`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -41,7 +41,6 @@
 - [[_COMMUNITY_vendas.js — Máscara de Moeda e Cursos|vendas.js — Máscara de Moeda e Cursos]]
 - [[_COMMUNITY_vendas.js — Máscara de Moeda e Cursos|vendas.js — Máscara de Moeda e Cursos]]
 - [[_COMMUNITY_vendas.js — Máscara de Moeda e Cursos|vendas.js — Máscara de Moeda e Cursos]]
-- [[_COMMUNITY_preview-guard.js — Trava de Preview Read-only|preview-guard.js — Trava de Preview Read-only]]
 - [[_COMMUNITY_preview-guard.js — Trava de Preview Read-only|preview-guard.js — Trava de Preview Read-only]]
 - [[_COMMUNITY_preview-guard.js — Trava de Preview Read-only|preview-guard.js — Trava de Preview Read-only]]
 - [[_COMMUNITY_Controle de Gastos — Categorias e Bases|Controle de Gastos — Categorias e Bases]]
@@ -218,7 +217,7 @@
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_refinado_debug_receita_global_calculo, preview_refinado_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_refinado_escala_pav_view_calendario, preview_refinado_escala_pav_view_financeiro, preview_refinado_escala_pav_view_cadastro [INFERRED 0.80]
 
-## Communities (170 total, 117 thin omitted)
+## Communities (169 total, 116 thin omitted)
 
 ### Community 0 - "Dashboard Financeiro Consolidado (Vendas + Faturamento)"
 Cohesion: 0.18
@@ -229,12 +228,12 @@ Cohesion: 0.06
 Nodes (34): KPI Receita Global (Vendas + Faturamento), Performance por Consultor (PAC) Chart, Dashboard / Visão Geral Page, Diagnóstico SAFE Hub Page, Detecção de Inconsistência MES/ANO vs DATA, Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale), Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page (+26 more)
 
 ### Community 2 - "SAFE Minions — Verificação de Mínimos ANAC"
-Cohesion: 0.11
-Nodes (19): Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab, Visão Geral Tab (Gastos), Visão Geral Tab (Horas por Mês), Acesso Somente Visualização (rationale) (+11 more)
+Cohesion: 0.06
+Nodes (31): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab (+23 more)
 
 ### Community 3 - "CLI de Administração (admin-cli.js)"
-Cohesion: 0.09
-Nodes (23): Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos, Tipo PPA — Piloto Privado de Avião, Upload de Extrato SACI (.xlt/.xltx/.xlsx/.xls) (+15 more)
+Cohesion: 0.06
+Nodes (31): Atualizar pela API CAVOK, Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Sincronizar CAVOK (Instrutores/Horas), Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos (+23 more)
 
 ### Community 4 - "Escala CCO e PAV — Apps Operacionais"
 Cohesion: 0.22
@@ -253,12 +252,12 @@ Cohesion: 0.14
 Nodes (20): Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel, Diretório de Acessos Table, Gestão de Usuários (Admin) Page, Identidade Única por E-mail (concept), Modal Novo/Editar Usuário, Senha Padrão = CPF (rationale) (+12 more)
 
 ### Community 8 - "Login e Página Inicial (Bases SAFE)"
-Cohesion: 0.24
-Nodes (18): Base Bragança Paulista, Base Jundiaí, Base Sorocaba, Preview de Redesign — SAFE Hub (Seletor), Trava de gravação (somente leitura), Redesign 1 · Refinado (card), Redesign 2 · Clean / SaaS (card), Redesign 3 · Dashboard denso (card) (+10 more)
+Cohesion: 0.25
+Nodes (17): Base Bragança Paulista, Base Jundiaí, Base Sorocaba, Preview de Redesign — SAFE Hub (Seletor), Trava de gravação (somente leitura), Redesign 1 · Refinado (card), Redesign 2 · Clean / SaaS (card), Redesign 3 · Dashboard denso (card) (+9 more)
 
 ### Community 9 - "Acesso Restrito, Login e Catálogo de Módulos"
-Cohesion: 0.30
-Nodes (16): Exportar iFood (fechamento PAV), PAV · Fechamento Financeiro, PAV · Calendário Operacional, PAV · Cadastro de PAVs, Ana Prado (PAV · SJK), André Lima (PAV · CPN), Base CPN · Campinas, Base SJK · São José dos Campos (+8 more)
+Cohesion: 0.27
+Nodes (17): Módulo Escala CCO, Exportar iFood (fechamento PAV), PAV · Fechamento Financeiro, PAV · Calendário Operacional, PAV · Cadastro de PAVs, Ana Prado (PAV · SJK), André Lima (PAV · CPN), Base CPN · Campinas (+9 more)
 
 ### Community 10 - "Cadastro de Alunos e Fechamento de Horas"
 Cohesion: 0.12
@@ -316,10 +315,6 @@ Nodes (5): Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fecham
 Cohesion: 0.40
 Nodes (5): Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fechamento Mensal Tab (Horas por Aeronave), Importar Relatório Cavok (XLS/XLSX), Visão Geral Tab (Horas por Mês)
 
-### Community 28 - "preview-guard.js — Trava de Preview Read-only"
-Cohesion: 0.10
-Nodes (20): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fechamento Mensal Tab (Horas por Aeronave), Importar Relatório Cavok (XLS/XLSX), Sincronizar CAVOK (Instrutores/Horas) (+12 more)
-
 ### Community 30 - "Fechamento de Horas — Sincronização CAVOK"
 Cohesion: 0.50
 Nodes (4): Portal Newzenler (fonte de progresso), Por Aluno Tab, Por Curso Tab, Progresso de Alunos Page
@@ -360,6 +355,10 @@ Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
 Cohesion: 0.67
 Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
 
+### Community 47 - "auth.js"
+Cohesion: 0.40
+Nodes (4): Admin, RBAC_CARGOS_OFERECIDOS, RBAC_MODULOS, RBAC_PERMS_BASE
+
 ### Community 153 - "SETUP — Passo a passo completo"
 Cohesion: 0.11
 Nodes (18): 1. Configurar o Google Sheets, 2. Configurar o Apps Script, 3. Configurar o frontend, 4. Migrar dados históricos (opcional), 5. Deploy no GitHub Pages, Atualizações automáticas CAVOK, Configurar a Escala CCO, Configurar o Fechamento de Horas (+10 more)
@@ -385,24 +384,24 @@ Cohesion: 0.67
 Nodes (3): Concorrência (page), Escola concorrente, Preço SAFE comparativo
 
 ## Knowledge Gaps
-- **263 isolated node(s):** `https`, `http`, `readline`, `crypto`, `c` (+258 more)
+- **266 isolated node(s):** `https`, `http`, `readline`, `crypto`, `c` (+261 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **117 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **116 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Horas Voadas INVA Mês Page` connect `CLI de Administração (admin-cli.js)` to `preview-guard.js — Trava de Preview Read-only`?**
+- **Why does `Fechamento Mensal Tab (Horas por Aeronave)` connect `SAFE Minions — Verificação de Mínimos ANAC` to `CLI de Administração (admin-cli.js)`?**
+  _High betweenness centrality (0.005) - this node is a cross-community bridge._
+- **Why does `Atualizar pela API CAVOK` connect `CLI de Administração (admin-cli.js)` to `SAFE Minions — Verificação de Mínimos ANAC`?**
   _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **What connects `https`, `http`, `readline` to the rest of the system?**
-  _271 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _274 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Cadastro de Alunos e Controle de Gastos` be split into smaller, more focused modules?**
   _Cohesion score 0.06417112299465241 - nodes in this community are weakly interconnected._
 - **Should `SAFE Minions — Verificação de Mínimos ANAC` be split into smaller, more focused modules?**
-  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Should `CLI de Administração (admin-cli.js)` be split into smaller, more focused modules?**
-  _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Should `Controle de Acesso e Gestão de Usuários (RBAC)` be split into smaller, more focused modules?**
-  _Cohesion score 0.1038961038961039 - nodes in this community are weakly interconnected._
-- **Should `Bases SAFE e Seletor de Redesign (Preview)` be split into smaller, more focused modules?**
   _Cohesion score 0.1038961038961039 - nodes in this community are weakly interconnected._

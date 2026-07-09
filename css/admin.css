@@ -672,3 +672,60 @@
   font-size: .8rem;
   line-height: 1.5;
 }
+
+/* ============================================================
+   Matriz de acesso por módulo (cargo + switches Ver/Editar)
+   ============================================================ */
+.acesso-matriz {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-top: 4px;
+}
+.acesso-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--gray-200);
+}
+.acesso-row:first-child { border-top: none; }
+.acesso-row.is-off { background: var(--off-white); }
+.acesso-row-info { min-width: 0; }
+.acesso-row-nome { font-weight: 600; color: var(--navy); font-size: 14px; }
+.acesso-row-nota { font-size: 12px; color: var(--gray-500); }
+.acesso-row-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+.acesso-seg { display: inline-flex; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); overflow: hidden; background: var(--white); }
+.acesso-seg button {
+  border: none; background: transparent; cursor: pointer;
+  font: 600 12.5px/1 var(--font-title, inherit); color: var(--gray-600);
+  padding: 7px 12px; transition: var(--transition, all .15s);
+  border-left: 1px solid var(--gray-200);
+}
+.acesso-seg button:first-child { border-left: none; }
+.acesso-seg button:hover { background: var(--gray-100); }
+.acesso-seg button.is-active { color: var(--white); }
+.acesso-seg button[data-lvl="0"].is-active { background: var(--gray-400); }
+.acesso-seg button[data-lvl="1"].is-active { background: var(--blue); }
+.acesso-seg button[data-lvl="2"].is-active { background: var(--teal-dark); }
+
+.acesso-escopo {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--gray-200); border-radius: 999px; background: var(--white);
+  padding: 5px 11px; font-size: 11.5px; font-weight: 700; color: var(--gray-600); cursor: pointer;
+  transition: var(--transition, all .15s);
+}
+.acesso-escopo::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gray-400); }
+.acesso-escopo[data-escopo="todas"] { color: var(--blue-dark); border-color: var(--blue); }
+.acesso-escopo[data-escopo="todas"]::before { background: var(--blue); }
+.acesso-escopo:hover { border-color: var(--blue); }
+.acesso-escopo[hidden] { display: none; }
+
+.acesso-resumo { font-size: 12.5px; color: var(--gray-500); margin-top: 10px; padding: 0 2px; }
+.acesso-resumo b { color: var(--navy); }
+.usuario-rbac[data-superadmin="1"] .acesso-matriz,
+.usuario-rbac[data-superadmin="1"] #u-cargo { opacity: .45; pointer-events: none; }

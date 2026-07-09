@@ -366,6 +366,7 @@ function listarUsuarios() {
       superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
       grupos: acessos.gruposPorUsuario[userId] || [],
       permissoesAvulsas: acessos.permissoesPorUsuario[userId] || [],
+      permissoesNegadas: acessos.negadasPorUsuario[userId] || [],
       origem:   'hub',
       modulo:   'Hub / Comercial'
     });
@@ -423,8 +424,8 @@ function criarUsuario(dados) {
   if (idx.CPF) {
     sheet.getRange(sheet.getLastRow(), idx.CPF).setValue(dados.cpf);
   }
-  if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas)) {
-    salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor);
+  if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas) || Array.isArray(dados.permissoesNegadas)) {
+    salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor, dados.permissoesNegadas || []);
   }
 
   return { id: id, nome: dados.nome };
@@ -574,8 +575,8 @@ function atualizarUsuario(id, dados) {
       if (idx.ATUALIZADO_POR && dados.atualizadoPor) {
         sheet.getRange(row, idx.ATUALIZADO_POR).setValue(dados.atualizadoPor);
       }
-      if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas)) {
-        salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor);
+      if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas) || Array.isArray(dados.permissoesNegadas)) {
+        salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor, dados.permissoesNegadas || []);
       }
       return true;
     }
