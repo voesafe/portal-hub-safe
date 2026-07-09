@@ -51,17 +51,34 @@
     /* ---- Card de vidro (glassmorphism) ----------------------------------- */
     .login-card {
       position: relative; z-index: 1;
-      background: rgba(255,255,255,.09);
-      backdrop-filter: blur(22px) saturate(160%);
-      -webkit-backdrop-filter: blur(22px) saturate(160%);
-      border: 1px solid rgba(255,255,255,.18);
+      background:
+        linear-gradient(160deg,
+          rgba(255,255,255,.11) 0%,
+          rgba(255,255,255,.05) 100%);
+      backdrop-filter: blur(24px) saturate(150%);
+      -webkit-backdrop-filter: blur(24px) saturate(150%);
       border-radius: 24px;
       padding: clamp(30px, 5vh, 48px) clamp(24px, 5vw, 42px);
       width: 100%; max-width: 420px;
       box-shadow:
-        0 30px 80px rgba(10,15,40,.45),
-        inset 0 1px 0 rgba(255,255,255,.25);
+        0 24px 60px rgba(10,15,40,.45),
+        inset 0 1px 0 rgba(255,255,255,.22);
       animation: fadeUp .5s cubic-bezier(.4,0,.2,1);
+    }
+    /* Borda em gradiente de 1px (aresta de luz do vidro) — técnica de máscara */
+    .login-card::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      padding: 1px; pointer-events: none;
+      background: linear-gradient(150deg,
+        rgba(255,255,255,.55) 0%,
+        rgba(255,255,255,.08) 35%,
+        rgba(255,255,255,.04) 65%,
+        rgba(255,255,255,.24) 100%);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
     }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
