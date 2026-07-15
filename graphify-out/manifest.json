@@ -25,9 +25,9 @@
     "semantic_hash": "50e5a50872bb70aa4b148351c87814e9"
   },
   "js/admin.js": {
-    "mtime": 1783619454.077926,
-    "ast_hash": "55c9d767d7d1b9d93312f2fc3eb907f1",
-    "semantic_hash": ""
+    "mtime": 1784134677.6522965,
+    "ast_hash": "c97f8e3ea1a30375011144179e5dc658",
+    "semantic_hash": "c97f8e3ea1a30375011144179e5dc658"
   },
   "js/api.js": {
     "mtime": 1783261070.761267,
@@ -35,9 +35,9 @@
     "semantic_hash": "14c2d2d54666d2a6a18c0f27539766a4"
   },
   "js/auth.js": {
-    "mtime": 1783619427.8457086,
+    "mtime": 1783620047.6511238,
     "ast_hash": "b8d655650ee66f369494d72e0b722bf7",
-    "semantic_hash": ""
+    "semantic_hash": "b8d655650ee66f369494d72e0b722bf7"
   },
   "js/bases.js": {
     "mtime": 1783528016.9013817,
@@ -57,7 +57,7 @@
   "js/config.js": {
     "mtime": 1783612639.360083,
     "ast_hash": "63c66f0749b7db9b3b9d0111e14994d2",
-    "semantic_hash": ""
+    "semantic_hash": "63c66f0749b7db9b3b9d0111e14994d2"
   },
   "js/controle-gastos.js": {
     "mtime": 1780945023.5599198,
@@ -82,7 +82,7 @@
   "js/inicio.js": {
     "mtime": 1783612639.3605847,
     "ast_hash": "b5d747ca865e1d520b18d911dab4cf79",
-    "semantic_hash": ""
+    "semantic_hash": "b5d747ca865e1d520b18d911dab4cf79"
   },
   "js/progresso-alunos.js": {
     "mtime": 1783528331.9282496,
@@ -365,9 +365,9 @@
     "semantic_hash": "b27be7f22becce7d02d2708b1131c1b9"
   },
   "admin.html": {
-    "mtime": 1783619025.3740752,
-    "ast_hash": "5515b76c1389ea33422942fdc22628de",
-    "semantic_hash": ""
+    "mtime": 1784134677.6520462,
+    "ast_hash": "6b2390b0950648cd714252e83f04785c",
+    "semantic_hash": "6b2390b0950648cd714252e83f04785c"
   },
   "bases.html": {
     "mtime": 1783528008.5865295,
@@ -427,7 +427,7 @@
   "index.html": {
     "mtime": 1783605248.5488858,
     "ast_hash": "ac53f77daf2786c24f1fc85a708e85c1",
-    "semantic_hash": ""
+    "semantic_hash": "ac53f77daf2786c24f1fc85a708e85c1"
   },
   "inicio.html": {
     "mtime": 1783528221.3029718,
@@ -975,8 +975,8 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1783612639.3518753,
-    "ast_hash": "3b8a4dd50cad09e5f58e362a8c2ae81a",
-    "semantic_hash": ""
+    "mtime": 1783620047.6457844,
+    "ast_hash": "981e54346936d0895d881291a8d45ce1",
+    "semantic_hash": "981e54346936d0895d881291a8d45ce1"
   }
 }
