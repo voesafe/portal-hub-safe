@@ -700,20 +700,29 @@ const Vendas = {
 
   async excluir(id) {
     if (!Auth.podeEditar()) { toast('Este acesso é somente leitura.', 'warning'); return; }
-    const nome = (this.dados.find(v => String(v.id) === String(id)) || {}).nome || '';
+    const idx = this.dados.findIndex(v => String(v.id) === String(id));
+    if (idx === -1) return;
+    const nome = this.dados[idx].nome || '';
     if (!confirm(`Excluir a venda de "${nome}"?\nEsta ação não pode ser desfeita.`)) return;
 
+    // Otimista: remove da lista na hora e restaura se o backend falhar.
+    const [removida] = this.dados.splice(idx, 1);
+    this.renderTabela();
+
     const res = await API.excluirVenda(id);
-    if (!res.ok) { toast(res.error || 'Erro ao excluir venda.', 'error'); return; }
+    if (!res.ok) {
+      this.dados.splice(idx, 0, removida);
+      this.renderTabela();
+      toast(res.error || 'Erro ao excluir venda. A exclusão foi desfeita.', 'error');
+      return;
+    }
     toast('Venda excluída.', 'success');
-    await this.carregar();
   },
 
   async salvar() {
     if (!Auth.podeEditar()) { toast('Este acesso é somente leitura.', 'warning'); return; }
 
     const btn = document.getElementById('btn-salvar');
-    btnLoading(btn, true);
 
     const dados = {
       id:          this.editandoId,
@@ -734,16 +743,36 @@ const Vendas = {
 
     if (!dados.data || !dados.nome || !dados.valor || !dados.curso) {
       toast('Data, nome, curso e valor são obrigatórios.', 'warning');
-      btnLoading(btn, false); return;
+      return;
     }
 
-    const res = this.editandoId ? await API.editarVenda(dados) : await API.criarVenda(dados);
+    const editando = this.editandoId;
+
+    if (editando) {
+      // Edição otimista: aplica na tela e fecha o modal na hora; reverte se falhar.
+      const alvo = this.dados.find(v => String(v.id) === String(editando));
+      const snapshot = alvo ? { ...alvo } : null;
+      if (alvo) { Object.assign(alvo, dados); this.renderTabela(); }
+      fecharModal('modal-venda');
+      toast('Venda atualizada!', 'success');
+
+      const res = await API.editarVenda(dados);
+      if (!res.ok) {
+        if (alvo && snapshot) { Object.assign(alvo, snapshot); this.renderTabela(); }
+        toast(res.error || 'Erro ao salvar. A alteração foi desfeita.', 'error');
+      }
+      return;
+    }
+
+    // Criar: o servidor gera o ID → fecha o modal e recarrega em segundo plano.
+    btnLoading(btn, true);
+    const res = await API.criarVenda(dados);
     btnLoading(btn, false);
 
     if (res.ok) {
-      toast(this.editandoId ? 'Venda atualizada!' : 'Venda registrada!', 'success');
+      toast('Venda registrada!', 'success');
       fecharModal('modal-venda');
-      await this.carregar();
+      this.carregar();
     } else {
       toast(res.error || 'Erro ao salvar.', 'error');
     }

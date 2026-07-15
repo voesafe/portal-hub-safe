@@ -575,11 +575,29 @@ const ControleGastos = {
       return;
     }
 
+    const editando = this.categoriaEditando;
+
+    if (editando) {
+      // Edição otimista do nome: aplica e fecha o modal na hora; reverte se falhar.
+      const categoria = (this.dados.todasCategorias || []).find(c => String(c.id) === String(editando.id));
+      const anterior = categoria ? categoria.nome : null;
+      if (categoria) { categoria.nome = nome; this.renderizarCategorias(); }
+      fecharModal('cg-modal-categoria');
+      toast('Categoria atualizada.', 'success');
+      this.categoriaEditando = null;
+
+      const resposta = await API.editarCategoriaGasto(editando.id, nome);
+      if (!resposta.ok) {
+        if (categoria) { categoria.nome = anterior; this.renderizarCategorias(); }
+        this.tratarErro(resposta.error);
+      }
+      return;
+    }
+
+    // Criar: o servidor gera o ID → fecha o modal e recarrega em segundo plano.
     const botao = document.getElementById('cg-modal-categoria-salvar');
     btnLoading(botao, true);
-    const resposta = this.categoriaEditando
-      ? await API.editarCategoriaGasto(this.categoriaEditando.id, nome)
-      : await API.criarCategoriaGasto(nome);
+    const resposta = await API.criarCategoriaGasto(nome);
     btnLoading(botao, false);
 
     if (!resposta.ok) {
@@ -588,21 +606,24 @@ const ControleGastos = {
     }
 
     fecharModal('cg-modal-categoria');
-    toast(this.categoriaEditando ? 'Categoria atualizada.' : 'Categoria criada.', 'success');
+    toast('Categoria criada.', 'success');
     this.categoriaEditando = null;
-    await this.carregar(false);
+    this.carregar(false);
   },
 
   async alterarStatusCategoria(id, ativa) {
-    this.setLoading(true);
+    const categoria = (this.dados.todasCategorias || []).find(c => String(c.id) === String(id));
+    const anterior = categoria ? categoria.ativa : null;
+    // Otimista: alterna o status na hora e reverte se o backend falhar.
+    if (categoria) { categoria.ativa = ativa; this.renderizarCategorias(); }
+
     const resposta = await API.alterarStatusCategoriaGasto(id, ativa);
-    this.setLoading(false);
     if (!resposta.ok) {
+      if (categoria) { categoria.ativa = anterior; this.renderizarCategorias(); }
       this.tratarErro(resposta.error);
       return;
     }
     toast(ativa ? 'Categoria reativada.' : 'Categoria desativada.', 'success');
-    await this.carregar(false);
   }
 };
 

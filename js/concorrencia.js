@@ -279,16 +279,33 @@ const Concorrencia = {
     if (!dados.curso)        { toast('Selecione o curso.', 'warning'); return; }
     if (!dados.valorAvista)  { toast('Valor à vista é obrigatório.', 'warning'); return; }
 
+    const editando = this.editandoId;
+
+    if (editando) {
+      // Edição otimista: aplica na tela e fecha o modal na hora; reverte se falhar.
+      const alvo = this.dados.find(c => String(c.id) === String(editando));
+      const snapshot = alvo ? { ...alvo } : null;
+      if (alvo) { Object.assign(alvo, dados); this.renderComparativo(); }
+      fecharModal('modal-concorrente');
+      toast('Concorrente atualizada!', 'success');
+
+      const res = await API.editarConcorrente(dados);
+      if (!res.ok) {
+        if (alvo && snapshot) { Object.assign(alvo, snapshot); this.renderComparativo(); }
+        toast(res.error || 'Erro ao salvar. A alteração foi desfeita.', 'error');
+      }
+      return;
+    }
+
+    // Criar: o servidor gera o ID → fecha o modal e recarrega em segundo plano.
     btnLoading(btn, true);
-    const res = this.editandoId
-      ? await API.editarConcorrente(dados)
-      : await API.criarConcorrente(dados);
+    const res = await API.criarConcorrente(dados);
     btnLoading(btn, false);
 
     if (res.ok) {
-      toast(this.editandoId ? 'Concorrente atualizada!' : 'Concorrente cadastrada!', 'success');
+      toast('Concorrente cadastrada!', 'success');
       fecharModal('modal-concorrente');
-      await this.carregar();
+      this.carregar();
     } else {
       toast(res.error || 'Erro ao salvar.', 'error');
     }
@@ -329,16 +346,20 @@ const Concorrencia = {
 
     if (!dados.valorAvista) { toast('Valor à vista é obrigatório.', 'warning'); return; }
 
-    btnLoading(btn, true);
-    const res = await API.salvarPrecoSafe(dados);
-    btnLoading(btn, false);
+    // Otimista: atualiza o preço SAFE localmente e reverte se o backend falhar.
+    const anterior = this.precosSafe.map(p => ({ ...p }));
+    const existente = this.precosSafe.find(p => p.curso === dados.curso);
+    if (existente) Object.assign(existente, dados);
+    else this.precosSafe.push({ ...dados });
+    this.renderComparativo();
+    fecharModal('modal-preco-safe');
+    toast('Preço SAFE atualizado!', 'success');
 
-    if (res.ok) {
-      toast('Preço SAFE atualizado!', 'success');
-      fecharModal('modal-preco-safe');
-      await this.carregar();
-    } else {
-      toast(res.error || 'Erro ao salvar.', 'error');
+    const res = await API.salvarPrecoSafe(dados);
+    if (!res.ok) {
+      this.precosSafe = anterior;
+      this.renderComparativo();
+      toast(res.error || 'Erro ao salvar. A alteração foi desfeita.', 'error');
     }
   },
 
@@ -378,16 +399,18 @@ const Concorrencia = {
     overlay.querySelector('#exc-fechar').addEventListener('click', fechar);
     overlay.querySelector('#exc-cancelar').addEventListener('click', fechar);
     overlay.querySelector('#exc-confirmar').addEventListener('click', async () => {
-      const btn = overlay.querySelector('#exc-confirmar');
-      btnLoading(btn, true);
+      // Otimista: remove na hora, fecha o modal e restaura se o backend falhar.
+      const idx = this.dados.findIndex(c => String(c.id) === String(id));
+      const removido = idx !== -1 ? this.dados[idx] : null;
+      if (idx !== -1) { this.dados.splice(idx, 1); this.renderComparativo(); }
+      fechar();
+
       const res = await API.excluirConcorrente(id);
       if (res.ok) {
         toast('Concorrente excluída.', 'success');
-        fechar();
-        await this.carregar();
       } else {
-        btnLoading(btn, false);
-        toast(res.error || 'Erro ao excluir.', 'error');
+        if (removido) { this.dados.splice(idx, 0, removido); this.renderComparativo(); }
+        toast(res.error || 'Erro ao excluir. A exclusão foi desfeita.', 'error');
       }
     });
     overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });

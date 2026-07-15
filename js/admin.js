@@ -823,7 +823,9 @@ const Admin = {
       toast('E-mail de boas-vindas enviado.', 'success');
     }
     fecharModal('modal-usuario');
-    await this.carregar();
+    // Recarrega em segundo plano: o modal já fechou e perfil/badges derivam dos
+    // grupos calculados no servidor, então não fingimos o estado localmente.
+    this.carregar();
   },
 
   initAlterarSenha() {
