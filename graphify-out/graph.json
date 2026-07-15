@@ -4,6 +4,19 @@
   "graph": {
     "hyperedges": [
       {
+        "id": "hub_shared_core_scripts",
+        "label": "N\u00facleo compartilhado config/api/auth em todas as p\u00e1ginas",
+        "nodes": [
+          "js_config",
+          "js_api",
+          "js_auth"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html"
+      },
+      {
         "id": "rbac_effective_permissions_flow",
         "label": "Fluxo de permiss\u00f5es efetivas RBAC",
         "nodes": [
@@ -17,21 +30,6 @@
         "confidence": "EXTRACTED",
         "confidence_score": 0.9,
         "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md"
-      },
-      {
-        "id": "user_creation_screen",
-        "label": "Tela de cria\u00e7\u00e3o de usu\u00e1rio por cargo e matriz",
-        "nodes": [
-          "admin_modal_usuario",
-          "admin_u_cargo",
-          "admin_matriz_acesso",
-          "claude_rbac_modulos",
-          "admin_js"
-        ],
-        "relation": "form",
-        "confidence": "INFERRED",
-        "confidence_score": 0.85,
-        "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html"
       },
       {
         "id": "login_session_flow",
@@ -518,7 +516,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "appsscript.json",
       "id": "apps_script_appsscript"
     },
@@ -528,7 +526,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L2",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "timezone",
       "id": "apps_script_appsscript_timezone"
     },
@@ -538,7 +536,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "dependencies",
       "id": "apps_script_appsscript_dependencies"
     },
@@ -548,7 +546,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "exceptionlogging",
       "id": "apps_script_appsscript_exceptionlogging"
     },
@@ -558,7 +556,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "oauthscopes",
       "id": "apps_script_appsscript_oauthscopes"
     },
@@ -568,7 +566,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "runtimeversion",
       "id": "apps_script_appsscript_runtimeversion"
     },
@@ -578,7 +576,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "webapp",
       "id": "apps_script_appsscript_webapp"
     },
@@ -588,7 +586,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "executeas",
       "id": "apps_script_appsscript_webapp_executeas"
     },
@@ -598,7 +596,7 @@
       "source_file": "apps-script/appsscript.json",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "access",
       "id": "apps_script_appsscript_webapp_access"
     },
@@ -608,7 +606,7 @@
       "source_file": "assets/safe-minions/xlsx.full.min.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 50,
+      "community": 55,
       "norm_label": "xlsx.full.min.js",
       "id": "assets_safe_minions_xlsx_full_min"
     },
@@ -618,7 +616,7 @@
       "source_file": "assets/safe-minions/xlsx.full.min.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 50,
+      "community": 55,
       "norm_label": "make_xlsx_lib()",
       "id": "assets_safe_minions_xlsx_full_min_make_xlsx_lib"
     },
@@ -628,7 +626,7 @@
       "source_file": "js/access-control.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 54,
+      "community": 59,
       "norm_label": "access-control.js",
       "id": "js_access_control"
     },
@@ -638,7 +636,7 @@
       "source_file": "js/access-control.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 54,
+      "community": 59,
       "norm_label": "accesscontrol",
       "id": "js_access_control_accesscontrol"
     },
@@ -648,7 +646,7 @@
       "source_file": "js/api.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "api.js",
       "id": "js_api"
     },
@@ -658,7 +656,7 @@
       "source_file": "js/api.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "cache",
       "id": "js_api_cache"
     },
@@ -668,7 +666,7 @@
       "source_file": "js/api.js",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "api",
       "id": "js_api_api"
     },
@@ -678,7 +676,7 @@
       "source_file": "js/api.js",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "toast()",
       "id": "js_api_toast"
     },
@@ -688,7 +686,7 @@
       "source_file": "js/api.js",
       "source_location": "L296",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "escapehtml()",
       "id": "js_api_escapehtml"
     },
@@ -698,7 +696,7 @@
       "source_file": "js/api.js",
       "source_location": "L305",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "formatbrl()",
       "id": "js_api_formatbrl"
     },
@@ -708,7 +706,7 @@
       "source_file": "js/api.js",
       "source_location": "L309",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "formatdata()",
       "id": "js_api_formatdata"
     },
@@ -718,7 +716,7 @@
       "source_file": "js/api.js",
       "source_location": "L315",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "nomemes()",
       "id": "js_api_nomemes"
     },
@@ -728,7 +726,7 @@
       "source_file": "js/api.js",
       "source_location": "L317",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "abrirmodal()",
       "id": "js_api_abrirmodal"
     },
@@ -738,7 +736,7 @@
       "source_file": "js/api.js",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "fecharmodal()",
       "id": "js_api_fecharmodal"
     },
@@ -748,7 +746,7 @@
       "source_file": "js/api.js",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "btnloading()",
       "id": "js_api_btnloading"
     },
@@ -758,29 +756,9 @@
       "source_file": "js/api.js",
       "source_location": "L332",
       "_origin": "ast",
-      "community": 12,
+      "community": 11,
       "norm_label": "skeletontabela()",
       "id": "js_api_skeletontabela"
-    },
-    {
-      "label": "bases.js",
-      "file_type": "code",
-      "source_file": "js/bases.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "bases.js",
-      "id": "js_bases"
-    },
-    {
-      "label": "Bases",
-      "file_type": "code",
-      "source_file": "js/bases.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "bases",
-      "id": "js_bases_bases"
     },
     {
       "label": "cadastro-alunos.js",
@@ -788,7 +766,7 @@
       "source_file": "js/cadastro-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 56,
+      "community": 60,
       "norm_label": "cadastro-alunos.js",
       "id": "js_cadastro_alunos"
     },
@@ -798,49 +776,9 @@
       "source_file": "js/cadastro-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 56,
+      "community": 60,
       "norm_label": "cadastroalunos",
       "id": "js_cadastro_alunos_cadastroalunos"
-    },
-    {
-      "label": "concorrencia.js",
-      "file_type": "code",
-      "source_file": "js/concorrencia.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "concorrencia.js",
-      "id": "js_concorrencia"
-    },
-    {
-      "label": "Concorrencia",
-      "file_type": "code",
-      "source_file": "js/concorrencia.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "concorrencia",
-      "id": "js_concorrencia_concorrencia"
-    },
-    {
-      "label": "controle-gastos.js",
-      "file_type": "code",
-      "source_file": "js/controle-gastos.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 58,
-      "norm_label": "controle-gastos.js",
-      "id": "js_controle_gastos"
-    },
-    {
-      "label": "ControleGastos",
-      "file_type": "code",
-      "source_file": "js/controle-gastos.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 58,
-      "norm_label": "controlegastos",
-      "id": "js_controle_gastos_controlegastos"
     },
     {
       "label": "dashboard.js",
@@ -848,7 +786,7 @@
       "source_file": "js/dashboard.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 59,
+      "community": 61,
       "norm_label": "dashboard.js",
       "id": "js_dashboard"
     },
@@ -858,7 +796,7 @@
       "source_file": "js/dashboard.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 59,
+      "community": 61,
       "norm_label": "dashboard",
       "id": "js_dashboard_dashboard"
     },
@@ -868,7 +806,7 @@
       "source_file": "js/fechamento-horas.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 60,
+      "community": 62,
       "norm_label": "fechamento-horas.js",
       "id": "js_fechamento_horas"
     },
@@ -878,7 +816,7 @@
       "source_file": "js/fechamento-horas.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 60,
+      "community": 62,
       "norm_label": "fechamentohoras",
       "id": "js_fechamento_horas_fechamentohoras"
     },
@@ -888,7 +826,7 @@
       "source_file": "js/horas-voadas-inva.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 61,
+      "community": 63,
       "norm_label": "horas-voadas-inva.js",
       "id": "js_horas_voadas_inva"
     },
@@ -898,7 +836,7 @@
       "source_file": "js/horas-voadas-inva.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 61,
+      "community": 63,
       "norm_label": "horasvoadasinva",
       "id": "js_horas_voadas_inva_horasvoadasinva"
     },
@@ -908,7 +846,7 @@
       "source_file": "js/progresso-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 62,
+      "community": 64,
       "norm_label": "progresso-alunos.js",
       "id": "js_progresso_alunos"
     },
@@ -918,79 +856,9 @@
       "source_file": "js/progresso-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 62,
+      "community": 64,
       "norm_label": "progressoalunos",
       "id": "js_progresso_alunos_progressoalunos"
-    },
-    {
-      "label": "vendas.js",
-      "file_type": "code",
-      "source_file": "js/vendas.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 21,
-      "norm_label": "vendas.js",
-      "id": "js_vendas"
-    },
-    {
-      "label": "CURSOS_VENDAS",
-      "file_type": "code",
-      "source_file": "js/vendas.js",
-      "source_location": "L6",
-      "_origin": "ast",
-      "community": 21,
-      "norm_label": "cursos_vendas",
-      "id": "js_vendas_cursos_vendas"
-    },
-    {
-      "label": "PACOTES_LEGADOS_CURSOS",
-      "file_type": "code",
-      "source_file": "js/vendas.js",
-      "source_location": "L26",
-      "_origin": "ast",
-      "community": 21,
-      "norm_label": "pacotes_legados_cursos",
-      "id": "js_vendas_pacotes_legados_cursos"
-    },
-    {
-      "label": "Vendas",
-      "file_type": "code",
-      "source_file": "js/vendas.js",
-      "source_location": "L33",
-      "_origin": "ast",
-      "community": 21,
-      "norm_label": "vendas",
-      "id": "js_vendas_vendas"
-    },
-    {
-      "label": "aplicarMascaraBRL()",
-      "file_type": "code",
-      "source_file": "js/vendas.js",
-      "source_location": "L777",
-      "_origin": "ast",
-      "community": 21,
-      "norm_label": "aplicarmascarabrl()",
-      "id": "js_vendas_aplicarmascarabrl"
-    },
-    {
-      "label": "setInputBRL()",
-      "file_type": "code",
-      "source_file": "js/vendas.js",
-      "source_location": "L785",
-      "_origin": "ast",
-      "community": 21,
-      "norm_label": "setinputbrl()",
-      "id": "js_vendas_setinputbrl"
-    },
-    {
-      "label": "getInputBRL()",
-      "file_type": "code",
-      "source_file": "js/vendas.js",
-      "source_location": "L796",
-      "_origin": "ast",
-      "community": 21,
-      "norm_label": "getinputbrl()",
-      "id": "js_vendas_getinputbrl"
     },
     {
       "label": "xlsx.full.min.js",
@@ -998,7 +866,7 @@
       "source_file": "preview/clean/assets/safe-minions/xlsx.full.min.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 63,
+      "community": 65,
       "norm_label": "xlsx.full.min.js",
       "id": "preview_clean_assets_safe_minions_xlsx_full_min"
     },
@@ -1008,7 +876,7 @@
       "source_file": "preview/clean/assets/safe-minions/xlsx.full.min.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 63,
+      "community": 65,
       "norm_label": "make_xlsx_lib()",
       "id": "preview_clean_assets_safe_minions_xlsx_full_min_make_xlsx_lib"
     },
@@ -1018,7 +886,7 @@
       "source_file": "preview/clean/js/access-control.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 64,
+      "community": 66,
       "norm_label": "access-control.js",
       "id": "preview_clean_js_access_control"
     },
@@ -1028,7 +896,7 @@
       "source_file": "preview/clean/js/access-control.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 64,
+      "community": 66,
       "norm_label": "accesscontrol",
       "id": "preview_clean_js_access_control_accesscontrol"
     },
@@ -1038,7 +906,7 @@
       "source_file": "preview/clean/js/admin.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 65,
+      "community": 67,
       "norm_label": "admin.js",
       "id": "preview_clean_js_admin"
     },
@@ -1048,7 +916,7 @@
       "source_file": "preview/clean/js/admin.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 65,
+      "community": 67,
       "norm_label": "admin",
       "id": "preview_clean_js_admin_admin"
     },
@@ -1058,7 +926,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "api.js",
       "id": "preview_clean_js_api"
     },
@@ -1068,7 +936,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "cache",
       "id": "preview_clean_js_api_cache"
     },
@@ -1078,7 +946,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "api",
       "id": "preview_clean_js_api_api"
     },
@@ -1088,7 +956,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "toast()",
       "id": "preview_clean_js_api_toast"
     },
@@ -1098,7 +966,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L296",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "escapehtml()",
       "id": "preview_clean_js_api_escapehtml"
     },
@@ -1108,7 +976,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L305",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "formatbrl()",
       "id": "preview_clean_js_api_formatbrl"
     },
@@ -1118,7 +986,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L309",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "formatdata()",
       "id": "preview_clean_js_api_formatdata"
     },
@@ -1128,7 +996,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L315",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "nomemes()",
       "id": "preview_clean_js_api_nomemes"
     },
@@ -1138,7 +1006,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L317",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "abrirmodal()",
       "id": "preview_clean_js_api_abrirmodal"
     },
@@ -1148,7 +1016,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "fecharmodal()",
       "id": "preview_clean_js_api_fecharmodal"
     },
@@ -1158,7 +1026,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "btnloading()",
       "id": "preview_clean_js_api_btnloading"
     },
@@ -1168,7 +1036,7 @@
       "source_file": "preview/clean/js/api.js",
       "source_location": "L332",
       "_origin": "ast",
-      "community": 13,
+      "community": 12,
       "norm_label": "skeletontabela()",
       "id": "preview_clean_js_api_skeletontabela"
     },
@@ -1178,7 +1046,7 @@
       "source_file": "preview/clean/js/auth.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 66,
+      "community": 68,
       "norm_label": "auth.js",
       "id": "preview_clean_js_auth"
     },
@@ -1188,7 +1056,7 @@
       "source_file": "preview/clean/js/auth.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 66,
+      "community": 68,
       "norm_label": "auth",
       "id": "preview_clean_js_auth_auth"
     },
@@ -1198,7 +1066,7 @@
       "source_file": "preview/clean/js/bases.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 67,
+      "community": 69,
       "norm_label": "bases.js",
       "id": "preview_clean_js_bases"
     },
@@ -1208,7 +1076,7 @@
       "source_file": "preview/clean/js/bases.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 67,
+      "community": 69,
       "norm_label": "bases",
       "id": "preview_clean_js_bases_bases"
     },
@@ -1218,7 +1086,7 @@
       "source_file": "preview/clean/js/cadastro-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 68,
+      "community": 70,
       "norm_label": "cadastro-alunos.js",
       "id": "preview_clean_js_cadastro_alunos"
     },
@@ -1228,7 +1096,7 @@
       "source_file": "preview/clean/js/cadastro-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 68,
+      "community": 70,
       "norm_label": "cadastroalunos",
       "id": "preview_clean_js_cadastro_alunos_cadastroalunos"
     },
@@ -1238,7 +1106,7 @@
       "source_file": "preview/clean/js/concorrencia.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 69,
+      "community": 71,
       "norm_label": "concorrencia.js",
       "id": "preview_clean_js_concorrencia"
     },
@@ -1248,7 +1116,7 @@
       "source_file": "preview/clean/js/concorrencia.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 69,
+      "community": 71,
       "norm_label": "concorrencia",
       "id": "preview_clean_js_concorrencia_concorrencia"
     },
@@ -1258,7 +1126,7 @@
       "source_file": "preview/clean/js/config.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 70,
+      "community": 72,
       "norm_label": "config.js",
       "id": "preview_clean_js_config"
     },
@@ -1268,7 +1136,7 @@
       "source_file": "preview/clean/js/config.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 70,
+      "community": 72,
       "norm_label": "config",
       "id": "preview_clean_js_config_config"
     },
@@ -1278,7 +1146,7 @@
       "source_file": "preview/clean/js/controle-gastos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 71,
+      "community": 73,
       "norm_label": "controle-gastos.js",
       "id": "preview_clean_js_controle_gastos"
     },
@@ -1288,7 +1156,7 @@
       "source_file": "preview/clean/js/controle-gastos.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 71,
+      "community": 73,
       "norm_label": "controlegastos",
       "id": "preview_clean_js_controle_gastos_controlegastos"
     },
@@ -1298,7 +1166,7 @@
       "source_file": "preview/clean/js/dashboard.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 72,
+      "community": 74,
       "norm_label": "dashboard.js",
       "id": "preview_clean_js_dashboard"
     },
@@ -1308,7 +1176,7 @@
       "source_file": "preview/clean/js/dashboard.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 72,
+      "community": 74,
       "norm_label": "dashboard",
       "id": "preview_clean_js_dashboard_dashboard"
     },
@@ -1318,7 +1186,7 @@
       "source_file": "preview/clean/js/fechamento-horas.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 73,
+      "community": 75,
       "norm_label": "fechamento-horas.js",
       "id": "preview_clean_js_fechamento_horas"
     },
@@ -1328,7 +1196,7 @@
       "source_file": "preview/clean/js/fechamento-horas.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 73,
+      "community": 75,
       "norm_label": "fechamentohoras",
       "id": "preview_clean_js_fechamento_horas_fechamentohoras"
     },
@@ -1338,7 +1206,7 @@
       "source_file": "preview/clean/js/horas-voadas-inva.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 74,
+      "community": 76,
       "norm_label": "horas-voadas-inva.js",
       "id": "preview_clean_js_horas_voadas_inva"
     },
@@ -1348,7 +1216,7 @@
       "source_file": "preview/clean/js/horas-voadas-inva.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 74,
+      "community": 76,
       "norm_label": "horasvoadasinva",
       "id": "preview_clean_js_horas_voadas_inva_horasvoadasinva"
     },
@@ -1358,7 +1226,7 @@
       "source_file": "preview/clean/js/inicio.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 75,
+      "community": 77,
       "norm_label": "inicio.js",
       "id": "preview_clean_js_inicio"
     },
@@ -1368,7 +1236,7 @@
       "source_file": "preview/clean/js/inicio.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 75,
+      "community": 77,
       "norm_label": "inicio",
       "id": "preview_clean_js_inicio_inicio"
     },
@@ -1378,7 +1246,7 @@
       "source_file": "preview/clean/js/preview-guard.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 27,
+      "community": 32,
       "norm_label": "preview-guard.js",
       "id": "preview_clean_js_preview_guard"
     },
@@ -1388,7 +1256,7 @@
       "source_file": "preview/clean/js/preview-guard.js",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 27,
+      "community": 32,
       "norm_label": "getaction()",
       "id": "preview_clean_js_preview_guard_getaction"
     },
@@ -1398,7 +1266,7 @@
       "source_file": "preview/clean/js/preview-guard.js",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 134,
+      "community": 135,
       "norm_label": ".open()",
       "id": "preview_clean_js_preview_guard_xmlhttprequest_open"
     },
@@ -1408,7 +1276,7 @@
       "source_file": "preview/clean/js/preview-guard.js",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 27,
+      "community": 32,
       "norm_label": ".send()",
       "id": "preview_clean_js_preview_guard_xmlhttprequest_send"
     },
@@ -1418,7 +1286,7 @@
       "source_file": "preview/clean/js/preview-guard.js",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 27,
+      "community": 32,
       "norm_label": "flash()",
       "id": "preview_clean_js_preview_guard_flash"
     },
@@ -1428,7 +1296,7 @@
       "source_file": "preview/clean/js/preview-guard.js",
       "source_location": "L87",
       "_origin": "ast",
-      "community": 27,
+      "community": 32,
       "norm_label": "urlfor()",
       "id": "preview_clean_js_preview_guard_urlfor"
     },
@@ -1438,7 +1306,7 @@
       "source_file": "preview/clean/js/preview-guard.js",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 27,
+      "community": 32,
       "norm_label": "buildbar()",
       "id": "preview_clean_js_preview_guard_buildbar"
     },
@@ -1448,7 +1316,7 @@
       "source_file": "preview/clean/js/progresso-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 76,
+      "community": 78,
       "norm_label": "progresso-alunos.js",
       "id": "preview_clean_js_progresso_alunos"
     },
@@ -1458,7 +1326,7 @@
       "source_file": "preview/clean/js/progresso-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 76,
+      "community": 78,
       "norm_label": "progressoalunos",
       "id": "preview_clean_js_progresso_alunos_progressoalunos"
     },
@@ -1468,7 +1336,7 @@
       "source_file": "preview/clean/js/vendas.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 22,
+      "community": 26,
       "norm_label": "vendas.js",
       "id": "preview_clean_js_vendas"
     },
@@ -1478,7 +1346,7 @@
       "source_file": "preview/clean/js/vendas.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 22,
+      "community": 26,
       "norm_label": "cursos_vendas",
       "id": "preview_clean_js_vendas_cursos_vendas"
     },
@@ -1488,7 +1356,7 @@
       "source_file": "preview/clean/js/vendas.js",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 22,
+      "community": 26,
       "norm_label": "pacotes_legados_cursos",
       "id": "preview_clean_js_vendas_pacotes_legados_cursos"
     },
@@ -1498,7 +1366,7 @@
       "source_file": "preview/clean/js/vendas.js",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 22,
+      "community": 26,
       "norm_label": "vendas",
       "id": "preview_clean_js_vendas_vendas"
     },
@@ -1508,7 +1376,7 @@
       "source_file": "preview/clean/js/vendas.js",
       "source_location": "L769",
       "_origin": "ast",
-      "community": 22,
+      "community": 26,
       "norm_label": "aplicarmascarabrl()",
       "id": "preview_clean_js_vendas_aplicarmascarabrl"
     },
@@ -1518,7 +1386,7 @@
       "source_file": "preview/clean/js/vendas.js",
       "source_location": "L777",
       "_origin": "ast",
-      "community": 22,
+      "community": 26,
       "norm_label": "setinputbrl()",
       "id": "preview_clean_js_vendas_setinputbrl"
     },
@@ -1528,7 +1396,7 @@
       "source_file": "preview/clean/js/vendas.js",
       "source_location": "L788",
       "_origin": "ast",
-      "community": 22,
+      "community": 26,
       "norm_label": "getinputbrl()",
       "id": "preview_clean_js_vendas_getinputbrl"
     },
@@ -1538,7 +1406,7 @@
       "source_file": "preview/denso/assets/safe-minions/xlsx.full.min.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 79,
       "norm_label": "xlsx.full.min.js",
       "id": "preview_denso_assets_safe_minions_xlsx_full_min"
     },
@@ -1548,7 +1416,7 @@
       "source_file": "preview/denso/assets/safe-minions/xlsx.full.min.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 77,
+      "community": 79,
       "norm_label": "make_xlsx_lib()",
       "id": "preview_denso_assets_safe_minions_xlsx_full_min_make_xlsx_lib"
     },
@@ -1558,7 +1426,7 @@
       "source_file": "preview/denso/js/access-control.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 78,
+      "community": 80,
       "norm_label": "access-control.js",
       "id": "preview_denso_js_access_control"
     },
@@ -1568,7 +1436,7 @@
       "source_file": "preview/denso/js/access-control.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 78,
+      "community": 80,
       "norm_label": "accesscontrol",
       "id": "preview_denso_js_access_control_accesscontrol"
     },
@@ -1578,7 +1446,7 @@
       "source_file": "preview/denso/js/admin.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 79,
+      "community": 81,
       "norm_label": "admin.js",
       "id": "preview_denso_js_admin"
     },
@@ -1588,7 +1456,7 @@
       "source_file": "preview/denso/js/admin.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 79,
+      "community": 81,
       "norm_label": "admin",
       "id": "preview_denso_js_admin_admin"
     },
@@ -1598,7 +1466,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "api.js",
       "id": "preview_denso_js_api"
     },
@@ -1608,7 +1476,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "cache",
       "id": "preview_denso_js_api_cache"
     },
@@ -1618,7 +1486,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "api",
       "id": "preview_denso_js_api_api"
     },
@@ -1628,7 +1496,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "toast()",
       "id": "preview_denso_js_api_toast"
     },
@@ -1638,7 +1506,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L296",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "escapehtml()",
       "id": "preview_denso_js_api_escapehtml"
     },
@@ -1648,7 +1516,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L305",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "formatbrl()",
       "id": "preview_denso_js_api_formatbrl"
     },
@@ -1658,7 +1526,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L309",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "formatdata()",
       "id": "preview_denso_js_api_formatdata"
     },
@@ -1668,7 +1536,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L315",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "nomemes()",
       "id": "preview_denso_js_api_nomemes"
     },
@@ -1678,7 +1546,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L317",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "abrirmodal()",
       "id": "preview_denso_js_api_abrirmodal"
     },
@@ -1688,7 +1556,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "fecharmodal()",
       "id": "preview_denso_js_api_fecharmodal"
     },
@@ -1698,7 +1566,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "btnloading()",
       "id": "preview_denso_js_api_btnloading"
     },
@@ -1708,7 +1576,7 @@
       "source_file": "preview/denso/js/api.js",
       "source_location": "L332",
       "_origin": "ast",
-      "community": 14,
+      "community": 13,
       "norm_label": "skeletontabela()",
       "id": "preview_denso_js_api_skeletontabela"
     },
@@ -1718,7 +1586,7 @@
       "source_file": "preview/denso/js/auth.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 80,
+      "community": 82,
       "norm_label": "auth.js",
       "id": "preview_denso_js_auth"
     },
@@ -1728,7 +1596,7 @@
       "source_file": "preview/denso/js/auth.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 80,
+      "community": 82,
       "norm_label": "auth",
       "id": "preview_denso_js_auth_auth"
     },
@@ -1738,7 +1606,7 @@
       "source_file": "preview/denso/js/bases.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 81,
+      "community": 83,
       "norm_label": "bases.js",
       "id": "preview_denso_js_bases"
     },
@@ -1748,7 +1616,7 @@
       "source_file": "preview/denso/js/bases.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 81,
+      "community": 83,
       "norm_label": "bases",
       "id": "preview_denso_js_bases_bases"
     },
@@ -1758,7 +1626,7 @@
       "source_file": "preview/denso/js/cadastro-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 82,
+      "community": 84,
       "norm_label": "cadastro-alunos.js",
       "id": "preview_denso_js_cadastro_alunos"
     },
@@ -1768,7 +1636,7 @@
       "source_file": "preview/denso/js/cadastro-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 82,
+      "community": 84,
       "norm_label": "cadastroalunos",
       "id": "preview_denso_js_cadastro_alunos_cadastroalunos"
     },
@@ -1778,7 +1646,7 @@
       "source_file": "preview/denso/js/concorrencia.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 83,
+      "community": 85,
       "norm_label": "concorrencia.js",
       "id": "preview_denso_js_concorrencia"
     },
@@ -1788,7 +1656,7 @@
       "source_file": "preview/denso/js/concorrencia.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 83,
+      "community": 85,
       "norm_label": "concorrencia",
       "id": "preview_denso_js_concorrencia_concorrencia"
     },
@@ -1798,7 +1666,7 @@
       "source_file": "preview/denso/js/config.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 84,
+      "community": 86,
       "norm_label": "config.js",
       "id": "preview_denso_js_config"
     },
@@ -1808,7 +1676,7 @@
       "source_file": "preview/denso/js/config.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 84,
+      "community": 86,
       "norm_label": "config",
       "id": "preview_denso_js_config_config"
     },
@@ -1818,7 +1686,7 @@
       "source_file": "preview/denso/js/controle-gastos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 85,
+      "community": 87,
       "norm_label": "controle-gastos.js",
       "id": "preview_denso_js_controle_gastos"
     },
@@ -1828,7 +1696,7 @@
       "source_file": "preview/denso/js/controle-gastos.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 85,
+      "community": 87,
       "norm_label": "controlegastos",
       "id": "preview_denso_js_controle_gastos_controlegastos"
     },
@@ -1838,7 +1706,7 @@
       "source_file": "preview/denso/js/dashboard.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 86,
+      "community": 88,
       "norm_label": "dashboard.js",
       "id": "preview_denso_js_dashboard"
     },
@@ -1848,7 +1716,7 @@
       "source_file": "preview/denso/js/dashboard.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 86,
+      "community": 88,
       "norm_label": "dashboard",
       "id": "preview_denso_js_dashboard_dashboard"
     },
@@ -1858,7 +1726,7 @@
       "source_file": "preview/denso/js/fechamento-horas.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 87,
+      "community": 89,
       "norm_label": "fechamento-horas.js",
       "id": "preview_denso_js_fechamento_horas"
     },
@@ -1868,7 +1736,7 @@
       "source_file": "preview/denso/js/fechamento-horas.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 87,
+      "community": 89,
       "norm_label": "fechamentohoras",
       "id": "preview_denso_js_fechamento_horas_fechamentohoras"
     },
@@ -1878,7 +1746,7 @@
       "source_file": "preview/denso/js/horas-voadas-inva.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 88,
+      "community": 90,
       "norm_label": "horas-voadas-inva.js",
       "id": "preview_denso_js_horas_voadas_inva"
     },
@@ -1888,7 +1756,7 @@
       "source_file": "preview/denso/js/horas-voadas-inva.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 88,
+      "community": 90,
       "norm_label": "horasvoadasinva",
       "id": "preview_denso_js_horas_voadas_inva_horasvoadasinva"
     },
@@ -1898,7 +1766,7 @@
       "source_file": "preview/denso/js/inicio.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 89,
+      "community": 91,
       "norm_label": "inicio.js",
       "id": "preview_denso_js_inicio"
     },
@@ -1908,7 +1776,7 @@
       "source_file": "preview/denso/js/inicio.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 89,
+      "community": 91,
       "norm_label": "inicio",
       "id": "preview_denso_js_inicio_inicio"
     },
@@ -1918,7 +1786,7 @@
       "source_file": "preview/denso/js/preview-guard.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 28,
+      "community": 33,
       "norm_label": "preview-guard.js",
       "id": "preview_denso_js_preview_guard"
     },
@@ -1928,7 +1796,7 @@
       "source_file": "preview/denso/js/preview-guard.js",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 28,
+      "community": 33,
       "norm_label": "getaction()",
       "id": "preview_denso_js_preview_guard_getaction"
     },
@@ -1938,7 +1806,7 @@
       "source_file": "preview/denso/js/preview-guard.js",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 149,
+      "community": 150,
       "norm_label": ".open()",
       "id": "preview_denso_js_preview_guard_xmlhttprequest_open"
     },
@@ -1948,7 +1816,7 @@
       "source_file": "preview/denso/js/preview-guard.js",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 28,
+      "community": 33,
       "norm_label": ".send()",
       "id": "preview_denso_js_preview_guard_xmlhttprequest_send"
     },
@@ -1958,7 +1826,7 @@
       "source_file": "preview/denso/js/preview-guard.js",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 28,
+      "community": 33,
       "norm_label": "flash()",
       "id": "preview_denso_js_preview_guard_flash"
     },
@@ -1968,7 +1836,7 @@
       "source_file": "preview/denso/js/preview-guard.js",
       "source_location": "L87",
       "_origin": "ast",
-      "community": 28,
+      "community": 33,
       "norm_label": "urlfor()",
       "id": "preview_denso_js_preview_guard_urlfor"
     },
@@ -1978,7 +1846,7 @@
       "source_file": "preview/denso/js/preview-guard.js",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 28,
+      "community": 33,
       "norm_label": "buildbar()",
       "id": "preview_denso_js_preview_guard_buildbar"
     },
@@ -1988,7 +1856,7 @@
       "source_file": "preview/denso/js/progresso-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 90,
+      "community": 92,
       "norm_label": "progresso-alunos.js",
       "id": "preview_denso_js_progresso_alunos"
     },
@@ -1998,7 +1866,7 @@
       "source_file": "preview/denso/js/progresso-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 90,
+      "community": 92,
       "norm_label": "progressoalunos",
       "id": "preview_denso_js_progresso_alunos_progressoalunos"
     },
@@ -2008,7 +1876,7 @@
       "source_file": "preview/denso/js/vendas.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 23,
+      "community": 27,
       "norm_label": "vendas.js",
       "id": "preview_denso_js_vendas"
     },
@@ -2018,7 +1886,7 @@
       "source_file": "preview/denso/js/vendas.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 23,
+      "community": 27,
       "norm_label": "cursos_vendas",
       "id": "preview_denso_js_vendas_cursos_vendas"
     },
@@ -2028,7 +1896,7 @@
       "source_file": "preview/denso/js/vendas.js",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 23,
+      "community": 27,
       "norm_label": "pacotes_legados_cursos",
       "id": "preview_denso_js_vendas_pacotes_legados_cursos"
     },
@@ -2038,7 +1906,7 @@
       "source_file": "preview/denso/js/vendas.js",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 23,
+      "community": 27,
       "norm_label": "vendas",
       "id": "preview_denso_js_vendas_vendas"
     },
@@ -2048,7 +1916,7 @@
       "source_file": "preview/denso/js/vendas.js",
       "source_location": "L769",
       "_origin": "ast",
-      "community": 23,
+      "community": 27,
       "norm_label": "aplicarmascarabrl()",
       "id": "preview_denso_js_vendas_aplicarmascarabrl"
     },
@@ -2058,7 +1926,7 @@
       "source_file": "preview/denso/js/vendas.js",
       "source_location": "L777",
       "_origin": "ast",
-      "community": 23,
+      "community": 27,
       "norm_label": "setinputbrl()",
       "id": "preview_denso_js_vendas_setinputbrl"
     },
@@ -2068,7 +1936,7 @@
       "source_file": "preview/denso/js/vendas.js",
       "source_location": "L788",
       "_origin": "ast",
-      "community": 23,
+      "community": 27,
       "norm_label": "getinputbrl()",
       "id": "preview_denso_js_vendas_getinputbrl"
     },
@@ -2078,7 +1946,7 @@
       "source_file": "preview/refinado/assets/safe-minions/xlsx.full.min.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 91,
+      "community": 93,
       "norm_label": "xlsx.full.min.js",
       "id": "preview_refinado_assets_safe_minions_xlsx_full_min"
     },
@@ -2088,7 +1956,7 @@
       "source_file": "preview/refinado/assets/safe-minions/xlsx.full.min.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 91,
+      "community": 93,
       "norm_label": "make_xlsx_lib()",
       "id": "preview_refinado_assets_safe_minions_xlsx_full_min_make_xlsx_lib"
     },
@@ -2098,7 +1966,7 @@
       "source_file": "preview/refinado/js/access-control.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 92,
+      "community": 94,
       "norm_label": "access-control.js",
       "id": "preview_refinado_js_access_control"
     },
@@ -2108,7 +1976,7 @@
       "source_file": "preview/refinado/js/access-control.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 92,
+      "community": 94,
       "norm_label": "accesscontrol",
       "id": "preview_refinado_js_access_control_accesscontrol"
     },
@@ -2118,7 +1986,7 @@
       "source_file": "preview/refinado/js/admin.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 95,
       "norm_label": "admin.js",
       "id": "preview_refinado_js_admin"
     },
@@ -2128,7 +1996,7 @@
       "source_file": "preview/refinado/js/admin.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 93,
+      "community": 95,
       "norm_label": "admin",
       "id": "preview_refinado_js_admin_admin"
     },
@@ -2138,7 +2006,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "api.js",
       "id": "preview_refinado_js_api"
     },
@@ -2148,7 +2016,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "cache",
       "id": "preview_refinado_js_api_cache"
     },
@@ -2158,7 +2026,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "api",
       "id": "preview_refinado_js_api_api"
     },
@@ -2168,7 +2036,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "toast()",
       "id": "preview_refinado_js_api_toast"
     },
@@ -2178,7 +2046,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L296",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "escapehtml()",
       "id": "preview_refinado_js_api_escapehtml"
     },
@@ -2188,7 +2056,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L305",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "formatbrl()",
       "id": "preview_refinado_js_api_formatbrl"
     },
@@ -2198,7 +2066,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L309",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "formatdata()",
       "id": "preview_refinado_js_api_formatdata"
     },
@@ -2208,7 +2076,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L315",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "nomemes()",
       "id": "preview_refinado_js_api_nomemes"
     },
@@ -2218,7 +2086,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L317",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "abrirmodal()",
       "id": "preview_refinado_js_api_abrirmodal"
     },
@@ -2228,7 +2096,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "fecharmodal()",
       "id": "preview_refinado_js_api_fecharmodal"
     },
@@ -2238,7 +2106,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "btnloading()",
       "id": "preview_refinado_js_api_btnloading"
     },
@@ -2248,7 +2116,7 @@
       "source_file": "preview/refinado/js/api.js",
       "source_location": "L332",
       "_origin": "ast",
-      "community": 15,
+      "community": 14,
       "norm_label": "skeletontabela()",
       "id": "preview_refinado_js_api_skeletontabela"
     },
@@ -2258,7 +2126,7 @@
       "source_file": "preview/refinado/js/auth.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 94,
+      "community": 96,
       "norm_label": "auth.js",
       "id": "preview_refinado_js_auth"
     },
@@ -2268,7 +2136,7 @@
       "source_file": "preview/refinado/js/auth.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 94,
+      "community": 96,
       "norm_label": "auth",
       "id": "preview_refinado_js_auth_auth"
     },
@@ -2278,7 +2146,7 @@
       "source_file": "preview/refinado/js/bases.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 95,
+      "community": 97,
       "norm_label": "bases.js",
       "id": "preview_refinado_js_bases"
     },
@@ -2288,7 +2156,7 @@
       "source_file": "preview/refinado/js/bases.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 95,
+      "community": 97,
       "norm_label": "bases",
       "id": "preview_refinado_js_bases_bases"
     },
@@ -2298,7 +2166,7 @@
       "source_file": "preview/refinado/js/cadastro-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 96,
+      "community": 98,
       "norm_label": "cadastro-alunos.js",
       "id": "preview_refinado_js_cadastro_alunos"
     },
@@ -2308,7 +2176,7 @@
       "source_file": "preview/refinado/js/cadastro-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 96,
+      "community": 98,
       "norm_label": "cadastroalunos",
       "id": "preview_refinado_js_cadastro_alunos_cadastroalunos"
     },
@@ -2318,7 +2186,7 @@
       "source_file": "preview/refinado/js/concorrencia.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 97,
+      "community": 99,
       "norm_label": "concorrencia.js",
       "id": "preview_refinado_js_concorrencia"
     },
@@ -2328,7 +2196,7 @@
       "source_file": "preview/refinado/js/concorrencia.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 97,
+      "community": 99,
       "norm_label": "concorrencia",
       "id": "preview_refinado_js_concorrencia_concorrencia"
     },
@@ -2338,7 +2206,7 @@
       "source_file": "preview/refinado/js/config.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 98,
+      "community": 100,
       "norm_label": "config.js",
       "id": "preview_refinado_js_config"
     },
@@ -2348,7 +2216,7 @@
       "source_file": "preview/refinado/js/config.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 98,
+      "community": 100,
       "norm_label": "config",
       "id": "preview_refinado_js_config_config"
     },
@@ -2358,7 +2226,7 @@
       "source_file": "preview/refinado/js/controle-gastos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 99,
+      "community": 101,
       "norm_label": "controle-gastos.js",
       "id": "preview_refinado_js_controle_gastos"
     },
@@ -2368,7 +2236,7 @@
       "source_file": "preview/refinado/js/controle-gastos.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 99,
+      "community": 101,
       "norm_label": "controlegastos",
       "id": "preview_refinado_js_controle_gastos_controlegastos"
     },
@@ -2378,7 +2246,7 @@
       "source_file": "preview/refinado/js/dashboard.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 102,
       "norm_label": "dashboard.js",
       "id": "preview_refinado_js_dashboard"
     },
@@ -2388,7 +2256,7 @@
       "source_file": "preview/refinado/js/dashboard.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 100,
+      "community": 102,
       "norm_label": "dashboard",
       "id": "preview_refinado_js_dashboard_dashboard"
     },
@@ -2398,7 +2266,7 @@
       "source_file": "preview/refinado/js/fechamento-horas.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 101,
+      "community": 103,
       "norm_label": "fechamento-horas.js",
       "id": "preview_refinado_js_fechamento_horas"
     },
@@ -2408,7 +2276,7 @@
       "source_file": "preview/refinado/js/fechamento-horas.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 101,
+      "community": 103,
       "norm_label": "fechamentohoras",
       "id": "preview_refinado_js_fechamento_horas_fechamentohoras"
     },
@@ -2418,7 +2286,7 @@
       "source_file": "preview/refinado/js/horas-voadas-inva.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 102,
+      "community": 104,
       "norm_label": "horas-voadas-inva.js",
       "id": "preview_refinado_js_horas_voadas_inva"
     },
@@ -2428,7 +2296,7 @@
       "source_file": "preview/refinado/js/horas-voadas-inva.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 102,
+      "community": 104,
       "norm_label": "horasvoadasinva",
       "id": "preview_refinado_js_horas_voadas_inva_horasvoadasinva"
     },
@@ -2438,7 +2306,7 @@
       "source_file": "preview/refinado/js/inicio.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 103,
+      "community": 105,
       "norm_label": "inicio.js",
       "id": "preview_refinado_js_inicio"
     },
@@ -2448,7 +2316,7 @@
       "source_file": "preview/refinado/js/inicio.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 103,
+      "community": 105,
       "norm_label": "inicio",
       "id": "preview_refinado_js_inicio_inicio"
     },
@@ -2458,7 +2326,7 @@
       "source_file": "preview/refinado/js/preview-guard.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 29,
+      "community": 34,
       "norm_label": "preview-guard.js",
       "id": "preview_refinado_js_preview_guard"
     },
@@ -2468,7 +2336,7 @@
       "source_file": "preview/refinado/js/preview-guard.js",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 29,
+      "community": 34,
       "norm_label": "getaction()",
       "id": "preview_refinado_js_preview_guard_getaction"
     },
@@ -2478,7 +2346,7 @@
       "source_file": "preview/refinado/js/preview-guard.js",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 161,
+      "community": 162,
       "norm_label": ".open()",
       "id": "preview_refinado_js_preview_guard_xmlhttprequest_open"
     },
@@ -2488,7 +2356,7 @@
       "source_file": "preview/refinado/js/preview-guard.js",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 29,
+      "community": 34,
       "norm_label": ".send()",
       "id": "preview_refinado_js_preview_guard_xmlhttprequest_send"
     },
@@ -2498,7 +2366,7 @@
       "source_file": "preview/refinado/js/preview-guard.js",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 29,
+      "community": 34,
       "norm_label": "flash()",
       "id": "preview_refinado_js_preview_guard_flash"
     },
@@ -2508,7 +2376,7 @@
       "source_file": "preview/refinado/js/preview-guard.js",
       "source_location": "L87",
       "_origin": "ast",
-      "community": 29,
+      "community": 34,
       "norm_label": "urlfor()",
       "id": "preview_refinado_js_preview_guard_urlfor"
     },
@@ -2518,7 +2386,7 @@
       "source_file": "preview/refinado/js/preview-guard.js",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 29,
+      "community": 34,
       "norm_label": "buildbar()",
       "id": "preview_refinado_js_preview_guard_buildbar"
     },
@@ -2528,7 +2396,7 @@
       "source_file": "preview/refinado/js/progresso-alunos.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 104,
+      "community": 106,
       "norm_label": "progresso-alunos.js",
       "id": "preview_refinado_js_progresso_alunos"
     },
@@ -2538,7 +2406,7 @@
       "source_file": "preview/refinado/js/progresso-alunos.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 104,
+      "community": 106,
       "norm_label": "progressoalunos",
       "id": "preview_refinado_js_progresso_alunos_progressoalunos"
     },
@@ -2548,7 +2416,7 @@
       "source_file": "preview/refinado/js/vendas.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 24,
+      "community": 28,
       "norm_label": "vendas.js",
       "id": "preview_refinado_js_vendas"
     },
@@ -2558,7 +2426,7 @@
       "source_file": "preview/refinado/js/vendas.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 24,
+      "community": 28,
       "norm_label": "cursos_vendas",
       "id": "preview_refinado_js_vendas_cursos_vendas"
     },
@@ -2568,7 +2436,7 @@
       "source_file": "preview/refinado/js/vendas.js",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 24,
+      "community": 28,
       "norm_label": "pacotes_legados_cursos",
       "id": "preview_refinado_js_vendas_pacotes_legados_cursos"
     },
@@ -2578,7 +2446,7 @@
       "source_file": "preview/refinado/js/vendas.js",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 24,
+      "community": 28,
       "norm_label": "vendas",
       "id": "preview_refinado_js_vendas_vendas"
     },
@@ -2588,7 +2456,7 @@
       "source_file": "preview/refinado/js/vendas.js",
       "source_location": "L769",
       "_origin": "ast",
-      "community": 24,
+      "community": 28,
       "norm_label": "aplicarmascarabrl()",
       "id": "preview_refinado_js_vendas_aplicarmascarabrl"
     },
@@ -2598,7 +2466,7 @@
       "source_file": "preview/refinado/js/vendas.js",
       "source_location": "L777",
       "_origin": "ast",
-      "community": 24,
+      "community": 28,
       "norm_label": "setinputbrl()",
       "id": "preview_refinado_js_vendas_setinputbrl"
     },
@@ -2608,7 +2476,7 @@
       "source_file": "preview/refinado/js/vendas.js",
       "source_location": "L788",
       "_origin": "ast",
-      "community": 24,
+      "community": 28,
       "norm_label": "getinputbrl()",
       "id": "preview_refinado_js_vendas_getinputbrl"
     },
@@ -2618,7 +2486,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 26,
+      "community": 31,
       "norm_label": "claude.md",
       "id": "claude"
     },
@@ -2628,7 +2496,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 26,
+      "community": 31,
       "norm_label": "claude.md \u2014 regras do projeto safe hub",
       "id": "claude_claude_md_regras_do_projeto_safe_hub"
     },
@@ -2638,7 +2506,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 26,
+      "community": 31,
       "norm_label": "uso obrigatorio do graphify",
       "id": "claude_uso_obrigat\u00f3rio_do_graphify"
     },
@@ -2648,7 +2516,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 26,
+      "community": 31,
       "norm_label": "transparencia de comandos",
       "id": "claude_transpar\u00eancia_de_comandos"
     },
@@ -2658,7 +2526,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 26,
+      "community": 31,
       "norm_label": "confiabilidade do grafo",
       "id": "claude_confiabilidade_do_grafo"
     },
@@ -2668,7 +2536,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 26,
+      "community": 31,
       "norm_label": "arquitetura de controle de acesso (rbac) \u2014 desde 2026-07-09",
       "id": "claude_arquitetura_de_controle_de_acesso_rbac_desde_2026_07_09"
     },
@@ -2678,7 +2546,7 @@
       "source_file": "README.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "readme.md",
       "id": "readme"
     },
@@ -2688,7 +2556,7 @@
       "source_file": "README.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "safe hub",
       "id": "readme_safe_hub"
     },
@@ -2698,7 +2566,7 @@
       "source_file": "README.md",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "estrutura do projeto",
       "id": "readme_estrutura_do_projeto"
     },
@@ -2708,7 +2576,7 @@
       "source_file": "README.md",
       "source_location": "L51",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "setup \u2014 passo a passo completo",
       "id": "readme_setup_passo_a_passo_completo"
     },
@@ -2718,7 +2586,7 @@
       "source_file": "README.md",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "1. configurar o google sheets",
       "id": "readme_1_configurar_o_google_sheets"
     },
@@ -2728,7 +2596,7 @@
       "source_file": "README.md",
       "source_location": "L58",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "2. configurar o apps script",
       "id": "readme_2_configurar_o_apps_script"
     },
@@ -2738,7 +2606,7 @@
       "source_file": "README.md",
       "source_location": "L98",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "inicializar o controle de gastos",
       "id": "readme_inicializar_o_controle_de_gastos"
     },
@@ -2748,7 +2616,7 @@
       "source_file": "README.md",
       "source_location": "L116",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "configurar o fechamento de horas",
       "id": "readme_configurar_o_fechamento_de_horas"
     },
@@ -2758,7 +2626,7 @@
       "source_file": "README.md",
       "source_location": "L128",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "integracao direta com a api cavok",
       "id": "readme_integra\u00e7\u00e3o_direta_com_a_api_cavok"
     },
@@ -2768,7 +2636,7 @@
       "source_file": "README.md",
       "source_location": "L140",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "atualizacoes automaticas cavok",
       "id": "readme_atualiza\u00e7\u00f5es_autom\u00e1ticas_cavok"
     },
@@ -2778,7 +2646,7 @@
       "source_file": "README.md",
       "source_location": "L160",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "configurar a escala cco",
       "id": "readme_configurar_a_escala_cco"
     },
@@ -2788,7 +2656,7 @@
       "source_file": "README.md",
       "source_location": "L185",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "safe minions",
       "id": "readme_safe_minions"
     },
@@ -2798,7 +2666,7 @@
       "source_file": "README.md",
       "source_location": "L191",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "3. configurar o frontend",
       "id": "readme_3_configurar_o_frontend"
     },
@@ -2808,7 +2676,7 @@
       "source_file": "README.md",
       "source_location": "L199",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "4. migrar dados historicos (opcional)",
       "id": "readme_4_migrar_dados_hist\u00f3ricos_opcional"
     },
@@ -2818,7 +2686,7 @@
       "source_file": "README.md",
       "source_location": "L209",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "5. deploy no github pages",
       "id": "readme_5_deploy_no_github_pages"
     },
@@ -2828,7 +2696,7 @@
       "source_file": "README.md",
       "source_location": "L227",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "credenciais padrao",
       "id": "readme_credenciais_padr\u00e3o"
     },
@@ -2838,7 +2706,7 @@
       "source_file": "README.md",
       "source_location": "L239",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "perfis de acesso",
       "id": "readme_perfis_de_acesso"
     },
@@ -2848,7 +2716,7 @@
       "source_file": "README.md",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "personalizacao",
       "id": "readme_personaliza\u00e7\u00e3o"
     },
@@ -2858,7 +2726,7 @@
       "source_file": "README.md",
       "source_location": "L283",
       "_origin": "ast",
-      "community": 8,
+      "community": 7,
       "norm_label": "tecnologias",
       "id": "readme_tecnologias"
     },
@@ -2871,7 +2739,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 35,
       "norm_label": "acesso restrito (page)",
       "id": "acesso_negado"
     },
@@ -2897,7 +2765,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 44,
+      "community": 49,
       "norm_label": "concorrencia (page)",
       "id": "concorrencia"
     },
@@ -2910,7 +2778,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 36,
       "norm_label": "dashboard / visao geral (page)",
       "id": "dashboard"
     },
@@ -2923,7 +2791,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 36,
       "norm_label": "diagnostico (page)",
       "id": "debug"
     },
@@ -2949,7 +2817,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 35,
       "norm_label": "login (page)",
       "id": "index"
     },
@@ -2975,7 +2843,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 167,
+      "community": 168,
       "norm_label": "perfis de acesso (consultor pac, admin, financeiro, master ti, cco)",
       "id": "readme_perfis_acesso"
     },
@@ -2988,7 +2856,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 163,
+      "community": 164,
       "norm_label": "credenciais padrao (thiago/marlon/adauto)",
       "id": "readme_credenciais_padrao"
     },
@@ -3001,7 +2869,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 169,
+      "community": 170,
       "norm_label": "setup do backend apps script (idempotente)",
       "id": "readme_setup_apps_script"
     },
@@ -3014,7 +2882,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 166,
+      "community": 167,
       "norm_label": "integracao direta com api cavok (gatilhos diarios)",
       "id": "readme_integracao_cavok"
     },
@@ -3027,7 +2895,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 164,
+      "community": 165,
       "norm_label": "integracao da escala cco (mapeamento de papeis admin/financeiro/user)",
       "id": "readme_escala_cco_integracao"
     },
@@ -3040,7 +2908,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 168,
+      "community": 169,
       "norm_label": "safe minions processa arquivos localmente no navegador",
       "id": "readme_safe_minions_desc"
     },
@@ -3053,7 +2921,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 165,
+      "community": 166,
       "norm_label": "identidade unica por e-mail unificando hub e cco",
       "id": "readme_identidade_unica_email"
     },
@@ -3118,7 +2986,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 44,
+      "community": 49,
       "norm_label": "escola concorrente",
       "id": "concorrencia_concorrente"
     },
@@ -3131,7 +2999,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 44,
+      "community": 49,
       "norm_label": "preco safe comparativo",
       "id": "concorrencia_preco_safe"
     },
@@ -3144,7 +3012,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 36,
       "norm_label": "kpi receita global (vendas + faturamento)",
       "id": "dashboard_kpi_receita_global"
     },
@@ -3157,7 +3025,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 36,
       "norm_label": "kpis de vendas (ticket medio, leads, ranking cursos, performance por consultor)",
       "id": "dashboard_kpi_vendas"
     },
@@ -3170,7 +3038,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 36,
       "norm_label": "diagnostico de divergencia kpi x faturamento",
       "id": "debug_diagnostico_receita"
     },
@@ -3209,7 +3077,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 35,
       "norm_label": "login por e-mail corporativo",
       "id": "index_login"
     },
@@ -3248,7 +3116,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 125,
+      "community": 126,
       "norm_label": "apple touch icon (safe hub)",
       "id": "preview_clean_assets_icons_apple_touch_icon_icon"
     },
@@ -3261,7 +3129,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 114,
+      "community": 115,
       "norm_label": "safe hub brand",
       "id": "concept_safe_hub_brand__preview_clean_assets_icons_apple_touch_icon"
     },
@@ -3274,7 +3142,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 126,
+      "community": 127,
       "norm_label": "safe hub pwa desktop icon (1024px)",
       "id": "preview_clean_assets_icons_pwa_desktop_1024_icon"
     },
@@ -3287,7 +3155,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 127,
+      "community": 128,
       "norm_label": "safe hub pwa desktop icon (512px)",
       "id": "preview_clean_assets_icons_pwa_desktop_512_icon"
     },
@@ -3300,7 +3168,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 128,
+      "community": 129,
       "norm_label": "pwa mobile icon (192px)",
       "id": "preview_clean_assets_icons_pwa_mobile_192_icon"
     },
@@ -3313,7 +3181,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 129,
+      "community": 130,
       "norm_label": "pwa mobile maskable icon (512px)",
       "id": "preview_clean_assets_icons_pwa_mobile_maskable_512_icon"
     },
@@ -3326,7 +3194,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 131,
       "norm_label": "safe hub logo (s mark)",
       "id": "preview_clean_assets_img_logo_logo"
     },
@@ -3339,7 +3207,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 131,
+      "community": 132,
       "norm_label": "safe escola de aviacao - logo horizontal",
       "id": "preview_clean_assets_img_safe_logo_horizontal_logo"
     },
@@ -3352,7 +3220,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 132,
+      "community": 133,
       "norm_label": "minion mascot (safe minions)",
       "id": "preview_clean_assets_safe_minions_minion_minion_mascot"
     },
@@ -3365,7 +3233,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 133,
+      "community": 134,
       "norm_label": "safe hub favicon (stylized s icon)",
       "id": "preview_clean_favicon_favicon"
     },
@@ -3378,7 +3246,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 139,
+      "community": 140,
       "norm_label": "apple touch icon (safe hub)",
       "id": "preview_denso_assets_icons_apple_touch_icon_icon"
     },
@@ -3391,7 +3259,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 115,
+      "community": 116,
       "norm_label": "safe hub brand",
       "id": "concept_safe_hub_brand__preview_denso_assets_icons_apple_touch_icon"
     },
@@ -3404,7 +3272,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 140,
+      "community": 141,
       "norm_label": "safe hub pwa desktop icon (1024px)",
       "id": "preview_denso_assets_icons_pwa_desktop_1024_icon"
     },
@@ -3417,7 +3285,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 141,
+      "community": 142,
       "norm_label": "safe hub pwa desktop icon (512px)",
       "id": "preview_denso_assets_icons_pwa_desktop_512_icon"
     },
@@ -3430,7 +3298,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 142,
+      "community": 143,
       "norm_label": "pwa mobile icon (192px)",
       "id": "preview_denso_assets_icons_pwa_mobile_192_icon"
     },
@@ -3443,7 +3311,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 143,
+      "community": 144,
       "norm_label": "pwa mobile maskable icon (512px)",
       "id": "preview_denso_assets_icons_pwa_mobile_maskable_512_icon"
     },
@@ -3456,7 +3324,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 144,
+      "community": 145,
       "norm_label": "safe hub logo (s mark)",
       "id": "preview_denso_assets_img_logo_logo"
     },
@@ -3469,7 +3337,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 145,
+      "community": 146,
       "norm_label": "safe escola de aviacao - logo horizontal",
       "id": "preview_denso_assets_img_safe_logo_horizontal_logo"
     },
@@ -3482,7 +3350,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 146,
+      "community": 147,
       "norm_label": "minion mascot (safe minions)",
       "id": "preview_denso_assets_safe_minions_minion_minion_mascot"
     },
@@ -3495,7 +3363,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 148,
+      "community": 149,
       "norm_label": "safe hub favicon (stylized s icon)",
       "id": "preview_denso_favicon_favicon"
     },
@@ -3508,7 +3376,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 151,
+      "community": 152,
       "norm_label": "apple touch icon (safe hub)",
       "id": "preview_refinado_assets_icons_apple_touch_icon_icon"
     },
@@ -3521,7 +3389,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 116,
+      "community": 117,
       "norm_label": "safe hub brand",
       "id": "concept_safe_hub_brand__preview_refinado_assets_icons_apple_touch_icon"
     },
@@ -3534,7 +3402,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 152,
+      "community": 153,
       "norm_label": "safe hub pwa desktop icon (1024px)",
       "id": "preview_refinado_assets_icons_pwa_desktop_1024_icon"
     },
@@ -3547,7 +3415,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 153,
+      "community": 154,
       "norm_label": "safe hub pwa desktop icon (512px)",
       "id": "preview_refinado_assets_icons_pwa_desktop_512_icon"
     },
@@ -3560,7 +3428,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 155,
       "norm_label": "pwa mobile icon (192px)",
       "id": "preview_refinado_assets_icons_pwa_mobile_192_icon"
     },
@@ -3573,7 +3441,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 155,
+      "community": 156,
       "norm_label": "pwa mobile maskable icon (512px)",
       "id": "preview_refinado_assets_icons_pwa_mobile_maskable_512_icon"
     },
@@ -3586,7 +3454,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 156,
+      "community": 157,
       "norm_label": "safe hub logo (s mark)",
       "id": "preview_refinado_assets_img_logo_logo"
     },
@@ -3599,7 +3467,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 157,
+      "community": 158,
       "norm_label": "safe escola de aviacao - logo horizontal",
       "id": "preview_refinado_assets_img_safe_logo_horizontal_logo"
     },
@@ -3612,7 +3480,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 158,
+      "community": 159,
       "norm_label": "minion mascot (safe minions)",
       "id": "preview_refinado_assets_safe_minions_minion_minion_mascot"
     },
@@ -3625,7 +3493,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 160,
+      "community": 161,
       "norm_label": "safe hub favicon (stylized s icon)",
       "id": "preview_refinado_favicon_favicon"
     },
@@ -3638,7 +3506,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 43,
       "norm_label": "controle de acesso (rbac) page",
       "id": "preview_denso_access_control_access_control_page"
     },
@@ -3651,7 +3519,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 43,
       "norm_label": "grupos de acesso panel",
       "id": "preview_denso_access_control_grupos_de_acesso"
     },
@@ -3664,7 +3532,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 43,
       "norm_label": "catalogo de permissoes panel",
       "id": "preview_denso_access_control_catalogo_de_permissoes"
     },
@@ -3677,7 +3545,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 43,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "preview_clean_rbac_grupos_e_permissoes__preview_denso_access_control"
     },
@@ -3690,7 +3558,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 138,
+      "community": 139,
       "norm_label": "acesso negado (403) page",
       "id": "preview_denso_acesso_negado_acesso_negado_page"
     },
@@ -3703,7 +3571,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "gestao de usuarios (admin) page",
       "id": "preview_denso_admin_gestao_de_usuarios_page"
     },
@@ -3716,7 +3584,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "diretorio de acessos table",
       "id": "preview_denso_admin_diretorio_de_acessos"
     },
@@ -3729,7 +3597,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "modal novo/editar usuario",
       "id": "preview_denso_admin_modal_novo_usuario"
     },
@@ -3742,7 +3610,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "identidade unica por e-mail (concept)",
       "id": "preview_denso_admin_identidade_unica_por_email"
     },
@@ -3755,7 +3623,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "senha padrao = cpf (rationale)",
       "id": "preview_denso_admin_senha_padrao_cpf"
     },
@@ -3768,7 +3636,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 147,
+      "community": 148,
       "norm_label": "bases safe page",
       "id": "preview_denso_bases_bases_page"
     },
@@ -3820,7 +3688,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 47,
+      "community": 52,
       "norm_label": "concorrencia page",
       "id": "preview_denso_concorrencia_concorrencia_page"
     },
@@ -3833,7 +3701,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 47,
+      "community": 52,
       "norm_label": "modal nova/editar concorrente",
       "id": "preview_denso_concorrencia_modal_nova_concorrente"
     },
@@ -3846,7 +3714,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 47,
+      "community": 52,
       "norm_label": "modal preco safe",
       "id": "preview_denso_concorrencia_modal_preco_safe"
     },
@@ -3976,7 +3844,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 136,
+      "community": 137,
       "norm_label": "preview-guard.js (read-only mirror guard)",
       "id": "preview_clean_preview_guard_js__preview_denso_dashboard"
     },
@@ -4028,7 +3896,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "escala cco app (centro de controle de operacoes)",
       "id": "preview_denso_escala_cco_escala_cco_app"
     },
@@ -4041,7 +3909,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "calendario (escala mensal do time)",
       "id": "preview_denso_escala_cco_calendario"
     },
@@ -4054,7 +3922,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "dashboard de metricas e relatorios (cco)",
       "id": "preview_denso_escala_cco_dashboard_metricas"
     },
@@ -4067,7 +3935,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "gerenciar funcionarios (cco)",
       "id": "preview_denso_escala_cco_funcionarios"
     },
@@ -4080,7 +3948,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "exportar ifood (planilha do mes)",
       "id": "preview_denso_escala_cco_financeiro_exportar_ifood"
     },
@@ -4093,7 +3961,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "ifood beneficios (plataforma de pagamento)",
       "id": "preview_denso_escala_cco_ifood_beneficios"
     },
@@ -4106,7 +3974,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "admin panel \u2014 valor por turno presencial",
       "id": "preview_denso_escala_cco_admin_panel_valor_turno"
     },
@@ -4119,7 +3987,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 22,
       "norm_label": "fechamento financeiro (total pago no mes/ano)",
       "id": "preview_denso_escala_cco_fechamento_financeiro"
     },
@@ -4197,7 +4065,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 45,
       "norm_label": "faturamento page",
       "id": "preview_denso_faturamento_faturamento_page"
     },
@@ -4210,7 +4078,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 45,
       "norm_label": "canais de receita (lojinha, safe academy, azul pontos, lito academy, vendas comercial)",
       "id": "preview_denso_faturamento_canais_receita"
     },
@@ -4223,7 +4091,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 45,
       "norm_label": "total exclui vendas comercial (rationale)",
       "id": "preview_denso_faturamento_total_exclui_vendas_comercial"
     },
@@ -4236,7 +4104,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 45,
       "norm_label": "modal lancar faturamento",
       "id": "preview_denso_faturamento_modal_lancar_faturamento"
     },
@@ -4249,7 +4117,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 34,
+      "community": 38,
       "norm_label": "fechamento de horas / cotistas page",
       "id": "preview_denso_fechamento_horas_fechamento_horas_page"
     },
@@ -4262,7 +4130,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 34,
+      "community": 38,
       "norm_label": "visao geral tab (horas por mes)",
       "id": "preview_denso_fechamento_horas_visao_geral"
     },
@@ -4275,7 +4143,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 34,
+      "community": 38,
       "norm_label": "fechamento mensal tab (horas por aeronave)",
       "id": "preview_denso_fechamento_horas_fechamento_mensal"
     },
@@ -4288,7 +4156,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 34,
+      "community": 38,
       "norm_label": "importar relatorio cavok (xls/xlsx)",
       "id": "preview_denso_fechamento_horas_importar_cavok"
     },
@@ -4301,7 +4169,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 34,
+      "community": 38,
       "norm_label": "atualizar pela api cavok",
       "id": "preview_denso_fechamento_horas_atualizar_api_cavok"
     },
@@ -4353,7 +4221,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "login page (safe hub)",
       "id": "preview_denso_index_login_page"
     },
@@ -4366,7 +4234,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "redireciona se ja logado (localstorage/sessionstorage)",
       "id": "preview_denso_index_session_redirect"
     },
@@ -4379,7 +4247,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "inicio (home portal) page",
       "id": "preview_denso_inicio_inicio_page"
     },
@@ -4392,7 +4260,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "modulos do safe hub (por perfil)",
       "id": "preview_denso_inicio_modulos_do_hub"
     },
@@ -4405,7 +4273,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "bases safe (inicio)",
       "id": "preview_denso_inicio_bases_safe"
     },
@@ -4418,7 +4286,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 41,
+      "community": 46,
       "norm_label": "progresso de alunos page",
       "id": "preview_denso_progresso_alunos_progresso_alunos_page"
     },
@@ -4431,7 +4299,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 41,
+      "community": 46,
       "norm_label": "por curso tab",
       "id": "preview_denso_progresso_alunos_por_curso"
     },
@@ -4444,7 +4312,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 41,
+      "community": 46,
       "norm_label": "por aluno tab",
       "id": "preview_denso_progresso_alunos_por_aluno"
     },
@@ -4457,7 +4325,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 41,
+      "community": 46,
       "norm_label": "portal newzenler (fonte de progresso)",
       "id": "preview_denso_progresso_alunos_newzenler"
     },
@@ -4613,7 +4481,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 44,
       "norm_label": "controle de acesso (rbac) page",
       "id": "preview_refinado_access_control_access_control_page"
     },
@@ -4626,7 +4494,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 44,
       "norm_label": "grupos de acesso panel",
       "id": "preview_refinado_access_control_grupos_de_acesso"
     },
@@ -4639,7 +4507,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 44,
       "norm_label": "catalogo de permissoes panel",
       "id": "preview_refinado_access_control_catalogo_de_permissoes"
     },
@@ -4652,7 +4520,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 44,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "preview_clean_rbac_grupos_e_permissoes__preview_refinado_access_control"
     },
@@ -4665,7 +4533,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 150,
+      "community": 151,
       "norm_label": "acesso negado (403) page",
       "id": "preview_refinado_acesso_negado_acesso_negado_page"
     },
@@ -4678,7 +4546,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "gestao de usuarios (admin) page",
       "id": "preview_refinado_admin_gestao_de_usuarios_page"
     },
@@ -4691,7 +4559,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "diretorio de acessos table",
       "id": "preview_refinado_admin_diretorio_de_acessos"
     },
@@ -4704,7 +4572,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "modal novo/editar usuario",
       "id": "preview_refinado_admin_modal_novo_usuario"
     },
@@ -4717,7 +4585,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "identidade unica por e-mail (concept)",
       "id": "preview_refinado_admin_identidade_unica_por_email"
     },
@@ -4730,7 +4598,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "senha padrao = cpf (rationale)",
       "id": "preview_refinado_admin_senha_padrao_cpf"
     },
@@ -4743,7 +4611,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 159,
+      "community": 160,
       "norm_label": "bases safe page",
       "id": "preview_refinado_bases_bases_page"
     },
@@ -4795,7 +4663,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 48,
+      "community": 53,
       "norm_label": "concorrencia page",
       "id": "preview_refinado_concorrencia_concorrencia_page"
     },
@@ -4808,7 +4676,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 48,
+      "community": 53,
       "norm_label": "modal nova/editar concorrente",
       "id": "preview_refinado_concorrencia_modal_nova_concorrente"
     },
@@ -4821,7 +4689,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 48,
+      "community": 53,
       "norm_label": "modal preco safe",
       "id": "preview_refinado_concorrencia_modal_preco_safe"
     },
@@ -4951,7 +4819,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 137,
+      "community": 138,
       "norm_label": "preview-guard.js (read-only mirror guard)",
       "id": "preview_clean_preview_guard_js__preview_refinado_dashboard"
     },
@@ -5003,7 +4871,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "escala cco app (centro de controle de operacoes)",
       "id": "preview_refinado_escala_cco_escala_cco_app"
     },
@@ -5016,7 +4884,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "calendario (escala mensal do time)",
       "id": "preview_refinado_escala_cco_calendario"
     },
@@ -5029,7 +4897,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "dashboard de metricas e relatorios (cco)",
       "id": "preview_refinado_escala_cco_dashboard_metricas"
     },
@@ -5042,7 +4910,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "gerenciar funcionarios (cco)",
       "id": "preview_refinado_escala_cco_funcionarios"
     },
@@ -5055,7 +4923,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "exportar ifood (planilha do mes)",
       "id": "preview_refinado_escala_cco_financeiro_exportar_ifood"
     },
@@ -5068,7 +4936,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "ifood beneficios (plataforma de pagamento)",
       "id": "preview_refinado_escala_cco_ifood_beneficios"
     },
@@ -5081,7 +4949,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "admin panel \u2014 valor por turno presencial",
       "id": "preview_refinado_escala_cco_admin_panel_valor_turno"
     },
@@ -5094,7 +4962,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 23,
       "norm_label": "fechamento financeiro (total pago no mes/ano)",
       "id": "preview_refinado_escala_cco_fechamento_financeiro"
     },
@@ -5172,7 +5040,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 42,
+      "community": 47,
       "norm_label": "faturamento page",
       "id": "preview_refinado_faturamento_faturamento_page"
     },
@@ -5185,7 +5053,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 42,
+      "community": 47,
       "norm_label": "canais de receita (lojinha, safe academy, azul pontos, lito academy, vendas comercial)",
       "id": "preview_refinado_faturamento_canais_receita"
     },
@@ -5198,7 +5066,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 42,
+      "community": 47,
       "norm_label": "total exclui vendas comercial (rationale)",
       "id": "preview_refinado_faturamento_total_exclui_vendas_comercial"
     },
@@ -5211,7 +5079,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 42,
+      "community": 47,
       "norm_label": "modal lancar faturamento",
       "id": "preview_refinado_faturamento_modal_lancar_faturamento"
     },
@@ -5224,7 +5092,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 35,
+      "community": 39,
       "norm_label": "fechamento de horas / cotistas page",
       "id": "preview_refinado_fechamento_horas_fechamento_horas_page"
     },
@@ -5237,7 +5105,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 35,
+      "community": 39,
       "norm_label": "visao geral tab (horas por mes)",
       "id": "preview_refinado_fechamento_horas_visao_geral"
     },
@@ -5250,7 +5118,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 35,
+      "community": 39,
       "norm_label": "fechamento mensal tab (horas por aeronave)",
       "id": "preview_refinado_fechamento_horas_fechamento_mensal"
     },
@@ -5263,7 +5131,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 35,
+      "community": 39,
       "norm_label": "importar relatorio cavok (xls/xlsx)",
       "id": "preview_refinado_fechamento_horas_importar_cavok"
     },
@@ -5276,7 +5144,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 35,
+      "community": 39,
       "norm_label": "atualizar pela api cavok",
       "id": "preview_refinado_fechamento_horas_atualizar_api_cavok"
     },
@@ -5328,7 +5196,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "login page (safe hub)",
       "id": "preview_refinado_index_login_page"
     },
@@ -5341,7 +5209,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "redireciona se ja logado (localstorage/sessionstorage)",
       "id": "preview_refinado_index_session_redirect"
     },
@@ -5354,7 +5222,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "inicio (home portal) page",
       "id": "preview_refinado_inicio_inicio_page"
     },
@@ -5367,7 +5235,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "modulos do safe hub (por perfil)",
       "id": "preview_refinado_inicio_modulos_do_hub"
     },
@@ -5380,7 +5248,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "bases safe (inicio)",
       "id": "preview_refinado_inicio_bases_safe"
     },
@@ -5393,7 +5261,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 48,
       "norm_label": "progresso de alunos page",
       "id": "preview_refinado_progresso_alunos_progresso_alunos_page"
     },
@@ -5406,7 +5274,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 48,
       "norm_label": "por curso tab",
       "id": "preview_refinado_progresso_alunos_por_curso"
     },
@@ -5419,7 +5287,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 48,
       "norm_label": "por aluno tab",
       "id": "preview_refinado_progresso_alunos_por_aluno"
     },
@@ -5432,7 +5300,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 48,
       "norm_label": "portal newzenler (fonte de progresso)",
       "id": "preview_refinado_progresso_alunos_newzenler"
     },
@@ -5588,7 +5456,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 29,
       "norm_label": "controle de acesso page (access-control.html)",
       "id": "access_control_page"
     },
@@ -5601,7 +5469,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 29,
       "norm_label": "gestao de usuarios page (admin.html)",
       "id": "admin_page"
     },
@@ -5614,7 +5482,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 113,
+      "community": 114,
       "norm_label": "bases safe page (bases.html)",
       "id": "bases_page"
     },
@@ -5627,7 +5495,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 29,
       "norm_label": "controle de gastos page (controle-gastos.html)",
       "id": "controle_gastos_page"
     },
@@ -5640,7 +5508,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 117,
+      "community": 118,
       "norm_label": "escala cco page/app (escala-cco.html)",
       "id": "escala_cco_page"
     },
@@ -5653,7 +5521,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 118,
+      "community": 119,
       "norm_label": "escala pav page/app (escala-pav.html)",
       "id": "escala_pav_page"
     },
@@ -5666,7 +5534,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 29,
       "norm_label": "faturamento page (faturamento.html)",
       "id": "faturamento_page"
     },
@@ -5679,7 +5547,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 122,
+      "community": 123,
       "norm_label": "fechamento de horas / cotistas page (fechamento-horas.html)",
       "id": "fechamento_horas_page"
     },
@@ -5692,7 +5560,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 123,
+      "community": 124,
       "norm_label": "inicio / home portal page (inicio.html)",
       "id": "inicio_page"
     },
@@ -5705,7 +5573,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 162,
+      "community": 163,
       "norm_label": "progresso de alunos page (progresso-alunos.html)",
       "id": "progresso_alunos_page"
     },
@@ -5718,7 +5586,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 29,
       "norm_label": "vendas page (vendas.html)",
       "id": "vendas_page"
     },
@@ -5731,7 +5599,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 29,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "rbac_effective_permissions"
     },
@@ -5744,7 +5612,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "carregarfaturamento()",
       "id": "faturamento_carregarfaturamento"
     },
@@ -5757,7 +5625,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "carregaridsregistros()",
       "id": "faturamento_carregaridsregistros"
     },
@@ -5770,7 +5638,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "rendertabelafat()",
       "id": "faturamento_rendertabelafat"
     },
@@ -5783,7 +5651,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "confirmarexclusaocanal()",
       "id": "faturamento_confirmarexclusaocanal"
     },
@@ -5796,7 +5664,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "excluircanal()",
       "id": "faturamento_excluircanal"
     },
@@ -5809,7 +5677,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "abriredicaomes()",
       "id": "faturamento_abriredicaomes"
     },
@@ -5822,7 +5690,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "renderchartfat()",
       "id": "faturamento_renderchartfat"
     },
@@ -5835,7 +5703,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 119,
+      "community": 120,
       "norm_label": "aplicarmascarabrl()",
       "id": "faturamento_aplicarmascarabrl"
     },
@@ -5848,7 +5716,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 21,
       "norm_label": "setinputbrl()",
       "id": "faturamento_setinputbrl"
     },
@@ -5861,7 +5729,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 120,
+      "community": 121,
       "norm_label": "getinputbrl()",
       "id": "faturamento_getinputbrl"
     },
@@ -5978,7 +5846,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 51,
+      "community": 56,
       "norm_label": "exportpdf()",
       "id": "escala_cco_exportpdf"
     },
@@ -5991,7 +5859,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 51,
+      "community": 56,
       "norm_label": "loadscript()",
       "id": "escala_cco_loadscript"
     },
@@ -6082,7 +5950,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 50,
       "norm_label": "initdash()",
       "id": "escala_cco_initdash"
     },
@@ -6095,7 +5963,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 50,
       "norm_label": "renderdash()",
       "id": "escala_cco_renderdash"
     },
@@ -6108,7 +5976,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 50,
       "norm_label": "loadallmonths()",
       "id": "escala_cco_loadallmonths"
     },
@@ -6121,7 +5989,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 36,
+      "community": 41,
       "norm_label": "gerarxlsxifood()",
       "id": "escala_cco_gerarxlsxifood"
     },
@@ -6134,7 +6002,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 36,
+      "community": 41,
       "norm_label": "abrirmodalexport()",
       "id": "escala_cco_abrirmodalexport"
     },
@@ -6147,7 +6015,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 36,
+      "community": 41,
       "norm_label": "exportconfirmarexportacao()",
       "id": "escala_cco_exportconfirmarexportacao"
     },
@@ -6173,7 +6041,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 53,
+      "community": 58,
       "norm_label": "configuraracessospav()",
       "id": "escala_pav_configuraracessospav"
     },
@@ -6186,7 +6054,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 53,
+      "community": 58,
       "norm_label": "aplicaracessospav()",
       "id": "escala_pav_aplicaracessospav"
     },
@@ -6290,7 +6158,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 36,
+      "community": 41,
       "norm_label": "gerarxlsxifood()",
       "id": "escala_pav_gerarxlsxifood"
     },
@@ -6303,7 +6171,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 57,
       "norm_label": "abrirmodalexport()",
       "id": "escala_pav_abrirmodalexport"
     },
@@ -6316,7 +6184,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 57,
       "norm_label": "atualizarpreviewexport()",
       "id": "escala_pav_atualizarpreviewexport"
     },
@@ -6329,7 +6197,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "controle de acesso (rbac) page",
       "id": "preview_clean_access_control_access_control_page"
     },
@@ -6342,7 +6210,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "grupos de acesso panel",
       "id": "preview_clean_access_control_grupos_de_acesso"
     },
@@ -6355,7 +6223,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "catalogo de permissoes panel",
       "id": "preview_clean_access_control_catalogo_de_permissoes"
     },
@@ -6368,7 +6236,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 124,
+      "community": 125,
       "norm_label": "acesso negado (403) page",
       "id": "preview_clean_acesso_negado_acesso_negado_page"
     },
@@ -6381,7 +6249,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "gestao de usuarios (admin) page",
       "id": "preview_clean_admin_gestao_de_usuarios_page"
     },
@@ -6394,7 +6262,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "diretorio de acessos table",
       "id": "preview_clean_admin_diretorio_de_acessos"
     },
@@ -6407,7 +6275,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "modal novo/editar usuario",
       "id": "preview_clean_admin_modal_novo_usuario"
     },
@@ -6420,7 +6288,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "identidade unica por e-mail (concept)",
       "id": "preview_clean_admin_identidade_unica_por_email"
     },
@@ -6433,7 +6301,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "senha padrao = cpf (rationale)",
       "id": "preview_clean_admin_senha_padrao_cpf"
     },
@@ -6446,7 +6314,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "bases safe page",
       "id": "preview_clean_bases_bases_page"
     },
@@ -6498,7 +6366,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 46,
+      "community": 51,
       "norm_label": "concorrencia page",
       "id": "preview_clean_concorrencia_concorrencia_page"
     },
@@ -6511,7 +6379,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 46,
+      "community": 51,
       "norm_label": "modal nova/editar concorrente",
       "id": "preview_clean_concorrencia_modal_nova_concorrente"
     },
@@ -6524,7 +6392,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 46,
+      "community": 51,
       "norm_label": "modal preco safe",
       "id": "preview_clean_concorrencia_modal_preco_safe"
     },
@@ -6732,7 +6600,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "gerenciar funcionarios (cco)",
       "id": "preview_clean_escala_cco_funcionarios"
     },
@@ -7018,7 +6886,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "login page (safe hub)",
       "id": "preview_clean_index_login_page"
     },
@@ -7031,7 +6899,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "redireciona se ja logado (localstorage/sessionstorage)",
       "id": "preview_clean_index_session_redirect"
     },
@@ -7044,7 +6912,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "inicio (home portal) page",
       "id": "preview_clean_inicio_inicio_page"
     },
@@ -7057,7 +6925,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "modulos do safe hub (por perfil)",
       "id": "preview_clean_inicio_modulos_do_hub"
     },
@@ -7070,7 +6938,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 9,
       "norm_label": "bases safe (inicio)",
       "id": "preview_clean_inicio_bases_safe"
     },
@@ -7083,7 +6951,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 42,
       "norm_label": "progresso de alunos page",
       "id": "preview_clean_progresso_alunos_progresso_alunos_page"
     },
@@ -7096,7 +6964,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 42,
       "norm_label": "por curso tab",
       "id": "preview_clean_progresso_alunos_por_curso"
     },
@@ -7109,7 +6977,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 42,
       "norm_label": "por aluno tab",
       "id": "preview_clean_progresso_alunos_por_aluno"
     },
@@ -7122,7 +6990,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 42,
       "norm_label": "portal newzenler (fonte de progresso)",
       "id": "preview_clean_progresso_alunos_newzenler"
     },
@@ -7278,7 +7146,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 135,
+      "community": 136,
       "norm_label": "preview-guard.js (read-only mirror guard)",
       "id": "preview_clean_preview_guard_js"
     },
@@ -7291,7 +7159,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 6,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "preview_clean_rbac_grupos_e_permissoes"
     },
@@ -7304,7 +7172,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "preview de redesign \u2014 safe hub (seletor)",
       "id": "preview_index_index"
     },
@@ -7317,7 +7185,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "redesign 1 \u00b7 refinado (card)",
       "id": "preview_index_v1_refinado_card"
     },
@@ -7330,7 +7198,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "redesign 2 \u00b7 clean / saas (card)",
       "id": "preview_index_v2_clean_card"
     },
@@ -7343,7 +7211,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "redesign 3 \u00b7 dashboard denso (card)",
       "id": "preview_index_v3_denso_card"
     },
@@ -7356,7 +7224,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "trava de gravacao (somente leitura)",
       "id": "preview_index_readonly_lock"
     },
@@ -7369,7 +7237,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "safe hub \u2014 variante refinado (inicio)",
       "id": "preview_v1_refinado_hub"
     },
@@ -7382,7 +7250,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "safe hub \u2014 variante clean / saas (inicio)",
       "id": "preview_v2_clean_hub"
     },
@@ -7395,7 +7263,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "safe hub \u2014 variante dashboard denso (inicio)",
       "id": "preview_v3_denso_hub"
     },
@@ -7408,7 +7276,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "modulo dashboard",
       "id": "preview_module_dashboard"
     },
@@ -7421,7 +7289,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 8,
       "norm_label": "modulo escala cco",
       "id": "preview_module_escala_cco"
     },
@@ -7434,7 +7302,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "modulo escala pav",
       "id": "preview_module_escala_pav"
     },
@@ -7447,7 +7315,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "modulo faturamento",
       "id": "preview_module_faturamento"
     },
@@ -7460,7 +7328,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "modulo concorrencia",
       "id": "preview_module_concorrencia"
     },
@@ -7473,7 +7341,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "modulo alunos",
       "id": "preview_module_alunos"
     },
@@ -7486,7 +7354,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "modulo fechamento de horas",
       "id": "preview_module_fechamento_horas"
     },
@@ -7499,7 +7367,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "base jundiai",
       "id": "preview_base_jundiai"
     },
@@ -7512,7 +7380,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "base braganca paulista",
       "id": "preview_base_braganca_paulista"
     },
@@ -7525,7 +7393,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "base sorocaba",
       "id": "preview_base_sorocaba"
     },
@@ -7746,7 +7614,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 54,
       "norm_label": "apple touch icon (safe hub)",
       "id": "assets_icons_apple_touch_icon_icon"
     },
@@ -7759,7 +7627,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 54,
       "norm_label": "safe hub brand",
       "id": "concept_safe_hub_brand"
     },
@@ -7772,7 +7640,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 106,
+      "community": 107,
       "norm_label": "safe hub pwa desktop icon (1024px)",
       "id": "assets_icons_pwa_desktop_1024_icon"
     },
@@ -7785,7 +7653,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 107,
+      "community": 108,
       "norm_label": "safe hub pwa desktop icon (512px)",
       "id": "assets_icons_pwa_desktop_512_icon"
     },
@@ -7798,7 +7666,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 108,
+      "community": 109,
       "norm_label": "pwa mobile icon (192px)",
       "id": "assets_icons_pwa_mobile_192_icon"
     },
@@ -7811,7 +7679,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 109,
+      "community": 110,
       "norm_label": "pwa mobile maskable icon (512px)",
       "id": "assets_icons_pwa_mobile_maskable_512_icon"
     },
@@ -7824,7 +7692,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 110,
+      "community": 111,
       "norm_label": "safe hub logo (s mark)",
       "id": "assets_img_logo_logo"
     },
@@ -7837,7 +7705,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 111,
+      "community": 112,
       "norm_label": "safe escola de aviacao - logo horizontal",
       "id": "assets_img_safe_logo_horizontal_logo"
     },
@@ -7850,7 +7718,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 112,
+      "community": 113,
       "norm_label": "minion mascot (safe minions)",
       "id": "assets_safe_minions_minion_minion_mascot"
     },
@@ -7863,59 +7731,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 121,
+      "community": 122,
       "norm_label": "safe hub favicon (stylized s icon)",
       "id": "favicon_favicon"
-    },
-    {
-      "label": "admin.js",
-      "file_type": "code",
-      "source_file": "js/admin.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "js_admin",
-      "community": 33,
-      "norm_label": "admin.js"
-    },
-    {
-      "label": "RBAC_PERMS_BASE",
-      "file_type": "code",
-      "source_file": "js/admin.js",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "js_admin_rbac_perms_base",
-      "community": 33,
-      "norm_label": "rbac_perms_base"
-    },
-    {
-      "label": "RBAC_CARGOS_OFERECIDOS",
-      "file_type": "code",
-      "source_file": "js/admin.js",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "js_admin_rbac_cargos_oferecidos",
-      "community": 33,
-      "norm_label": "rbac_cargos_oferecidos"
-    },
-    {
-      "label": "RBAC_MODULOS",
-      "file_type": "code",
-      "source_file": "js/admin.js",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "js_admin_rbac_modulos",
-      "community": 33,
-      "norm_label": "rbac_modulos"
-    },
-    {
-      "label": "Admin",
-      "file_type": "code",
-      "source_file": "js/admin.js",
-      "source_location": "L66",
-      "_origin": "ast",
-      "id": "js_admin_admin",
-      "community": 33,
-      "norm_label": "admin"
     },
     {
       "label": "auth.js",
@@ -7923,9 +7741,9 @@
       "source_file": "js/auth.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "js_auth",
-      "community": 6,
-      "norm_label": "auth.js"
+      "community": 20,
+      "norm_label": "auth.js",
+      "id": "js_auth"
     },
     {
       "label": "Auth",
@@ -7933,9 +7751,9 @@
       "source_file": "js/auth.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "js_auth_auth",
-      "community": 6,
-      "norm_label": "auth"
+      "community": 20,
+      "norm_label": "auth",
+      "id": "js_auth_auth"
     },
     {
       "label": "config.js",
@@ -7943,9 +7761,9 @@
       "source_file": "js/config.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "js_config",
-      "community": 31,
-      "norm_label": "config.js"
+      "community": 40,
+      "norm_label": "config.js",
+      "id": "js_config"
     },
     {
       "label": "CONFIG",
@@ -7953,9 +7771,9 @@
       "source_file": "js/config.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "js_config_config",
-      "community": 31,
-      "norm_label": "config"
+      "community": 40,
+      "norm_label": "config",
+      "id": "js_config_config"
     },
     {
       "label": "inicio.js",
@@ -7963,9 +7781,9 @@
       "source_file": "js/inicio.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "js_inicio",
-      "community": 30,
-      "norm_label": "inicio.js"
+      "community": 35,
+      "norm_label": "inicio.js",
+      "id": "js_inicio"
     },
     {
       "label": "Inicio",
@@ -7973,9 +7791,9 @@
       "source_file": "js/inicio.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "js_inicio_inicio",
-      "community": 30,
-      "norm_label": "inicio"
+      "community": 35,
+      "norm_label": "inicio",
+      "id": "js_inicio_inicio"
     },
     {
       "label": "RBAC Puro (Permiss\u00f5es Efetivas)",
@@ -7986,9 +7804,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_rbac_puro",
-      "community": 6,
-      "norm_label": "rbac puro (permissoes efetivas)"
+      "community": 17,
+      "norm_label": "rbac puro (permissoes efetivas)",
+      "id": "claude_rbac_puro"
     },
     {
       "label": "permissoesEfetivas",
@@ -7999,9 +7817,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_permissoes_efetivas",
-      "community": 6,
-      "norm_label": "permissoesefetivas"
+      "community": 17,
+      "norm_label": "permissoesefetivas",
+      "id": "claude_permissoes_efetivas"
     },
     {
       "label": "ACCESS_PERMISSIONS (cat\u00e1logo de permiss\u00f5es)",
@@ -8012,9 +7830,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_access_permissions",
-      "community": 6,
-      "norm_label": "access_permissions (catalogo de permissoes)"
+      "community": 17,
+      "norm_label": "access_permissions (catalogo de permissoes)",
+      "id": "claude_access_permissions"
     },
     {
       "label": "ACCESS_DEFAULT_GROUPS (cargos oficiais)",
@@ -8025,9 +7843,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_access_default_groups",
-      "community": 6,
-      "norm_label": "access_default_groups (cargos oficiais)"
+      "community": 17,
+      "norm_label": "access_default_groups (cargos oficiais)",
+      "id": "claude_access_default_groups"
     },
     {
       "label": "Auth.PAGINAS (fonte \u00fanica frontend)",
@@ -8038,9 +7856,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_auth_paginas",
-      "community": 6,
-      "norm_label": "auth.paginas (fonte unica frontend)"
+      "community": 17,
+      "norm_label": "auth.paginas (fonte unica frontend)",
+      "id": "claude_auth_paginas"
     },
     {
       "label": "perfil (espelho cosm\u00e9tico)",
@@ -8051,9 +7869,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_perfil_cosmetico",
-      "community": 6,
-      "norm_label": "perfil (espelho cosmetico)"
+      "community": 17,
+      "norm_label": "perfil (espelho cosmetico)",
+      "id": "claude_perfil_cosmetico"
     },
     {
       "label": "sincronizarGruposPadrao_ (reconciliador)",
@@ -8064,9 +7882,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_sincronizar_grupos_padrao",
-      "community": 6,
-      "norm_label": "sincronizargrupospadrao_ (reconciliador)"
+      "community": 17,
+      "norm_label": "sincronizargrupospadrao_ (reconciliador)",
+      "id": "claude_sincronizar_grupos_padrao"
     },
     {
       "label": "RBAC_MODULOS (matriz can\u00f4nica)",
@@ -8077,9 +7895,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_rbac_modulos",
-      "community": 6,
-      "norm_label": "rbac_modulos (matriz canonica)"
+      "community": 17,
+      "norm_label": "rbac_modulos (matriz canonica)",
+      "id": "claude_rbac_modulos"
     },
     {
       "label": "calcularPermissoesEfetivasUsuario_ ((grupos \u222a GRANT) \\ DENY)",
@@ -8090,9 +7908,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_calcular_permissoes_efetivas",
-      "community": 6,
-      "norm_label": "calcularpermissoesefetivasusuario_ ((grupos \u222a grant) \\ deny)"
+      "community": 17,
+      "norm_label": "calcularpermissoesefetivasusuario_ ((grupos \u222a grant) \\ deny)",
+      "id": "claude_calcular_permissoes_efetivas"
     },
     {
       "label": "permissoesEfetivasCco_ (usu\u00e1rios CCO)",
@@ -8103,9 +7921,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_permissoes_efetivas_cco",
-      "community": 6,
-      "norm_label": "permissoesefetivascco_ (usuarios cco)"
+      "community": 17,
+      "norm_label": "permissoesefetivascco_ (usuarios cco)",
+      "id": "claude_permissoes_efetivas_cco"
     },
     {
       "label": "SESSION_VERSION / SAFE_AUTH_VERSION (relogin global)",
@@ -8116,113 +7934,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "claude_session_version",
-      "community": 31,
-      "norm_label": "session_version / safe_auth_version (relogin global)"
-    },
-    {
-      "label": "Modal de cria\u00e7\u00e3o/edi\u00e7\u00e3o de usu\u00e1rio",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_modal_usuario",
-      "community": 6,
-      "norm_label": "modal de criacao/edicao de usuario"
-    },
-    {
-      "label": "Select de Cargo (#u-cargo)",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_u_cargo",
-      "community": 6,
-      "norm_label": "select de cargo (#u-cargo)"
-    },
-    {
-      "label": "Matriz de acessos por m\u00f3dulo (#u-matriz-acesso)",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_matriz_acesso",
-      "community": 6,
-      "norm_label": "matriz de acessos por modulo (#u-matriz-acesso)"
-    },
-    {
-      "label": "Checkbox Superadmin (#u-superadmin)",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_superadmin_toggle",
-      "community": 105,
-      "norm_label": "checkbox superadmin (#u-superadmin)"
-    },
-    {
-      "label": "Sistema de origem hub/cco (#u-origem)",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_origem_cco",
-      "community": 6,
-      "norm_label": "sistema de origem hub/cco (#u-origem)"
-    },
-    {
-      "label": "Guardas de UI data-finance-only/master-only/write-only",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_data_finance_only",
-      "community": 6,
-      "norm_label": "guardas de ui data-finance-only/master-only/write-only"
-    },
-    {
-      "label": "js/admin.js (l\u00f3gica da tela de usu\u00e1rios)",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_js",
-      "community": 6,
-      "norm_label": "js/admin.js (logica da tela de usuarios)"
-    },
-    {
-      "label": "Bot\u00e3o For\u00e7ar relogin geral (#btn-forcar-relogin)",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "admin_btn_forcar_relogin",
-      "community": 31,
-      "norm_label": "botao forcar relogin geral (#btn-forcar-relogin)"
+      "community": 40,
+      "norm_label": "session_version / safe_auth_version (relogin global)",
+      "id": "claude_session_version"
     },
     {
       "label": "Tela de Login (index.html)",
@@ -8233,9 +7947,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "index_login_card",
-      "community": 6,
-      "norm_label": "tela de login (index.html)"
+      "community": 20,
+      "norm_label": "tela de login (index.html)",
+      "id": "index_login_card"
     },
     {
       "label": "fazerLogin() \u2192 Auth.login()",
@@ -8246,9 +7960,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "index_fazer_login",
-      "community": 6,
-      "norm_label": "fazerlogin() \u2192 auth.login()"
+      "community": 20,
+      "norm_label": "fazerlogin() \u2192 auth.login()",
+      "id": "index_fazer_login"
     },
     {
       "label": "Redirecionamento por sess\u00e3o (CONFIG.SESSION_KEY)",
@@ -8259,9 +7973,592 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "index_session_redirect",
-      "community": 31,
-      "norm_label": "redirecionamento por sessao (config.session_key)"
+      "community": 40,
+      "norm_label": "redirecionamento por sessao (config.session_key)",
+      "id": "index_session_redirect"
+    },
+    {
+      "label": "admin.js",
+      "file_type": "code",
+      "source_file": "js/admin.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "js_admin",
+      "community": 37,
+      "norm_label": "admin.js"
+    },
+    {
+      "label": "RBAC_PERMS_BASE",
+      "file_type": "code",
+      "source_file": "js/admin.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "js_admin_rbac_perms_base",
+      "community": 37,
+      "norm_label": "rbac_perms_base"
+    },
+    {
+      "label": "RBAC_CARGOS_OFERECIDOS",
+      "file_type": "code",
+      "source_file": "js/admin.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "js_admin_rbac_cargos_oferecidos",
+      "community": 37,
+      "norm_label": "rbac_cargos_oferecidos"
+    },
+    {
+      "label": "RBAC_MODULOS",
+      "file_type": "code",
+      "source_file": "js/admin.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "js_admin_rbac_modulos",
+      "community": 37,
+      "norm_label": "rbac_modulos"
+    },
+    {
+      "label": "Admin",
+      "file_type": "code",
+      "source_file": "js/admin.js",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "js_admin_admin",
+      "community": 37,
+      "norm_label": "admin"
+    },
+    {
+      "label": "bases.js",
+      "file_type": "code",
+      "source_file": "js/bases.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "js_bases",
+      "community": 30,
+      "norm_label": "bases.js"
+    },
+    {
+      "label": "Bases",
+      "file_type": "code",
+      "source_file": "js/bases.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "js_bases_bases",
+      "community": 30,
+      "norm_label": "bases"
+    },
+    {
+      "label": "concorrencia.js",
+      "file_type": "code",
+      "source_file": "js/concorrencia.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "js_concorrencia",
+      "community": 24,
+      "norm_label": "concorrencia.js"
+    },
+    {
+      "label": "Concorrencia",
+      "file_type": "code",
+      "source_file": "js/concorrencia.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "js_concorrencia_concorrencia",
+      "community": 24,
+      "norm_label": "concorrencia"
+    },
+    {
+      "label": "controle-gastos.js",
+      "file_type": "code",
+      "source_file": "js/controle-gastos.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "js_controle_gastos",
+      "community": 19,
+      "norm_label": "controle-gastos.js"
+    },
+    {
+      "label": "ControleGastos",
+      "file_type": "code",
+      "source_file": "js/controle-gastos.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "js_controle_gastos_controlegastos",
+      "community": 19,
+      "norm_label": "controlegastos"
+    },
+    {
+      "label": "vendas.js",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "js_vendas",
+      "community": 25,
+      "norm_label": "vendas.js"
+    },
+    {
+      "label": "CURSOS_VENDAS",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "js_vendas_cursos_vendas",
+      "community": 25,
+      "norm_label": "cursos_vendas"
+    },
+    {
+      "label": "PACOTES_LEGADOS_CURSOS",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "js_vendas_pacotes_legados_cursos",
+      "community": 25,
+      "norm_label": "pacotes_legados_cursos"
+    },
+    {
+      "label": "Vendas",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "js_vendas_vendas",
+      "community": 25,
+      "norm_label": "vendas"
+    },
+    {
+      "label": "aplicarMascaraBRL()",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L806",
+      "_origin": "ast",
+      "id": "js_vendas_aplicarmascarabrl",
+      "community": 25,
+      "norm_label": "aplicarmascarabrl()"
+    },
+    {
+      "label": "setInputBRL()",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L814",
+      "_origin": "ast",
+      "id": "js_vendas_setinputbrl",
+      "community": 25,
+      "norm_label": "setinputbrl()"
+    },
+    {
+      "label": "getInputBRL()",
+      "file_type": "code",
+      "source_file": "js/vendas.js",
+      "source_location": "L825",
+      "_origin": "ast",
+      "id": "js_vendas_getinputbrl",
+      "community": 25,
+      "norm_label": "getinputbrl()"
+    },
+    {
+      "label": "Admin \u2014 Gest\u00e3o de Usu\u00e1rios (page)",
+      "file_type": "document",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "admin_html",
+      "community": 15,
+      "norm_label": "admin \u2014 gestao de usuarios (page)"
+    },
+    {
+      "label": "Diret\u00f3rio de acessos (tabela + tabs + filtros)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "admin_diretorio_acessos",
+      "community": 15,
+      "norm_label": "diretorio de acessos (tabela + tabs + filtros)"
+    },
+    {
+      "label": "Modal de Usu\u00e1rio (criar/editar)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "admin_modal_usuario",
+      "community": 20,
+      "norm_label": "modal de usuario (criar/editar)"
+    },
+    {
+      "label": "Matriz RBAC de acesso por m\u00f3dulo (cargo + Ver/Editar)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "admin_matriz_rbac",
+      "community": 20,
+      "norm_label": "matriz rbac de acesso por modulo (cargo + ver/editar)"
+    },
+    {
+      "label": "Card de alterar minha senha",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "admin_alterar_senha",
+      "community": 15,
+      "norm_label": "card de alterar minha senha"
+    },
+    {
+      "label": "Campos operacionais do CCO (iniciais, cor, escala)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "admin_campos_cco",
+      "community": 20,
+      "norm_label": "campos operacionais do cco (iniciais, cor, escala)"
+    },
+    {
+      "label": "Bases SAFE (page)",
+      "file_type": "document",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "bases_html",
+      "community": 30,
+      "norm_label": "bases safe (page)"
+    },
+    {
+      "label": "Grid de bases (unidades)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "bases_grid",
+      "community": 30,
+      "norm_label": "grid de bases (unidades)"
+    },
+    {
+      "label": "Modal de base (nova/editar unidade)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "bases_modal_base",
+      "community": 30,
+      "norm_label": "modal de base (nova/editar unidade)"
+    },
+    {
+      "label": "Concorr\u00eancia (page)",
+      "file_type": "document",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concorrencia_html",
+      "community": 24,
+      "norm_label": "concorrencia (page)"
+    },
+    {
+      "label": "Comparativo de pre\u00e7os por curso + filtro",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concorrencia_comparativo",
+      "community": 24,
+      "norm_label": "comparativo de precos por curso + filtro"
+    },
+    {
+      "label": "Modal de concorrente (nova/editar)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concorrencia_modal_concorrente",
+      "community": 24,
+      "norm_label": "modal de concorrente (nova/editar)"
+    },
+    {
+      "label": "Modal de pre\u00e7o SAFE",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concorrencia_modal_preco_safe",
+      "community": 24,
+      "norm_label": "modal de preco safe"
+    },
+    {
+      "label": "Controle de Gastos (page)",
+      "file_type": "document",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "controle_gastos_html",
+      "community": 19,
+      "norm_label": "controle de gastos (page)"
+    },
+    {
+      "label": "Vis\u00e3o Geral (KPIs + gr\u00e1ficos Chart.js)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "controle_gastos_visao_geral",
+      "community": 19,
+      "norm_label": "visao geral (kpis + graficos chart.js)"
+    },
+    {
+      "label": "Fechamento mensal (editor por base SJK/CPN)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "controle_gastos_fechamento_mensal",
+      "community": 19,
+      "norm_label": "fechamento mensal (editor por base sjk/cpn)"
+    },
+    {
+      "label": "Receita total por base",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "controle_gastos_receitas",
+      "community": 19,
+      "norm_label": "receita total por base"
+    },
+    {
+      "label": "Categorias de gastos (tabela + modal)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "controle_gastos_categorias",
+      "community": 19,
+      "norm_label": "categorias de gastos (tabela + modal)"
+    },
+    {
+      "label": "Vendas (page)",
+      "file_type": "document",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vendas_html",
+      "community": 15,
+      "norm_label": "vendas (page)"
+    },
+    {
+      "label": "Registro de Vendas (tabela + filtros)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vendas_tabela_vendas",
+      "community": 15,
+      "norm_label": "registro de vendas (tabela + filtros)"
+    },
+    {
+      "label": "Modal de Venda (nova/editar)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vendas_modal_venda",
+      "community": 15,
+      "norm_label": "modal de venda (nova/editar)"
+    },
+    {
+      "label": "Curso picker multiselect",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vendas_curso_picker",
+      "community": 15,
+      "norm_label": "curso picker multiselect"
+    },
+    {
+      "label": "css/safe-theme.css",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "css_safe_theme",
+      "community": 15,
+      "norm_label": "css/safe-theme.css"
+    },
+    {
+      "label": "css/layout.css",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "css_layout",
+      "community": 15,
+      "norm_label": "css/layout.css"
+    },
+    {
+      "label": "css/admin.css",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "css_admin",
+      "community": 15,
+      "norm_label": "css/admin.css"
+    },
+    {
+      "label": "css/bases.css",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "css_bases",
+      "community": 30,
+      "norm_label": "css/bases.css"
+    },
+    {
+      "label": "css/concorrencia.css",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "css_concorrencia",
+      "community": 24,
+      "norm_label": "css/concorrencia.css"
+    },
+    {
+      "label": "css/controle-gastos.css",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "css_controle_gastos",
+      "community": 19,
+      "norm_label": "css/controle-gastos.css"
+    },
+    {
+      "label": "css/vendas.css",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "css_vendas",
+      "community": 15,
+      "norm_label": "css/vendas.css"
+    },
+    {
+      "label": "Chart.js 4.4.0 (CDN)",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "source_url": "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "chartjs_cdn",
+      "community": 19,
+      "norm_label": "chart.js 4.4.0 (cdn)"
+    },
+    {
+      "label": "access-control.html (gerenciar cargos)",
+      "file_type": "document",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "access_control_html",
+      "community": 20,
+      "norm_label": "access-control.html (gerenciar cargos)"
     }
   ],
   "links": [
@@ -9068,6 +9365,46 @@
       "target": "js_access_control_accesscontrol"
     },
     {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "js_api"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "js_api"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "js_api"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "js_api"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/api.js",
@@ -9178,14 +9515,14 @@
       "target": "js_api_toast"
     },
     {
-      "relation": "contains",
+      "relation": "references",
       "confidence": "EXTRACTED",
-      "source_file": "js/bases.js",
-      "source_location": "L5",
-      "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "js_bases",
-      "target": "js_bases_bases"
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "js_api"
     },
     {
       "relation": "contains",
@@ -9196,26 +9533,6 @@
       "confidence_score": 1.0,
       "source": "js_cadastro_alunos",
       "target": "js_cadastro_alunos_cadastroalunos"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/concorrencia.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_concorrencia",
-      "target": "js_concorrencia_concorrencia"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/controle-gastos.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_controle_gastos",
-      "target": "js_controle_gastos_controlegastos"
     },
     {
       "relation": "contains",
@@ -9256,66 +9573,6 @@
       "confidence_score": 1.0,
       "source": "js_progresso_alunos",
       "target": "js_progresso_alunos_progressoalunos"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/vendas.js",
-      "source_location": "L777",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_vendas",
-      "target": "js_vendas_aplicarmascarabrl"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/vendas.js",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_vendas",
-      "target": "js_vendas_cursos_vendas"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/vendas.js",
-      "source_location": "L796",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_vendas",
-      "target": "js_vendas_getinputbrl"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/vendas.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_vendas",
-      "target": "js_vendas_pacotes_legados_cursos"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/vendas.js",
-      "source_location": "L785",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_vendas",
-      "target": "js_vendas_setinputbrl"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/vendas.js",
-      "source_location": "L33",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "js_vendas",
-      "target": "js_vendas_vendas"
     },
     {
       "relation": "contains",
@@ -14256,63 +14513,53 @@
       "target": "concept_safe_hub_brand"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/admin.js",
-      "source_location": "L66",
-      "weight": 1.0,
-      "source": "js_admin",
-      "target": "js_admin_admin",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/admin.js",
-      "source_location": "L9",
-      "weight": 1.0,
-      "source": "js_admin",
-      "target": "js_admin_rbac_cargos_oferecidos",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/admin.js",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "js_admin",
-      "target": "js_admin_rbac_modulos",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/admin.js",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "js_admin",
-      "target": "js_admin_rbac_perms_base",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "js_auth"
+    },
+    {
+      "relation": "conceptually_related_to",
       "confidence": "INFERRED",
       "confidence_score": 0.75,
       "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
       "source_location": null,
       "weight": 1.0,
-      "source": "admin_data_finance_only",
+      "source": "admin_matriz_rbac",
       "target": "js_auth"
     },
     {
       "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
       "source_location": null,
       "weight": 1.0,
-      "source": "admin_modal_usuario",
+      "source": "bases_html",
+      "target": "js_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "js_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
       "target": "js_auth"
     },
     {
@@ -14341,9 +14588,59 @@
       "source_file": "js/auth.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_auth",
-      "target": "js_auth_auth",
-      "confidence_score": 1.0
+      "target": "js_auth_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "js_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "js_config"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "js_config"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "js_config"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "js_config"
     },
     {
       "relation": "references",
@@ -14361,9 +14658,19 @@
       "source_file": "js/config.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_config",
-      "target": "js_config_config",
-      "confidence_score": 1.0
+      "target": "js_config_config"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "js_config"
     },
     {
       "relation": "contains",
@@ -14371,9 +14678,9 @@
       "source_file": "js/inicio.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_inicio",
-      "target": "js_inicio_inicio",
-      "confidence_score": 1.0
+      "target": "js_inicio_inicio"
     },
     {
       "relation": "references",
@@ -14383,16 +14690,6 @@
       "source_location": null,
       "weight": 1.0,
       "source": "claude_rbac_puro",
-      "target": "claude_permissoes_efetivas"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_data_finance_only",
       "target": "claude_permissoes_efetivas"
     },
     {
@@ -14437,16 +14734,6 @@
     },
     {
       "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_u_cargo",
-      "target": "claude_access_default_groups"
-    },
-    {
-      "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
@@ -14486,26 +14773,6 @@
       "target": "claude_access_default_groups"
     },
     {
-      "relation": "implements",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_js",
-      "target": "claude_rbac_modulos"
-    },
-    {
-      "relation": "implements",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_matriz_acesso",
-      "target": "claude_rbac_modulos"
-    },
-    {
       "relation": "shares_data_with",
       "confidence": "INFERRED",
       "confidence_score": 0.75,
@@ -14514,26 +14781,6 @@
       "weight": 1.0,
       "source": "claude_rbac_modulos",
       "target": "claude_calcular_permissoes_efetivas"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_origem_cco",
-      "target": "claude_permissoes_efetivas_cco"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_btn_forcar_relogin",
-      "target": "claude_session_version"
     },
     {
       "relation": "conceptually_related_to",
@@ -14549,54 +14796,567 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_modal_usuario",
-      "target": "admin_matriz_acesso"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_modal_usuario",
-      "target": "admin_u_cargo"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_js",
-      "target": "admin_u_cargo"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "admin_js",
-      "target": "admin_matriz_acesso"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/index.html",
       "source_location": null,
       "weight": 1.0,
       "source": "index_login_card",
       "target": "index_fazer_login"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "js_admin"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/admin.js",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "js_admin",
+      "target": "js_admin_admin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/admin.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "js_admin",
+      "target": "js_admin_rbac_cargos_oferecidos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/admin.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "js_admin",
+      "target": "js_admin_rbac_modulos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/admin.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "js_admin",
+      "target": "js_admin_rbac_perms_base",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "js_bases"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/bases.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "js_bases",
+      "target": "js_bases_bases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "js_concorrencia"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/concorrencia.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "js_concorrencia",
+      "target": "js_concorrencia_concorrencia",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "js_controle_gastos"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/controle-gastos.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "js_controle_gastos",
+      "target": "js_controle_gastos_controlegastos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L806",
+      "weight": 1.0,
+      "source": "js_vendas",
+      "target": "js_vendas_aplicarmascarabrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "js_vendas",
+      "target": "js_vendas_cursos_vendas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L825",
+      "weight": 1.0,
+      "source": "js_vendas",
+      "target": "js_vendas_getinputbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "js_vendas",
+      "target": "js_vendas_pacotes_legados_cursos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L814",
+      "weight": 1.0,
+      "source": "js_vendas",
+      "target": "js_vendas_setinputbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js/vendas.js",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "js_vendas",
+      "target": "js_vendas_vendas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "js_vendas"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "admin_alterar_senha"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "admin_diretorio_acessos"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "admin_modal_usuario"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "css_admin"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "css_layout"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_html",
+      "target": "css_safe_theme"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_modal_usuario",
+      "target": "admin_campos_cco"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_modal_usuario",
+      "target": "admin_matriz_rbac"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "admin_matriz_rbac",
+      "target": "access_control_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "bases_grid"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "bases_modal_base"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "css_bases"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "css_layout"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/bases.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "bases_html",
+      "target": "css_safe_theme"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "concorrencia_comparativo"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "concorrencia_modal_concorrente"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "concorrencia_modal_preco_safe"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "css_concorrencia"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "css_layout"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_html",
+      "target": "css_safe_theme"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/concorrencia.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concorrencia_modal_preco_safe",
+      "target": "concorrencia_modal_concorrente"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "chartjs_cdn"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "controle_gastos_categorias"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "controle_gastos_fechamento_mensal"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "controle_gastos_receitas"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "controle_gastos_visao_geral"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "css_controle_gastos"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "css_layout"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_html",
+      "target": "css_safe_theme"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/controle-gastos.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "controle_gastos_visao_geral",
+      "target": "chartjs_cdn"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "css_layout"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "css_safe_theme"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "css_vendas"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "vendas_modal_venda"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_html",
+      "target": "vendas_tabela_vendas"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/vendas.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vendas_modal_venda",
+      "target": "vendas_curso_picker"
     }
   ],
   "hyperedges": [
+    {
+      "id": "hub_shared_core_scripts",
+      "label": "N\u00facleo compartilhado config/api/auth em todas as p\u00e1ginas",
+      "nodes": [
+        "js_config",
+        "js_api",
+        "js_auth"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html"
+    },
     {
       "id": "rbac_effective_permissions_flow",
       "label": "Fluxo de permiss\u00f5es efetivas RBAC",
@@ -14611,21 +15371,6 @@
       "confidence": "EXTRACTED",
       "confidence_score": 0.9,
       "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md"
-    },
-    {
-      "id": "user_creation_screen",
-      "label": "Tela de cria\u00e7\u00e3o de usu\u00e1rio por cargo e matriz",
-      "nodes": [
-        "admin_modal_usuario",
-        "admin_u_cargo",
-        "admin_matriz_acesso",
-        "claude_rbac_modulos",
-        "admin_js"
-      ],
-      "relation": "form",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/admin.html"
     },
     {
       "id": "login_session_flow",
@@ -14854,5 +15599,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "e733ba4edc8c4ac1f51cac026b9c5dc4e3493aa0"
+  "built_at_commit": "dc480ad4fe6ce7c957e184b39a8d478b5388d55c"
 }

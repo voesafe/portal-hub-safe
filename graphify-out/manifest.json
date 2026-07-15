@@ -25,9 +25,9 @@
     "semantic_hash": "50e5a50872bb70aa4b148351c87814e9"
   },
   "js/admin.js": {
-    "mtime": 1784134677.6522965,
-    "ast_hash": "c97f8e3ea1a30375011144179e5dc658",
-    "semantic_hash": "c97f8e3ea1a30375011144179e5dc658"
+    "mtime": 1784136472.1294935,
+    "ast_hash": "e37373441a9e381104d4538952fa1b72",
+    "semantic_hash": "e37373441a9e381104d4538952fa1b72"
   },
   "js/api.js": {
     "mtime": 1783261070.761267,
@@ -40,9 +40,9 @@
     "semantic_hash": "b8d655650ee66f369494d72e0b722bf7"
   },
   "js/bases.js": {
-    "mtime": 1783528016.9013817,
-    "ast_hash": "3d6d3d64c2a9169f76c62c58c1b66b16",
-    "semantic_hash": "3d6d3d64c2a9169f76c62c58c1b66b16"
+    "mtime": 1784136472.1297796,
+    "ast_hash": "5320511d7d6082e676f174f1fa8152af",
+    "semantic_hash": "5320511d7d6082e676f174f1fa8152af"
   },
   "js/cadastro-alunos.js": {
     "mtime": 1783202447.1066372,
@@ -50,9 +50,9 @@
     "semantic_hash": "0050ecd974c116a5e2779002d662ee48"
   },
   "js/concorrencia.js": {
-    "mtime": 1782833601.172566,
-    "ast_hash": "2c033fed3e82d078a6dca67516122ad3",
-    "semantic_hash": "2c033fed3e82d078a6dca67516122ad3"
+    "mtime": 1784136472.1299255,
+    "ast_hash": "637a6ae9d3e3ea90b7e0df90d929a43f",
+    "semantic_hash": "637a6ae9d3e3ea90b7e0df90d929a43f"
   },
   "js/config.js": {
     "mtime": 1783612639.360083,
@@ -60,9 +60,9 @@
     "semantic_hash": "63c66f0749b7db9b3b9d0111e14994d2"
   },
   "js/controle-gastos.js": {
-    "mtime": 1780945023.5599198,
-    "ast_hash": "ab4b53be87d64b123caf8cf59e949b2b",
-    "semantic_hash": "ab4b53be87d64b123caf8cf59e949b2b"
+    "mtime": 1784136472.1300993,
+    "ast_hash": "a9f9eab017f86328ffce1967ebf9e0fe",
+    "semantic_hash": "a9f9eab017f86328ffce1967ebf9e0fe"
   },
   "js/dashboard.js": {
     "mtime": 1780839955.3933463,
@@ -90,9 +90,9 @@
     "semantic_hash": "aa41e90819c50ec79d35bdd6a5103f17"
   },
   "js/vendas.js": {
-    "mtime": 1783528053.7787993,
-    "ast_hash": "684e90cdfc0deaee2b00182b24d702ae",
-    "semantic_hash": "684e90cdfc0deaee2b00182b24d702ae"
+    "mtime": 1784136472.1302874,
+    "ast_hash": "3b7635520d632fd9efc87bdf6ecada07",
+    "semantic_hash": "3b7635520d632fd9efc87bdf6ecada07"
   },
   "preview/clean/assets/safe-minions/xlsx.full.min.js": {
     "mtime": 1783375451.4449642,
@@ -365,14 +365,14 @@
     "semantic_hash": "b27be7f22becce7d02d2708b1131c1b9"
   },
   "admin.html": {
-    "mtime": 1784134677.6520462,
-    "ast_hash": "6b2390b0950648cd714252e83f04785c",
-    "semantic_hash": "6b2390b0950648cd714252e83f04785c"
+    "mtime": 1784136472.1286201,
+    "ast_hash": "5211cecd8849ca05cb3c79a757813707",
+    "semantic_hash": "5211cecd8849ca05cb3c79a757813707"
   },
   "bases.html": {
-    "mtime": 1783528008.5865295,
-    "ast_hash": "7eec6b20cd35bc6876c8a3fd5465f93e",
-    "semantic_hash": "7eec6b20cd35bc6876c8a3fd5465f93e"
+    "mtime": 1784136472.1289072,
+    "ast_hash": "a88015330d66e330511f4833b76fd4b2",
+    "semantic_hash": "a88015330d66e330511f4833b76fd4b2"
   },
   "cadastro-alunos.html": {
     "mtime": 1783368327.8421104,
@@ -380,14 +380,14 @@
     "semantic_hash": "1f4daef11347844c9aeaf15b8b565c42"
   },
   "concorrencia.html": {
-    "mtime": 1783368327.8424459,
-    "ast_hash": "eff75c867591d12d3dcfc649b2a0104c",
-    "semantic_hash": "eff75c867591d12d3dcfc649b2a0104c"
+    "mtime": 1784136472.1291385,
+    "ast_hash": "7e425ebad91fa784008fb39a27ee003f",
+    "semantic_hash": "7e425ebad91fa784008fb39a27ee003f"
   },
   "controle-gastos.html": {
-    "mtime": 1783528076.0010824,
-    "ast_hash": "1b80a43a31a5531a1d0165f88394eb15",
-    "semantic_hash": "1b80a43a31a5531a1d0165f88394eb15"
+    "mtime": 1784136472.129317,
+    "ast_hash": "8a154343f081c1a6afedaa9a1de32c8e",
+    "semantic_hash": "8a154343f081c1a6afedaa9a1de32c8e"
   },
   "dashboard.html": {
     "mtime": 1783368327.8431795,
@@ -770,9 +770,9 @@
     "semantic_hash": "0edcccf5d09934d32f6c5f265622ee02"
   },
   "vendas.html": {
-    "mtime": 1783528036.4646285,
-    "ast_hash": "1615d9fe883958c713cef0867eadf9f9",
-    "semantic_hash": "1615d9fe883958c713cef0867eadf9f9"
+    "mtime": 1784136472.1305945,
+    "ast_hash": "79a19c751fee59d90a95f7e650e1098c",
+    "semantic_hash": "79a19c751fee59d90a95f7e650e1098c"
   },
   "assets/icons/apple-touch-icon.png": {
     "mtime": 1783368312.3252013,
