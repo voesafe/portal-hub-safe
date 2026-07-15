@@ -669,18 +669,26 @@ const Admin = {
 
     if (!window.confirm(`Deseja ${verbo} o acesso de ${usuario.nome}?\n\n${explicacao}`)) return;
 
+    // Atualização otimista: reflete na tela imediatamente (o backend do Apps Script
+    // pode levar ~10s). Se a gravação falhar, revertemos o estado e avisamos.
+    usuario.ativo = !ativo;
+    this.gravarCacheUsuarios({ usuarios: this.usuarios });
+    this.renderResumo();
+    this.renderTabela();
+
     const res = await API.alterarStatusUsuario(usuario.id, this.normalizarOrigem(usuario.origem), !ativo);
 
     if (!res.ok) {
+      // Reverte o estado otimista, pois o servidor não confirmou a alteração.
+      usuario.ativo = ativo;
+      this.gravarCacheUsuarios({ usuarios: this.usuarios });
+      this.renderResumo();
+      this.renderTabela();
       toast(res.error || `Não foi possível ${verbo} o acesso.`, 'error');
       return;
     }
 
     toast(ativo ? 'Acesso desativado.' : 'Acesso reativado.', 'success');
-    usuario.ativo = !ativo;
-    this.gravarCacheUsuarios({ usuarios: this.usuarios });
-    this.renderResumo();
-    this.renderTabela();
   },
 
   dadosFormularioUsuario() {
