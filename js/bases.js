@@ -166,6 +166,25 @@ const Bases = {
       return;
     }
 
+    const editando = this.editandoId;
+
+    if (editando) {
+      // Edição otimista: aplica na tela e fecha o modal na hora; reverte se falhar.
+      const alvo = this.itens.find(item => String(item.id) === String(editando));
+      const snapshot = alvo ? { ...alvo } : null;
+      if (alvo) { Object.assign(alvo, dados); this.renderizar(); }
+      fecharModal('modal-base');
+      toast('Base atualizada.', 'success');
+
+      const res = await API.salvarBase(dados);
+      if (!res.ok) {
+        if (alvo && snapshot) { Object.assign(alvo, snapshot); this.renderizar(); }
+        toast(res.error || 'Nao foi possivel salvar a base. A alteracao foi desfeita.', 'error');
+      }
+      return;
+    }
+
+    // Criar: o servidor gera o ID → fecha o modal e recarrega em segundo plano.
     const btn = document.getElementById('btn-salvar-base');
     btnLoading(btn, true);
     const res = await API.salvarBase(dados);
@@ -176,9 +195,9 @@ const Bases = {
       return;
     }
 
-    toast(this.editandoId ? 'Base atualizada.' : 'Base criada.', 'success');
+    toast('Base criada.', 'success');
     fecharModal('modal-base');
-    await this.carregar();
+    this.carregar();
   }
 };
 
