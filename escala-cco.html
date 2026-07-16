@@ -1068,7 +1068,7 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
       </div>
       <div class="export-modal-sub">Selecione o mês que deseja exportar. Confira os números antes de gerar o arquivo.</div>
       <label class="export-field-label" for="exportMesSelect">Mês da exportação</label>
-      <select class="export-mes-select" id="exportMesSelect"></select>
+      <select class="export-mes-select" id="exportMesSelect" onchange="atualizarPreviewExport()"></select>
       <div class="export-preview" id="exportPreview">
         <div class="export-preview-mes" id="exportPreviewMes">—</div>
         <div class="export-preview-stats">
