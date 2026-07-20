@@ -7,6 +7,7 @@ const CadastroAlunos = {
   alunos: [],
   filtro: 'ativos',
   ordenacao: 'matricula_desc',
+  selecionados: new Set(),
 
   statusMeta: {
     pendente_s141: { label: 'Pendente S141' },
@@ -50,6 +51,7 @@ const CadastroAlunos = {
       tab.addEventListener('click', () => {
         this.filtro = tab.dataset.filtro;
         document.querySelectorAll('.cadastro-tab').forEach(item => item.classList.toggle('active', item === tab));
+        this.selecionados.clear();
         this.renderizar();
       });
     });
@@ -59,12 +61,52 @@ const CadastroAlunos = {
       if (!botao) return;
       this.executarAcao(botao.dataset.acao, botao.dataset.id, botao);
     });
+
+    document.getElementById('cadastro-alunos-tbody')?.addEventListener('change', evento => {
+      const check = evento.target.closest('.cadastro-row-check');
+      if (!check) return;
+      if (check.checked) this.selecionados.add(check.dataset.id);
+      else this.selecionados.delete(check.dataset.id);
+      this.atualizarSelecao();
+    });
+
+    document.getElementById('cadastro-check-all')?.addEventListener('change', evento => {
+      const marcar = evento.target.checked;
+      this.selecionados.clear();
+      if (marcar) {
+        this.ordenarAlunos(this.alunosFiltrados()).forEach(aluno => this.selecionados.add(String(aluno.id)));
+      }
+      this.renderizar();
+    });
+
+    document.getElementById('cadastro-bulk-limpar')?.addEventListener('click', () => {
+      this.selecionados.clear();
+      this.renderizar();
+    });
+
+    document.getElementById('cadastro-bulk-sync')?.addEventListener('click', () => this.sincronizarSelecionados());
   },
 
   fecharMenusAcao(menuAtual = null) {
     document.querySelectorAll('.cadastro-action-menu.open').forEach(menu => {
-      if (menu !== menuAtual) menu.classList.remove('open');
+      if (menu !== menuAtual) {
+        menu.classList.remove('open');
+        menu.classList.remove('drop-up');
+      }
     });
+  },
+
+  // Abre o popover para cima quando não cabe abaixo do gatilho (última linha da tabela).
+  posicionarMenuAcao(menu, gatilho) {
+    const popover = menu.querySelector('.cadastro-action-popover');
+    if (!popover) return;
+    const rect = gatilho.getBoundingClientRect();
+    const alturaPopover = popover.offsetHeight; // já visível: .open foi aplicado antes
+    const espacoAbaixo = window.innerHeight - rect.bottom;
+    const espacoAcima = rect.top;
+    if (espacoAbaixo < alturaPopover + 16 && espacoAcima > espacoAbaixo) {
+      menu.classList.add('drop-up');
+    }
   },
 
   async carregar(mostrarToast = false) {
@@ -215,6 +257,11 @@ const CadastroAlunos = {
     return String(a || '').localeCompare(String(b || ''), 'pt-BR', { sensitivity: 'base' });
   },
 
+  // Seleção em massa só faz sentido na aba "Prontos Trello" (sincronizar em lote).
+  selecaoAtiva() {
+    return this.filtro === 'trello';
+  },
+
   renderizar() {
     this.atualizarResumo();
     const tbody = document.getElementById('cadastro-alunos-tbody');
@@ -224,12 +271,41 @@ const CadastroAlunos = {
     const lista = this.ordenarAlunos(this.alunosFiltrados());
     if (subtitle) subtitle.textContent = `${lista.length} aluno(s) exibido(s) de ${this.alunos.length}.`;
 
-    if (!lista.length) {
-      tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted" style="padding:32px">Nenhum aluno encontrado para este filtro.</td></tr>';
-      return;
+    // Fora da aba com seleção, nada fica selecionado. Dentro, descarta ids que saíram da lista.
+    if (!this.selecaoAtiva()) {
+      this.selecionados.clear();
+    } else {
+      const idsVisiveis = new Set(lista.map(aluno => String(aluno.id)));
+      [...this.selecionados].forEach(id => { if (!idsVisiveis.has(id)) this.selecionados.delete(id); });
     }
 
-    tbody.innerHTML = lista.map(aluno => this.renderLinha(aluno)).join('');
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:32px">Nenhum aluno encontrado para este filtro.</td></tr>';
+    } else {
+      tbody.innerHTML = lista.map(aluno => this.renderLinha(aluno)).join('');
+    }
+
+    this.atualizarSelecao();
+  },
+
+  atualizarSelecao() {
+    const card = document.getElementById('cadastro-fila-card');
+    const barra = document.getElementById('cadastro-bulk-bar');
+    const contador = document.getElementById('cadastro-bulk-count');
+    const checkAll = document.getElementById('cadastro-check-all');
+    const ativa = this.selecaoAtiva();
+
+    card?.classList.toggle('mostrar-selecao', ativa);
+
+    const total = this.selecionados.size;
+    if (contador) contador.textContent = total;
+    if (barra) barra.hidden = !(ativa && total > 0);
+
+    if (checkAll) {
+      const visiveis = this.ordenarAlunos(this.alunosFiltrados()).length;
+      checkAll.checked = ativa && visiveis > 0 && total === visiveis;
+      checkAll.indeterminate = ativa && total > 0 && total < visiveis;
+    }
   },
 
   renderLinha(aluno) {
@@ -237,8 +313,12 @@ const CadastroAlunos = {
     const curso = aluno.cursoOperacional || aluno.curso || '—';
     const base = aluno.baseTrello || aluno.base || '—';
     const obs = aluno.observacao ? `<small>${escapeHtml(aluno.observacao)}</small>` : '';
+    const selecionado = this.selecionados.has(String(aluno.id)) ? 'checked' : '';
     return `
       <tr>
+        <td class="cadastro-col-check" data-label="">
+          <input type="checkbox" class="cadastro-row-check" data-id="${escapeHtml(aluno.id)}" aria-label="Selecionar aluno" ${selecionado}>
+        </td>
         <td data-label="Matrícula">
           <strong>${escapeHtml(aluno.matricula || '—')}</strong>
         </td>
@@ -324,7 +404,11 @@ const CadastroAlunos = {
       const menu = botao.closest('.cadastro-action-menu');
       const abrir = !menu?.classList.contains('open');
       this.fecharMenusAcao(menu);
-      menu?.classList.toggle('open', abrir);
+      if (menu) {
+        menu.classList.remove('drop-up');
+        menu.classList.toggle('open', abrir);
+        if (abrir) this.posicionarMenuAcao(menu, botao);
+      }
       return;
     }
 
@@ -365,6 +449,42 @@ const CadastroAlunos = {
       toast(erro.message || 'Erro ao executar ação.', 'error', 6000);
     } finally {
       btnLoading(botao, false);
+    }
+  },
+
+  async sincronizarSelecionados() {
+    const ids = [...this.selecionados];
+    if (!ids.length) return;
+    if (!window.confirm(`Sincronizar ${ids.length} aluno(s) selecionado(s) com o Trello?`)) return;
+
+    this.fecharMenusAcao();
+    // O Apps Script serializa cada chamada e devolve a lista completa — roda sequencial
+    // para evitar corridas de estado no servidor.
+    let sucesso = 0;
+    let falhas = 0;
+    this.setCarregando(true, `Sincronizando 0/${ids.length}...`);
+    try {
+      for (let i = 0; i < ids.length; i++) {
+        this.setCarregando(true, `Sincronizando ${i + 1}/${ids.length}...`);
+        try {
+          const res = await API.sincronizarTrelloCadastroAluno(ids[i]);
+          if (!res.ok) throw new Error(res.error || 'Falha ao sincronizar.');
+          this.alunos = res.data?.alunos || this.alunos;
+          sucesso++;
+        } catch (erro) {
+          console.error('[Cadastro Alunos sync massa]', ids[i], erro);
+          falhas++;
+        }
+      }
+      this.selecionados.clear();
+      this.renderizar();
+      if (falhas) {
+        toast(`${sucesso} sincronizado(s), ${falhas} com erro. Verifique os que restaram na aba.`, 'error', 7000);
+      } else {
+        toast(`${sucesso} aluno(s) sincronizado(s) com o Trello.`, 'success', 6000);
+      }
+    } finally {
+      this.setCarregando(false);
     }
   }
 };

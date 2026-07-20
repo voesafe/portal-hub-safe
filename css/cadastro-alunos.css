@@ -243,6 +243,12 @@
   gap: 2px;
 }
 
+/* Abre o menu para cima quando não há espaço abaixo (última linha da tabela). */
+.cadastro-action-menu.drop-up .cadastro-action-popover {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
 .cadastro-action-popover button,
 .cadastro-action-popover a {
   display: block;
@@ -259,6 +265,50 @@
 .cadastro-action-popover button:hover,
 .cadastro-action-popover a:hover {
   background: var(--gray-100);
+}
+
+/* ===== Seleção em massa (visível só na aba Prontos Trello) ===== */
+.cadastro-col-check {
+  width: 40px;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.cadastro-col-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--blue, #2f6bff);
+}
+
+/* Esconde a coluna de seleção fora da aba Prontos Trello. */
+.cadastro-fila-card:not(.mostrar-selecao) .cadastro-col-check {
+  display: none;
+}
+
+.cadastro-bulk-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  background: var(--gray-50, #f4f6fb);
+}
+
+.cadastro-bulk-info {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.cadastro-bulk-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .cadastro-alunos-page .card {
