@@ -97,13 +97,23 @@ const CadastroAlunos = {
   },
 
   // Abre o popover para cima quando não cabe abaixo do gatilho (última linha da tabela).
+  // Quem corta é o .table-wrapper (overflow) e/ou a janela — mede contra o menor dos dois.
   posicionarMenuAcao(menu, gatilho) {
     const popover = menu.querySelector('.cadastro-action-popover');
     if (!popover) return;
     const rect = gatilho.getBoundingClientRect();
     const alturaPopover = popover.offsetHeight; // já visível: .open foi aplicado antes
-    const espacoAbaixo = window.innerHeight - rect.bottom;
-    const espacoAcima = rect.top;
+
+    const wrapper = menu.closest('.table-wrapper');
+    const limiteInferior = wrapper
+      ? Math.min(window.innerHeight, wrapper.getBoundingClientRect().bottom)
+      : window.innerHeight;
+    const limiteSuperior = wrapper
+      ? Math.max(0, wrapper.getBoundingClientRect().top)
+      : 0;
+
+    const espacoAbaixo = limiteInferior - rect.bottom;
+    const espacoAcima = rect.top - limiteSuperior;
     if (espacoAbaixo < alturaPopover + 16 && espacoAcima > espacoAbaixo) {
       menu.classList.add('drop-up');
     }

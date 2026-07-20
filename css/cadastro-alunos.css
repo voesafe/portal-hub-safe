@@ -269,7 +269,6 @@
 
 /* ===== Seleção em massa (visível só na aba Prontos Trello) ===== */
 .cadastro-col-check {
-  width: 40px;
   text-align: center;
   vertical-align: middle !important;
 }
@@ -281,8 +280,13 @@
   accent-color: var(--blue, #2f6bff);
 }
 
-/* Esconde a coluna de seleção fora da aba Prontos Trello. */
+/* Esconde a coluna de seleção fora da aba Prontos Trello (inclusive no mobile,
+   onde `td { display: grid !important }` exigiria !important para ser sobreposto). */
 .cadastro-fila-card:not(.mostrar-selecao) .cadastro-col-check {
+  display: none !important;
+}
+
+.cadastro-bulk-bar[hidden] {
   display: none;
 }
 
@@ -351,59 +355,66 @@
   padding-bottom: 13px;
 }
 
+/* Coluna 1 = checkbox de seleção (só ocupa largura quando visível). As demais
+   colunas seguem deslocadas +1 em relação ao layout original de 8 colunas. */
 .table-cadastro-alunos th:nth-child(1),
 .table-cadastro-alunos td:nth-child(1) {
-  width: 90px;
+  width: 44px;
 }
 
 .table-cadastro-alunos th:nth-child(2),
 .table-cadastro-alunos td:nth-child(2) {
+  width: 90px;
+}
+
+.table-cadastro-alunos th:nth-child(3),
+.table-cadastro-alunos td:nth-child(3) {
   width: 260px;
 }
 
-.table.table-cadastro-alunos thead th:nth-child(3),
-.table.table-cadastro-alunos tbody td:nth-child(3) {
+.table.table-cadastro-alunos thead th:nth-child(4),
+.table.table-cadastro-alunos tbody td:nth-child(4) {
   width: 140px;
   white-space: nowrap;
   word-break: normal;
   overflow-wrap: normal;
 }
 
-.table-cadastro-alunos th:nth-child(4),
-.table-cadastro-alunos td:nth-child(4) {
-  width: 260px;
-}
-
 .table-cadastro-alunos th:nth-child(5),
 .table-cadastro-alunos td:nth-child(5) {
-  width: 70px;
-  white-space: nowrap;
+  width: 260px;
 }
 
 .table-cadastro-alunos th:nth-child(6),
 .table-cadastro-alunos td:nth-child(6) {
-  width: 125px;
+  width: 70px;
   white-space: nowrap;
 }
 
 .table-cadastro-alunos th:nth-child(7),
 .table-cadastro-alunos td:nth-child(7) {
-  width: 185px;
+  width: 125px;
+  white-space: nowrap;
 }
 
 .table-cadastro-alunos th:nth-child(8),
 .table-cadastro-alunos td:nth-child(8) {
+  width: 185px;
+}
+
+.table-cadastro-alunos th:nth-child(9),
+.table-cadastro-alunos td:nth-child(9) {
   width: 165px;
 }
 
-.table.table-cadastro-alunos tbody td:nth-child(3),
+.table.table-cadastro-alunos tbody td:nth-child(4),
 .cadastro-cpf {
   font-variant-numeric: tabular-nums;
 }
 
-.table-cadastro-alunos td:nth-child(2),
-.table-cadastro-alunos td:nth-child(4),
-.table-cadastro-alunos td:nth-child(7) {
+.table-cadastro-alunos td:nth-child(3),
+.table-cadastro-alunos td:nth-child(5),
+.table-cadastro-alunos td:nth-child(8) {
   white-space: normal;
 }
 
