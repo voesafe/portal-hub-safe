@@ -144,6 +144,9 @@ const API = {
   async getControleAcesso() { return this.get('access-control', {}, false); },
   async salvarGrupoAcesso(dados) { return this.post('salvar-access-group', dados); },
 
+  // ── NOTAMs (leitura do cache; global p/ todos os logados) ──
+  async getNotams() { return this.get('notams', {}, true); },
+
   // ── Cadastro de Alunos / Trello ────────────────────────────
   async getCadastroAlunos() { return this.get('cadastro-alunos', {}, false); },
   async importarCadastroAlunos(alunos) { return this.post('cadastro-alunos-importar', { alunos }); },

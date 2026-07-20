@@ -36,35 +36,6 @@
         "source_file": "escala-cco.html"
       },
       {
-        "id": "rbac_permissoes_efetivas_flow",
-        "label": "Fluxo RBAC de permiss\u00f5es efetivas",
-        "nodes": [
-          "claude_rbac_permissoes_efetivas",
-          "claude_auth_paginas_fonte_unica",
-          "claude_modelo_excecoes_grant_deny",
-          "accesscontrol_gs",
-          "auth_js"
-        ],
-        "relation": "participate_in",
-        "confidence": "INFERRED",
-        "confidence_score": 0.85,
-        "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md"
-      },
-      {
-        "id": "tela_criacao_cargos_matriz",
-        "label": "Tela de cria\u00e7\u00e3o: cargos + matriz + exce\u00e7\u00f5es",
-        "nodes": [
-          "claude_tela_criacao_usuario",
-          "claude_cargos_oficiais",
-          "claude_modelo_excecoes_grant_deny",
-          "gen_rbac_js"
-        ],
-        "relation": "participate_in",
-        "confidence": "INFERRED",
-        "confidence_score": 0.85,
-        "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md"
-      },
-      {
         "id": "hub_shared_core_scripts",
         "label": "N\u00facleo compartilhado config/api/auth em todas as p\u00e1ginas",
         "nodes": [
@@ -298,7 +269,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "admin-cli.js",
       "id": "admin_cli"
     },
@@ -308,7 +279,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "https",
       "id": "admin_cli_https"
     },
@@ -318,7 +289,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "http",
       "id": "admin_cli_http"
     },
@@ -328,7 +299,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "readline",
       "id": "admin_cli_readline"
     },
@@ -338,7 +309,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "crypto",
       "id": "admin_cli_crypto"
     },
@@ -348,7 +319,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "getrl()",
       "id": "admin_cli_getrl"
     },
@@ -358,7 +329,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "pergunta()",
       "id": "admin_cli_pergunta"
     },
@@ -368,7 +339,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "hashsenha()",
       "id": "admin_cli_hashsenha"
     },
@@ -378,7 +349,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "fazerget()",
       "id": "admin_cli_fazerget"
     },
@@ -388,7 +359,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "fazerpost()",
       "id": "admin_cli_fazerpost"
     },
@@ -398,7 +369,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L108",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "apipost()",
       "id": "admin_cli_apipost"
     },
@@ -408,7 +379,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "apiget()",
       "id": "admin_cli_apiget"
     },
@@ -418,7 +389,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L129",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "c",
       "id": "admin_cli_c"
     },
@@ -428,7 +399,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L140",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "ok()",
       "id": "admin_cli_ok"
     },
@@ -438,7 +409,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L141",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "erro()",
       "id": "admin_cli_erro"
     },
@@ -448,7 +419,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L142",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "info()",
       "id": "admin_cli_info"
     },
@@ -458,7 +429,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L143",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "titulo()",
       "id": "admin_cli_titulo"
     },
@@ -468,7 +439,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "labelperfil()",
       "id": "admin_cli_labelperfil"
     },
@@ -478,7 +449,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L154",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "cmdlistar()",
       "id": "admin_cli_cmdlistar"
     },
@@ -488,7 +459,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L195",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "cmdadicionar()",
       "id": "admin_cli_cmdadicionar"
     },
@@ -498,7 +469,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L230",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "cmdsenha()",
       "id": "admin_cli_cmdsenha"
     },
@@ -508,7 +479,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L261",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "cmdresetar()",
       "id": "admin_cli_cmdresetar"
     },
@@ -518,7 +489,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L286",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "cmdremover()",
       "id": "admin_cli_cmdremover"
     },
@@ -528,7 +499,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L319",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "ajuda()",
       "id": "admin_cli_ajuda"
     },
@@ -538,7 +509,7 @@
       "source_file": "admin-cli.js",
       "source_location": "L335",
       "_origin": "ast",
-      "community": 4,
+      "community": 5,
       "norm_label": "main()",
       "id": "admin_cli_main"
     },
@@ -2518,7 +2489,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 5,
+      "community": 2,
       "norm_label": "claude.md",
       "id": "claude"
     },
@@ -2528,7 +2499,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 5,
+      "community": 2,
       "norm_label": "claude.md \u2014 regras do projeto safe hub",
       "id": "claude_claude_md_regras_do_projeto_safe_hub"
     },
@@ -2538,7 +2509,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 5,
+      "community": 2,
       "norm_label": "uso obrigatorio do graphify",
       "id": "claude_uso_obrigat\u00f3rio_do_graphify"
     },
@@ -2548,7 +2519,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 5,
+      "community": 2,
       "norm_label": "transparencia de comandos",
       "id": "claude_transpar\u00eancia_de_comandos"
     },
@@ -2558,7 +2529,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 5,
+      "community": 2,
       "norm_label": "confiabilidade do grafo",
       "id": "claude_confiabilidade_do_grafo"
     },
@@ -2568,7 +2539,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 5,
+      "community": 2,
       "norm_label": "arquitetura de controle de acesso (rbac) \u2014 desde 2026-07-09",
       "id": "claude_arquitetura_de_controle_de_acesso_rbac_desde_2026_07_09"
     },
@@ -3681,7 +3652,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "cadastro de aluno page",
       "id": "preview_denso_cadastro_alunos_cadastro_alunos_page"
     },
@@ -3694,7 +3665,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fila operacional s141 (trello sync)",
       "id": "preview_denso_cadastro_alunos_fila_operacional_s141"
     },
@@ -3707,7 +3678,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "importar xls do cavok",
       "id": "preview_denso_cadastro_alunos_importar_xls_cavok"
     },
@@ -3759,7 +3730,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "controle de gastos page",
       "id": "preview_denso_controle_gastos_controle_gastos_page"
     },
@@ -3772,7 +3743,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "visao geral tab (gastos)",
       "id": "preview_denso_controle_gastos_visao_geral"
     },
@@ -3785,7 +3756,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fechamento mensal tab (gastos)",
       "id": "preview_denso_controle_gastos_fechamento_mensal"
     },
@@ -3798,7 +3769,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "receita total por base tab",
       "id": "preview_denso_controle_gastos_receita_total_por_base"
     },
@@ -3811,7 +3782,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "categorias de gastos tab",
       "id": "preview_denso_controle_gastos_categorias"
     },
@@ -3824,7 +3795,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "acesso somente visualizacao (rationale)",
       "id": "preview_denso_controle_gastos_acesso_somente_visualizacao"
     },
@@ -4214,7 +4185,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "horas voadas inva mes page",
       "id": "preview_denso_horas_voadas_inva_horas_voadas_inva_page"
     },
@@ -4227,7 +4198,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_denso_horas_voadas_inva_sincronizar_cavok"
     },
@@ -4240,7 +4211,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "cadastrar instrutor form",
       "id": "preview_denso_horas_voadas_inva_cadastrar_instrutor"
     },
@@ -4370,7 +4341,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "safe minions page",
       "id": "preview_denso_safe_minions_safe_minions_page"
     },
@@ -4383,7 +4354,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "verificacao de minimos anac is 141-007",
       "id": "preview_denso_safe_minions_verificacao_minimos_anac"
     },
@@ -4396,7 +4367,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo ppa \u2014 piloto privado de aviao",
       "id": "preview_denso_safe_minions_tipo_ppa"
     },
@@ -4409,7 +4380,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo pc/ifr \u2014 piloto comercial + instrumentos",
       "id": "preview_denso_safe_minions_tipo_pc_ifr"
     },
@@ -4422,7 +4393,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo inva \u2014 instrutor de voo de aviao",
       "id": "preview_denso_safe_minions_tipo_inva"
     },
@@ -4435,7 +4406,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "upload de extrato saci (.xlt/.xltx/.xlsx/.xls)",
       "id": "preview_denso_safe_minions_upload_saci"
     },
@@ -4448,7 +4419,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "resultado da analise (duplo comando, horas pic/ifr)",
       "id": "preview_denso_safe_minions_resultado_analise"
     },
@@ -4656,7 +4627,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "cadastro de aluno page",
       "id": "preview_refinado_cadastro_alunos_cadastro_alunos_page"
     },
@@ -4669,7 +4640,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fila operacional s141 (trello sync)",
       "id": "preview_refinado_cadastro_alunos_fila_operacional_s141"
     },
@@ -4682,7 +4653,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "importar xls do cavok",
       "id": "preview_refinado_cadastro_alunos_importar_xls_cavok"
     },
@@ -4734,7 +4705,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "controle de gastos page",
       "id": "preview_refinado_controle_gastos_controle_gastos_page"
     },
@@ -4747,7 +4718,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "visao geral tab (gastos)",
       "id": "preview_refinado_controle_gastos_visao_geral"
     },
@@ -4760,7 +4731,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fechamento mensal tab (gastos)",
       "id": "preview_refinado_controle_gastos_fechamento_mensal"
     },
@@ -4773,7 +4744,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "receita total por base tab",
       "id": "preview_refinado_controle_gastos_receita_total_por_base"
     },
@@ -4786,7 +4757,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "categorias de gastos tab",
       "id": "preview_refinado_controle_gastos_categorias"
     },
@@ -4799,7 +4770,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "acesso somente visualizacao (rationale)",
       "id": "preview_refinado_controle_gastos_acesso_somente_visualizacao"
     },
@@ -5189,7 +5160,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "horas voadas inva mes page",
       "id": "preview_refinado_horas_voadas_inva_horas_voadas_inva_page"
     },
@@ -5202,7 +5173,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_refinado_horas_voadas_inva_sincronizar_cavok"
     },
@@ -5215,7 +5186,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "cadastrar instrutor form",
       "id": "preview_refinado_horas_voadas_inva_cadastrar_instrutor"
     },
@@ -5345,7 +5316,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "safe minions page",
       "id": "preview_refinado_safe_minions_safe_minions_page"
     },
@@ -5358,7 +5329,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "verificacao de minimos anac is 141-007",
       "id": "preview_refinado_safe_minions_verificacao_minimos_anac"
     },
@@ -5371,7 +5342,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo ppa \u2014 piloto privado de aviao",
       "id": "preview_refinado_safe_minions_tipo_ppa"
     },
@@ -5384,7 +5355,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo pc/ifr \u2014 piloto comercial + instrumentos",
       "id": "preview_refinado_safe_minions_tipo_pc_ifr"
     },
@@ -5397,7 +5368,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo inva \u2014 instrutor de voo de aviao",
       "id": "preview_refinado_safe_minions_tipo_inva"
     },
@@ -5410,7 +5381,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "upload de extrato saci (.xlt/.xltx/.xlsx/.xls)",
       "id": "preview_refinado_safe_minions_upload_saci"
     },
@@ -5423,7 +5394,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "resultado da analise (duplo comando, horas pic/ifr)",
       "id": "preview_refinado_safe_minions_resultado_analise"
     },
@@ -6060,7 +6031,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "cadastro de aluno page",
       "id": "preview_clean_cadastro_alunos_cadastro_alunos_page"
     },
@@ -6073,7 +6044,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fila operacional s141 (trello sync)",
       "id": "preview_clean_cadastro_alunos_fila_operacional_s141"
     },
@@ -6086,7 +6057,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "importar xls do cavok",
       "id": "preview_clean_cadastro_alunos_importar_xls_cavok"
     },
@@ -6138,7 +6109,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "controle de gastos page",
       "id": "preview_clean_controle_gastos_controle_gastos_page"
     },
@@ -6151,7 +6122,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "visao geral tab (gastos)",
       "id": "preview_clean_controle_gastos_visao_geral"
     },
@@ -6164,7 +6135,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fechamento mensal tab (gastos)",
       "id": "preview_clean_controle_gastos_fechamento_mensal"
     },
@@ -6177,7 +6148,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "receita total por base tab",
       "id": "preview_clean_controle_gastos_receita_total_por_base"
     },
@@ -6190,7 +6161,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "categorias de gastos tab",
       "id": "preview_clean_controle_gastos_categorias"
     },
@@ -6203,7 +6174,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "acesso somente visualizacao (rationale)",
       "id": "preview_clean_controle_gastos_acesso_somente_visualizacao"
     },
@@ -6515,7 +6486,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fechamento de horas / cotistas page",
       "id": "preview_clean_fechamento_horas_fechamento_horas_page"
     },
@@ -6528,7 +6499,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "visao geral tab (horas por mes)",
       "id": "preview_clean_fechamento_horas_visao_geral"
     },
@@ -6541,7 +6512,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "fechamento mensal tab (horas por aeronave)",
       "id": "preview_clean_fechamento_horas_fechamento_mensal"
     },
@@ -6554,7 +6525,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 3,
       "norm_label": "importar relatorio cavok (xls/xlsx)",
       "id": "preview_clean_fechamento_horas_importar_cavok"
     },
@@ -6567,7 +6538,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "atualizar pela api cavok",
       "id": "preview_clean_fechamento_horas_atualizar_api_cavok"
     },
@@ -6580,7 +6551,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "horas voadas inva mes page",
       "id": "preview_clean_horas_voadas_inva_horas_voadas_inva_page"
     },
@@ -6593,7 +6564,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_clean_horas_voadas_inva_sincronizar_cavok"
     },
@@ -6606,7 +6577,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "cadastrar instrutor form",
       "id": "preview_clean_horas_voadas_inva_cadastrar_instrutor"
     },
@@ -6736,7 +6707,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "safe minions page",
       "id": "preview_clean_safe_minions_safe_minions_page"
     },
@@ -6749,7 +6720,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "verificacao de minimos anac is 141-007",
       "id": "preview_clean_safe_minions_verificacao_minimos_anac"
     },
@@ -6762,7 +6733,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo ppa \u2014 piloto privado de aviao",
       "id": "preview_clean_safe_minions_tipo_ppa"
     },
@@ -6775,7 +6746,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo pc/ifr \u2014 piloto comercial + instrumentos",
       "id": "preview_clean_safe_minions_tipo_pc_ifr"
     },
@@ -6788,7 +6759,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "tipo inva \u2014 instrutor de voo de aviao",
       "id": "preview_clean_safe_minions_tipo_inva"
     },
@@ -6801,7 +6772,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "upload de extrato saci (.xlt/.xltx/.xlsx/.xls)",
       "id": "preview_clean_safe_minions_upload_saci"
     },
@@ -6814,7 +6785,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "resultado da analise (duplo comando, horas pic/ifr)",
       "id": "preview_clean_safe_minions_resultado_analise"
     },
@@ -8151,240 +8122,6 @@
       "id": "access_control_html"
     },
     {
-      "label": "RBAC \u2014 Permiss\u00f5es Efetivas",
-      "file_type": "rationale",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "rbac \u2014 permissoes efetivas",
-      "id": "claude_rbac_permissoes_efetivas"
-    },
-    {
-      "label": "Auth.PAGINAS \u2014 Fonte \u00danica no Frontend",
-      "file_type": "rationale",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "auth.paginas \u2014 fonte unica no frontend",
-      "id": "claude_auth_paginas_fonte_unica"
-    },
-    {
-      "label": "N\u00edveis Visualizar e Editar por m\u00f3dulo",
-      "file_type": "concept",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "niveis visualizar e editar por modulo",
-      "id": "claude_niveis_ver_editar"
-    },
-    {
-      "label": "perfil como espelho cosm\u00e9tico",
-      "file_type": "rationale",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "perfil como espelho cosmetico",
-      "id": "claude_perfil_cosmetico"
-    },
-    {
-      "label": "Usu\u00e1rios CCO \u2014 permissoesEfetivasCco_",
-      "file_type": "rationale",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "usuarios cco \u2014 permissoesefetivascco_",
-      "id": "claude_usuarios_cco_permissoes"
-    },
-    {
-      "label": "For\u00e7ar relogin global (SESSION_VERSION)",
-      "file_type": "rationale",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "forcar relogin global (session_version)",
-      "id": "claude_forcar_relogin_global"
-    },
-    {
-      "label": "Cargos oficiais (ACCESS_DEFAULT_GROUPS)",
-      "file_type": "concept",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "cargos oficiais (access_default_groups)",
-      "id": "claude_cargos_oficiais"
-    },
-    {
-      "label": "sincronizarGruposPadrao_ como reconciliador",
-      "file_type": "rationale",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "sincronizargrupospadrao_ como reconciliador",
-      "id": "claude_sincronizar_grupos_reconciliador"
-    },
-    {
-      "label": "Tela de cria\u00e7\u00e3o de usu\u00e1rio (matriz RBAC_MODULOS)",
-      "file_type": "concept",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "tela de criacao de usuario (matriz rbac_modulos)",
-      "id": "claude_tela_criacao_usuario"
-    },
-    {
-      "label": "Modelo de exce\u00e7\u00f5es GRANT/DENY",
-      "file_type": "rationale",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "modelo de excecoes grant/deny",
-      "id": "claude_modelo_excecoes_grant_deny"
-    },
-    {
-      "label": "Escala CCO \u2014 editar a pr\u00f3pria escala",
-      "file_type": "concept",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "escala cco \u2014 editar a propria escala",
-      "id": "claude_escala_cco_editar_propria"
-    },
-    {
-      "label": "apps-script/AccessControl.gs",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "apps-script/accesscontrol.gs",
-      "id": "accesscontrol_gs"
-    },
-    {
-      "label": "js/auth.js",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "js/auth.js",
-      "id": "auth_js"
-    },
-    {
-      "label": "apps-script/Auth.gs",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "apps-script/auth.gs",
-      "id": "apps_script_auth_gs"
-    },
-    {
-      "label": "js/config.js",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "js/config.js",
-      "id": "config_js"
-    },
-    {
-      "label": "js/admin.js",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "js/admin.js",
-      "id": "admin_js"
-    },
-    {
-      "label": "scratchpad/gen_rbac.js",
-      "file_type": "code",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "scratchpad/gen_rbac.js",
-      "id": "gen_rbac_js"
-    },
-    {
-      "label": "Backend Escala CCO",
-      "file_type": "concept",
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 5,
-      "norm_label": "backend escala cco",
-      "id": "escala_cco_backend"
-    },
-    {
       "label": "Escala CCO \u2014 SAFE Hub Page",
       "file_type": "code",
       "source_file": "escala-cco.html",
@@ -8393,9 +8130,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_page",
       "community": 0,
-      "norm_label": "escala cco \u2014 safe hub page"
+      "norm_label": "escala cco \u2014 safe hub page",
+      "id": "escala_cco_page"
     },
     {
       "label": "gasRequest (GAS GET fetch)",
@@ -8406,9 +8143,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_gasrequest",
       "community": 0,
-      "norm_label": "gasrequest (gas get fetch)"
+      "norm_label": "gasrequest (gas get fetch)",
+      "id": "escala_cco_gasrequest"
     },
     {
       "label": "gasWrite (serialized write queue)",
@@ -8419,9 +8156,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_gaswrite",
       "community": 0,
-      "norm_label": "gaswrite (serialized write queue)"
+      "norm_label": "gaswrite (serialized write queue)",
+      "id": "escala_cco_gaswrite"
     },
     {
       "label": "doLogin",
@@ -8432,9 +8169,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_dologin",
       "community": 0,
-      "norm_label": "dologin"
+      "norm_label": "dologin",
+      "id": "escala_cco_dologin"
     },
     {
       "label": "loadMonth",
@@ -8445,9 +8182,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_loadmonth",
       "community": 0,
-      "norm_label": "loadmonth"
+      "norm_label": "loadmonth",
+      "id": "escala_cco_loadmonth"
     },
     {
       "label": "toggleShift (optimistic)",
@@ -8458,9 +8195,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_toggleshift",
       "community": 0,
-      "norm_label": "toggleshift (optimistic)"
+      "norm_label": "toggleshift (optimistic)",
+      "id": "escala_cco_toggleshift"
     },
     {
       "label": "removeBothShifts",
@@ -8471,9 +8208,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_removebothshifts",
       "community": 0,
-      "norm_label": "removebothshifts"
+      "norm_label": "removebothshifts",
+      "id": "escala_cco_removebothshifts"
     },
     {
       "label": "saveShiftValue",
@@ -8484,9 +8221,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_saveshiftvalue",
       "community": 0,
-      "norm_label": "saveshiftvalue"
+      "norm_label": "saveshiftvalue",
+      "id": "escala_cco_saveshiftvalue"
     },
     {
       "label": "renderCalendar",
@@ -8497,9 +8234,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_rendercalendar",
       "community": 0,
-      "norm_label": "rendercalendar"
+      "norm_label": "rendercalendar",
+      "id": "escala_cco_rendercalendar"
     },
     {
       "label": "renderCalendarReadOnly",
@@ -8510,9 +8247,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_rendercalendarreadonly",
       "community": 0,
-      "norm_label": "rendercalendarreadonly"
+      "norm_label": "rendercalendarreadonly",
+      "id": "escala_cco_rendercalendarreadonly"
     },
     {
       "label": "computeFinForMonth",
@@ -8523,9 +8260,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_computefinformonth",
       "community": 0,
-      "norm_label": "computefinformonth"
+      "norm_label": "computefinformonth",
+      "id": "escala_cco_computefinformonth"
     },
     {
       "label": "renderFinancials",
@@ -8536,9 +8273,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_renderfinancials",
       "community": 0,
-      "norm_label": "renderfinancials"
+      "norm_label": "renderfinancials",
+      "id": "escala_cco_renderfinancials"
     },
     {
       "label": "abrirModalExport",
@@ -8549,9 +8286,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_abrirmodalexport",
       "community": 0,
-      "norm_label": "abrirmodalexport"
+      "norm_label": "abrirmodalexport",
+      "id": "escala_cco_abrirmodalexport"
     },
     {
       "label": "atualizarPreviewExport",
@@ -8562,9 +8299,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_atualizarpreviewexport",
       "community": 0,
-      "norm_label": "atualizarpreviewexport"
+      "norm_label": "atualizarpreviewexport",
+      "id": "escala_cco_atualizarpreviewexport"
     },
     {
       "label": "exportIrParaConfirmacao",
@@ -8575,9 +8312,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_exportirparaconfirmacao",
       "community": 0,
-      "norm_label": "exportirparaconfirmacao"
+      "norm_label": "exportirparaconfirmacao",
+      "id": "escala_cco_exportirparaconfirmacao"
     },
     {
       "label": "exportVoltarEtapa1",
@@ -8588,9 +8325,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_exportvoltaretapa1",
       "community": 115,
-      "norm_label": "exportvoltaretapa1"
+      "norm_label": "exportvoltaretapa1",
+      "id": "escala_cco_exportvoltaretapa1"
     },
     {
       "label": "fecharModalExport",
@@ -8601,9 +8338,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_fecharmodalexport",
       "community": 0,
-      "norm_label": "fecharmodalexport"
+      "norm_label": "fecharmodalexport",
+      "id": "escala_cco_fecharmodalexport"
     },
     {
       "label": "exportConfirmarExportacao",
@@ -8614,9 +8351,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_exportconfirmarexportacao",
       "community": 0,
-      "norm_label": "exportconfirmarexportacao"
+      "norm_label": "exportconfirmarexportacao",
+      "id": "escala_cco_exportconfirmarexportacao"
     },
     {
       "label": "gerarXlsxIfood",
@@ -8627,9 +8364,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_gerarxlsxifood",
       "community": 0,
-      "norm_label": "gerarxlsxifood"
+      "norm_label": "gerarxlsxifood",
+      "id": "escala_cco_gerarxlsxifood"
     },
     {
       "label": "exportPDF",
@@ -8640,9 +8377,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_exportpdf",
       "community": 114,
-      "norm_label": "exportpdf"
+      "norm_label": "exportpdf",
+      "id": "escala_cco_exportpdf"
     },
     {
       "label": "salvarUser",
@@ -8653,9 +8390,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_salvaruser",
       "community": 0,
-      "norm_label": "salvaruser"
+      "norm_label": "salvaruser",
+      "id": "escala_cco_salvaruser"
     },
     {
       "label": "alternarAtivoUser",
@@ -8666,9 +8403,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_alternarativouser",
       "community": 0,
-      "norm_label": "alternarativouser"
+      "norm_label": "alternarativouser",
+      "id": "escala_cco_alternarativouser"
     },
     {
       "label": "renderUsersList",
@@ -8679,9 +8416,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_renderuserslist",
       "community": 0,
-      "norm_label": "renderuserslist"
+      "norm_label": "renderuserslist",
+      "id": "escala_cco_renderuserslist"
     },
     {
       "label": "salvarFuncionario",
@@ -8692,9 +8429,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_salvarfuncionario",
       "community": 0,
-      "norm_label": "salvarfuncionario"
+      "norm_label": "salvarfuncionario",
+      "id": "escala_cco_salvarfuncionario"
     },
     {
       "label": "alternarAtivoFunc",
@@ -8705,9 +8442,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_alternarativofunc",
       "community": 113,
-      "norm_label": "alternarativofunc"
+      "norm_label": "alternarativofunc",
+      "id": "escala_cco_alternarativofunc"
     },
     {
       "label": "initDash",
@@ -8718,9 +8455,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_initdash",
       "community": 0,
-      "norm_label": "initdash"
+      "norm_label": "initdash",
+      "id": "escala_cco_initdash"
     },
     {
       "label": "renderDash",
@@ -8731,9 +8468,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_renderdash",
       "community": 0,
-      "norm_label": "renderdash"
+      "norm_label": "renderdash",
+      "id": "escala_cco_renderdash"
     },
     {
       "label": "loadAllMonths",
@@ -8744,9 +8481,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_loadallmonths",
       "community": 0,
-      "norm_label": "loadallmonths"
+      "norm_label": "loadallmonths",
+      "id": "escala_cco_loadallmonths"
     },
     {
       "label": "toggleDashView",
@@ -8757,9 +8494,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_toggledashview",
       "community": 0,
-      "norm_label": "toggledashview"
+      "norm_label": "toggledashview",
+      "id": "escala_cco_toggledashview"
     },
     {
       "label": "applyScheduleOverrides",
@@ -8770,9 +8507,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_applyscheduleoverrides",
       "community": 0,
-      "norm_label": "applyscheduleoverrides"
+      "norm_label": "applyscheduleoverrides",
+      "id": "escala_cco_applyscheduleoverrides"
     },
     {
       "label": "applyScheduleFixes",
@@ -8783,9 +8520,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_applyschedulefixes",
       "community": 0,
-      "norm_label": "applyschedulefixes"
+      "norm_label": "applyschedulefixes",
+      "id": "escala_cco_applyschedulefixes"
     },
     {
       "label": "saveScheduleOverride",
@@ -8796,9 +8533,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_savescheduleoverride",
       "community": 0,
-      "norm_label": "savescheduleoverride"
+      "norm_label": "savescheduleoverride",
+      "id": "escala_cco_savescheduleoverride"
     },
     {
       "label": "isAdmin",
@@ -8809,9 +8546,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_isadmin",
       "community": 0,
-      "norm_label": "isadmin"
+      "norm_label": "isadmin",
+      "id": "escala_cco_isadmin"
     },
     {
       "label": "isFinanceiro",
@@ -8822,9 +8559,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_isfinanceiro",
       "community": 0,
-      "norm_label": "isfinanceiro"
+      "norm_label": "isfinanceiro",
+      "id": "escala_cco_isfinanceiro"
     },
     {
       "label": "scheduleData (m\u00eas corrente em mem\u00f3ria)",
@@ -8835,9 +8572,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_scheduledata",
       "community": 0,
-      "norm_label": "scheduledata (mes corrente em memoria)"
+      "norm_label": "scheduledata (mes corrente em memoria)",
+      "id": "escala_cco_scheduledata"
     },
     {
       "label": "USERS / SCHEDULE_USERS (estado de usu\u00e1rios)",
@@ -8848,9 +8585,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_users_state",
       "community": 0,
-      "norm_label": "users / schedule_users (estado de usuarios)"
+      "norm_label": "users / schedule_users (estado de usuarios)",
+      "id": "escala_cco_users_state"
     },
     {
       "label": "Controle de acesso por role (admin/financeiro/user)",
@@ -8861,9 +8598,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_rbac_auth",
       "community": 0,
-      "norm_label": "controle de acesso por role (admin/financeiro/user)"
+      "norm_label": "controle de acesso por role (admin/financeiro/user)",
+      "id": "escala_cco_rbac_auth"
     },
     {
       "label": "Fluxo de exporta\u00e7\u00e3o da planilha iFood (2 etapas)",
@@ -8874,9 +8611,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_ifood_export_flow",
       "community": 0,
-      "norm_label": "fluxo de exportacao da planilha ifood (2 etapas)"
+      "norm_label": "fluxo de exportacao da planilha ifood (2 etapas)",
+      "id": "escala_cco_ifood_export_flow"
     },
     {
       "label": "C\u00e1lculo financeiro por turno (T1+T2 \u00d7 shiftValue)",
@@ -8887,9 +8624,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_financeiro_computation",
       "community": 0,
-      "norm_label": "calculo financeiro por turno (t1+t2 \u00d7 shiftvalue)"
+      "norm_label": "calculo financeiro por turno (t1+t2 \u00d7 shiftvalue)",
+      "id": "escala_cco_financeiro_computation"
     },
     {
       "label": "Serializa\u00e7\u00e3o de escritas (fila UMA por vez)",
@@ -8900,9 +8637,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_gaswrite_serialization",
       "community": 0,
-      "norm_label": "serializacao de escritas (fila uma por vez)"
+      "norm_label": "serializacao de escritas (fila uma por vez)",
+      "id": "escala_cco_gaswrite_serialization"
     },
     {
       "label": "UI otimista com rollback no toggle de turno",
@@ -8913,9 +8650,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_optimistic_rollback",
       "community": 0,
-      "norm_label": "ui otimista com rollback no toggle de turno"
+      "norm_label": "ui otimista com rollback no toggle de turno",
+      "id": "escala_cco_optimistic_rollback"
     },
     {
       "label": "Backend Apps Script (Escala CCO)",
@@ -8926,9 +8663,360 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "escala_cco_gas_backend",
       "community": 0,
-      "norm_label": "backend apps script (escala cco)"
+      "norm_label": "backend apps script (escala cco)",
+      "id": "escala_cco_gas_backend"
+    },
+    {
+      "label": "RBAC \u2014 Permiss\u00f5es Efetivas",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_rbac_permissoes_efetivas",
+      "community": 2,
+      "norm_label": "rbac \u2014 permissoes efetivas"
+    },
+    {
+      "label": "Auth.PAGINAS \u2014 Fonte \u00danica no Frontend",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_auth_paginas_fonte_unica",
+      "community": 2,
+      "norm_label": "auth.paginas \u2014 fonte unica no frontend"
+    },
+    {
+      "label": "N\u00edveis Visualizar e Editar por m\u00f3dulo",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_niveis_ver_editar",
+      "community": 2,
+      "norm_label": "niveis visualizar e editar por modulo"
+    },
+    {
+      "label": "perfil como espelho cosm\u00e9tico",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_perfil_cosmetico",
+      "community": 2,
+      "norm_label": "perfil como espelho cosmetico"
+    },
+    {
+      "label": "Usu\u00e1rios CCO \u2014 permissoesEfetivasCco_",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_usuarios_cco_permissoes",
+      "community": 2,
+      "norm_label": "usuarios cco \u2014 permissoesefetivascco_"
+    },
+    {
+      "label": "For\u00e7ar relogin global (SESSION_VERSION)",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_forcar_relogin_global",
+      "community": 2,
+      "norm_label": "forcar relogin global (session_version)"
+    },
+    {
+      "label": "Cargos oficiais (ACCESS_DEFAULT_GROUPS)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_cargos_oficiais",
+      "community": 2,
+      "norm_label": "cargos oficiais (access_default_groups)"
+    },
+    {
+      "label": "sincronizarGruposPadrao_ como reconciliador",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_sincronizar_grupos_reconciliador",
+      "community": 2,
+      "norm_label": "sincronizargrupospadrao_ como reconciliador"
+    },
+    {
+      "label": "Tela de cria\u00e7\u00e3o de usu\u00e1rio (matriz RBAC_MODULOS)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_tela_criacao_usuario",
+      "community": 2,
+      "norm_label": "tela de criacao de usuario (matriz rbac_modulos)"
+    },
+    {
+      "label": "Modelo de exce\u00e7\u00f5es GRANT/DENY",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_modelo_excecoes_grant_deny",
+      "community": 2,
+      "norm_label": "modelo de excecoes grant/deny"
+    },
+    {
+      "label": "Escala CCO \u2014 editar a pr\u00f3pria escala",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_escala_cco_editar_propria",
+      "community": 2,
+      "norm_label": "escala cco \u2014 editar a propria escala"
+    },
+    {
+      "label": "apps-script/AccessControl.gs",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "accesscontrol_gs",
+      "community": 2,
+      "norm_label": "apps-script/accesscontrol.gs"
+    },
+    {
+      "label": "js/auth.js",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "auth_js",
+      "community": 2,
+      "norm_label": "js/auth.js"
+    },
+    {
+      "label": "apps-script/Auth.gs",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "apps_script_auth_gs",
+      "community": 2,
+      "norm_label": "apps-script/auth.gs"
+    },
+    {
+      "label": "js/config.js",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "config_js",
+      "community": 2,
+      "norm_label": "js/config.js"
+    },
+    {
+      "label": "js/admin.js",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "admin_js",
+      "community": 2,
+      "norm_label": "js/admin.js"
+    },
+    {
+      "label": "scratchpad/gen_rbac.js",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gen_rbac_js",
+      "community": 2,
+      "norm_label": "scratchpad/gen_rbac.js"
+    },
+    {
+      "label": "Backend Escala CCO",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "escala_cco_backend",
+      "community": 2,
+      "norm_label": "backend escala cco"
+    },
+    {
+      "label": "M\u00f3dulo NOTAMs (bases SAFE) \u2014 desde 2026-07-17",
+      "file_type": "document",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L56",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_modulo_notams",
+      "community": 2,
+      "norm_label": "modulo notams (bases safe) \u2014 desde 2026-07-17"
+    },
+    {
+      "label": "Fonte NOTAMs \u2014 API AISWEB/DECEA (XML)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L60",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_notams_fonte_aisweb",
+      "community": 2,
+      "norm_label": "fonte notams \u2014 api aisweb/decea (xml)"
+    },
+    {
+      "label": "Arquitetura NOTAMs \u2014 Apps Script UrlFetchApp + cache aba NOTAMS",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L61",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_notams_arquitetura_cache",
+      "community": 2,
+      "norm_label": "arquitetura notams \u2014 apps script urlfetchapp + cache aba notams"
+    },
+    {
+      "label": "Config da chave AISWEB (Script Properties)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L62",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_notams_config_chave",
+      "community": 2,
+      "norm_label": "config da chave aisweb (script properties)"
+    },
+    {
+      "label": "Parser defensivo notamParseXml_ / notamPick_",
+      "file_type": "rationale",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L63",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_notams_parser_defensivo",
+      "community": 2,
+      "norm_label": "parser defensivo notamparsexml_ / notampick_"
+    },
+    {
+      "label": "Classifica\u00e7\u00e3o de impacto (notamClassificar_)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L64",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_notams_classificacao_impacto",
+      "community": 2,
+      "norm_label": "classificacao de impacto (notamclassificar_)"
+    },
+    {
+      "label": "Fase 2 pendente (notams.html + js/notams.js)",
+      "file_type": "concept",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L65",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_notams_fase2_pendente",
+      "community": 2,
+      "norm_label": "fase 2 pendente (notams.html + js/notams.js)"
+    },
+    {
+      "label": "apps-script/Notams.gs",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L61",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "notams_gs",
+      "community": 2,
+      "norm_label": "apps-script/notams.gs"
+    },
+    {
+      "label": "apps-script/Code.gs",
+      "file_type": "code",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L61",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "code_gs",
+      "community": 2,
+      "norm_label": "apps-script/code.gs"
     }
   ],
   "links": [
@@ -11096,7 +11184,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
       "source_location": "L1",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -11106,7 +11194,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
       "source_location": "L27",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -11116,12 +11204,22 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
       "source_location": null,
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_confiabilidade_do_grafo"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "claude_claude_md_regras_do_projeto_safe_hub",
+      "target": "claude_modulo_notams"
     },
     {
       "relation": "references",
@@ -11136,20 +11234,20 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
       "source_location": null,
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_transpar\u00eancia_de_comandos"
     },
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
       "source_location": null,
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_uso_obrigat\u00f3rio_do_graphify"
     },
@@ -15453,206 +15551,6 @@
       "target": "vendas_curso_picker"
     },
     {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_modelo_excecoes_grant_deny",
-      "target": "claude_rbac_permissoes_efetivas"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_perfil_cosmetico",
-      "target": "claude_rbac_permissoes_efetivas"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_rbac_permissoes_efetivas",
-      "target": "accesscontrol_gs"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_rbac_permissoes_efetivas",
-      "target": "claude_auth_paginas_fonte_unica"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_rbac_permissoes_efetivas",
-      "target": "claude_niveis_ver_editar"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_usuarios_cco_permissoes",
-      "target": "claude_rbac_permissoes_efetivas"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_auth_paginas_fonte_unica",
-      "target": "auth_js"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_perfil_cosmetico",
-      "target": "admin_js"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_usuarios_cco_permissoes",
-      "target": "apps_script_auth_gs"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_forcar_relogin_global",
-      "target": "apps_script_auth_gs"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_forcar_relogin_global",
-      "target": "config_js"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_cargos_oficiais",
-      "target": "accesscontrol_gs"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_sincronizar_grupos_reconciliador",
-      "target": "claude_cargos_oficiais"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_tela_criacao_usuario",
-      "target": "claude_cargos_oficiais"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_sincronizar_grupos_reconciliador",
-      "target": "accesscontrol_gs"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_tela_criacao_usuario",
-      "target": "admin_js"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_tela_criacao_usuario",
-      "target": "claude_modelo_excecoes_grant_deny"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_tela_criacao_usuario",
-      "target": "gen_rbac_js"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_escala_cco_editar_propria",
-      "target": "claude_modelo_excecoes_grant_deny"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "claude_escala_cco_editar_propria",
-      "target": "escala_cco_backend"
-    },
-    {
       "relation": "references",
       "confidence": "INFERRED",
       "confidence_score": 0.85,
@@ -16191,6 +16089,336 @@
       "weight": 1.0,
       "source": "escala_cco_optimistic_rollback",
       "target": "escala_cco_gaswrite_serialization"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_modelo_excecoes_grant_deny",
+      "target": "claude_rbac_permissoes_efetivas"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_perfil_cosmetico",
+      "target": "claude_rbac_permissoes_efetivas"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_rbac_permissoes_efetivas",
+      "target": "accesscontrol_gs"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_rbac_permissoes_efetivas",
+      "target": "claude_auth_paginas_fonte_unica"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_rbac_permissoes_efetivas",
+      "target": "claude_niveis_ver_editar"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_usuarios_cco_permissoes",
+      "target": "claude_rbac_permissoes_efetivas"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_auth_paginas_fonte_unica",
+      "target": "auth_js"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "claude_notams_fase2_pendente",
+      "target": "claude_auth_paginas_fonte_unica"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_perfil_cosmetico",
+      "target": "admin_js"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_usuarios_cco_permissoes",
+      "target": "apps_script_auth_gs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_forcar_relogin_global",
+      "target": "apps_script_auth_gs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_forcar_relogin_global",
+      "target": "config_js"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_cargos_oficiais",
+      "target": "accesscontrol_gs"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_sincronizar_grupos_reconciliador",
+      "target": "claude_cargos_oficiais"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_tela_criacao_usuario",
+      "target": "claude_cargos_oficiais"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_sincronizar_grupos_reconciliador",
+      "target": "accesscontrol_gs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_tela_criacao_usuario",
+      "target": "admin_js"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_tela_criacao_usuario",
+      "target": "claude_modelo_excecoes_grant_deny"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_tela_criacao_usuario",
+      "target": "gen_rbac_js"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_escala_cco_editar_propria",
+      "target": "claude_modelo_excecoes_grant_deny"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_escala_cco_editar_propria",
+      "target": "escala_cco_backend"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "claude_modulo_notams",
+      "target": "claude_notams_arquitetura_cache"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "claude_modulo_notams",
+      "target": "claude_notams_classificacao_impacto"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "claude_modulo_notams",
+      "target": "claude_notams_config_chave"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "claude_modulo_notams",
+      "target": "claude_notams_fase2_pendente"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "claude_modulo_notams",
+      "target": "claude_notams_fonte_aisweb"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "claude_modulo_notams",
+      "target": "claude_notams_parser_defensivo"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "claude_notams_fonte_aisweb",
+      "target": "claude_notams_arquitetura_cache"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "claude_notams_arquitetura_cache",
+      "target": "code_gs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "claude_notams_arquitetura_cache",
+      "target": "notams_gs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "claude_notams_config_chave",
+      "target": "notams_gs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "claude_notams_parser_defensivo",
+      "target": "notams_gs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "claude_notams_classificacao_impacto",
+      "target": "notams_gs"
     }
   ],
   "hyperedges": [
@@ -16225,35 +16453,6 @@
       "confidence": "EXTRACTED",
       "confidence_score": 0.85,
       "source_file": "escala-cco.html"
-    },
-    {
-      "id": "rbac_permissoes_efetivas_flow",
-      "label": "Fluxo RBAC de permiss\u00f5es efetivas",
-      "nodes": [
-        "claude_rbac_permissoes_efetivas",
-        "claude_auth_paginas_fonte_unica",
-        "claude_modelo_excecoes_grant_deny",
-        "accesscontrol_gs",
-        "auth_js"
-      ],
-      "relation": "participate_in",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md"
-    },
-    {
-      "id": "tela_criacao_cargos_matriz",
-      "label": "Tela de cria\u00e7\u00e3o: cargos + matriz + exce\u00e7\u00f5es",
-      "nodes": [
-        "claude_tela_criacao_usuario",
-        "claude_cargos_oficiais",
-        "claude_modelo_excecoes_grant_deny",
-        "gen_rbac_js"
-      ],
-      "relation": "participate_in",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "/Users/macbookpro/Documents/01. C\u00f3digo VSCODE SAFE/portal-hub-safe/CLAUDE.md"
     },
     {
       "id": "hub_shared_core_scripts",
@@ -16481,5 +16680,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "74580a67af85a4250e930f741a1bfe1513c74d7a"
+  "built_at_commit": "11dbc217c71c29741cea735f72d8f8f367402ae3"
 }

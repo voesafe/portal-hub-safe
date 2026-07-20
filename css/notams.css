@@ -1,0 +1,253 @@
+/* ============================================================
+   notams.css — Módulo NOTAMs (bases SAFE: SBSJ e SDAM)
+   SAFE Hub · usa os tokens do safe-theme.css
+   Modo claro é o padrão; dark é opcional e ESCOPADO nesta página
+   (via body.notams-dark) — não afeta o resto do Hub.
+   ============================================================ */
+
+.notams-page {
+  /* tokens locais (claro = padrão do Hub) */
+  --n-surface:    var(--white);
+  --n-surface-2:  var(--gray-100);
+  --n-ink:        var(--navy);
+  --n-ink-soft:   var(--gray-500);
+  --n-ink-mute:   var(--gray-400);
+  --n-line:       var(--gray-200);
+  --n-line-soft:  var(--gray-100);
+  --n-raw-bg:     #0e1530;
+  --n-raw-ink:    #a8c7e6;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Dark scoped (só nesta página) ─────────────────────────── */
+body.notams-dark { background: #0c1122; }
+body.notams-dark .main { background: #0c1122; }
+body.notams-dark .topbar {
+  background: #10162c;
+  border-bottom-color: #26314f;
+}
+body.notams-dark .topbar-title { color: #eaf0fb; }
+body.notams-dark .topbar-subtitle { color: #8093b5; }
+body.notams-dark .notams-page {
+  --n-surface:   #141b32;
+  --n-surface-2: #1b2440;
+  --n-ink:       #eaf0fb;
+  --n-ink-soft:  #a9b7d4;
+  --n-ink-mute:  #8093b5;
+  --n-line:      #26314f;
+  --n-line-soft: #1d2740;
+  --n-raw-bg:    #080d1c;
+  --n-raw-ink:   #8fb4dc;
+}
+
+/* ── Atualizado em (topbar) ────────────────────────────────── */
+.notam-updated {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78rem;
+  color: var(--gray-500);
+  white-space: nowrap;
+}
+.notam-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(46,204,113,.18);
+}
+body.notams-dark .notam-updated { color: #a9b7d4; }
+
+/* ── Nota/aviso ────────────────────────────────────────────── */
+.notam-note {
+  font-size: .8rem;
+  color: var(--n-ink-soft);
+  background: var(--n-surface-2);
+  border: 1px dashed var(--n-line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ── Tiles de resumo ───────────────────────────────────────── */
+.notam-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.notam-tile {
+  background: var(--n-surface);
+  border: 1px solid var(--n-line-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.notam-tile::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+.notam-tile.crit::before { background: var(--danger); }
+.notam-tile.warn::before { background: var(--warning); }
+.notam-tile.live::before { background: var(--success); }
+.notam-tile.tot::before  { background: linear-gradient(180deg, var(--blue), var(--teal)); }
+.notam-tile .lab {
+  font-size: .7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--n-ink-mute);
+}
+.notam-tile .val {
+  font-family: var(--font-title); font-weight: 800; font-size: 1.9rem;
+  line-height: 1; margin-top: 8px; color: var(--n-ink);
+  font-variant-numeric: tabular-nums;
+}
+.notam-tile .cap { font-size: .74rem; color: var(--n-ink-mute); margin-top: 5px; }
+
+/* ── Controles ─────────────────────────────────────────────── */
+.notam-controls {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; justify-content: space-between;
+}
+.notam-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.notam-chip {
+  padding: 7px 13px; border-radius: 100px; font-size: .76rem; font-weight: 600;
+  border: 1.5px solid var(--n-line); background: var(--n-surface); color: var(--n-ink-soft);
+  cursor: pointer; transition: var(--transition);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.notam-chip:hover { border-color: var(--gray-300); }
+.notam-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+body.notams-dark .notam-chip.active { background: var(--blue-dark); border-color: var(--blue-dark); }
+.notam-chip .cnt { font-size: .68rem; opacity: .7; font-variant-numeric: tabular-nums; }
+
+.notam-segmented {
+  display: inline-flex; background: var(--n-surface-2);
+  border-radius: 100px; padding: 3px; gap: 2px;
+}
+.notam-seg {
+  padding: 7px 14px; border-radius: 100px; font-size: .76rem; font-weight: 600;
+  color: var(--n-ink-soft); cursor: pointer; border: none; background: transparent;
+  transition: var(--transition);
+}
+.notam-seg.active { background: var(--n-surface); color: var(--n-ink); box-shadow: var(--shadow-card); }
+
+/* ── Abas de aeroporto ─────────────────────────────────────── */
+.notam-tabs { display: flex; gap: 4px; border-bottom: 1.5px solid var(--n-line); }
+.notam-tab {
+  background: transparent; border: none; padding: 10px 16px;
+  font-family: var(--font-title); font-size: .86rem; font-weight: 700;
+  color: var(--n-ink-mute); cursor: pointer; position: relative;
+  transition: color .15s; display: inline-flex; align-items: center; gap: 7px;
+}
+.notam-tab:hover { color: var(--n-ink-soft); }
+.notam-tab.active { color: var(--n-ink); }
+.notam-tab.active::after {
+  content: ''; position: absolute; left: 12px; right: 12px; bottom: -1.5px;
+  height: 2.5px; border-radius: 3px 3px 0 0;
+  background: linear-gradient(90deg, var(--blue), var(--teal));
+}
+.notam-tab .tcnt {
+  font-family: var(--font-body); font-size: .68rem; font-weight: 700;
+  color: var(--n-ink-mute); background: var(--n-surface-2);
+  padding: 1px 7px; border-radius: 100px; font-variant-numeric: tabular-nums;
+}
+
+/* ── Colunas de aeroporto ──────────────────────────────────── */
+.notam-airports { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.notam-airports.solo { grid-template-columns: 1fr; }
+.notam-station {
+  background: var(--n-surface);
+  border: 1px solid var(--n-line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.notam-station.hidden-ap { display: none; }
+.notam-station-head {
+  display: flex; align-items: center; gap: 13px;
+  padding: 16px 18px; border-bottom: 1px solid var(--n-line-soft);
+}
+.notam-icao {
+  font-family: var(--font-title); font-weight: 900; font-size: 1.15rem;
+  letter-spacing: .03em; color: var(--n-ink);
+  background: var(--n-surface-2); padding: 6px 12px; border-radius: 9px;
+}
+.notam-station-head .name { font-size: .9rem; font-weight: 700; color: var(--n-ink); }
+.notam-station-head .meta { font-size: .72rem; color: var(--n-ink-mute); }
+.notam-station-head .count {
+  margin-left: auto; font-size: .74rem; color: var(--n-ink-soft);
+  background: var(--n-surface-2); padding: 5px 11px; border-radius: 100px; font-weight: 600;
+}
+.notam-stack { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+
+/* ── Card de NOTAM ─────────────────────────────────────────── */
+.notam {
+  border: 1px solid var(--n-line); border-radius: var(--radius-md);
+  background: var(--n-surface); overflow: hidden;
+  transition: box-shadow .18s; position: relative;
+}
+.notam:hover { box-shadow: var(--shadow-md); }
+.notam::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--gray-300);
+}
+.notam.sev-critico::before { background: var(--danger); }
+.notam.sev-atencao::before { background: var(--warning); }
+.notam.sev-info::before    { background: var(--blue); }
+.notam.hidden { display: none !important; }
+
+.notam-head { display: flex; align-items: flex-start; gap: 10px; padding: 13px 15px 11px 18px; }
+.notam-id { font-family: var(--font-title); font-weight: 800; font-size: .95rem; color: var(--n-ink); letter-spacing: .02em; }
+.notam-cat { font-size: .72rem; color: var(--n-ink-mute); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.notam-badges { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+.notam-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 100px; font-size: .68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
+}
+.notam-badge.b-live   { background: rgba(46,204,113,.14); color: #1e9e57; }
+.notam-badge.b-future { background: rgba(91,174,226,.14); color: var(--blue-dark); }
+.notam-badge.b-crit   { background: rgba(231,76,60,.13);  color: #c0392b; }
+.notam-badge.b-warn   { background: rgba(243,156,18,.15); color: #c77c0d; }
+body.notams-dark .notam-badge.b-live   { color: #5fd894; }
+body.notams-dark .notam-badge.b-future { color: #8fc7ee; }
+body.notams-dark .notam-badge.b-crit   { color: #f08a7e; }
+body.notams-dark .notam-badge.b-warn   { color: #f3bd6b; }
+
+.notam-valid { display: flex; gap: 18px; padding: 0 15px 12px 18px; flex-wrap: wrap; }
+.notam-valid .v { font-size: .74rem; color: var(--n-ink-soft); font-variant-numeric: tabular-nums; }
+.notam-valid .v b {
+  display: block; font-size: .64rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--n-ink-mute); font-weight: 700; margin-bottom: 1px;
+}
+.notam-valid .v.upcoming span { color: var(--blue-dark); font-weight: 700; }
+
+.notam-body { margin: 0 15px 14px 18px; border-radius: 8px; overflow: hidden; }
+.notam-decoded { background: var(--n-surface-2); padding: 11px 13px; font-size: .85rem; color: var(--n-ink); border-left: 3px solid var(--teal); }
+.notam-raw {
+  background: var(--n-raw-bg); color: var(--n-raw-ink); padding: 11px 13px;
+  font-family: ui-monospace,'SF Mono',Menlo,Consolas,monospace; font-size: .76rem;
+  line-height: 1.5; white-space: pre-wrap; word-break: break-word; display: none;
+}
+.notam.show-raw .notam-decoded { display: none; }
+.notam.show-raw .notam-raw { display: block; }
+
+.notam-foot { display: flex; align-items: center; gap: 12px; padding: 0 15px 13px 18px; }
+.notam-mini-toggle {
+  font-size: .73rem; font-weight: 600; color: var(--blue-dark);
+  background: none; border: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; padding: 0;
+}
+.notam-mini-toggle:hover { text-decoration: underline; }
+body.notams-dark .notam-mini-toggle { color: var(--blue-light); }
+.notam-scope { margin-left: auto; font-size: .7rem; color: var(--n-ink-mute); }
+
+.notam-foot { text-align: center; font-size: .74rem; color: var(--n-ink-mute); padding: 4px 0 2px; }
+
+/* Empty state por estação */
+.notam-empty { padding: 28px 16px; text-align: center; color: var(--n-ink-mute); font-size: .85rem; }
+
+@media (max-width: 900px) {
+  .notam-tiles { grid-template-columns: repeat(2, 1fr); }
+  .notam-airports { grid-template-columns: 1fr; }
+}

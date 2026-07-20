@@ -132,6 +132,11 @@ function doGet(e) {
         var usuarioCadastro = exigirCadastroAlunos(token);
         return jsonSuccess(listarCadastroAlunos(usuarioCadastro));
 
+      // ── NOTAMs — todos os logados podem ver (leitura do cache) ──
+      case 'notams':
+        exigirSessao(token);
+        return jsonSuccess(listarNotams());
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }

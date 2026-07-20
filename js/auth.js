@@ -7,6 +7,12 @@ const Auth = {
   SESSION_MAX_MS: 12 * 60 * 60 * 1000,
   SESSION_TIMEZONE: 'America/Sao_Paulo',
 
+  // Feature flag do módulo NOTAMs. Mantém OFF até: (1) backend promovido a @28
+  // (rota `notams`) e (2) chave AISWEB/DECEA configurada. Com OFF, a entrada
+  // `notams.html` é removida de PAGINAS (fonte única) → some do menu e o acesso
+  // direto é bloqueado por protegerPagina. Ligar = trocar para true.
+  NOTAMS_ATIVO: false,
+
   salvarSessao(usuario) {
     localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(this.normalizarSessao(usuario)));
   },
@@ -131,6 +137,7 @@ const Auth = {
   // ══════════════════════════════════════════════════════════
   PAGINAS: {
     'inicio.html':            { ver: ['inicio.visualizar'], publica: true },
+    'notams.html':            { publica: true },  // NOTAMs: global p/ todos os logados (backend só exige sessão)
     'dashboard.html':         { ver: ['dashboard_vendas.visualizar_proprio', 'dashboard_vendas.visualizar_todos'] },
     'vendas.html':            { ver: ['vendas.visualizar_proprias', 'vendas.visualizar_todas'],
                                 editar: ['vendas.criar_propria', 'vendas.criar_para_qualquer_pac', 'vendas.editar_propria', 'vendas.editar_todas', 'vendas.excluir_propria', 'vendas.excluir_todas'] },
@@ -162,6 +169,7 @@ const Auth = {
   },
 
   ROTULOS_PAGINA: {
+    'notams.html': 'NOTAMs',
     'dashboard.html': 'Dashboard de Vendas',
     'vendas.html': 'Vendas',
     'faturamento.html': 'Faturamento',
@@ -421,7 +429,8 @@ const Auth = {
       chevron:       `<svg ${base}><path d="m9 18 6-6-6-6"></path></svg>`,
       fechar:        `<svg ${base}><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`,
       lock:          `<svg ${base}><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>`,
-      logout:       `<svg ${base}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>`
+      logout:       `<svg ${base}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>`,
+      notam:        `<svg ${base}><path d="M2 12l20-8-4 18-6-6-4 4z"></path><path d="M12 16l-2-2"></path></svg>`
     };
     return icons[nome] || '';
   },
@@ -486,6 +495,14 @@ const Auth = {
         <span>Início</span>
       </a>`
     ];
+
+    // NOTAMs — global (todos os logados). Operacional das bases SAFE.
+    if (ver('notams.html')) {
+      secoes.push(`<a href="notams.html" class="menu-dashboard${path === 'notams.html' ? ' active' : ''}">
+        <span class="nav-icon" aria-hidden="true">${this.iconSvg('notam')}</span>
+        <span>NOTAMs</span>
+      </a>`);
+    }
 
     if (ver('dashboard.html')) {
       secoes.push(`<a href="dashboard.html" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}">
@@ -782,3 +799,13 @@ const Auth = {
 
   }
 };
+
+// Gate do módulo NOTAMs. Enquanto o flag estiver OFF, troca a entrada `publica`
+// por uma que exige uma permissão que NINGUÉM possui (nem está no catálogo) →
+// podeVer() = false p/ todos (menos superadmin, que bypassa), some do menu e o
+// acesso direto é barrado por protegerPagina. NÃO usar `delete`: podeVer é
+// fail-open (sem regra = liberado a logados). Ligar em Auth.NOTAMS_ATIVO quando
+// @28 (rota `notams`) + chave AISWEB estiverem prontos.
+if (!Auth.NOTAMS_ATIVO) {
+  Auth.PAGINAS['notams.html'] = { ver: ['notams.indisponivel'] };
+}
