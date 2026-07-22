@@ -30,14 +30,14 @@
     "semantic_hash": "e37373441a9e381104d4538952fa1b72"
   },
   "js/api.js": {
-    "mtime": 1783261070.761267,
-    "ast_hash": "14c2d2d54666d2a6a18c0f27539766a4",
-    "semantic_hash": "14c2d2d54666d2a6a18c0f27539766a4"
+    "mtime": 1784301724.8796585,
+    "ast_hash": "da7348cf0d79cca43387456e1a7ad376",
+    "semantic_hash": "da7348cf0d79cca43387456e1a7ad376"
   },
   "js/auth.js": {
-    "mtime": 1783620047.6511238,
-    "ast_hash": "b8d655650ee66f369494d72e0b722bf7",
-    "semantic_hash": "b8d655650ee66f369494d72e0b722bf7"
+    "mtime": 1784565083.5956397,
+    "ast_hash": "46a674447a4fbf064ee5e945126fcc75",
+    "semantic_hash": "46a674447a4fbf064ee5e945126fcc75"
   },
   "js/bases.js": {
     "mtime": 1784136472.1297796,
@@ -45,9 +45,9 @@
     "semantic_hash": "5320511d7d6082e676f174f1fa8152af"
   },
   "js/cadastro-alunos.js": {
-    "mtime": 1783202447.1066372,
-    "ast_hash": "0050ecd974c116a5e2779002d662ee48",
-    "semantic_hash": "0050ecd974c116a5e2779002d662ee48"
+    "mtime": 1784547885.6859682,
+    "ast_hash": "23ff16abab2f9f4ae7fa650bf721ba45",
+    "semantic_hash": "23ff16abab2f9f4ae7fa650bf721ba45"
   },
   "js/concorrencia.js": {
     "mtime": 1784136472.1299255,
@@ -55,7 +55,7 @@
     "semantic_hash": "637a6ae9d3e3ea90b7e0df90d929a43f"
   },
   "js/config.js": {
-    "mtime": 1783612639.360083,
+    "mtime": 1784302448.8434665,
     "ast_hash": "63c66f0749b7db9b3b9d0111e14994d2",
     "semantic_hash": "63c66f0749b7db9b3b9d0111e14994d2"
   },
@@ -375,9 +375,9 @@
     "semantic_hash": "a88015330d66e330511f4833b76fd4b2"
   },
   "cadastro-alunos.html": {
-    "mtime": 1783368327.8421104,
-    "ast_hash": "1f4daef11347844c9aeaf15b8b565c42",
-    "semantic_hash": "1f4daef11347844c9aeaf15b8b565c42"
+    "mtime": 1784547913.0658839,
+    "ast_hash": "2e60cc2d55051d1264bdddaa3d2b3910",
+    "semantic_hash": "2e60cc2d55051d1264bdddaa3d2b3910"
   },
   "concorrencia.html": {
     "mtime": 1784136472.1291385,
@@ -400,9 +400,9 @@
     "semantic_hash": "e932da39034b91dbcad768331a340608"
   },
   "escala-cco.html": {
-    "mtime": 1784206767.5361125,
-    "ast_hash": "06099823ff5b7dc175c213e0d2da4256",
-    "semantic_hash": "06099823ff5b7dc175c213e0d2da4256"
+    "mtime": 1784732425.2581327,
+    "ast_hash": "9cb84f9bf9d08404fed6dd8e288d9f9e",
+    "semantic_hash": "9cb84f9bf9d08404fed6dd8e288d9f9e"
   },
   "escala-pav.html": {
     "mtime": 1783528102.4397788,
@@ -975,8 +975,18 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1784299283.3837373,
-    "ast_hash": "f5ceef99a42b40c33220025757c7fa7e",
-    "semantic_hash": "f5ceef99a42b40c33220025757c7fa7e"
+    "mtime": 1784732821.2006068,
+    "ast_hash": "0107d5f1d7e91e99c83c373b95bdb9cc",
+    "semantic_hash": "0107d5f1d7e91e99c83c373b95bdb9cc"
+  },
+  "js/notams.js": {
+    "mtime": 1784301647.6968718,
+    "ast_hash": "8a92ff641a3469642cd073c26c2ce0d6",
+    "semantic_hash": "8a92ff641a3469642cd073c26c2ce0d6"
+  },
+  "notams.html": {
+    "mtime": 1784301464.8697338,
+    "ast_hash": "d99c322ce1ffd92734d33b98ee9307f5",
+    "semantic_hash": "d99c322ce1ffd92734d33b98ee9307f5"
   }
 }

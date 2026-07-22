@@ -77,3 +77,14 @@ Página da fila S141/Trello ([cadastro-alunos.html](cadastro-alunos.html) + [js/
 - **⚠️ `hidden` vs `display`:** a barra `.cadastro-bulk-bar` tem `display:flex`, que sobrepõe o atributo `hidden` (só `display:none` de baixa especificidade) — precisa da regra `.cadastro-bulk-bar[hidden]{display:none}`.
 - **Drop-up mede contra o `.table-wrapper`, não a janela:** o wrapper tem `overflow-x:auto` (→ força `overflow-y:auto`), então é ele quem corta o popover para baixo; medir só `window.innerHeight` deixava o menu cortado com viewport sobrando.
 - **Cache-bust:** ao mexer no JS/CSS, bumpar `?v=` dos assets no HTML (padrão `AAAAMMDD-cadastro-alunos-vN`).
+
+## Auditoria de alterações (Escala CCO) — desde 2026-07-22
+
+Log de **quem** alterou a escala/valores/cadastros na Escala CCO, com valor **antes→depois**. Piloto do padrão de auditoria que será replicado nos demais módulos.
+
+- **Backend** = Apps Script **container-bound** da Escala CCO (fonte fora deste repo — agora clonada em `~/Documents/01. Código VSCODE SAFE/Escala CCO SAFE/backend/Código.js`; Script ID `1i5Y7hRzwCVnwKUukWenluQPmRd3WR3M_8r_je-6bDrAw41GHoi9QI90B`, conta clasp `victor.pinho@voesafe.com`). Ver [[escala_cco_backend]].
+- **Sheet `LOG`** (`timestamp, autor, acao, alvo, turno, antes, depois, detalhe`), gravada por `logAudit_` (defensivo em try/catch — auditoria **nunca** bloqueia a operação principal). Usa `getLogSheet_` próprio (NÃO o `getSheet` genérico, que criaria colunas de escala).
+- **Autor + antes→depois** capturados em TODAS as mutações: `setShift` (ações `escalar`/`desmarcar`/`alterar_turno`), `setConfig` (`valor_turno`), `saveUser` (`criar`/`editar_funcionario`), `toggleUserActive`. O frontend passa o autor via param **`by: currentUser?.username`** em cada chamada — o backend não descobre sozinho (auth é própria, não Google-SSO).
+- **Action `getLog`** (leitura) com **guard no servidor** `ehAuditor_(by)`: só `role=admin` OU coluna **`canViewLog=true`** no `usuarios`. Filtros opcionais `month`/`limit` (padrão 500). Retorna mais recente primeiro.
+- **Permissão `canViewLog`** = coluna O (15) do `usuarios`, concedida **só por admin** (`ehAdmin_`, checado no `saveUser` edição). Exposta em `login`/`getUsers` (admin sempre true). Frontend: checkbox "Pode ver o Histórico" no cadastro de funcionário (admin-only) e item de menu **🕓 Histórico** (drawer) + modal, gated por `isAdmin() || currentUser.canViewLog`.
+- **Deploy:** backend em **produção @3** (`clasp deploy -i AKfycbyeoa-8Vv…`); mudança 100% **aditiva/retrocompatível** (ações antigas intactas, `by` opcional). Rollback: `clasp redeploy AKfycbyeoa-8Vv… -V 1`. Frontend ([escala-cco.html](escala-cco.html)) tem JS inline (sem `?v=` a bumpar) → publica via git push na `main` (GitHub Pages). **Sem otimista** no getLog (só leitura).
