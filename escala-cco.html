@@ -1711,6 +1711,11 @@ window.addEventListener("DOMContentLoaded",async ()=>{
     }else{
       currentUser={
         username:"safe-hub-admin",
+        // Autor REAL da auditoria: quem entra pelo Hub compartilha o username sentinel
+        // "safe-hub-admin" (necessário p/ os guards do backend), mas o LOG precisa saber
+        // QUEM de fato alterou. Usa o nome + e-mail da sessão do Hub. Enviado no param
+        // `actor` das mutações (o `by` continua sendo o sentinel). Ver [[escala_cco_backend]].
+        autor:(sessao.email ? `${sessao.nome||"Administrador SAFE"} (${sessao.email})` : (sessao.nome||"safe-hub-admin")),
         name:sessao.nome||"Administrador SAFE",
         initials:String(sessao.nome||"AD").split(/\s+/).map(p=>p[0]).join("").slice(0,2).toUpperCase(),
         color:"#1D2951",
@@ -1828,7 +1833,7 @@ async function toggleShift(dk,shift,targetUser){
   isSaving=true;setLoading(40);
   try{
     const{y,m}=MONTHS[currentMonthIdx];
-    await gasWrite("setShift",{month:`${y}-${String(m+1).padStart(2,"0")}`,date:dk,shift,users:arr,by:currentUser?.username});
+    await gasWrite("setShift",{month:`${y}-${String(m+1).padStart(2,"0")}`,date:dk,shift,users:arr,by:currentUser?.username,actor:currentUser?.autor||currentUser?.username});
     setLoading(100);
   }catch(e){
     // Desfaz só este turno (sem recarregar o mês todo) e avisa de forma clara.
@@ -1847,7 +1852,7 @@ async function saveShiftValue(){
   if(isNaN(val)||val<0){showToast("Valor inválido.","error");return}
   shiftValue=val;
   document.getElementById("shiftValueDisplay").textContent=`R$ ${val.toFixed(2).replace(".",",")}`;
-  try{await gasWrite("setConfig",{shiftValue:val,by:currentUser?.username});showToast("Valor atualizado!","success");renderFinancials()}
+  try{await gasWrite("setConfig",{shiftValue:val,by:currentUser?.username,actor:currentUser?.autor||currentUser?.username});showToast("Valor atualizado!","success");renderFinancials()}
   catch(e){showToast("Erro ao salvar valor.","error")}
 }
 
@@ -2274,7 +2279,8 @@ async function salvarUser(){
     financeiroExclude: "false",
     ifoodExclude: "false",
     active: "true",
-    by: currentUser?.username
+    by: currentUser?.username,
+    actor: currentUser?.autor||currentUser?.username
   };
 
   // Senha padrão = CPF (apenas para novos)
@@ -2313,7 +2319,8 @@ async function alternarAtivoUser(uname, novoAtivo){
     const res = await gasRequest("toggleUserActive", {
       username: uname,
       active: novoAtivo ? "true" : "false",
-      by: currentUser?.username
+      by: currentUser?.username,
+      actor: currentUser?.autor||currentUser?.username
     });
     if(res.ok){
       showToast(novoAtivo ? "Reativado!" : "Inativado!","success");
@@ -2695,6 +2702,7 @@ async function salvarFuncionario(){
     color:     document.getElementById("funcColor").value,
     initials:  document.getElementById("funcIniciais").value.trim().toUpperCase(),
     by:        currentUser?.username,
+    actor:     currentUser?.autor||currentUser?.username,
     // Permissão de VER auditoria — só admin concede (backend valida via ehAdmin_)
     canViewLog: document.getElementById("funcCanViewLog")?.checked ? "true" : "false"
   };
@@ -2727,7 +2735,7 @@ async function alternarAtivoFunc(username, reativar){
   const acao = reativar ? "reativar" : "inativar";
   if(!confirm(`Tem certeza que deseja ${acao} esse funcionário?\n\nIsso não afeta a escala existente — apenas oculta/restaura ele da lista de adicionar.`)) return;
   try {
-    const res = await gasRequest("toggleUserActive", { username, active: reativar ? "true" : "false", by: currentUser?.username });
+    const res = await gasRequest("toggleUserActive", { username, active: reativar ? "true" : "false", by: currentUser?.username, actor: currentUser?.autor||currentUser?.username });
     if(res.error){ showToast(res.error, "error"); return; }
     const usersRes = await gasRequest("getUsers");
     if(usersRes.users){ USERS = usersRes.users; SCHEDULE_USERS = Object.keys(USERS).filter(k=>USERS[k].scheduleVisible && USERS[k].active!==false); }
