@@ -770,6 +770,9 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
         <button class="nav-func-btn" id="navFuncBtn" onclick="toggleFuncView()" title="Gerenciar funcionários">
           Funcionários
         </button>
+        <button class="nav-func-btn" id="navHistoricoBtn" onclick="abrirModalHistorico()" title="Histórico de alterações" style="display:none">
+          🕓 Histórico
+        </button>
         <button class="nav-func-btn" id="navCalBtn" onclick="voltarCalendario()" title="Voltar ao calendário" style="display:none">
           Calendário
         </button>
@@ -1598,6 +1601,9 @@ function iniciarApp(u){
   // Mostrar botão Funcionários só para admin
   const navFunc = document.getElementById("navFuncBtn");
   if(navFunc){ navFunc.style.display = u.role==="admin" ? "inline-flex" : "none"; }
+  // Botão Histórico: admin OU usuário com permissão de auditoria (canViewLog)
+  const navHist = document.getElementById("navHistoricoBtn");
+  if(navHist){ navHist.style.display = (u.role==="admin"||u.canViewLog===true) ? "inline-flex" : "none"; }
   // Setup drawer mobile
   setupDrawerForUser(u);
   // Mostrar botão Dashboard para admin e financeiro
@@ -2375,8 +2381,11 @@ function toggleFuncView(){
   // Alternar visibilidade dos botões nav
   const navFunc = document.getElementById("navFuncBtn");
   const navCal  = document.getElementById("navCalBtn");
+  const navHist = document.getElementById("navHistoricoBtn");
   if(navFunc) navFunc.style.display = isOpen ? "none" : "inline-flex";
   if(navCal)  navCal.style.display  = isOpen ? "inline-flex" : "none";
+  // Histórico volta ao sair da view (se admin ou tiver permissão)
+  if(navHist) navHist.style.display = (!isOpen && (currentUser?.role==="admin"||currentUser?.canViewLog===true)) ? "inline-flex" : "none";
   if(isOpen) renderFuncList();
 }
 
@@ -2761,6 +2770,8 @@ function toggleDashView(){
   const isFin     = currentUser?.role==="financeiro";
   if(navDash)   navDash.style.display   = dashOpen ? "none" : (isAdmin||isFin) ? "inline-flex" : "none";
   if(navFunc)   navFunc.style.display   = dashOpen ? "none" : isAdmin ? "inline-flex" : "none";
+  const navHist = document.getElementById("navHistoricoBtn");
+  if(navHist)   navHist.style.display   = dashOpen ? "none" : (isAdmin||currentUser?.canViewLog===true) ? "inline-flex" : "none";
   if(navCalBtn) navCalBtn.style.display = dashOpen ? "inline-flex" : "none";
 
   if(dashOpen) initDash();
