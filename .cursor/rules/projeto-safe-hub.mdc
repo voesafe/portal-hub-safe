@@ -1,0 +1,42 @@
+---
+description: Regras permanentes do projeto SAFE Hub (Graphify, RBAC, padrão optimistic, deploy). Sempre ativas.
+globs:
+alwaysApply: true
+---
+
+# Regras do Projeto SAFE Hub
+
+A fonte única e completa das regras deste projeto está em **[CLAUDE.md](mdc:CLAUDE.md)**.
+Leia e siga esse arquivo. Os pontos abaixo são o resumo obrigatório.
+
+## Graphify (uso obrigatório)
+
+- **Antes de responder** qualquer pergunta sobre código, arquitetura, arquivos, funções ou fluxos → consulte primeiro o Graphify.
+- **Antes de alterar** qualquer código → consulte o Graphify para entender a estrutura atual e não mexer em arquivo errado.
+- **Depois de alterar** → atualize o Graphify para manter o grafo sincronizado.
+- **Evite ler arquivos inteiros** sem necessidade: use o Graphify para localizar trechos relevantes (projeto grande, 195+ arquivos, ~480k palavras).
+- Antes de confiar no grafo, verifique se está atualizado; na dúvida, revalide.
+
+## Transparência de comandos
+
+- Antes de rodar qualquer comando de **build, merge, instalação ou atualização** (inclusive Graphify e clasp), mostre o comando exato e explique o que ele faz **antes** de executar.
+
+## RBAC (controle de acesso)
+
+- Acesso é 100% baseado em **permissões efetivas** (grupos + permissões avulsas), calculadas no backend. Não decida acesso por string de `perfil` (é cosmético/espelho).
+- Fonte única no frontend: `Auth.PAGINAS` em [js/auth.js](mdc:js/auth.js). Catálogo em [apps-script/AccessControl.gs](mdc:apps-script/AccessControl.gs).
+- Ao criar módulo/página nova: adicione a permissão em `ACCESS_PERMISSIONS`, mapeie em `Auth.PAGINAS` e inclua no grupo padrão adequado.
+
+## Padrão de UI: atualização otimista (optimistic)
+
+- Backend Apps Script tem latência alta (~10s).
+- **Mutação simples de item já no estado local** (toggle, excluir, editar) → otimista com rollback (snapshot → mutar → render → `await API` → em falha restaurar).
+- **CRIAR** (servidor gera ID) → fechar modal + `carregar()` sem `await` (reload em background). Não fingir a linha.
+- **NÃO otimista** quando o servidor recalcula/gera (ID, versão, agregados, KPIs) → round-trip único.
+- Ao mudar JS/CSS de uma página, **bumpe o `?v=`** do asset no HTML (cache-bust do GitHub Pages).
+
+## Deploy
+
+- Frontend → GitHub Pages via `git push` na `main`.
+- Backend Apps Script → `clasp push` só atualiza `@HEAD`; produção usa deployment de versão fixa (`clasp deploy -i <id>`).
+- Commite/faça push **somente quando solicitado**.
