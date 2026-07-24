@@ -721,10 +721,74 @@ function aniversariosPrevia() {
   return res;
 }
 
+/** CPF valido a partir de uma semente — para os alunos de teste. */
+function aniversariosCpfTeste_(semente) {
+  var base = String(semente).replace(/\D/g, '');
+  while (base.length < 9) base = '1' + base;
+  base = base.slice(-9);
+  if (/^(\d)\1+$/.test(base)) base = '123456' + base.slice(-3);
+
+  var soma = 0, i;
+  for (i = 0; i < 9; i++) soma += Number(base.charAt(i)) * (10 - i);
+  var d1 = 11 - (soma % 11); if (d1 >= 10) d1 = 0;
+
+  var b2 = base + d1;
+  soma = 0;
+  for (i = 0; i < 10; i++) soma += Number(b2.charAt(i)) * (11 - i);
+  var d2 = 11 - (soma % 11); if (d2 >= 10) d2 = 0;
+
+  return base + d1 + d2;
+}
+
+/** Linha no formato EXATO do XLS do CAVOK (15 colunas). */
+function aniversariosLinhaTeste_(matricula, nome, cpf, nascimento, curso) {
+  return {
+    'Matrícula': matricula, 'Nome': nome, 'CPF': cpf,
+    'E-mail': 'teste.' + matricula.toLowerCase() + '@exemplo.com',
+    'Segundo E-mail': '', 'Telefone': '',
+    'Data Nascimento': nascimento,
+    'Celular': '', 'Cliente': '',
+    'Base': 'SDAM - SDAM', 'Curso': curso, 'Contrato': '',
+    'Termo de Ciência': '', 'Sexo': '', 'Data matrícula': '24/07/2026'
+  };
+}
+
+/** Le de volta o que ficou gravado nas linhas de teste. */
+function aniversariosLerTeste_(cpfs) {
+  var contexto = carregarContextoCadastroAlunos_();
+  var achados = {};
+
+  contexto.linhas.forEach(function(item) {
+    var a = linhaParaCadastroAluno_(item.row, item.rowNumber, contexto.indices);
+    var pos = cpfs.indexOf(a.cpf);
+    if (pos === -1) return;
+    var dm = diaMesNascimentoCadastroAluno_(a.nascimento);
+    achados[pos] = {
+      matricula: a.matricula,
+      nascimentoGravado: a.nascimento || '(vazio)',
+      diaMes: dm ? dm.dia + '/' + dm.mes : '(nenhum)',
+      formatoDaCelula: contexto.indices.nascimento
+        ? contexto.sheet.getRange(a.rowNumber, contexto.indices.nascimento).getNumberFormat()
+        : '(sem coluna)',
+      idadeEm2026: aniversariosIdadeQueFaz_(a.nascimento, '2026') || '(n/a)'
+    };
+  });
+
+  return {
+    colunaNascimentoExiste: !!contexto.indices.nascimento,
+    linhas: [achados[0] || null, achados[1] || null, achados[2] || null]
+  };
+}
+
 /**
  * Testa a IMPORTACAO de ponta a ponta contra uma COPIA da planilha, sem
- * precisar do frontend. Usa o caminho real (importarCadastroAlunos) com linhas
- * no formato exato do XLS do CAVOK e mostra o que foi gravado.
+ * precisar do frontend. Usa o caminho real (importarCadastroAlunos).
+ *
+ * Exercita os DOIS caminhos de escrita, que sao diferentes no codigo:
+ *   FASE 1 — aluno novo   -> appendCadastroAluno_    (appendRow + formato)
+ *   FASE 2 — aluno existe -> atualizarLinhaCadastroAluno_ (setValue)
+ *
+ * Usa CPF novo a cada execucao, senao a 2a rodada nunca testaria o append.
  *
  * ⚠️ Recusa rodar se o script estiver apontado para a planilha de PRODUCAO.
  * Antes de rodar: Configuracoes do projeto -> Propriedades do script ->
@@ -740,60 +804,58 @@ function aniversariosTesteImportacao() {
     );
   }
 
-  // Cabecalhos IDENTICOS aos do export real do CAVOK (15 colunas).
-  var linhas = [
-    {
-      'Matrícula': 'TESTE-001', 'Nome': 'Aluno Teste Nascimento', 'CPF': '111.222.333-96',
-      'E-mail': 'teste.aniversario@exemplo.com', 'Segundo E-mail': '', 'Telefone': '',
-      'Data Nascimento': '10/07/1995', 'Celular': '', 'Cliente': '',
-      'Base': 'SDAM - SDAM', 'Curso': 'PPA - Pratico (PP)', 'Contrato': '',
-      'Termo de Ciência': '', 'Sexo': '', 'Data matrícula': '24/07/2026'
-    },
-    {
-      'Matrícula': 'TESTE-002', 'Nome': 'Aluno Teste Sem Data', 'CPF': '444.555.666-19',
-      'E-mail': 'teste.semdata@exemplo.com', 'Segundo E-mail': '', 'Telefone': '',
-      'Data Nascimento': '', 'Celular': '', 'Cliente': '',
-      'Base': 'SDAM - SDAM', 'Curso': 'INVA (Prático)', 'Contrato': '',
-      'Termo de Ciência': '', 'Sexo': '', 'Data matrícula': '24/07/2026'
-    },
-    {
-      'Matrícula': 'TESTE-003', 'Nome': 'Aluno Teste 29 Fev', 'CPF': '777.888.999-41',
-      'E-mail': 'teste.bissexto@exemplo.com', 'Segundo E-mail': '', 'Telefone': '',
-      'Data Nascimento': '29/02/2000', 'Celular': '', 'Cliente': '',
-      'Base': 'SDAM - SDAM', 'Curso': 'PC/IFRA (Prático)', 'Contrato': '',
-      'Termo de Ciência': '', 'Sexo': '', 'Data matrícula': '24/07/2026'
-    }
+  var selo = String(Date.now()).slice(-6);
+  var cpfs = [
+    aniversariosCpfTeste_(Date.now()),
+    aniversariosCpfTeste_(Date.now() + 137),
+    aniversariosCpfTeste_(Date.now() + 911)
   ];
 
-  importarCadastroAlunos(linhas, { email: 'teste-importacao' });
+  var out = { planilha: idAtual, selo: selo, cpfs: cpfs, falhas: [] };
 
-  // Le de volta pelo caminho normal e confere o que ficou gravado.
-  var contexto = carregarContextoCadastroAlunos_();
-  var out = { planilha: idAtual, colunaNascimentoExiste: !!contexto.indices.nascimento, alunos: [] };
+  // ── FASE 1: alunos NOVOS (caminho appendCadastroAluno_) ──
+  importarCadastroAlunos([
+    aniversariosLinhaTeste_('T' + selo + '-A', 'Aluno Teste Nascimento', cpfs[0], '10/07/1995', 'PPA - Pratico (PP)'),
+    aniversariosLinhaTeste_('T' + selo + '-B', 'Aluno Teste Sem Data',   cpfs[1], '',           'INVA (Prático)'),
+    aniversariosLinhaTeste_('T' + selo + '-C', 'Aluno Teste 29 Fev',     cpfs[2], '29/02/2000', 'PC/IFRA (Prático)')
+  ], { email: 'teste-importacao' });
 
-  contexto.linhas.forEach(function(item) {
-    var a = linhaParaCadastroAluno_(item.row, item.rowNumber, contexto.indices);
-    if (String(a.matricula).indexOf('TESTE-') !== 0) return;
-    var dm = diaMesNascimentoCadastroAluno_(a.nascimento);
-    var formato = contexto.indices.nascimento
-      ? contexto.sheet.getRange(a.rowNumber, contexto.indices.nascimento).getNumberFormat()
-      : '(sem coluna)';
-    out.alunos.push({
-      matricula: a.matricula,
-      nome: a.nome,
-      nascimentoGravado: a.nascimento || '(vazio)',
-      diaMes: dm ? dm.dia + '/' + dm.mes : '(nenhum)',
-      formatoDaCelula: formato,
-      idadeEm2026: aniversariosIdadeQueFaz_(a.nascimento, '2026') || '(n/a)'
-    });
-  });
+  var f1 = aniversariosLerTeste_(cpfs);
+  out.colunaNascimentoExiste = f1.colunaNascimentoExiste;
+  out.fase1_alunoNovo = f1.linhas;
 
-  out.veredito = out.colunaNascimentoExiste &&
-    out.alunos.length === 3 &&
-    out.alunos[0].nascimentoGravado === '10/07/1995' &&
-    out.alunos[0].formatoDaCelula === '@'
-      ? 'OK — coluna criada, data gravada como TEXTO dd/mm/aaaa, dia/mes correto.'
-      : 'CONFERIR — veja os campos acima.';
+  if (!f1.colunaNascimentoExiste) out.falhas.push('coluna de nascimento não existe');
+  if (!f1.linhas[0]) out.falhas.push('fase 1: aluno A não foi encontrado');
+  else {
+    if (f1.linhas[0].nascimentoGravado !== '10/07/1995') out.falhas.push('fase 1: nascimento não gravado no append');
+    if (f1.linhas[0].formatoDaCelula !== '@') out.falhas.push('fase 1: célula não está em formato TEXTO (@)');
+    if (f1.linhas[0].diaMes !== '10/07') out.falhas.push('fase 1: dia/mês incorreto');
+  }
+  if (f1.linhas[2] && f1.linhas[2].diaMes !== '29/02') out.falhas.push('fase 1: 29/02 não preservado');
+  if (f1.linhas[1] && f1.linhas[1].nascimentoGravado !== '(vazio)') out.falhas.push('fase 1: aluno sem data ganhou data');
+
+  // ── FASE 2: MESMOS CPFs, data trocada (caminho atualizarLinha) ──
+  importarCadastroAlunos([
+    aniversariosLinhaTeste_('T' + selo + '-A', 'Aluno Teste Nascimento', cpfs[0], '05/12/1988', 'PPA - Pratico (PP)'),
+    aniversariosLinhaTeste_('T' + selo + '-B', 'Aluno Teste Sem Data',   cpfs[1], '',           'INVA (Prático)')
+  ], { email: 'teste-importacao' });
+
+  var f2 = aniversariosLerTeste_(cpfs);
+  out.fase2_alunoExistente = f2.linhas;
+
+  if (!f2.linhas[0]) out.falhas.push('fase 2: aluno A desapareceu');
+  else {
+    if (f2.linhas[0].nascimentoGravado !== '05/12/1988') out.falhas.push('fase 2: data não foi atualizada');
+    if (f2.linhas[0].formatoDaCelula !== '@') out.falhas.push('fase 2: célula saiu do formato TEXTO');
+  }
+  // Regra: import sem a data NAO pode apagar nascimento ja existente.
+  if (f2.linhas[2] && f2.linhas[2].nascimentoGravado !== '29/02/2000') {
+    out.falhas.push('fase 2: aluno fora do lote teve o nascimento alterado');
+  }
+
+  out.veredito = out.falhas.length === 0
+    ? 'OK — append e update gravam dd/mm/aaaa como TEXTO, 29/02 preservado, aluno sem data intacto.'
+    : 'FALHOU — ' + out.falhas.join(' | ');
 
   Logger.log(JSON.stringify(out, null, 2));
   return out;

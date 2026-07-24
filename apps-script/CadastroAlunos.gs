@@ -547,7 +547,13 @@ function appendCadastroAluno_(sheet, idx, novo, opcoes) {
   var lastCol = sheet.getLastColumn();
   for (var i = 0; i < lastCol; i++) if (typeof row[i] === 'undefined') row[i] = '';
   sheet.appendRow(row);
-  return sheet.getLastRow();
+  var rowNumber = sheet.getLastRow();
+  // Nascimento é gravado DEPOIS do appendRow, via setNascimentoCadastroAluno_,
+  // que aplica formato texto ANTES do valor. Passar a data dentro do array
+  // faria o Sheets converter "10/07/1995" em Date no próprio append — o
+  // deslocamento de fuso voltaria por aqui.
+  if (novo.nascimento) setNascimentoCadastroAluno_(sheet, rowNumber, idx, novo.nascimento);
+  return rowNumber;
 }
 
 function atualizarLinhaCadastroAluno_(sheet, rowNumber, idx, novo, opcoes) {
