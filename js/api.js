@@ -155,6 +155,10 @@ const API = {
   async inativarCadastroAluno(id) { return this.post('cadastro-alunos-inativar', { id }); },
   async reativarCadastroAluno(id) { return this.post('cadastro-alunos-reativar', { id }); },
 
+  // ── Aniversários de alunos ─────────────────────────────────
+  async getAniversarios(mes) { return this.get('aniversarios', mes ? { mes } : {}, false); },
+  async reenviarAniversario(id) { return this.post('aniversarios-reenviar', { id }); },
+
   // ── Bases ──────────────────────────────────────────────────
   async getBases(useCache = true) { return this.get('bases', {}, useCache); },
   async salvarBase(dados) {

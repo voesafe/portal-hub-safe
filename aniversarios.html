@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aniversários — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/safe-theme.css">
+  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/aniversarios.css?v=20260724-aniversarios-v1">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Aniversários</div>
+          <div class="topbar-subtitle">E-mail de parabéns automático para os alunos</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" id="btn-recarregar-aniv" type="button">Atualizar</button>
+      </div>
+    </div>
+
+    <div class="page aniversarios-page">
+
+      <!-- Estado do envio automático -->
+      <section class="card aniv-status-card" id="aniv-status-card" hidden>
+        <div class="aniv-status-icone" id="aniv-status-icone">!</div>
+        <div class="aniv-status-texto">
+          <div class="aniv-status-titulo" id="aniv-status-titulo">—</div>
+          <div class="aniv-status-desc" id="aniv-status-desc">—</div>
+        </div>
+      </section>
+
+      <!-- Indicadores -->
+      <section class="aniv-kpis" id="aniv-kpis"></section>
+
+      <!-- Hoje -->
+      <section class="card aniv-bloco">
+        <header class="aniv-bloco-head">
+          <div>
+            <h2 class="aniv-bloco-titulo">Hoje</h2>
+            <p class="aniv-bloco-sub" id="aniv-hoje-sub">—</p>
+          </div>
+        </header>
+        <div id="aniv-hoje-lista" class="aniv-lista"></div>
+      </section>
+
+      <!-- Próximos 7 dias -->
+      <section class="card aniv-bloco">
+        <header class="aniv-bloco-head">
+          <div>
+            <h2 class="aniv-bloco-titulo">Próximos 7 dias</h2>
+            <p class="aniv-bloco-sub">Para quem quiser fazer algo além do e-mail</p>
+          </div>
+        </header>
+        <div id="aniv-proximos-lista" class="aniv-lista"></div>
+      </section>
+
+      <!-- Mês -->
+      <section class="card aniv-bloco">
+        <header class="aniv-bloco-head">
+          <div>
+            <h2 class="aniv-bloco-titulo">Aniversariantes do mês</h2>
+            <p class="aniv-bloco-sub" id="aniv-mes-sub">—</p>
+          </div>
+          <select class="form-control aniv-select-mes" id="aniv-mes">
+            <option value="01">Janeiro</option>
+            <option value="02">Fevereiro</option>
+            <option value="03">Março</option>
+            <option value="04">Abril</option>
+            <option value="05">Maio</option>
+            <option value="06">Junho</option>
+            <option value="07">Julho</option>
+            <option value="08">Agosto</option>
+            <option value="09">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+          </select>
+        </header>
+        <div class="table-wrapper">
+          <table class="table table-aniversarios">
+            <thead>
+              <tr>
+                <th>Dia</th>
+                <th>Aluno</th>
+                <th>Idade</th>
+                <th>Curso</th>
+                <th>E-mail</th>
+                <th>Situação</th>
+              </tr>
+            </thead>
+            <tbody id="aniv-mes-corpo"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="dashboard-loading-overlay" id="aniv-loading">
+        <div class="dashboard-loading-card">
+          <img class="dashboard-loading-logo" src="assets/img/logo.png" alt="">
+          <span class="dashboard-loading-text" id="aniv-loading-text">Carregando aniversários...</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/config.js?v=20260724-aniversarios-v1"></script>
+<script src="js/api.js?v=20260724-aniversarios-v1"></script>
+<script src="js/auth.js?v=20260724-aniversarios-v1"></script>
+<script src="js/aniversarios.js?v=20260724-aniversarios-v1"></script>
+</body>
+</html>

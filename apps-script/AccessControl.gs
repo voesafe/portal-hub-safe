@@ -66,6 +66,12 @@ var ACCESS_PERMISSIONS = [
   ['cadastro_alunos.sincronizar_trello', 'Cadastro de Alunos', 'Sincronizar Trello'],
   ['cadastro_alunos.inativar', 'Cadastro de Alunos', 'Inativar aluno'],
   ['cadastro_alunos.reativar', 'Cadastro de Alunos', 'Reativar aluno'],
+  // Aniversários: de propósito FORA de todos os cargos padrão. Sem grupo, só
+  // superadmin/master enxerga (bypass em usuarioEhSuperadmin/temPermissao).
+  // Para liberar a alguém, conceder no Controle de Acesso — o guarda do
+  // backend (exigirAniversarios) já honra a permissão de forma aditiva.
+  ['aniversarios.visualizar', 'Aniversários', 'Visualizar aniversários'],
+  ['aniversarios.reenviar', 'Aniversários', 'Reenviar e-mail de aniversário'],
   ['safe_minions.visualizar', 'SAFE MINIONS', 'Visualizar SAFE MINIONS'],
   ['safe_minions.processar_arquivo_local', 'SAFE MINIONS', 'Processar arquivo local'],
   ['bases.visualizar', 'Bases', 'Visualizar bases'],

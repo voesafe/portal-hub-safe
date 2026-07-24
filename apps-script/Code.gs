@@ -137,6 +137,19 @@ function doGet(e) {
         exigirSessao(token);
         return jsonSuccess(listarNotams());
 
+      // ── Aniversários de alunos ──
+      case 'aniversarios': {
+        var usuarioAniv = exigirAniversarios(token);
+        return jsonSuccess(listarAniversarios(usuarioAniv, p.mes || null));
+      }
+
+      // Descadastro do e-mail de aniversário. SEM sessão de propósito: quem
+      // recebeu o e-mail já provou ter acesso à caixa, e exigir login aqui faz
+      // a pessoa marcar como spam. Devolve HTML (página), não JSON.
+      // O token do aluno vem em `t` para não colidir com o `token` de sessão.
+      case 'aniversario-descadastro':
+        return processarDescadastroAniversario(p.t || '');
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }
@@ -288,6 +301,12 @@ function doPost(e) {
       case 'cadastro-alunos-reativar':
         var usuarioReativaAluno = exigirCadastroAlunos(token);
         return jsonSuccess(alterarSituacaoCadastroAluno(dados.id, true, usuarioReativaAluno));
+
+      // ── Aniversários ───────────────────────────────────────
+      case 'aniversarios-reenviar':
+        var usuarioReenvioAniv = exigirAniversarios(token);
+        if (!dados.id) return jsonError('ID obrigatório');
+        return jsonSuccess(reenviarAniversario(dados.id, usuarioReenvioAniv));
 
       // ── Bases ──────────────────────────────────────────────
       case 'salvar-base':

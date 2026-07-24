@@ -13,7 +13,13 @@ var CADASTRO_ALUNOS_EXTRA_HEADERS = [
   'TRELLO_URL',
   'TRELLO_STATUS',
   'OBS_HUB',
-  'ATUALIZADO_EM'
+  'ATUALIZADO_EM',
+  // Aniversarios (ver Aniversarios.gs). DATA_NASCIMENTO normaliza para a mesma
+  // chave que o "Data Nascimento" do XLS do CAVOK, entao nao duplica coluna se
+  // a planilha ja tiver a original.
+  'DATA_NASCIMENTO',
+  'ANIVERSARIO_ENVIADO_EM',
+  'SEM_ANIVERSARIO'
 ];
 
 function listarCadastroAlunos(usuario) {
@@ -276,13 +282,18 @@ function carregarContextoCadastroAlunos_() {
   if (lastRow > headerInfo.row) {
     var range = sheet.getRange(headerInfo.row + 1, 1, lastRow - headerInfo.row, lastCol);
     var values = range.getValues();
-    // A coluna de data de matrícula é lida como valor exibido (getDisplayValues)
-    // para evitar deslocamento de fuso: a planilha está sem timezone e o Sheets
+    // As colunas de data são lidas como valor exibido (getDisplayValues) para
+    // evitar deslocamento de fuso: a planilha está sem timezone e o Sheets
     // grava datas como meia-noite UTC, o que fazia o dia recuar na formatação.
-    var colData = headerInfo.indices.dataMatricula;
-    var displays = colData ? range.getDisplayValues() : null;
+    // Vale para a data de matrícula e para a de nascimento — nesta, um dia de
+    // erro significa parabenizar na data errada.
+    var colsData = [headerInfo.indices.dataMatricula, headerInfo.indices.nascimento]
+      .filter(function(c) { return !!c; });
+    var displays = colsData.length ? range.getDisplayValues() : null;
     values.forEach(function(row, idx) {
-      if (displays) row[colData - 1] = displays[idx][colData - 1];
+      if (displays) {
+        colsData.forEach(function(col) { row[col - 1] = displays[idx][col - 1]; });
+      }
       if (row.join('').trim() !== '') rows.push({ row: row, rowNumber: headerInfo.row + 1 + idx });
     });
   }
@@ -328,6 +339,11 @@ function mapearCabecalhosCadastroAlunos_(headers) {
     if (key === 'trello_status') map.trelloStatus = idx + 1;
     if (key === 'obs_hub' || key === 'observacao' || key === 'observacao_hub') map.observacao = idx + 1;
     if (key === 'atualizado_em') map.atualizadoEm = idx + 1;
+    // "Data Nascimento" (XLS do CAVOK) -> data_nascimento. Aceita tambem a
+    // variante com "de", que normaliza diferente.
+    if (key === 'data_nascimento' || key === 'data_de_nascimento') map.nascimento = idx + 1;
+    if (key === 'aniversario_enviado_em') map.aniversarioEnviadoEm = idx + 1;
+    if (key === 'sem_aniversario') map.semAniversario = idx + 1;
   });
   return map;
 }
@@ -374,6 +390,11 @@ function linhaParaCadastroAluno_(row, rowNumber, idx) {
     base: String(valorLinhaCadastroAluno_(row, idx.base) || '').trim(),
     baseTrello: String(valorLinhaCadastroAluno_(row, idx.baseTrello) || '').trim() || baseInfo.codigo,
     dataMatricula: formatarDataCadastroAluno_(valorLinhaCadastroAluno_(row, idx.dataMatricula)),
+    // Aniversarios: mantida como TEXTO dd/mm/aaaa de ponta a ponta (nunca vira
+    // Date) para nao sofrer deslocamento de fuso. Ver Aniversarios.gs.
+    nascimento: normalizarNascimentoCadastroAluno_(valorLinhaCadastroAluno_(row, idx.nascimento)),
+    aniversarioEnviadoEm: String(valorLinhaCadastroAluno_(row, idx.aniversarioEnviadoEm) || '').trim(),
+    semAniversario: valorBooleano(valorLinhaCadastroAluno_(row, idx.semAniversario)),
     situacao: ativo ? 'Ativo' : 'Inativo',
     s141: s141,
     status: status,
@@ -419,8 +440,64 @@ function normalizarAlunoImportado_(raw) {
     elegivel: !!cursoInfo.codigo,
     base: String(baseOriginal || '').trim(),
     baseTrello: baseInfo.codigo,
-    dataMatricula: obj.data_matricula || ''
+    dataMatricula: obj.data_matricula || '',
+    // "Data Nascimento" do XLS do CAVOK. Antes era lida aqui e descartada no
+    // return — a coluna sempre existiu no export.
+    nascimento: normalizarNascimentoCadastroAluno_(obj.data_nascimento || obj.data_de_nascimento)
   };
+}
+
+/**
+ * Normaliza data de nascimento para o texto dd/mm/aaaa.
+ *
+ * Aceita o que chega do XLS (string dd/mm/aaaa), o que o Sheets devolve quando
+ * decide converter a celula em Date, e a variante ISO aaaa-mm-dd. Devolve ''
+ * quando nao da para confiar no valor — aluno sem data simplesmente nao entra
+ * na fila de envio.
+ *
+ * Nunca usa new Date(string): parsear "10/07/1995" em JS depende de locale e
+ * de fuso, e um dia de erro aqui significa parabenizar na data errada.
+ */
+function normalizarNascimentoCadastroAluno_(valor) {
+  if (valor === null || valor === undefined || valor === '') return '';
+
+  if (Object.prototype.toString.call(valor) === '[object Date]') {
+    if (isNaN(valor.getTime())) return '';
+    // Componentes locais, sem passar por UTC.
+    return padZeroCadastroAluno_(valor.getDate()) + '/' +
+           padZeroCadastroAluno_(valor.getMonth() + 1) + '/' +
+           valor.getFullYear();
+  }
+
+  var texto = String(valor).trim();
+  if (!texto) return '';
+
+  var br = texto.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+  if (br) {
+    return padZeroCadastroAluno_(br[1]) + '/' + padZeroCadastroAluno_(br[2]) + '/' + br[3];
+  }
+
+  var iso = texto.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (iso) {
+    return padZeroCadastroAluno_(iso[3]) + '/' + padZeroCadastroAluno_(iso[2]) + '/' + iso[1];
+  }
+
+  return '';
+}
+
+function padZeroCadastroAluno_(valor) {
+  var s = String(valor);
+  return s.length < 2 ? '0' + s : s;
+}
+
+/**
+ * Dia e mes de um nascimento normalizado. Devolve null se nao houver data.
+ * Usado pela varredura diaria — comparar dd/mm como string evita qualquer
+ * aritmetica de data.
+ */
+function diaMesNascimentoCadastroAluno_(nascimento) {
+  var m = String(nascimento || '').match(/^(\d{2})\/(\d{2})\//);
+  return m ? { dia: m[1], mes: m[2] } : null;
 }
 
 function normalizarCursoCadastroAluno_(curso) {
@@ -481,6 +558,11 @@ function atualizarLinhaCadastroAluno_(sheet, rowNumber, idx, novo, opcoes) {
   setCadastroAlunoValor_(sheet, rowNumber, idx, 'curso', novo.curso);
   setCadastroAlunoValor_(sheet, rowNumber, idx, 'base', novo.base);
   setCadastroAlunoValor_(sheet, rowNumber, idx, 'dataMatricula', novo.dataMatricula);
+  // So sobrescreve quando o XLS trouxe a data — import sem a coluna preenchida
+  // nao pode apagar um nascimento ja registrado.
+  if (novo.nascimento) {
+    setNascimentoCadastroAluno_(sheet, rowNumber, idx, novo.nascimento);
+  }
   setCadastroAlunoValor_(sheet, rowNumber, idx, 'cursoOperacional', novo.cursoOperacional || '');
   setCadastroAlunoValor_(sheet, rowNumber, idx, 'baseTrello', novo.baseTrello || '');
   if (opcoes.situacao) setCadastroAlunoValor_(sheet, rowNumber, idx, 'situacao', opcoes.situacao);
@@ -502,6 +584,21 @@ function setCadastroAlunoValor_(sheet, rowNumber, idx, campo, valor) {
   var col = idx[campo];
   if (!col) return;
   sheet.getRange(rowNumber, col).setValue(valor);
+}
+
+/**
+ * Grava o nascimento forcando formato TEXTO na celula.
+ *
+ * Sem o setNumberFormat('@') o Sheets converte "10/07/1995" em Date na hora da
+ * escrita e a leitura volta deslocada (mesma armadilha do campo `alvo` no LOG
+ * da Escala CCO). Como so precisamos de dia/mes, texto e o formato certo.
+ */
+function setNascimentoCadastroAluno_(sheet, rowNumber, idx, valor) {
+  var col = idx.nascimento;
+  if (!col) return;
+  var cel = sheet.getRange(rowNumber, col);
+  cel.setNumberFormat('@');
+  cel.setValue(valor);
 }
 
 function valorLinhaCadastroAluno_(row, col) {

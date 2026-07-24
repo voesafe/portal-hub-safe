@@ -158,6 +158,10 @@ const Auth = {
     'progresso-alunos.html':  { ver: ['progresso_alunos.visualizar'] },
     'cadastro-alunos.html':   { ver: ['cadastro_alunos.visualizar'],
                                 editar: ['cadastro_alunos.importar_xls_cavok', 'cadastro_alunos.marcar_s141', 'cadastro_alunos.sincronizar_trello', 'cadastro_alunos.inativar', 'cadastro_alunos.reativar'] },
+    // Aniversários: nenhum cargo padrão tem `aniversarios.*` (ver
+    // AccessControl.gs), então só superadmin/master enxerga — que é o pedido.
+    'aniversarios.html':      { ver: ['aniversarios.visualizar'],
+                                editar: ['aniversarios.reenviar'] },
     'safe-minions.html':      { ver: ['safe_minions.visualizar'],
                                 editar: ['safe_minions.processar_arquivo_local'] },
     'bases.html':             { ver: ['bases.visualizar'],
@@ -181,6 +185,7 @@ const Auth = {
     'horas-voadas-inva.html': 'Horas Voadas INVA Mês',
     'progresso-alunos.html': 'Progresso de Alunos',
     'cadastro-alunos.html': 'Cadastro de Aluno',
+    'aniversarios.html': 'Aniversários',
     'safe-minions.html': 'SAFE MINIONS',
     'bases.html': 'Bases',
     'admin.html': 'Gestão de Usuários',
@@ -373,6 +378,7 @@ const Auth = {
   protegerSafeMinions()     { return this.protegerPagina('safe-minions.html', 'SAFE MINIONS'); },
   protegerProgressoAlunos() { return this.protegerPagina('progresso-alunos.html', 'Progresso de Alunos'); },
   protegerCadastroAlunos()  { return this.protegerPagina('cadastro-alunos.html', 'Cadastro de Aluno'); },
+  protegerAniversarios()    { return this.protegerPagina('aniversarios.html', 'Aniversários'); },
   protegerFinanceiro()      { return this.protegerPagina('controle-gastos.html', 'Controle de Gastos'); },
   protegerFechamentoHoras() { return this.protegerPagina('fechamento-horas.html', 'Fechamento de Horas / Cotistas'); },
   protegerGestaoUsuarios()  { return this.protegerPagina('admin.html', 'Gestão central de usuários'); },
@@ -419,6 +425,7 @@ const Auth = {
       minions:      `<svg ${base}><path d="M8 3h8"></path><path d="M9 3v3"></path><path d="M15 3v3"></path><rect x="5" y="6" width="14" height="15" rx="4"></rect><circle cx="10" cy="12" r="2"></circle><circle cx="14" cy="12" r="2"></circle><path d="M8 12h4"></path><path d="M12 12h4"></path><path d="M9 17h6"></path></svg>`,
       academico:    `<svg ${base}><path d="m12 3-9 4.5 9 4.5 9-4.5L12 3Z"></path><path d="M6 8v5c0 2.5 2.7 4 6 4s6-1.5 6-4V8"></path><path d="M21 12v5"></path></svg>`,
       aluno:        `<svg ${base}><path d="M20 21a8 8 0 1 0-16 0"></path><circle cx="12" cy="7" r="4"></circle><path d="M16 11l2 2 4-4"></path></svg>`,
+      aniversario:  `<svg ${base}><path d="M4 21h16"></path><path d="M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"></path><path d="M5 16.5c1.5 0 1.5-1 3-1s1.5 1 3 1 1.5-1 3-1 1.5 1 3 1"></path><path d="M9 12V9"></path><path d="M12 12V8"></path><path d="M15 12V9"></path></svg>`,
       comercial:     `<svg ${base}><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>`,
       administracao: `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 9h18"></path></svg>`,
       financeiro:    `<svg ${base}><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h3"></path></svg>`,
@@ -529,6 +536,7 @@ const Auth = {
     const itensAdm = [
       ver('safe-minions.html') ? item('safe-minions.html', 'SAFE MINIONS', 'minions', { permitido: true }) : '',
       ver('cadastro-alunos.html') ? item('cadastro-alunos.html', 'Cadastro de Aluno', 'aluno', { permitido: true }) : '',
+      ver('aniversarios.html') ? item('aniversarios.html', 'Aniversários', 'aniversario', { permitido: true }) : '',
       this.temPermissao('planilha_admin.abrir')
         ? item(
             'https://docs.google.com/spreadsheets/d/1zUHGTAC8TUhD6v1k-7OLeDQRlj99J0BMbimScZD2SoI/edit?gid=1905416248#gid=1905416248',
@@ -539,7 +547,7 @@ const Auth = {
     ].join('');
     if (itensAdm) {
       secoes.push(secao('administracao', 'Administração', 'administracao', itensAdm,
-        ['safe-minions.html', 'cadastro-alunos.html']));
+        ['safe-minions.html', 'cadastro-alunos.html', 'aniversarios.html']));
     }
 
     secoes.push(secaoSeTiver('financeiro', 'Financeiro', 'financeiro', [
@@ -627,6 +635,7 @@ const Auth = {
       'horas-voadas-inva.html': 'horas',
       'safe-minions.html': 'minions',
       'cadastro-alunos.html': 'aluno',
+      'aniversarios.html': 'aniversario',
       'bases.html': 'bases',
       'progresso-alunos.html': 'academico'
     };
