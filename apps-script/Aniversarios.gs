@@ -721,6 +721,84 @@ function aniversariosPrevia() {
   return res;
 }
 
+/**
+ * Testa a IMPORTACAO de ponta a ponta contra uma COPIA da planilha, sem
+ * precisar do frontend. Usa o caminho real (importarCadastroAlunos) com linhas
+ * no formato exato do XLS do CAVOK e mostra o que foi gravado.
+ *
+ * ⚠️ Recusa rodar se o script estiver apontado para a planilha de PRODUCAO.
+ * Antes de rodar: Configuracoes do projeto -> Propriedades do script ->
+ * CADASTRO_ALUNOS_SHEET_ID = ID da copia.
+ */
+function aniversariosTesteImportacao() {
+  var idAtual = obterCadastroAlunosSheetId_();
+  if (idAtual === CADASTRO_ALUNOS_SHEET_ID) {
+    throw new Error(
+      'BLOQUEADO: o script está apontado para a planilha de PRODUÇÃO (' + idAtual + ').\n' +
+      'Defina a propriedade CADASTRO_ALUNOS_SHEET_ID com o ID de uma CÓPIA antes de rodar este teste.\n' +
+      'Configurações do projeto → Propriedades do script.'
+    );
+  }
+
+  // Cabecalhos IDENTICOS aos do export real do CAVOK (15 colunas).
+  var linhas = [
+    {
+      'Matrícula': 'TESTE-001', 'Nome': 'Aluno Teste Nascimento', 'CPF': '111.222.333-96',
+      'E-mail': 'teste.aniversario@exemplo.com', 'Segundo E-mail': '', 'Telefone': '',
+      'Data Nascimento': '10/07/1995', 'Celular': '', 'Cliente': '',
+      'Base': 'SDAM - SDAM', 'Curso': 'PPA - Pratico (PP)', 'Contrato': '',
+      'Termo de Ciência': '', 'Sexo': '', 'Data matrícula': '24/07/2026'
+    },
+    {
+      'Matrícula': 'TESTE-002', 'Nome': 'Aluno Teste Sem Data', 'CPF': '444.555.666-19',
+      'E-mail': 'teste.semdata@exemplo.com', 'Segundo E-mail': '', 'Telefone': '',
+      'Data Nascimento': '', 'Celular': '', 'Cliente': '',
+      'Base': 'SDAM - SDAM', 'Curso': 'INVA (Prático)', 'Contrato': '',
+      'Termo de Ciência': '', 'Sexo': '', 'Data matrícula': '24/07/2026'
+    },
+    {
+      'Matrícula': 'TESTE-003', 'Nome': 'Aluno Teste 29 Fev', 'CPF': '777.888.999-41',
+      'E-mail': 'teste.bissexto@exemplo.com', 'Segundo E-mail': '', 'Telefone': '',
+      'Data Nascimento': '29/02/2000', 'Celular': '', 'Cliente': '',
+      'Base': 'SDAM - SDAM', 'Curso': 'PC/IFRA (Prático)', 'Contrato': '',
+      'Termo de Ciência': '', 'Sexo': '', 'Data matrícula': '24/07/2026'
+    }
+  ];
+
+  importarCadastroAlunos(linhas, { email: 'teste-importacao' });
+
+  // Le de volta pelo caminho normal e confere o que ficou gravado.
+  var contexto = carregarContextoCadastroAlunos_();
+  var out = { planilha: idAtual, colunaNascimentoExiste: !!contexto.indices.nascimento, alunos: [] };
+
+  contexto.linhas.forEach(function(item) {
+    var a = linhaParaCadastroAluno_(item.row, item.rowNumber, contexto.indices);
+    if (String(a.matricula).indexOf('TESTE-') !== 0) return;
+    var dm = diaMesNascimentoCadastroAluno_(a.nascimento);
+    var formato = contexto.indices.nascimento
+      ? contexto.sheet.getRange(a.rowNumber, contexto.indices.nascimento).getNumberFormat()
+      : '(sem coluna)';
+    out.alunos.push({
+      matricula: a.matricula,
+      nome: a.nome,
+      nascimentoGravado: a.nascimento || '(vazio)',
+      diaMes: dm ? dm.dia + '/' + dm.mes : '(nenhum)',
+      formatoDaCelula: formato,
+      idadeEm2026: aniversariosIdadeQueFaz_(a.nascimento, '2026') || '(n/a)'
+    });
+  });
+
+  out.veredito = out.colunaNascimentoExiste &&
+    out.alunos.length === 3 &&
+    out.alunos[0].nascimentoGravado === '10/07/1995' &&
+    out.alunos[0].formatoDaCelula === '@'
+      ? 'OK — coluna criada, data gravada como TEXTO dd/mm/aaaa, dia/mes correto.'
+      : 'CONFERIR — veja os campos acima.';
+
+  Logger.log(JSON.stringify(out, null, 2));
+  return out;
+}
+
 /** Diagnostico rapido: cobertura da base e estado do gatilho. */
 function aniversariosDiagnostico() {
   var res = listarAniversarios({ email: 'diagnostico' });
