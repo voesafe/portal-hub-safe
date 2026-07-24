@@ -685,11 +685,24 @@ function aniversariosRemoverTrigger() {
 /**
  * Manda o e-mail de aniversario SO para o endereco informado, com dados de
  * exemplo. Nao toca na planilha e nao marca ninguem como enviado.
+ *
+ * O botao "Executar" do editor NAO passa argumento, e Session.getActiveUser()
+ * exigiria o escopo userinfo.email (fora da lista do appsscript.json). Por isso
+ * o destino sai da propriedade de script ANIVERSARIOS_TEST_EMAIL quando a
+ * funcao e chamada sem parametro.
  */
 function aniversariosSelfTest(emailDestino) {
-  var destino = String(emailDestino || Session.getActiveUser().getEmail() || '').trim();
+  var destino = String(
+    emailDestino ||
+    PropertiesService.getScriptProperties().getProperty('ANIVERSARIOS_TEST_EMAIL') ||
+    ''
+  ).trim();
+
   if (!aniversariosEmailValido_(destino)) {
-    throw new Error('Informe um e-mail válido: aniversariosSelfTest("voce@voesafe.com")');
+    throw new Error(
+      'Defina para onde mandar o teste: Configurações do projeto → Propriedades do script → ' +
+      'ANIVERSARIOS_TEST_EMAIL = seu@email.com  (ou chame aniversariosSelfTest("seu@email.com")).'
+    );
   }
 
   enviarEmailAniversario_({
