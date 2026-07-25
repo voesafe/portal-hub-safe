@@ -125,8 +125,7 @@ const Aniversarios = {
     const cards = [
       { valor: this.dados.hoje.length, label: 'Aniversariantes hoje', tom: 'destaque' },
       { valor: r.enviadosNoAno || 0, label: `E-mails enviados em ${this.dados.ano}`, tom: '' },
-      { valor: `${r.coberturaPct || 0}%`, label: 'Alunos ativos com data', tom: this.tomCobertura(r.coberturaPct) },
-      { valor: r.semData || 0, label: 'Ativos sem data de nascimento', tom: (r.semData ? 'alerta' : '') }
+      this.cardStatusDoDia()
     ];
 
     alvo.innerHTML = cards.map(c => `
@@ -137,11 +136,44 @@ const Aniversarios = {
     `).join('');
   },
 
-  tomCobertura(pct) {
-    const n = Number(pct || 0);
-    if (n >= 90) return 'ok';
-    if (n >= 60) return '';
-    return 'alerta';
+  /**
+   * Status do disparo de hoje. Responde três perguntas de uma vez: o lote rodou?
+   * quantos saíram? algum falhou? O erro do lote fica guardado no servidor
+   * (ANIVERSARIOS_ULTIMA_EXECUCAO) porque a planilha só registra sucesso.
+   */
+  cardStatusDoDia() {
+    const total = (this.dados.hoje || []).length;
+    const comErro = (this.dados.hoje || []).filter(a => a.erroEnvio).length;
+    const enviados = (this.dados.hoje || []).filter(a => a.enviadoHoje).length;
+    const ultima = this.dados.ultimaExecucao;
+
+    if (!total) {
+      return {
+        valor: '—',
+        label: ultima?.deHoje
+          ? `Nenhum aniversariante hoje · verificado ${ultima.quando.slice(-5)}`
+          : 'Nenhum aniversariante hoje',
+        tom: ''
+      };
+    }
+
+    if (comErro) {
+      return {
+        valor: `${comErro}`,
+        label: comErro === 1 ? 'E-mail falhou — reenvie abaixo' : 'E-mails falharam — reenvie abaixo',
+        tom: 'erro'
+      };
+    }
+
+    if (enviados === total) {
+      return { valor: `${enviados}/${total}`, label: 'E-mails de hoje enviados', tom: 'ok' };
+    }
+
+    return {
+      valor: `${enviados}/${total}`,
+      label: this.dados.gatilhoAtivo ? 'Aguardando o envio automático' : 'Envio desligado — envie pelo botão',
+      tom: 'alerta'
+    };
   },
 
   // ── Hoje ───────────────────────────────────────────────────
@@ -182,14 +214,21 @@ const Aniversarios = {
   },
 
   cartaoAluno(aluno, comAcao) {
-    const motivo = aluno.motivo ? this.MOTIVOS[aluno.motivo] : null;
+    const motivo = aluno.erroEnvio
+      ? { label: 'Erro no envio', tom: 'erro' }
+      : (aluno.motivo ? this.MOTIVOS[aluno.motivo] : null);
     const quando = comAcao
-      ? (aluno.enviadoHoje ? 'E-mail enviado' : 'Aguardando envio')
+      ? (aluno.erroEnvio ? 'Falhou no envio' : (aluno.enviadoHoje ? 'E-mail enviado' : 'Aguardando envio'))
       : (aluno.emDias === 1 ? 'amanhã' : `em ${aluno.emDias} dias`);
 
     const podeReenviar = comAcao && Auth.podeEditar('aniversarios.html') &&
       !aluno.semAniversario && aluno.motivo !== 'sem_email' &&
       aluno.motivo !== 'sem_data' && aluno.motivo !== 'nome_invalido';
+
+    // Falha do lote: mostra o motivo e troca o rótulo do botão para 'Tentar de novo'.
+    const rotuloBotao = aluno.erroEnvio
+      ? 'Tentar de novo'
+      : (aluno.enviadoHoje ? 'Reenviar' : 'Enviar agora');
 
     return `
       <article class="aniv-card">
@@ -204,11 +243,12 @@ const Aniversarios = {
             ${aluno.cursoOperacional || aluno.curso ? `<span>${this.esc(aluno.cursoOperacional || aluno.curso)}</span>` : ''}
             ${aluno.email ? `<span class="aniv-card-email">${this.esc(aluno.email)}</span>` : ''}
           </div>
+          ${aluno.erroEnvio ? `<div class="aniv-card-erro">${this.esc(aluno.erroEnvio)}</div>` : ''}
         </div>
         <div class="aniv-card-lado">
           <span class="aniv-quando">${this.esc(quando)}</span>
           ${motivo ? `<span class="aniv-tag aniv-tag-${motivo.tom}">${motivo.label}</span>` : ''}
-          ${podeReenviar ? `<button class="btn btn-ghost btn-sm" type="button" data-reenviar="${this.esc(aluno.id)}">${aluno.enviadoHoje ? 'Reenviar' : 'Enviar agora'}</button>` : ''}
+          ${podeReenviar ? `<button class="btn ${aluno.erroEnvio ? 'btn-primary' : 'btn-ghost'} btn-sm" type="button" data-reenviar="${this.esc(aluno.id)}">${rotuloBotao}</button>` : ''}
         </div>
       </article>
     `;

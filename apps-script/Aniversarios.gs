@@ -199,7 +199,12 @@ function enviarAniversariosDoDia(opcoes) {
       erros: []
     };
 
-    if (!selecionados.length) return resultado;
+    // Registra mesmo em dia sem aniversariante: é o sinal de que o gatilho
+    // rodou. Sem isso, "nenhum e-mail hoje" fica igual a "o gatilho morreu".
+    if (!selecionados.length) {
+      if (!simular) aniversariosGravarUltimaExecucao_(resultado);
+      return resultado;
+    }
 
     var quota = 0;
     try {
@@ -226,16 +231,86 @@ function enviarAniversariosDoDia(opcoes) {
         resultado.enviados++;
         resultado.alunos.push({ nome: aluno.nome, email: aluno.email, rowNumber: aluno.rowNumber });
       } catch (err) {
-        // Uma falha isolada nunca derruba o lote.
+        // Uma falha isolada nunca derruba o lote. Guarda com o rowNumber para a
+        // pagina poder apontar o erro no cartao do aluno certo.
         resultado.falhas++;
-        resultado.erros.push(aluno.nome + ': ' + (err && err.message ? err.message : err));
+        resultado.erros.push({
+          rowNumber: aluno.rowNumber,
+          nome: aluno.nome,
+          erro: String(err && err.message ? err.message : err).slice(0, 200)
+        });
       }
     });
 
+    if (!simular) aniversariosGravarUltimaExecucao_(resultado);
     return resultado;
   } finally {
     lock.releaseLock();
   }
+}
+
+// ============================================================
+// ULTIMA EXECUCAO (para a pagina saber o que aconteceu no lote)
+// ============================================================
+
+var ANIVERSARIOS_ULTIMA_EXECUCAO_PROP = 'ANIVERSARIOS_ULTIMA_EXECUCAO';
+
+/**
+ * Guarda o resultado do ultimo lote numa propriedade do script.
+ *
+ * Sem isto, um aluno cujo e-mail FALHOU fica visualmente identico a um que
+ * ainda nao foi processado — a coluna ANIVERSARIO_ENVIADO_EM so registra
+ * sucesso. E o Google nao avisa nada, porque as falhas sao tratadas por aluno.
+ *
+ * Limite de ~9 KB por propriedade: guarda no maximo 30 erros.
+ */
+function aniversariosGravarUltimaExecucao_(resultado) {
+  try {
+    var registro = {
+      data: resultado.data,
+      ano: resultado.ano,
+      quando: Utilities.formatDate(new Date(), aniversariosTimeZone_(), 'dd/MM/yyyy HH:mm'),
+      elegiveis: resultado.elegiveis,
+      enviados: resultado.enviados,
+      falhas: resultado.falhas,
+      erros: (resultado.erros || []).slice(0, 30)
+    };
+    PropertiesService.getScriptProperties()
+      .setProperty(ANIVERSARIOS_ULTIMA_EXECUCAO_PROP, JSON.stringify(registro));
+  } catch (e) {
+    // Registro de diagnostico nunca pode derrubar o envio.
+  }
+}
+
+function aniversariosUltimaExecucao_(hoje) {
+  try {
+    var raw = PropertiesService.getScriptProperties().getProperty(ANIVERSARIOS_ULTIMA_EXECUCAO_PROP);
+    if (!raw) return null;
+    var reg = JSON.parse(raw);
+    reg.deHoje = (reg.data === hoje.diaMes && String(reg.ano) === String(hoje.ano));
+    return reg;
+  } catch (e) {
+    return null;
+  }
+}
+
+/** Remove o erro de um aluno depois de um reenvio manual bem-sucedido. */
+function aniversariosLimparErro_(rowNumber) {
+  try {
+    var props = PropertiesService.getScriptProperties();
+    var raw = props.getProperty(ANIVERSARIOS_ULTIMA_EXECUCAO_PROP);
+    if (!raw) return;
+    var reg = JSON.parse(raw);
+    var antes = (reg.erros || []).length;
+    reg.erros = (reg.erros || []).filter(function(e) {
+      return Number(e.rowNumber) !== Number(rowNumber);
+    });
+    if (reg.erros.length !== antes) {
+      reg.falhas = reg.erros.length;
+      reg.enviados = Number(reg.enviados || 0) + 1;
+      props.setProperty(ANIVERSARIOS_ULTIMA_EXECUCAO_PROP, JSON.stringify(reg));
+    }
+  } catch (e) {}
 }
 
 function enviarEmailAniversario_(aluno, ano) {
@@ -556,6 +631,13 @@ function listarAniversarios(usuario, mesSolicitado) {
   // Calculado uma vez, fora do laco — sao milhares de linhas.
   var diasAlvo = aniversariosDiasAlvo_(hoje);
 
+  // Erros do ultimo lote, indexados por linha, para apontar no cartao certo.
+  var ultima = aniversariosUltimaExecucao_(hoje);
+  var errosPorLinha = {};
+  if (ultima && ultima.deHoje) {
+    (ultima.erros || []).forEach(function(e) { errosPorLinha[Number(e.rowNumber)] = e.erro; });
+  }
+
   var resumo = {
     total: 0, ativos: 0, comData: 0, semData: 0,
     descadastrados: 0, semEmail: 0, enviadosNoAno: 0
@@ -609,6 +691,7 @@ function listarAniversarios(usuario, mesSolicitado) {
 
     if (diasAlvo.indexOf(diaMes) !== -1) {
       registro.enviadoHoje = String(aluno.aniversarioEnviadoEm || '') === hoje.ano;
+      registro.erroEnvio = errosPorLinha[Number(aluno.rowNumber)] || '';
       listaHoje.push(registro);
     } else if (indiceProximos[diaMes] !== undefined) {
       registro.emDias = indiceProximos[diaMes];
@@ -636,6 +719,7 @@ function listarAniversarios(usuario, mesSolicitado) {
     hojeLabel: hoje.diaMes,
     ano: hoje.ano,
     gatilhoAtivo: aniversariosTriggerAtivo_(),
+    ultimaExecucao: ultima,
     usuario: String(usuario && (usuario.email || usuario.nome) || '')
   };
 }
@@ -679,6 +763,7 @@ function reenviarAniversario(id, usuario) {
 
   enviarEmailAniversario_(aluno, hoje.ano);
   marcarAniversarioEnviado_(contexto.sheet, aluno.rowNumber, contexto.indices, hoje.ano);
+  aniversariosLimparErro_(aluno.rowNumber);
 
   return listarAniversarios(usuario);
 }

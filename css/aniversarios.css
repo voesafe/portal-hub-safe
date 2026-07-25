@@ -91,6 +91,16 @@
 .aniv-kpi-ok     .aniv-kpi-valor { color: var(--teal-dark); }
 .aniv-kpi-alerta .aniv-kpi-valor { color: var(--warning); }
 
+/* Falha de envio: o único lugar da página que usa vermelho, para o olho
+   encontrar sozinho. */
+.aniv-kpi-erro {
+  border-color: var(--danger);
+  background: rgba(231, 76, 60, .05);
+}
+
+.aniv-kpi-erro .aniv-kpi-valor { color: var(--danger); }
+.aniv-kpi-erro .aniv-kpi-label { color: #a33226; font-weight: 600; }
+
 /* ── Blocos ───────────────────────────────────────────────── */
 .aniv-bloco { padding: 20px 22px; }
 
@@ -225,6 +235,23 @@
 .aniv-tag-neutro {
   background: var(--gray-100);
   color: var(--gray-500);
+}
+
+.aniv-tag-erro {
+  background: rgba(231, 76, 60, .14);
+  color: #a33226;
+}
+
+/* Mensagem de erro do envio, no cartão do aluno que falhou. */
+.aniv-card-erro {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(231, 76, 60, .08);
+  border-left: 3px solid var(--danger);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: .82rem;
+  line-height: 1.45;
+  color: #8f2c21;
 }
 
 /* ── Vazio ────────────────────────────────────────────────── */
