@@ -29,6 +29,14 @@ var ANIVERSARIOS_TRIGGER_HORA = 9;
 var ANIVERSARIOS_REMETENTE = 'SAFE Escola de Aviação';
 var ANIVERSARIOS_ASSUNTO = 'Feliz aniversário, {NOME}!';
 var ANIVERSARIOS_LOGO_CID = 'logoSafe';
+var ANIVERSARIOS_HERO_CID = 'heroSafe';
+var ANIVERSARIOS_MARCA_CID = 'marcaSafe';
+
+// Links do rodape. O do WhatsApp fica VAZIO ate ter o numero — vazio, o link
+// nao e renderizado. Link quebrado num e-mail e pior que link ausente.
+var ANIVERSARIOS_LINK_SITE = 'https://www.voesafe.com.br';
+var ANIVERSARIOS_LINK_INSTAGRAM = 'https://www.instagram.com/voesafe/';
+var ANIVERSARIOS_LINK_WHATSAPP = '';
 
 // URL /exec do deployment de producao. Usada para montar o link de
 // descadastro. Sobrescrevivel por propriedade do script (util no clone/teste).
@@ -322,7 +330,9 @@ function enviarEmailAniversario_(aluno, ano) {
 
   var primeiroNome = aniversariosPrimeiroNome_(aluno.nome);
   var link = linkDescadastroAniversario_(aluno.cpf);
-  var assunto = ANIVERSARIOS_ASSUNTO.replace('{NOME}', primeiroNome);
+  // Substituicao por funcao de proposito: com string, um '$&' ou '$1' no nome
+  // seria interpretado como padrao pelo replace e sairia texto errado no assunto.
+  var assunto = ANIVERSARIOS_ASSUNTO.replace('{NOME}', function() { return primeiroNome; });
 
   var payload = {
     to: email,
@@ -336,7 +346,9 @@ function enviarEmailAniversario_(aluno, ano) {
   // remota. Se o asset falhar, manda mesmo assim — o alt estilizado cobre.
   try {
     payload.inlineImages = {};
+    payload.inlineImages[ANIVERSARIOS_HERO_CID] = safeHeroBlob_();
     payload.inlineImages[ANIVERSARIOS_LOGO_CID] = safeLogoBlob_();
+    payload.inlineImages[ANIVERSARIOS_MARCA_CID] = safeMarcaBlob_();
   } catch (e) {
     delete payload.inlineImages;
   }
@@ -357,6 +369,13 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
   var link = escapeHtmlEmail_(linkDescadastro);
   var anoTxt = escapeHtmlEmail_(ano || aniversariosHoje_().ano);
 
+  // Links do rodapé. O do WhatsApp só aparece se estiver preenchido — link
+  // quebrado num e-mail é pior que link ausente.
+  var linkWhats = ANIVERSARIOS_LINK_WHATSAPP
+    ? '<a href="' + escapeHtmlEmail_(ANIVERSARIOS_LINK_WHATSAPP) + '" style="color:#9fb2cc;text-decoration:none;">WhatsApp</a>'
+    : '';
+  var sep = '<span style="color:#3c4a63;padding:0 10px;">&middot;</span>';
+
   return ''
     + '<!doctype html><html lang="pt-BR"><head>'
     + '<meta charset="utf-8">'
@@ -365,7 +384,7 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     + '<meta http-equiv="x-ua-compatible" content="ie=edge">'
     + '<title>Feliz aniversário, ' + nome + '!</title>'
     + '<style>'
-    + 'html,body{width:100%!important;height:100%!important;margin:0!important;padding:0!important;background-color:#eef2f7;}'
+    + 'html,body{width:100%!important;margin:0!important;padding:0!important;background-color:#eef2f7;}'
     + 'table,td{border-collapse:collapse!important;mso-table-lspace:0pt!important;mso-table-rspace:0pt!important;}'
     + 'table{border-spacing:0!important;}'
     + 'img{display:block;max-width:100%;height:auto;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;}'
@@ -373,134 +392,171 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     + '*{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}'
     + '.preheader{display:none!important;visibility:hidden;opacity:0;overflow:hidden;width:0;height:0;color:transparent;mso-hide:all;}'
     + '@media screen and (max-width:640px){'
-    + '.email-wrapper{padding:0!important;}'
-    + '.email-container{width:100%!important;max-width:100%!important;border-radius:0!important;}'
-    + '.mobile-padding{padding-right:24px!important;padding-left:24px!important;}'
-    + '.header-padding{padding:28px 24px 24px!important;}'
-    + '.hero-padding{padding-top:38px!important;padding-bottom:18px!important;}'
-    + '.hero-title{font-size:34px!important;line-height:40px!important;letter-spacing:-0.7px!important;}'
-    + '.body-text{font-size:16px!important;line-height:26px!important;}'
-    + '.highlight-text{font-size:17px!important;line-height:27px!important;}'
-    + '.logo{width:235px!important;max-width:235px!important;}'
-    + '.footer-padding{padding:30px 24px 34px!important;}'
+    + '.wrap{padding:0!important;}'
+    + '.box{width:100%!important;max-width:100%!important;border-radius:0!important;}'
+    + '.pad{padding-left:26px!important;padding-right:26px!important;}'
+    + '.hero-pad{padding:30px 26px 26px!important;}'
+    + '.h1{font-size:32px!important;line-height:38px!important;letter-spacing:-.6px!important;}'
+    + '.body-t{font-size:16px!important;line-height:27px!important;}'
+    + '.quote-t{font-size:20px!important;line-height:31px!important;}'
+    + '.quote-pad{padding:28px 24px!important;}.marca-cel{display:none!important;width:0!important;padding:0!important;}'
+    + '.foot-pad{padding:24px 24px 26px!important;}'
     + '}'
     + '@media (prefers-color-scheme:dark){'
-    + 'body,.email-background{background-color:#eef2f7!important;}'
-    + '.force-white{background-color:#ffffff!important;}'
-    + '.force-navy{background-color:#16213f!important;}'
-    + '.force-dark-text{color:#16213f!important;}'
-    + '.force-body-text{color:#667085!important;}'
-    + '.force-light-block{background-color:#f6f9fc!important;}'
+    + 'body,.bg{background-color:#eef2f7!important;}'
+    + '.fw{background-color:#ffffff!important;}'
+    + '.fn{background-color:#071126!important;}'
+    + '.fdark{color:#15213f!important;}'
+    + '.fbody{color:#4b5772!important;}'
     + '}'
     + '</style></head>'
     + '<body style="margin:0;padding:0;background-color:#eef2f7;">'
 
-    + '<div class="preheader">Hoje é um dia especial. A SAFE deseja a você um novo ciclo cheio de conquistas e novos voos.</div>'
+    + '<div class="preheader">Hoje é o seu dia — e toda a equipe da SAFE quer comemorar com você.</div>'
     + '<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;">'
-    + '&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>'
+    + '&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>'
 
-    + '<center role="article" aria-roledescription="email" lang="pt-BR" class="email-background" style="width:100%;background-color:#eef2f7;">'
+    + '<center role="article" aria-roledescription="email" lang="pt-BR" class="bg" style="width:100%;background-color:#eef2f7;">'
     + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">'
-    + '<tr><td align="center" class="email-wrapper" style="padding:38px 14px;">'
+    + '<tr><td align="center" class="wrap" style="padding:40px 14px;">'
 
-    + '<table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0" class="email-container" style="width:620px;max-width:620px;overflow:hidden;background-color:#ffffff;border:1px solid #e4eaf1;border-radius:26px;box-shadow:0 18px 55px rgba(21,35,65,0.12);">'
+    + '<!--[if mso | IE]><table role="presentation" width="640" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td width="640"><![endif]-->'
+    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="box" style="width:100%;max-width:640px;margin:0 auto;overflow:hidden;background-color:#ffffff;border-radius:22px;box-shadow:0 20px 60px rgba(7,17,38,.14);">'
 
-    // Cabecalho — logo embutido. O style no <img> vira o visual do alt quando
-    // o cliente suprime imagens: o topo nunca fica vazio.
-    + '<tr><td align="center" class="force-navy header-padding" style="padding:34px 40px 30px;background-color:#16213f;">'
-    + '<img src="cid:' + ANIVERSARIOS_LOGO_CID + '" width="310" alt="SAFE Escola de Aviação" class="logo"'
-    + ' style="width:310px;max-width:310px;height:auto;margin:0 auto;display:block;border:0;'
-    + 'color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;">'
+    // ── FOTO: bloco de largura inteira. Fica fora de qualquer sobreposição de
+    //    texto de propósito — background-image em célula não renderiza no
+    //    Outlook, e o nome do aluno precisa ser HTML de verdade. ──
+    + '<tr><td bgcolor="#071126" style="padding:0;font-size:0;line-height:0;background-color:#071126;">'
+    + '<img src="cid:' + ANIVERSARIOS_HERO_CID + '" width="640" alt="Equipe da SAFE comemorando um aniversário"'
+    + ' style="width:100%;max-width:640px;height:auto;display:block;border:0;">'
     + '</td></tr>'
 
-    + '<tr><td style="height:7px;font-size:0;line-height:0;background-color:#5baee2;">&nbsp;</td></tr>'
-
-    + '<tr><td class="force-white mobile-padding hero-padding" style="padding:48px 54px 20px;background-color:#ffffff;">'
-    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">'
-
-    + '<tr><td align="center" style="padding-bottom:18px;">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
-    + '<td align="center" style="padding:8px 16px;background-color:#eef8fb;border:1px solid #d8eef5;border-radius:999px;color:#2878a9;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;line-height:16px;letter-spacing:1.3px;text-transform:uppercase;">Um dia especial para celebrar</td>'
+    // ── Faixa de identidade (azul + turquesa) ──
+    + '<tr><td style="padding:0;font-size:0;line-height:0;">'
+    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
+    + '<td width="50%" bgcolor="#5baee2" style="height:5px;background-color:#5baee2;font-size:0;line-height:0;">&nbsp;</td>'
+    + '<td width="50%" bgcolor="#60c0bf" style="height:5px;background-color:#60c0bf;font-size:0;line-height:0;">&nbsp;</td>'
     + '</tr></table></td></tr>'
 
-    + '<tr><td align="center" class="hero-title force-dark-text" style="padding:0 0 18px;color:#16213f;font-family:Arial,Helvetica,sans-serif;font-size:43px;font-weight:700;line-height:49px;letter-spacing:-1.2px;">'
-    + 'Feliz aniversário,<br>' + nome + '!</td></tr>'
+    // ── Saudação em navy, com o nome dinâmico ──
+    + '<tr><td class="fn hero-pad" bgcolor="#071126" style="padding:34px 46px 30px;background-color:#071126;">'
+    + '<div style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#60c0bf;">Hoje é o seu dia</div>'
+    + '<h1 class="h1" style="margin:14px 0 0;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:40px;line-height:46px;font-weight:700;letter-spacing:-1px;color:#ffffff;">'
+    + 'Feliz aniversário,<br>' + nome + '!</h1>'
+    + '</td></tr>'
 
-    + '<tr><td align="center" style="padding-bottom:28px;">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
-    + '<td style="width:46px;height:4px;background-color:#5baee2;border-radius:4px 0 0 4px;font-size:0;line-height:0;">&nbsp;</td>'
-    + '<td style="width:46px;height:4px;background-color:#60c0bf;border-radius:0 4px 4px 0;font-size:0;line-height:0;">&nbsp;</td>'
+    // ── Corpo ──
+    + '<tr><td class="fw pad" bgcolor="#ffffff" style="padding:34px 46px 6px;background-color:#ffffff;">'
+    + '<p class="body-t fbody" style="margin:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:17px;line-height:30px;color:#4b5772;">'
+    + 'Hoje não comemoramos apenas uma data. Celebramos cada decisão que trouxe você até aqui, '
+    + 'cada desafio superado e cada passo dado em direção ao seu sonho de voar.</p>'
+    + '<p class="body-t fbody" style="margin:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:17px;line-height:30px;color:#4b5772;">'
+    + 'Ter você com a gente nessa jornada é motivo de orgulho para toda a equipe da SAFE.</p>'
+    + '<p class="body-t fbody" style="margin:0 0 8px;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:17px;line-height:30px;color:#4b5772;">'
+    + 'Que este novo ciclo traga saúde, conquistas e boas histórias — e que nunca falte coragem '
+    + 'para decolar cada vez mais alto.</p>'
+    + '</td></tr>'
+
+    // ── Citação em serifada, sobre navy. É o momento de respiro do e-mail. ──
+    + '<tr><td bgcolor="#ffffff" style="padding:28px 46px 0;background-color:#ffffff;">'
+    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#071126" style="background-color:#071126;border-radius:16px;overflow:hidden;">'
+    + '<tr>'
+    + '<td class="quote-pad" style="padding:30px 32px;">'
+    + '<p class="quote-t" style="margin:0;font-family:Georgia,\'Times New Roman\',serif;font-size:22px;line-height:34px;'
+    + 'font-style:italic;color:#ffffff;">'
+    + '&ldquo;Que nunca faltem novos destinos, grandes sonhos e c&eacute;us abertos.&rdquo;</p>'
+    + '</td>'
+    + '<td width="86" valign="middle" align="right" class="marca-cel" style="width:86px;padding:0 30px 0 0;">'
+    + '<img src="cid:' + ANIVERSARIOS_MARCA_CID + '" width="52" alt=""'
+    + ' style="width:52px;height:auto;display:block;border:0;opacity:.9;">'
+    + '</td>'
     + '</tr></table></td></tr>'
 
-    + '<tr><td align="center" class="body-text force-body-text" style="padding:0 0 18px;color:#667085;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:29px;">'
-    + 'Hoje celebramos mais um capítulo da sua história e desejamos que este novo ciclo seja repleto de realizações, aprendizados e momentos inesquecíveis.</td></tr>'
+    // ── Despedida ──
+    + '<tr><td class="fw pad" bgcolor="#ffffff" style="padding:30px 46px 32px;background-color:#ffffff;">'
+    + '<p class="body-t fbody" style="margin:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:17px;line-height:30px;color:#4b5772;">'
+    + 'Obrigado por confiar seu sonho à SAFE. Nos vemos nos próximos voos.</p>'
+    + '<p class="fdark" style="margin:0;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:17px;line-height:28px;color:#15213f;">Um abraço,<br>'
+    + '<strong style="color:#15213f;">Equipe SAFE</strong></p>'
+    + '</td></tr>'
 
-    + '<tr><td align="center" class="body-text force-body-text" style="padding:0 0 32px;color:#667085;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:29px;">'
-    + 'Que você continue voando cada vez mais alto, conquistando novos horizontes e transformando seus sonhos em grandes jornadas.</td></tr>'
-
-    + '<tr><td style="padding:0 0 34px;">'
-    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="force-light-block" style="overflow:hidden;background-color:#f6f9fc;border:1px solid #e3eaf2;border-radius:18px;"><tr>'
-    + '<td width="7" style="width:7px;background-color:#60c0bf;font-size:0;line-height:0;">&nbsp;</td>'
-    + '<td align="center" class="highlight-text force-dark-text" style="padding:25px 28px;color:#16213f;font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:600;line-height:29px;">'
-    + 'Que nunca faltem motivos para sonhar,<br>coragem para decolar e determinação para chegar ainda mais longe.</td>'
-    + '</tr></table></td></tr>'
-
-    + '<tr><td align="center" class="body-text force-body-text" style="padding:0 0 30px;color:#667085;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:27px;">'
-    + 'É uma alegria ter você fazendo parte da nossa história e da família SAFE.</td></tr>'
-
-    + '<tr><td align="center" class="force-dark-text" style="padding:2px 0 4px;color:#16213f;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:26px;">'
-    + 'Com carinho,<br><strong>Equipe SAFE Escola de Aviação</strong></td></tr>'
-
-    + '</table></td></tr>'
-
-    // Rodape
-    + '<tr><td class="force-navy footer-padding" style="padding:30px 52px 34px;background-color:#16213f;">'
+    // ── Rodapé: compacto de propósito. O aviso de mensagem automática e o
+    //    descadastro foram unidos num bloco só — eram duas linhas separadas por
+    //    um vão, e juntas ocupam metade da altura sem perder clareza. ──
+    + '<tr><td class="fn foot-pad" bgcolor="#071126" style="padding:26px 46px 28px;background-color:#071126;">'
     + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">'
 
     + '<tr><td align="center" style="padding-bottom:14px;">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
-    + '<td style="width:32px;height:3px;background-color:#5baee2;font-size:0;line-height:0;">&nbsp;</td>'
-    + '<td style="width:32px;height:3px;background-color:#60c0bf;font-size:0;line-height:0;">&nbsp;</td>'
+    + '<img src="cid:' + ANIVERSARIOS_LOGO_CID + '" width="124" alt="SAFE Escola de Aviação"'
+    + ' style="width:124px;height:auto;margin:0 auto;display:block;border:0;'
+    + 'color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;">'
+    + '</td></tr>'
+
+    + '<tr><td align="center" style="padding-bottom:14px;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;font-size:13px;line-height:16px;">'
+    + '<a href="' + escapeHtmlEmail_(ANIVERSARIOS_LINK_SITE) + '" style="color:#9fb2cc;text-decoration:none;">Site</a>'
+    + sep
+    + '<a href="' + escapeHtmlEmail_(ANIVERSARIOS_LINK_INSTAGRAM) + '" style="color:#9fb2cc;text-decoration:none;">Instagram</a>'
+    + (linkWhats ? sep + linkWhats : '')
+    + '</td></tr>'
+
+    + '<tr><td style="padding-bottom:13px;font-size:0;line-height:0;">'
+    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
+    + '<td bgcolor="#22304a" style="height:1px;background-color:#22304a;font-size:0;line-height:0;">&nbsp;</td>'
     + '</tr></table></td></tr>'
 
-    + '<tr><td align="center" style="color:#d5dbea;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;">'
-    + 'Esta é uma mensagem automática enviada pela SAFE em comemoração ao seu aniversário.</td></tr>'
+    + '<tr><td align="center" style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:12px;line-height:19px;color:#7f8ea6;">'
+    + 'Mensagem automática em comemoração ao seu aniversário. Não quer mais recebê-las? '
+    + '<a href="' + link + '" style="color:#8fc9ea;text-decoration:underline;white-space:nowrap;">Cancelar o recebimento</a>.'
+    + '</td></tr>'
 
-    + '<tr><td align="center" style="padding-top:10px;color:#99a5bf;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;">'
-    + 'Não deseja mais receber mensagens de aniversário?<br>'
-    + '<a href="' + link + '" style="color:#8fc9ea;text-decoration:underline;">Cancelar o recebimento</a>.</td></tr>'
-
-    + '<tr><td align="center" style="padding-top:12px;color:#99a5bf;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;">'
-    + '© ' + anoTxt + ' SAFE Escola de Aviação.<br>Todos os direitos reservados.</td></tr>'
+    + '<tr><td align="center" style="padding-top:11px;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:11px;line-height:17px;color:#5b6a83;">'
+    + '&copy; ' + anoTxt + ' SAFE Escola de Aviação &middot; São José dos Campos e Campinas</td></tr>'
 
     + '</table></td></tr>'
 
     + '</table>'
+    + '<!--[if mso | IE]></td></tr></table><![endif]-->'
     + '</td></tr></table></center></body></html>';
 }
 
 function textoEmailAniversario_(primeiroNome, linkDescadastro) {
   return [
-    'Feliz aniversário, ' + primeiroNome + '!',
-    'Mais um capítulo da sua história.',
+    'HOJE E O SEU DIA',
     '',
-    'Hoje celebramos mais um capítulo da sua história e desejamos que este novo',
-    'ciclo seja repleto de realizações, aprendizados e momentos inesquecíveis.',
+    'Feliz aniversario, ' + primeiroNome + '!',
     '',
-    'Que você continue voando cada vez mais alto, conquistando novos horizontes',
-    'e transformando seus sonhos em grandes jornadas.',
+    'Hoje nao comemoramos apenas uma data. Celebramos cada decisao que trouxe',
+    'voce ate aqui, cada desafio superado e cada passo dado em direcao ao seu',
+    'sonho de voar.',
     '',
-    'Que nunca faltem motivos para sonhar, coragem para decolar e determinação',
-    'para chegar ainda mais longe.',
+    'Ter voce com a gente nessa jornada e motivo de orgulho para toda a equipe',
+    'da SAFE.',
     '',
-    'É uma alegria ter você fazendo parte da nossa história e da família SAFE.',
+    'Que este novo ciclo traga saude, conquistas e boas historias - e que nunca',
+    'falte coragem para decolar cada vez mais alto.',
     '',
-    'Com carinho,',
-    'Equipe SAFE Escola de Aviação',
+    '   "Que nunca faltem novos destinos, grandes sonhos e ceus abertos."',
+    '',
+    'Obrigado por confiar seu sonho a SAFE. Nos vemos nos proximos voos.',
+    '',
+    'Um abraco,',
+    'Equipe SAFE - Escola de Aviacao',
+    '',
+    ANIVERSARIOS_LINK_SITE,
+    ANIVERSARIOS_LINK_INSTAGRAM,
     '',
     '---',
-    'Esta é uma mensagem automática enviada em comemoração ao seu aniversário.',
-    'Para não receber mais mensagens de aniversário, acesse:',
+    'Mensagem automatica em comemoracao ao seu aniversario.',
+    'Para nao receber mais mensagens de aniversario, acesse:',
     linkDescadastro
   ].join('\n');
 }
