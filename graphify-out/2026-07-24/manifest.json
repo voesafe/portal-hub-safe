@@ -30,14 +30,14 @@
     "semantic_hash": "e37373441a9e381104d4538952fa1b72"
   },
   "js/api.js": {
-    "mtime": 1784301724.8796585,
-    "ast_hash": "da7348cf0d79cca43387456e1a7ad376",
-    "semantic_hash": "da7348cf0d79cca43387456e1a7ad376"
+    "mtime": 1784934128.4171321,
+    "ast_hash": "93786a18f31835df8d95ec6dbd71b5a9",
+    "semantic_hash": ""
   },
   "js/auth.js": {
-    "mtime": 1784565083.5956397,
-    "ast_hash": "46a674447a4fbf064ee5e945126fcc75",
-    "semantic_hash": "46a674447a4fbf064ee5e945126fcc75"
+    "mtime": 1784934194.7705483,
+    "ast_hash": "a6be97bad7d4ce372dca9bb55aa4c74b",
+    "semantic_hash": ""
   },
   "js/bases.js": {
     "mtime": 1784136472.1297796,
@@ -55,9 +55,9 @@
     "semantic_hash": "637a6ae9d3e3ea90b7e0df90d929a43f"
   },
   "js/config.js": {
-    "mtime": 1784302448.8434665,
-    "ast_hash": "63c66f0749b7db9b3b9d0111e14994d2",
-    "semantic_hash": "63c66f0749b7db9b3b9d0111e14994d2"
+    "mtime": 1784934306.290775,
+    "ast_hash": "b0b74824368d60b0a755933f0bec5572",
+    "semantic_hash": ""
   },
   "js/controle-gastos.js": {
     "mtime": 1784136472.1300993,
@@ -975,9 +975,9 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1784742629.249097,
-    "ast_hash": "5469ef566f5ec272547331f680c6460d",
-    "semantic_hash": "5469ef566f5ec272547331f680c6460d"
+    "mtime": 1784934459.98892,
+    "ast_hash": "c7f73083296091b1a51e8af907d48850",
+    "semantic_hash": ""
   },
   "js/notams.js": {
     "mtime": 1784301647.6968718,
@@ -988,5 +988,15 @@
     "mtime": 1784301464.8697338,
     "ast_hash": "d99c322ce1ffd92734d33b98ee9307f5",
     "semantic_hash": "d99c322ce1ffd92734d33b98ee9307f5"
+  },
+  "js/aniversarios.js": {
+    "mtime": 1784934260.2985413,
+    "ast_hash": "7a7e4a373d2cfa99c0b6ece35ea9a4d9",
+    "semantic_hash": ""
+  },
+  "aniversarios.html": {
+    "mtime": 1784934216.493825,
+    "ast_hash": "66eff46544ddb2ae5db5b423bd1334c5",
+    "semantic_hash": ""
   }
 }

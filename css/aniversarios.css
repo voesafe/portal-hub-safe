@@ -11,44 +11,63 @@
   gap: 18px;
 }
 
-/* ── Estado do envio automático ───────────────────────────── */
-.aniv-status-card {
-  display: flex;
+/* ── Estado do envio automático (pílula no header) ─────────────
+   Discreta de propósito: fica verde quase sempre, então não deve
+   competir com os dados. O detalhe vive no title. */
+.aniv-pill {
+  display: inline-flex;
   align-items: center;
-  gap: 16px;
-  padding: 18px 22px;
-}
-
-.aniv-status-card[hidden] { display: none; }
-
-.aniv-status-icone {
-  flex: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--white);
-}
-
-.aniv-status-card.ativo   .aniv-status-icone { background: var(--teal-dark); }
-.aniv-status-card.inativo .aniv-status-icone { background: var(--warning); }
-
-.aniv-status-card.ativo   { border-left: 4px solid var(--teal-dark); }
-.aniv-status-card.inativo { border-left: 4px solid var(--warning); }
-
-.aniv-status-titulo {
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 3px;
-}
-
-.aniv-status-desc {
-  font-size: .88rem;
+  gap: 8px;
+  padding: 6px 14px 6px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  background: var(--white);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .01em;
   color: var(--gray-500);
-  line-height: 1.5;
+  white-space: nowrap;
+  cursor: default;
+  transition: border-color .18s ease, color .18s ease;
+}
+
+.aniv-pill[hidden] { display: none; }
+
+.aniv-pill-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gray-300);
+}
+
+/* Ligado: verde discreto com um halo suave — o "aceso" sem piscar. */
+.aniv-pill.ativo {
+  border-color: rgba(68, 168, 167, .4);
+  color: var(--teal-dark);
+}
+
+.aniv-pill.ativo .aniv-pill-dot {
+  background: var(--teal-dark);
+  box-shadow: 0 0 0 3px rgba(96, 192, 191, .25);
+}
+
+/* Desligado: âmbar, um pouco mais presente por ser o estado excepcional. */
+.aniv-pill.inativo {
+  border-color: rgba(243, 156, 18, .45);
+  background: rgba(243, 156, 18, .07);
+  color: #a4670a;
+}
+
+.aniv-pill.inativo .aniv-pill-dot {
+  background: var(--warning);
+  box-shadow: 0 0 0 3px rgba(243, 156, 18, .2);
+}
+
+/* Em tela estreita o header aperta: fica só o ponto, com o title explicando. */
+@media (max-width: 640px) {
+  .aniv-pill { padding: 6px; gap: 0; }
+  .aniv-pill-label { display: none; }
 }
 
 /* ── Indicadores ──────────────────────────────────────────── */

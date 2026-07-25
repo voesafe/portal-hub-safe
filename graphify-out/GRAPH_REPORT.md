@@ -1,7 +1,7 @@
 # Graph Report - portal-hub-safe  (2026-07-24)
 
 ## Corpus Check
-- 74 files · ~490,759 words
+- 74 files · ~491,977 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fe122c42`
+- Built from commit: `105f07ce`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/safe-theme.css">
   <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
-  <link rel="stylesheet" href="css/aniversarios.css?v=20260724-aniversarios-v2">
+  <link rel="stylesheet" href="css/aniversarios.css?v=20260724-aniversarios-v3">
 </head>
 <body>
 <div class="app-shell">
@@ -48,20 +48,15 @@
         </div>
       </div>
       <div class="topbar-right">
+        <span class="aniv-pill" id="aniv-pill" hidden>
+          <span class="aniv-pill-dot" aria-hidden="true"></span>
+          <span class="aniv-pill-label">—</span>
+        </span>
         <button class="btn btn-ghost" id="btn-recarregar-aniv" type="button">Atualizar</button>
       </div>
     </div>
 
     <div class="page aniversarios-page">
-
-      <!-- Estado do envio automático -->
-      <section class="card aniv-status-card" id="aniv-status-card" hidden>
-        <div class="aniv-status-icone" id="aniv-status-icone">!</div>
-        <div class="aniv-status-texto">
-          <div class="aniv-status-titulo" id="aniv-status-titulo">—</div>
-          <div class="aniv-status-desc" id="aniv-status-desc">—</div>
-        </div>
-      </section>
 
       <!-- Indicadores -->
       <section class="aniv-kpis" id="aniv-kpis"></section>
@@ -141,6 +136,6 @@
 <script src="js/config.js?v=20260724-aniversarios-v1"></script>
 <script src="js/api.js?v=20260724-aniversarios-v1"></script>
 <script src="js/auth.js?v=20260724-aniversarios-v1"></script>
-<script src="js/aniversarios.js?v=20260724-aniversarios-v5"></script>
+<script src="js/aniversarios.js?v=20260724-aniversarios-v6"></script>
 </body>
 </html>

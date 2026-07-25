@@ -93,26 +93,32 @@ const Aniversarios = {
     this.renderMes();
   },
 
-  // ── Estado do envio automático ─────────────────────────────
+  /**
+   * Estado do envio automático — pílula discreta no header.
+   * Era um card de largura inteira; virou pílula porque fica verde 99% do
+   * tempo e um status permanente não merece ocupar a página. O detalhe (e o
+   * que fazer quando está desligado) vai no title.
+   */
   renderStatus() {
-    const card = document.getElementById('aniv-status-card');
-    const icone = document.getElementById('aniv-status-icone');
-    const titulo = document.getElementById('aniv-status-titulo');
-    const desc = document.getElementById('aniv-status-desc');
-    if (!card) return;
+    const pill = document.getElementById('aniv-pill');
+    if (!pill) return;
+    const label = pill.querySelector('.aniv-pill-label');
 
     const ativo = !!this.dados.gatilhoAtivo;
-    card.hidden = false;
-    card.classList.toggle('ativo', ativo);
-    card.classList.toggle('inativo', !ativo);
-    icone.textContent = ativo ? '✓' : '!';
+    const ultima = this.dados.ultimaExecucao;
+
+    pill.hidden = false;
+    pill.classList.toggle('ativo', ativo);
+    pill.classList.toggle('inativo', !ativo);
 
     if (ativo) {
-      titulo.textContent = 'Envio automático ligado';
-      desc.textContent = 'Todos os dias, por volta das 9h, quem faz aniversário recebe o e-mail.';
+      label.textContent = 'Envio automático ligado';
+      pill.title = ultima?.quando
+        ? `Todos os dias por volta das 9h. Última verificação: ${ultima.quando}.`
+        : 'Todos os dias por volta das 9h, quem faz aniversário recebe o e-mail.';
     } else {
-      titulo.textContent = 'Envio automático desligado';
-      desc.textContent = 'Nenhum e-mail está sendo enviado. Para ligar, rode aniversariosInstalarTrigger() no Apps Script.';
+      label.textContent = 'Envio desligado';
+      pill.title = 'Nenhum e-mail está sendo enviado. Para ligar, rode aniversariosInstalarTrigger() no Apps Script.';
     }
   },
 
