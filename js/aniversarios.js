@@ -22,8 +22,31 @@ const Aniversarios = {
   async iniciar() {
     if (!Auth.protegerAniversarios()) return;
     Auth.preencherUI();
+    this._bindHamburger();
     this.vincularEventos();
     await this.carregar();
+  },
+
+  /**
+   * Abre/fecha a sidebar no mobile.
+   * O auth.js só ajusta o aria-expanded e FECHA o menu (fecharMenu) — o toggle
+   * de `mobile-open` é responsabilidade do JS de cada página. Sem isto o
+   * hamburger não abre nada. Mesmo padrão do progresso-alunos.js.
+   */
+  _bindHamburger() {
+    const sidebar   = document.getElementById('sidebar');
+    const overlay   = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger');
+    hamburger?.addEventListener('click', () => {
+      const aberto = sidebar?.classList.toggle('mobile-open');
+      overlay?.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', String(!!aberto));
+    });
+    overlay?.addEventListener('click', () => {
+      sidebar?.classList.remove('mobile-open');
+      overlay?.classList.remove('active');
+      hamburger?.setAttribute('aria-expanded', 'false');
+    });
   },
 
   vincularEventos() {

@@ -163,6 +163,13 @@ function importarCadastroAlunos(alunos, usuario) {
     }
 
     if (ativo && !novo.elegivel) {
+      // Este ramo sai sem tocar na linha de propósito: aluno de curso não
+      // elegível não entra na fila S141. Mas a data de nascimento não tem nada
+      // a ver com S141 — sem gravar aqui, quem já está no Hub com curso fora de
+      // PP/PC/INVA nunca receberia a data. É a única coluna escrita neste ramo.
+      if (novo.nascimento) {
+        setNascimentoCadastroAluno_(sheet, ativo.item.rowNumber, indices, novo.nascimento);
+      }
       resumo.existentes++;
       resumo.naoElegiveis++;
       return;
@@ -201,6 +208,12 @@ function importarCadastroAlunos(alunos, usuario) {
 /**
  * CARGA DE NASCIMENTOS — preenche a coluna DATA_NASCIMENTO dos alunos que JA
  * existem na planilha, a partir de um export do CAVOK.
+ *
+ * ⚠️ DORMENTE desde 2026-07-24: nao ha rota nem botao. Foi usada UMA vez para
+ * a carga dos 742 alunos e removida da UI porque a importacao normal passou a
+ * gravar o nascimento em TODOS os ramos. Mantida porque a logica de escrita em
+ * lote e dificil de reescrever com pressa. Para reativar: uma rota no Code.gs,
+ * um metodo no api.js e um input de arquivo no cadastro-alunos.html.
  *
  * Deliberadamente NAO usa importarCadastroAlunos, que serve a fila S141 e faria
  * duas coisas indesejadas aqui:
