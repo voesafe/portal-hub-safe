@@ -95,12 +95,44 @@ function aniversariosPrimeiroNome_(nome) {
 }
 
 /**
+ * Palavras que aparecem no campo NOME do CAVOK mas nao sao nome de pessoa —
+ * marcador de status, cadastro de teste, sujeira. Encontradas na base real em
+ * 2026-07-24: "INATIVO" (com Gmail de pessoa real!), "Aluno TESTE" e "teste2".
+ */
+var ANIVERSARIOS_NOMES_INVALIDOS = [
+  'inativo', 'ativo', 'cancelado', 'desistente', 'trancado', 'suspenso',
+  'bloqueado', 'duplicado', 'excluir', 'aluno', 'sem nome', 'nao usar',
+  'xxx', 'zzz'
+];
+
+/**
+ * Nome que NAO deve receber e-mail de aniversario.
+ *
+ * Mandar "Feliz aniversario, Inativo!" para uma pessoa real e o tipo de erro
+ * que nao se desfaz. Confiar so na higiene do cadastro nao serve: isto roda
+ * sozinho por anos. Compara o PRIMEIRO token (e o nome inteiro), nunca
+ * substring, para nao pegar nome legitimo por acidente.
+ */
+function aniversariosNomeSuspeito_(nome) {
+  var t = normalizarTextoCadastroAluno_(nome);
+  if (!t || t.length < 2) return true;
+
+  var primeiro = t.split(' ')[0];
+  if (/^test(e)?\d*$/.test(primeiro)) return true;
+  if (ANIVERSARIOS_NOMES_INVALIDOS.indexOf(primeiro) !== -1) return true;
+  if (ANIVERSARIOS_NOMES_INVALIDOS.indexOf(t) !== -1) return true;
+
+  return false;
+}
+
+/**
  * Motivo pelo qual um aluno NAO recebe. Devolve '' quando ele e elegivel.
  * Centralizado aqui para a pagina do Hub e o envio usarem o mesmo criterio.
  */
 function aniversariosMotivoInelegivel_(aluno, anoAtual) {
   if (aluno.situacao === 'Inativo') return 'inativo';
   if (aluno.semAniversario) return 'descadastrado';
+  if (aniversariosNomeSuspeito_(aluno.nome)) return 'nome_invalido';
   if (!aluno.nascimento) return 'sem_data';
   if (!aniversariosEmailValido_(aluno.email)) return 'sem_email';
   if (anoAtual && String(aluno.aniversarioEnviadoEm || '') === String(anoAtual)) return 'ja_enviado';
@@ -209,6 +241,9 @@ function enviarAniversariosDoDia(opcoes) {
 function enviarEmailAniversario_(aluno, ano) {
   var email = String(aluno.email || '').trim();
   if (!aniversariosEmailValido_(email)) throw new Error('E-mail inválido.');
+  // Ultima linha de defesa: nem o lote diario nem o reenvio manual chegam aqui
+  // com nome suspeito, mas quem chamar esta funcao no futuro tambem nao passa.
+  if (aniversariosNomeSuspeito_(aluno.nome)) throw new Error('Nome inválido para envio: "' + aluno.nome + '".');
 
   var primeiroNome = aniversariosPrimeiroNome_(aluno.nome);
   var link = linkDescadastroAniversario_(aluno.cpf);
@@ -639,6 +674,7 @@ function reenviarAniversario(id, usuario) {
 
   if (aluno.situacao === 'Inativo') throw new Error('Aluno inativo não recebe e-mail de aniversário. Reative o cadastro primeiro.');
   if (aluno.semAniversario) throw new Error('Este aluno cancelou o recebimento de mensagens de aniversário.');
+  if (aniversariosNomeSuspeito_(aluno.nome)) throw new Error('O nome cadastrado ("' + aluno.nome + '") não parece um nome de pessoa. Corrija no CAVOK antes de enviar.');
   if (!aniversariosEmailValido_(aluno.email)) throw new Error('Aluno sem e-mail válido cadastrado.');
 
   enviarEmailAniversario_(aluno, hoje.ano);

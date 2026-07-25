@@ -15,6 +15,7 @@ const Aniversarios = {
   // backend não manda mais aluno inativo nas listas.
   MOTIVOS: {
     descadastrado:  { label: 'Cancelou o envio',     tom: 'neutro' },
+    nome_invalido:  { label: 'Nome inválido no CAVOK', tom: 'alerta' },
     sem_data:       { label: 'Sem data de nascimento', tom: 'alerta' },
     sem_email:      { label: 'Sem e-mail válido',    tom: 'alerta' },
     ja_enviado:     { label: 'Já enviado este ano',  tom: 'ok' }
@@ -187,7 +188,8 @@ const Aniversarios = {
       : (aluno.emDias === 1 ? 'amanhã' : `em ${aluno.emDias} dias`);
 
     const podeReenviar = comAcao && Auth.podeEditar('aniversarios.html') &&
-      !aluno.semAniversario && aluno.motivo !== 'sem_email' && aluno.motivo !== 'sem_data';
+      !aluno.semAniversario && aluno.motivo !== 'sem_email' &&
+      aluno.motivo !== 'sem_data' && aluno.motivo !== 'nome_invalido';
 
     return `
       <article class="aniv-card">
