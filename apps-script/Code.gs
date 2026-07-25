@@ -286,6 +286,12 @@ function doPost(e) {
         var usuarioImportaAlunos = exigirCadastroAlunos(token);
         return jsonSuccess(importarCadastroAlunos(dados.alunos || [], usuarioImportaAlunos));
 
+      // Carga de nascimentos: toca SÓ a coluna DATA_NASCIMENTO dos alunos que
+      // já existem. Não cria linha nem mexe em status/S141/Trello.
+      case 'cadastro-alunos-nascimentos':
+        var usuarioNascimentos = exigirCadastroAlunos(token);
+        return jsonSuccess(atualizarNascimentosCadastroAlunos(dados.alunos || [], usuarioNascimentos));
+
       case 'cadastro-alunos-marcar-s141':
         var usuarioS141 = exigirCadastroAlunos(token);
         return jsonSuccess(marcarS141CadastroAluno(dados.id, usuarioS141));

@@ -198,6 +198,116 @@ function importarCadastroAlunos(alunos, usuario) {
   };
 }
 
+/**
+ * CARGA DE NASCIMENTOS — preenche a coluna DATA_NASCIMENTO dos alunos que JA
+ * existem na planilha, a partir de um export do CAVOK.
+ *
+ * Deliberadamente NAO usa importarCadastroAlunos, que serve a fila S141 e faria
+ * duas coisas indesejadas aqui:
+ *   - ignora aluno de curso nao elegivel (`if (ativo && !novo.elegivel) return`),
+ *     deixando justamente esses sem data;
+ *   - marca 'novo_curso' e zera o s141 quando o curso do export difere do que
+ *     esta na planilha.
+ *
+ * Esta funcao toca UMA unica coluna. Nao cria linha, nao altera status, s141,
+ * Trello, observacao nem ATUALIZADO_EM. Alunos do arquivo que nao existem na
+ * planilha sao apenas contados, nunca inseridos.
+ *
+ * Escreve em LOTE (3 chamadas de API, nao 2 por aluno): com 742 alunos, uma
+ * escrita por celula estouraria o limite de 6 minutos do Apps Script.
+ */
+function atualizarNascimentosCadastroAlunos(linhas, usuario) {
+  var contexto = carregarContextoCadastroAlunos_();
+  var colNasc = contexto.indices.nascimento;
+  if (!colNasc) {
+    throw new Error('Coluna DATA_NASCIMENTO não encontrada na planilha. Faça uma importação normal primeiro para que ela seja criada.');
+  }
+  if (!contexto.linhas.length) {
+    throw new Error('A planilha não tem alunos para atualizar.');
+  }
+
+  // Indexa quem ja esta na planilha. Um CPF pode ter varias linhas (um curso
+  // por linha) — todas recebem a data.
+  var porCpf = {}, porMatricula = {};
+  contexto.linhas.forEach(function(item) {
+    var aluno = linhaParaCadastroAluno_(item.row, item.rowNumber, contexto.indices);
+    if (aluno.cpf) {
+      if (!porCpf[aluno.cpf]) porCpf[aluno.cpf] = [];
+      porCpf[aluno.cpf].push(aluno);
+    }
+    if (aluno.matricula) {
+      if (!porMatricula[aluno.matricula]) porMatricula[aluno.matricula] = [];
+      porMatricula[aluno.matricula].push(aluno);
+    }
+  });
+
+  var primeiraLinha = contexto.headerRow + 1;
+  var totalLinhas = contexto.linhas[contexto.linhas.length - 1].rowNumber - primeiraLinha + 1;
+  var range = contexto.sheet.getRange(primeiraLinha, colNasc, totalLinhas, 1);
+  var atuais = range.getDisplayValues();
+
+  var resumo = {
+    linhasNoArquivo: 0,
+    atualizados: 0,
+    jaEstavamCertos: 0,
+    semDataNoArquivo: 0,
+    naoEncontrados: 0,
+    exemplosNaoEncontrados: []
+  };
+
+  var novos = {}; // rowNumber -> data
+
+  (linhas || []).forEach(function(raw) {
+    resumo.linhasNoArquivo++;
+    var norm = normalizarAlunoImportado_(raw);
+
+    if (!norm.nascimento) {
+      resumo.semDataNoArquivo++;
+      return;
+    }
+
+    var alvos = (norm.cpf && porCpf[norm.cpf]) ||
+                (norm.matricula && porMatricula[norm.matricula]) || null;
+
+    if (!alvos || !alvos.length) {
+      resumo.naoEncontrados++;
+      if (resumo.exemplosNaoEncontrados.length < 10) {
+        resumo.exemplosNaoEncontrados.push(norm.nome || norm.matricula || norm.cpf);
+      }
+      return;
+    }
+
+    alvos.forEach(function(aluno) {
+      if (aluno.nascimento === norm.nascimento) {
+        resumo.jaEstavamCertos++;
+        return;
+      }
+      novos[aluno.rowNumber] = norm.nascimento;
+    });
+  });
+
+  // Monta o array final preservando o que ja estava nas linhas nao tocadas.
+  var valores = [];
+  for (var i = 0; i < totalLinhas; i++) {
+    var rowNumber = primeiraLinha + i;
+    if (novos.hasOwnProperty(rowNumber)) {
+      valores.push([novos[rowNumber]]);
+      resumo.atualizados++;
+    } else {
+      valores.push([atuais[i][0]]);
+    }
+  }
+
+  // Formato texto na coluna inteira ANTES de escrever: sem isso o Sheets
+  // converte "10/07/1995" em Date e a leitura volta deslocada de um dia.
+  range.setNumberFormat('@');
+  range.setValues(valores);
+
+  var listado = listarCadastroAlunos(usuario);
+  listado.resumoNascimentos = resumo;
+  return { alunos: listado.alunos, resumo: resumo };
+}
+
 function marcarS141CadastroAluno(id, usuario) {
   var contexto = carregarContextoCadastroAlunos_();
   var alvo = buscarLinhaCadastroAluno_(contexto, id);

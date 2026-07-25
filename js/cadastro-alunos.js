@@ -38,6 +38,7 @@ const CadastroAlunos = {
   vincularEventos() {
     document.getElementById('btn-recarregar-alunos')?.addEventListener('click', () => this.carregar(true));
     document.getElementById('arquivo-cavok')?.addEventListener('change', evento => this.importarArquivo(evento));
+    document.getElementById('arquivo-nascimentos')?.addEventListener('change', evento => this.importarNascimentos(evento));
     document.getElementById('cadastro-busca')?.addEventListener('input', () => this.renderizar());
     document.getElementById('cadastro-ordenacao')?.addEventListener('change', evento => {
       this.ordenacao = evento.target.value || 'matricula_desc';
@@ -164,6 +165,63 @@ const CadastroAlunos = {
     } catch (erro) {
       console.error('[Importação CAVOK]', erro);
       toast(erro.message || 'Erro ao importar XLS do CAVOK.', 'error', 6000);
+    } finally {
+      input.value = '';
+      this.setCarregando(false);
+    }
+  },
+
+  /**
+   * Carga de datas de nascimento a partir de um export do CAVOK.
+   * Preenche SÓ a coluna de nascimento dos alunos que já estão na planilha —
+   * não cria linha nem mexe em status/S141/Trello. Ver
+   * atualizarNascimentosCadastroAlunos no backend.
+   */
+  async importarNascimentos(evento) {
+    const input = evento.target;
+    const arquivo = input.files?.[0];
+    if (!arquivo) return;
+
+    if (typeof XLSX === 'undefined') {
+      toast('Biblioteca de leitura XLS não carregada.', 'error');
+      input.value = '';
+      return;
+    }
+
+    this.setCarregando(true, 'Lendo datas de nascimento...');
+    try {
+      const buffer = await arquivo.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: 'array', cellDates: false });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const linhas = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
+      if (!linhas.length) throw new Error('O arquivo não possui linhas.');
+
+      const temColuna = Object.keys(linhas[0] || {}).some(
+        k => k.toLowerCase().replace(/[^a-z]/g, '').includes('datanascimento')
+      );
+      if (!temColuna) {
+        throw new Error('O arquivo não tem a coluna "Data Nascimento". Inclua essa coluna no export do CAVOK.');
+      }
+
+      this.setCarregando(true, `Atualizando nascimentos de ${linhas.length} alunos...`);
+      const res = await API.atualizarNascimentosCadastroAlunos(linhas);
+      if (!res.ok) throw new Error(res.error || 'Não foi possível atualizar os nascimentos.');
+
+      this.alunos = res.data?.alunos || [];
+      this.renderizar();
+
+      const r = res.data?.resumo || {};
+      toast(
+        `${r.atualizados || 0} nascimento(s) gravado(s). ` +
+        `${r.jaEstavamCertos || 0} já estavam certos, ` +
+        `${r.semDataNoArquivo || 0} sem data no CAVOK, ` +
+        `${r.naoEncontrados || 0} não estão na planilha.`,
+        'success', 12000
+      );
+      console.info('[Carga de nascimentos]', r);
+    } catch (erro) {
+      console.error('[Carga de nascimentos]', erro);
+      toast(erro.message || 'Erro ao atualizar nascimentos.', 'error', 6000);
     } finally {
       input.value = '';
       this.setCarregando(false);
