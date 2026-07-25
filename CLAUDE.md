@@ -121,6 +121,41 @@ E-mail de parabéns automático para alunos, uma vez por ano. Lê a **mesma** "P
 - **O gatilho é o último passo e é independente:** mesmo com tudo publicado, **ninguém recebe nada** até rodar `aniversariosInstalarTrigger()` (diário, ~9h). `aniversariosRemoverTrigger()` desliga.
 - **Testar com segurança:** `obterCadastroAlunosSheetId_()` lê a propriedade de script `CADASTRO_ALUNOS_SHEET_ID` (fallback no código) → aponte para uma **cópia** da planilha, rode a importação real, confira, e apague a propriedade para voltar à produção. No editor: `aniversariosSelfTest('voce@voesafe.com')` (manda só pra você, não grava nada), `aniversariosPrevia()` (quem receberia hoje, sem enviar), `aniversariosDiagnostico()` (cobertura + cota + gatilho).
 - **Deploy:** `clasp push` só atualiza o **@HEAD** — produção segue intocada até `clasp deploy -i AKfycbxpOGXgEJ5…`. Permissão nova exige relogin geral: `CONFIG.SESSION_VERSION` e `SAFE_AUTH_VERSION` foram para `2026.07.24-aniversarios-v1`.
+### Entrega (deliverability) do e-mail de aniversário
+
+Medido em 2026-07-25: **24,5% dos alunos estão na Microsoft** (195 hotmail.com, 41 outlook.com, 9 live.com, 6 hotmail.com.br = 257 de 1.050). Gmail é 60,7%. Um problema de entrega no Outlook.com atinge um quarto da base, não é caso isolado.
+
+**Estado do DNS de `voesafe.com`** (domínio remetente, Google Workspace):
+
+| | Valor | Situação |
+|---|---|---|
+| SPF | `v=spf1 include:_spf.google.com ~all` | ok |
+| DKIM | presente no seletor `google` | ok |
+| DMARC | `v=DMARC1; p=none` | **fraco, e sem `rua=`** |
+| MX | `smtp.google.com` | ok |
+
+*(`voesafe.com.br` é outro domínio, na Hostinger, usado pelo site. Não envia o e-mail de aniversário e não influencia essa entrega. `hub.voesafe.com.br` é CNAME para `voesafe.github.io`.)*
+
+**Sintoma real:** Gmail entrega na caixa de entrada; um Hotmail testado caiu em spam. Causa mais provável é **remetente sem histórico** no Outlook.com, não configuração: a Microsoft desconfia de remetente novo mesmo com autenticação perfeita. Volume de 2-3/dia é o perfil ideal para construir reputação (parece orgânico, não disparo em massa).
+
+**Passos, nesta ordem (DNS é manual, fora deste repo):**
+
+1. **Relatórios DMARC, risco zero.** TXT em `_dmarc.voesafe.com`:
+   `v=DMARC1; p=none; rua=mailto:dmarc@voesafe.com; fo=1`
+   Comportamento não muda; passa a receber relatórios de tudo que envia como o domínio.
+2. **Depois de 1 ou 2 semanas lendo os relatórios**, subir para aplicação:
+   `v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc@voesafe.com; fo=1`
+   ⚠️ **Não pular o passo 1.** Se algum sistema legítimo (ERP, matrícula, ferramenta de marketing) envia como `@voesafe.com` sem passar por SPF/DKIM, ele começa a cair em quarentena. Os relatórios revelam isso antes.
+3. **Pedir a quem recebeu no Hotmail para marcar "Não é lixo eletrônico"** e adicionar o remetente aos contatos. Sinal de usuário pesa muito na Microsoft, e volume baixo é o melhor momento para semear isso.
+4. Para testar de novo: marcar como legítimo **primeiro**, depois reenviar. Reenviar para uma caixa que tem a mensagem em spam, sem marcação, reforça o sinal negativo.
+
+**Avaliado e descartado:**
+- **Cabeçalho `List-Unsubscribe`:** é o que a Microsoft pede de remetente em massa, e o `MailApp` não define cabeçalhos. Daria com o serviço avançado do Gmail montando o MIME na mão, mas reescreve todo o envio (inclusive as imagens embutidas) e exige escopo amplo de Gmail. O gatilho de "massa" da Microsoft é 5.000/dia; estamos em 3. Custo alto, benefício duvidoso.
+- **Descadastro apontando para `hub.voesafe.com.br` com redirecionamento**, para alinhar domínio: `script.google.com` tem reputação altíssima e cadeia de redirecionamento é sinal negativo por si só. Ficaria pior.
+- **SNDS / JMRP da Microsoft:** são para quem controla os IPs de envio. Os nossos são do Google, compartilhados.
+
+**Não existe garantia de 100%.** O que existe é probabilidade alta. Vale lembrar que este e-mail **não é transacional**: se um parabéns cai em spam, perde-se uma gentileza, não quebra matrícula nem acesso. Diferente do e-mail de senha do Hub, que precisa chegar.
+
 - **Remetente e avatar (decidido em 2026-07-24):** os e-mails saem por `MailApp` da conta dona do script (`victor.pinho@voesafe.com`), então o **avatar no Gmail é a foto de perfil dele** — o `name` do `MailApp` só muda o nome exibido ("SAFE Escola de Aviação"). **Não existe forma de trocar o avatar por mensagem**: ele vem do perfil da conta remetente ou de BIMI (domínio). Para o logo aparecer no avatar seria preciso um **usuário Workspace de verdade** (alias não tem foto própria) + trocar `MailApp` por `GmailApp.sendEmail({from})`, que exige **escopo amplo de Gmail** no projeto — troca recusada por ora, já que o logo já é a primeira coisa no corpo do e-mail. Se um dia mudar, o envio está isolado em `enviarEmailAniversario_` (~5 linhas) e o remetente é a constante `ANIVERSARIOS_REMETENTE`; o custo real é a licença e a reautorização, não o código. `replyTo` foi avaliado e **não** adicionado (respostas ficam na caixa do Victor por escolha).
 - **Carga de nascimentos (usada UMA vez, em 2026-07-24, e removida da UI):** os 742 ativos já estavam na planilha sem data — um export completo do CAVOK (1.050 alunos) preencheu **789 linhas** (787 alunos; 2 têm dois cursos) via `atualizarNascimentosCadastroAlunos` ([CadastroAlunos.gs](apps-script/CadastroAlunos.gs)), que escreve **só** a coluna `DATA_NASCIMENTO` em lote. Sobraram 260 sem data no próprio CAVOK e 3 alunos que não existem no Hub. A função ficou **dormente** (sem rota nem botão) porque a importação normal passou a gravar o nascimento em **todos** os ramos — inclusive o `if (ativo && !novo.elegivel)`, que antes fazia `return` sem tocar na linha e deixaria sem data quem já está no Hub com curso fora de PP/PC/INVA. Para reativar: rota no `Code.gs` + método no `api.js` + input no HTML.
 - **⚠️ Nunca use `importarCadastroAlunos` para uma carga em massa com export completo:** ela **reativa** todo inativo que aparecer no arquivo (`if (inativo && !ativo)` → `situacao: 'Ativo'`, `hubStatus: 'reativado'`) e marca `novo_curso` + `s141: false` quando o curso do export difere do da planilha. No fluxo semanal (só matriculados da semana) isso quase nunca dispara; com a base inteira, dispararia para todos.
