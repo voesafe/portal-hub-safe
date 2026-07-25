@@ -382,8 +382,13 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     + '<meta name="viewport" content="width=device-width, initial-scale=1">'
     + '<meta name="x-apple-disable-message-reformatting" content="">'
     + '<meta http-equiv="x-ua-compatible" content="ie=edge">'
+    // Declara que o e-mail nao quer o modo escuro automatico do cliente.
+    // Apple Mail e Outlook respeitam; o app do Gmail respeita em parte.
+    + '<meta name="color-scheme" content="light only">'
+    + '<meta name="supported-color-schemes" content="light only">'
     + '<title>Feliz aniversário, ' + nome + '!</title>'
     + '<style>'
+    + ':root{color-scheme:light only;supported-color-schemes:light only;}'
     + 'html,body{width:100%!important;margin:0!important;padding:0!important;background-color:#eef2f7;}'
     + 'table,td{border-collapse:collapse!important;mso-table-lspace:0pt!important;mso-table-rspace:0pt!important;}'
     + 'table{border-spacing:0!important;}'
@@ -408,7 +413,21 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     + '.fn{background-color:#071126!important;}'
     + '.fdark{color:#15213f!important;}'
     + '.fbody{color:#4b5772!important;}'
+    + '.fwhite{color:#ffffff!important;}'
+    + '.fteal{color:#60c0bf!important;}'
+    + '.fmuted{color:#7f8ea6!important;}'
     + '}'
+    // O app do Gmail marca com data-ogsc (cor) e data-ogsb (fundo) o que ele
+    // inverteu no modo escuro. Reafirmar por esses seletores e a unica forma de
+    // recuperar o navy — foi o que deixava o cabecalho azul claro no iPhone.
+    + '[data-ogsc] .bg,[data-ogsb] .bg{background-color:#eef2f7!important;}'
+    + '[data-ogsc] .fw,[data-ogsb] .fw{background-color:#ffffff!important;}'
+    + '[data-ogsc] .fn,[data-ogsb] .fn{background-color:#071126!important;}'
+    + '[data-ogsc] .fdark{color:#15213f!important;}'
+    + '[data-ogsc] .fbody{color:#4b5772!important;}'
+    + '[data-ogsc] .fwhite{color:#ffffff!important;}'
+    + '[data-ogsc] .fteal{color:#60c0bf!important;}'
+    + '[data-ogsc] .fmuted{color:#7f8ea6!important;}'
     + '</style></head>'
     + '<body style="margin:0;padding:0;background-color:#eef2f7;">'
 
@@ -426,7 +445,7 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     // ── FOTO: bloco de largura inteira. Fica fora de qualquer sobreposição de
     //    texto de propósito — background-image em célula não renderiza no
     //    Outlook, e o nome do aluno precisa ser HTML de verdade. ──
-    + '<tr><td bgcolor="#071126" style="padding:0;font-size:0;line-height:0;background-color:#071126;">'
+    + '<tr><td class="fn" bgcolor="#071126" style="padding:0;font-size:0;line-height:0;background-color:#071126;">'
     + '<img src="cid:' + ANIVERSARIOS_HERO_CID + '" width="640" alt="Equipe da SAFE comemorando um aniversário"'
     + ' style="width:100%;max-width:640px;height:auto;display:block;border:0;">'
     + '</td></tr>'
@@ -441,8 +460,8 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     // ── Saudação em navy, com o nome dinâmico ──
     + '<tr><td class="fn hero-pad" bgcolor="#071126" style="padding:34px 46px 30px;background-color:#071126;">'
     + '<div style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
-    + 'font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#60c0bf;">Hoje é o seu dia</div>'
-    + '<h1 class="h1" style="margin:14px 0 0;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
+    + 'font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#60c0bf;" class="fteal">Hoje é o seu dia</div>'
+    + '<h1 class="h1 fwhite" style="margin:14px 0 0;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
     + 'font-size:40px;line-height:46px;font-weight:700;letter-spacing:-1px;color:#ffffff;">'
     + 'Feliz aniversário,<br>' + nome + '!</h1>'
     + '</td></tr>'
@@ -464,10 +483,10 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
 
     // ── Citação em serifada, sobre navy. É o momento de respiro do e-mail. ──
     + '<tr><td bgcolor="#ffffff" style="padding:28px 46px 0;background-color:#ffffff;">'
-    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#071126" style="background-color:#071126;border-radius:16px;overflow:hidden;">'
+    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="fn" bgcolor="#071126" style="background-color:#071126;border-radius:16px;overflow:hidden;">'
     + '<tr>'
     + '<td class="quote-pad" style="padding:30px 32px;">'
-    + '<p class="quote-t" style="margin:0;font-family:Georgia,\'Times New Roman\',serif;font-size:22px;line-height:34px;'
+    + '<p class="quote-t fwhite" style="margin:0;font-family:Georgia,\'Times New Roman\',serif;font-size:22px;line-height:34px;'
     + 'font-style:italic;color:#ffffff;">'
     + '&ldquo;Que nunca faltem novos destinos, grandes sonhos e c&eacute;us abertos.&rdquo;</p>'
     + '</td>'
@@ -512,7 +531,7 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     + '</tr></table></td></tr>'
 
     + '<tr><td align="center" style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
-    + 'font-size:12px;line-height:19px;color:#7f8ea6;">'
+    + 'font-size:12px;line-height:19px;color:#7f8ea6;" class="fmuted">'
     + 'Mensagem automática em comemoração ao seu aniversário. Não quer mais recebê-las? '
     + '<a href="' + link + '" style="color:#8fc9ea;text-decoration:underline;white-space:nowrap;">Cancelar o recebimento</a>.'
     + '</td></tr>'
