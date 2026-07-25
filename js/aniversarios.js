@@ -11,8 +11,9 @@ const Aniversarios = {
   dados: null,
   mes: null,
 
+  // Motivos de um aluno ATIVO não receber. 'inativo' não está aqui porque o
+  // backend não manda mais aluno inativo nas listas.
   MOTIVOS: {
-    inativo:        { label: 'Aluno inativo',        tom: 'neutro' },
     descadastrado:  { label: 'Cancelou o envio',     tom: 'neutro' },
     sem_data:       { label: 'Sem data de nascimento', tom: 'alerta' },
     sem_email:      { label: 'Sem e-mail válido',    tom: 'alerta' },
@@ -221,7 +222,7 @@ const Aniversarios = {
     if (select) select.value = this.dados.mesAlvo;
 
     const lista = this.dados.mes || [];
-    if (sub) sub.textContent = `${lista.length} aluno${lista.length === 1 ? '' : 's'} em ${this.nomeMes(this.dados.mesAlvo)}`;
+    if (sub) sub.textContent = `${lista.length} aluno${lista.length === 1 ? '' : 's'} ativo${lista.length === 1 ? '' : 's'} em ${this.nomeMes(this.dados.mesAlvo)}`;
 
     if (!lista.length) {
       corpo.innerHTML = `<tr><td colspan="6" class="aniv-td-vazio">Nenhum aniversariante neste mês.</td></tr>`;

@@ -547,6 +547,11 @@ function listarAniversarios(usuario, mesSolicitado) {
       if (!aniversariosEmailValido_(aluno.email)) resumo.semEmail++;
     }
 
+    // Aluno inativo nao recebe e-mail (aniversariosMotivoInelegivel_ barra por
+    // situacao), entao tambem nao entra nas listas — so poluiria a tela. Ele
+    // continua contado no resumo e volta a aparecer se for reativado.
+    if (!ativo) return;
+
     var diaMes = dm.dia + '/' + dm.mes;
     var registro = {
       id: aluno.id,
@@ -632,6 +637,7 @@ function reenviarAniversario(id, usuario) {
   var aluno = linhaParaCadastroAluno_(alvo.row, alvo.rowNumber, contexto.indices);
   var hoje = aniversariosHoje_();
 
+  if (aluno.situacao === 'Inativo') throw new Error('Aluno inativo não recebe e-mail de aniversário. Reative o cadastro primeiro.');
   if (aluno.semAniversario) throw new Error('Este aluno cancelou o recebimento de mensagens de aniversário.');
   if (!aniversariosEmailValido_(aluno.email)) throw new Error('Aluno sem e-mail válido cadastrado.');
 
