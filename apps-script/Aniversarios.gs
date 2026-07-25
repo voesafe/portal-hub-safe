@@ -431,7 +431,7 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     + '</style></head>'
     + '<body style="margin:0;padding:0;background-color:#eef2f7;">'
 
-    + '<div class="preheader">Hoje é o seu dia — e toda a equipe da SAFE quer comemorar com você.</div>'
+    + '<div class="preheader">Hoje é o seu dia, e toda a equipe da SAFE quer comemorar com você.</div>'
     + '<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;">'
     + '&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>'
 
@@ -477,7 +477,7 @@ function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
     + 'Ter você com a gente nessa jornada é motivo de orgulho para toda a equipe da SAFE.</p>'
     + '<p class="body-t fbody" style="margin:0 0 8px;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;'
     + 'font-size:17px;line-height:30px;color:#4b5772;">'
-    + 'Que este novo ciclo traga saúde, conquistas e boas histórias — e que nunca falte coragem '
+    + 'Que este novo ciclo traga saúde, conquistas e boas histórias. E que nunca falte coragem '
     + 'para decolar cada vez mais alto.</p>'
     + '</td></tr>'
 
@@ -560,7 +560,7 @@ function textoEmailAniversario_(primeiroNome, linkDescadastro) {
     'Ter voce com a gente nessa jornada e motivo de orgulho para toda a equipe',
     'da SAFE.',
     '',
-    'Que este novo ciclo traga saude, conquistas e boas historias - e que nunca',
+    'Que este novo ciclo traga saude, conquistas e boas historias. E que nunca',
     'falte coragem para decolar cada vez mais alto.',
     '',
     '   "Que nunca faltem novos destinos, grandes sonhos e ceus abertos."',
@@ -568,7 +568,7 @@ function textoEmailAniversario_(primeiroNome, linkDescadastro) {
     'Obrigado por confiar seu sonho a SAFE. Nos vemos nos proximos voos.',
     '',
     'Um abraco,',
-    'Equipe SAFE - Escola de Aviacao',
+    'Equipe SAFE Escola de Aviacao',
     '',
     ANIVERSARIOS_LINK_SITE,
     ANIVERSARIOS_LINK_INSTAGRAM,
@@ -670,7 +670,7 @@ function paginaDescadastroAniversario_(ok, titulo, mensagem) {
   var html = ''
     + '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
     + '<meta name="viewport" content="width=device-width, initial-scale=1">'
-    + '<title>' + escapeHtmlEmail_(titulo) + ' — SAFE</title></head>'
+    + '<title>' + escapeHtmlEmail_(titulo) + ' &middot; SAFE</title></head>'
     + '<body style="margin:0;padding:0;background:#eef2f7;font-family:Arial,Helvetica,sans-serif;">'
     + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">'
     + '<tr><td align="center" style="padding:60px 16px;">'
@@ -684,7 +684,7 @@ function paginaDescadastroAniversario_(ok, titulo, mensagem) {
 
   return HtmlService.createHtmlOutput(html)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
-    .setTitle(titulo + ' — SAFE');
+    .setTitle(titulo + ' \u00b7 SAFE');
 }
 
 // ============================================================
@@ -1056,8 +1056,8 @@ function aniversariosTesteImportacao() {
   }
 
   out.veredito = out.falhas.length === 0
-    ? 'OK — append e update gravam dd/mm/aaaa como TEXTO, 29/02 preservado, aluno sem data intacto.'
-    : 'FALHOU — ' + out.falhas.join(' | ');
+    ? 'OK: append e update gravam dd/mm/aaaa como TEXTO, 29/02 preservado, aluno sem data intacto.'
+    : 'FALHOU: ' + out.falhas.join(' | ');
 
   Logger.log(JSON.stringify(out, null, 2));
   return out;

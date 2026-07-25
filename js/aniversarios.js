@@ -166,7 +166,7 @@ const Aniversarios = {
     if (comErro) {
       return {
         valor: `${comErro}`,
-        label: comErro === 1 ? 'E-mail falhou — reenvie abaixo' : 'E-mails falharam — reenvie abaixo',
+        label: comErro === 1 ? 'E-mail falhou, reenvie abaixo' : 'E-mails falharam, reenvie abaixo',
         tom: 'erro'
       };
     }
@@ -177,7 +177,7 @@ const Aniversarios = {
 
     return {
       valor: `${enviados}/${total}`,
-      label: this.dados.gatilhoAtivo ? 'Aguardando o envio automático' : 'Envio desligado — envie pelo botão',
+      label: this.dados.gatilhoAtivo ? 'Aguardando o envio automático' : 'Envio desligado, envie pelo botão',
       tom: 'alerta'
     };
   },

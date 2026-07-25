@@ -2,6 +2,10 @@
 
 Regras permanentes para qualquer trabalho neste projeto. Estas instruções têm prioridade sobre o comportamento padrão.
 
+## Escrita: sem travessão
+
+0. **Nunca use travessão (`—`) nem meia-risca (`–`) em texto gerado.** Vale para e-mails a alunos, textos de interface, comentários de código novo e mensagens de commit. Decidido em 2026-07-25: para a SAFE, travessão no meio da frase é marca de texto feito por IA, e a comunicação com aluno não pode soar automática. **Reescreva a frase**, não apenas troque o sinal: use vírgula (pausa curta), dois pontos (o que vem depois explica), ponto quebrando em duas frases (quase sempre lê melhor) ou reordene. O `—` sozinho como marcador de campo vazio na interface (`valor: '—'`) é convenção de UI e está liberado, assim como o separador `·`.
+
 ## Uso obrigatório do Graphify
 
 1. **Antes de responder qualquer pergunta** sobre o código, arquitetura, arquivos, funções ou fluxos do projeto, consulte primeiro o Graphify, usando o comando/skill correto disponível neste projeto.
