@@ -289,4 +289,23 @@ tbody td.excluido { opacity: 0.4; text-decoration: line-through; }
   .minimos-grid { grid-template-columns: 1fr; }
   .minimo-card.full { grid-column: 1; }
   .easter-egg { width: 50px; right: 10px; }
+
+  /* Os blocos do resultado tinham 32px de padding lateral fixo, que em 390px
+     come 64px dos ~358px disponíveis. Reduzido para 18px. */
+  .resultado-header { padding: 20px 18px; flex-wrap: wrap; gap: 10px; }
+  .status-geral     { padding: 14px 18px; }
+  .minimos-grid     { padding: 18px; }
+  .registros-section{ padding: 0 18px 24px; }
+  .inva-cheque-info { margin: 14px 18px 0; }
+  .upload-section   { padding: 40px 20px; }
+  .nova-analise-btn { width: calc(100% - 36px); padding: 14px 20px; }
+}
+
+@media (max-width: 480px) {
+  /* Em linha os 3 tipos ficam com ~110px cada e o rótulo longo ("Piloto
+     Comercial + Instrumentos") quebra em quatro linhas dentro de um botão
+     estreito. Empilhados eles ficam legíveis e continuam fáceis de tocar. */
+  .tipo-selector { flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  .tipo-btn { padding: 12px 14px; }
+  .resultado-header h2 { font-size: 16px; }
 }

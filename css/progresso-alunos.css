@@ -385,6 +385,13 @@
   .progresso-filters { flex-direction: column; }
   .progresso-filter-group { min-width: 100%; }
   .progresso-filter-group--curso { min-width: 100%; }
+
+  /* Os filtros já empilharam em largura total, mas as ações continuavam numa
+     linha curta encostada à esquerda, desalinhadas dos campos acima. */
+  /* Vale para as duas abas: #pa-btn-buscar (Por Curso) e #pa-btn-buscar-aluno
+     (Por Aluno). O botão fantasma de limpar fica no tamanho natural. */
+  .progresso-filter-actions { width: 100%; padding-bottom: 0; }
+  .progresso-filter-actions .btn-primary { flex: 1; justify-content: center; }
 }
 
 @media (max-width: 480px) {

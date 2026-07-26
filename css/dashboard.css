@@ -86,6 +86,18 @@
 .sidebar.collapsed .nav-item:hover::after,
 .sidebar.collapsed .nav-item:hover::before { opacity: 1; }
 
+/* ── Ranking "Cursos mais vendidos" ────────────────────── */
+/* Essa tabela é a única do Hub sem `.table-wrapper`, e o tema aplica
+   `white-space: nowrap` em todo `.table tbody td`. Nome de curso longo
+   ("Piloto Comercial/IFR Prático") empurrava a coluna da quantidade para fora
+   do card, e o `.card { overflow: hidden }` do layout.css cortava ela: no
+   celular o número simplesmente sumia. Deixar o nome quebrar linha resolve sem
+   precisar de scroll horizontal numa lista de 8 itens. A posição e a
+   quantidade seguem sem quebra, que é o que mantém a leitura alinhada. */
+#ranking-cursos td { white-space: normal; }
+#ranking-cursos td:first-child,
+#ranking-cursos td:last-child { white-space: nowrap; }
+
 /* ── Estado vazio nos gráficos ─────────────────────────── */
 .chart-empty {
   display: flex;
