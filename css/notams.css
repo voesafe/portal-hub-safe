@@ -44,20 +44,13 @@ body.notams-dark .notams-page {
 }
 
 /* ── Atualizado em (topbar) ────────────────────────────────── */
-.notam-updated {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: .78rem;
-  color: var(--gray-500);
-  white-space: nowrap;
+/* Virou `.topbar-status` do layout.css, a mesma pílula que a página de
+   Aniversários usa. Aqui fica só o ajuste do modo escuro da página. */
+body.notams-dark .topbar-status {
+  background: transparent;
+  border-color: rgba(169,183,212,.28);
+  color: #a9b7d4;
 }
-.notam-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 0 3px rgba(46,204,113,.18);
-}
-body.notams-dark .notam-updated { color: #a9b7d4; }
 
 /* ── Nota/aviso ────────────────────────────────────────────── */
 .notam-note {

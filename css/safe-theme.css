@@ -3,7 +3,11 @@
    SAFE Hub
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
+/* Fonte única do Hub. A Escala CCO e a Escala PAV carregavam esse mesmo
+   par por um <link> próprio, com outros pesos, e por isso pesavam
+   diferente das demais telas. Os pesos 800/900 de Montserrat entraram
+   aqui para que as duas passem a se servir daqui, sem link duplicado. */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 /* ── Variáveis ─────────────────────────────────────────────── */
 :root {

@@ -259,8 +259,9 @@ const Notams = {
   _aplicarTema(tema) {
     const dark = tema === 'dark';
     document.body.classList.toggle('notams-dark', dark);
-    const btn = document.getElementById('notam-theme-btn');
-    if (btn) btn.textContent = dark ? '☀️' : '🌙';
+    // Ícone SVG compartilhado do Hub: o `.is-dark` troca sol por lua na
+    // regra `.theme-toggle` do layout.css. Era emoji via textContent.
+    document.getElementById('notam-theme-btn')?.classList.toggle('is-dark', dark);
     try { localStorage.setItem('notams-theme', dark ? 'dark' : 'light'); } catch (e) {}
   },
 

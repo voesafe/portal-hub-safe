@@ -4,19 +4,18 @@
 <meta charset="UTF-8">
 <!-- PWA -->
 <link rel="manifest" href="manifest.webmanifest?v=20260706" />
-<meta name="theme-color" content="#1D2951" />
-<link rel="icon" href="favicon.ico?v=20260706" />
+<meta name="theme-color" content="#19213f" />
+<link rel="icon" type="image/png" href="favicon.png?v=20260706">
 
 <!-- iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="SAFE" />
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Escala CCO — SAFE Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Raleway:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/safe-theme.css?v=20260726-mobile-v2">
-<link rel="stylesheet" href="css/layout.css?v=20260726-mobile-v2">
+<link rel="stylesheet" href="css/safe-theme.css?v=20260726-hub-ui-v1">
+<link rel="stylesheet" href="css/layout.css?v=20260726-hub-ui-v1">
 <style>
 :root {
   --navy:#1D2951;--blue:#5BAEE2;--teal:#60C0BF;
@@ -82,8 +81,6 @@ body.dark .func-label{color:var(--text2)}
 body.dark .func-modal-overlay{background:rgba(0,0,0,.6)}
 body.dark .filter-tab{background:var(--surface);border-color:var(--border);color:var(--text2)}
 body.dark .filter-tab.active{background:var(--navy);color:#fff}
-body.dark .nav-func-btn{background:rgba(91,174,226,.15);border-color:rgba(91,174,226,.4);color:#9ed1f0}
-body.dark .nav-func-btn:hover{background:rgba(91,174,226,.3);border-color:var(--blue);color:#fff}
 
 /* ── FUNCIONÁRIOS VIEW ─────────────────────────────────── */
 .func-view{display:none}
@@ -144,12 +141,10 @@ body.dark .func-modal-info{background:rgba(91,174,226,.12);border-color:rgba(91,
 .btn-func-save{flex:2;background:var(--navy);color:#fff;border:none;padding:11px;border-radius:8px;font-family:var(--font);font-weight:700;font-size:14px;cursor:pointer;transition:background .2s}
 .btn-func-save:hover{background:#263a6a}
 
-/* Botão no nav */
-.nav-func-btn{display:none;align-items:center;gap:6px;background:rgba(91,174,226,.15);border:1px solid rgba(91,174,226,.4);color:#a5d4f0;padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s}
-.nav-func-btn:hover{background:rgba(91,174,226,.3);border-color:var(--blue);color:#fff}
-.nav-dash-btn{display:none;align-items:center;gap:6px;background:rgba(96,192,191,.12);border:1px solid rgba(96,192,191,.35);color:#8fe0df;padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s}
-.nav-dash-btn:hover{background:rgba(96,192,191,.25);border-color:var(--teal);color:#fff}
-body.dark .nav-dash-btn{background:rgba(96,192,191,.1);border-color:rgba(96,192,191,.3);color:#8fe0df}
+/* Os botões de navegação do header usam o sistema `.btn` do Hub
+   (safe-theme.css) com o tamanho de header do layout.css. O que sobrou
+   aqui é só o marcador `data-cco-nav`, usado no mobile para trocar a
+   fileira de botões pelo drawer. */
 
 /* ── DASHBOARD ─────────────────────────────────────────── */
 .dash-view{display:none}
@@ -222,8 +217,6 @@ body.dark .dash-mes-select{background:#0F1729;border-color:var(--border);color:v
   .func-row{grid-template-columns:1fr}
   .func-grid{grid-template-columns:1fr}
 }
-.theme-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);width:32px;height:32px;border-radius:6px;font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;padding:0}
-.theme-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-text-size-adjust:100%}
 
@@ -245,13 +238,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 /* AÇÕES DO MÓDULO NA TOPBAR DO HUB */
 .cco-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-.nav-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.2)}
-.nav-ifood-btn{display:none;align-items:center;gap:6px;background:rgba(234,29,44,.15);border:1px solid rgba(234,29,44,.4);color:#ff8a8a;padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
-.nav-ifood-btn:hover{background:rgba(234,29,44,.3);border-color:#EA1D2C;color:#fff}
-.nav-export-btn{display:none;align-items:center;gap:6px;background:rgba(96,192,191,.12);border:1px solid rgba(96,192,191,.35);color:var(--teal);padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s}
-.nav-export-btn:hover{background:rgba(96,192,191,.25);border-color:var(--teal);color:#fff}
-.nav-users-btn{display:none;align-items:center;gap:6px;background:rgba(91,174,226,.12);border:1px solid rgba(91,174,226,.35);color:var(--blue);padding:6px 14px;border-radius:6px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s}
-.nav-users-btn:hover{background:rgba(91,174,226,.25);border-color:var(--blue);color:#fff}
 
 /* USERS MANAGEMENT VIEW */
 #usersView{display:none;animation:fadeUp .3s ease}
@@ -337,32 +323,17 @@ body.dark .user-card-info{color:var(--text2)}
 .cco-hub-main .hamburger span{background:#1D2951}
 .cco-hub-main .sidebar{font-family:'Montserrat',sans-serif}
 .cco-hub-main .sidebar button{font-family:'Montserrat',sans-serif}
-.cco-hub-main .topbar .nav-export-btn,
-.cco-hub-main .topbar .nav-dash-btn,
-.cco-hub-main .topbar .nav-func-btn{
-  color:#1D2951;
-  background:#fff;
-  border-color:#D7E0EC;
-}
-.cco-hub-main .topbar .nav-export-btn:hover,
-.cco-hub-main .topbar .nav-dash-btn:hover,
-.cco-hub-main .topbar .nav-func-btn:hover{
-  color:#1D2951;
-  background:#EDF4FA;
-  border-color:#5BAEE2;
-}
-.cco-hub-main .topbar .nav-ifood-btn{color:#D5202F;background:#FFF5F6}
-.cco-hub-main .topbar .theme-btn{color:#1D2951;background:#F4F7FB;border-color:#D7E0EC}
-.cco-hub-main .topbar .hamburger-btn{background:#F4F7FB;border:1px solid #D7E0EC}
-.cco-hub-main .topbar .hamburger-btn .bar{background:#1D2951}
-body.dark .cco-hub-main .topbar .nav-export-btn,
-body.dark .cco-hub-main .topbar .nav-dash-btn,
-body.dark .cco-hub-main .topbar .nav-func-btn,
-body.dark .cco-hub-main .topbar .theme-btn,
-body.dark .cco-hub-main .topbar .hamburger-btn{
+/* No modo claro os botões do header já vêm prontos do `.btn .btn-ghost`.
+   Só o modo escuro da CCO precisa de ajuste, porque o `.btn-ghost` é
+   desenhado para fundo claro e aqui a topbar fica escura. */
+body.dark .cco-hub-main .topbar .btn-ghost{
   color:var(--text);
   background:var(--surface);
   border-color:var(--border);
+}
+body.dark .cco-hub-main .topbar .btn-ghost:hover{
+  background:var(--bg-3, var(--bg));
+  border-color:var(--blue);
 }
 body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 
@@ -518,21 +489,22 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 @keyframes spinscale{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(.78)}100%{transform:rotate(360deg) scale(1)}}
 .logo-loading{animation:spinscale 1.6s linear infinite}
 /* ── HAMBURGER + DRAWER ────────────────────────────────────── */
+/* Botão do drawer da CCO. A aparência vem de `.btn .btn-ghost .btn-icon`
+   (a mesma dos demais botões do header); aqui fica só o que é próprio
+   dele: as três barras e a animação para "X" quando abre. Ele só existe
+   no mobile, onde substitui a fileira de botões `[data-cco-nav]`. */
 .hamburger-btn{
   display:none;
   flex-direction:column;justify-content:center;align-items:center;
-  gap:5px;width:40px;height:40px;border-radius:8px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-  cursor:pointer;flex-shrink:0;transition:background .2s;padding:0
+  gap:4px;flex-shrink:0
 }
-.hamburger-btn:hover{background:rgba(255,255,255,.16)}
 .hamburger-btn .bar{
-  width:18px;height:2px;background:#fff;border-radius:2px;
+  width:16px;height:2px;background:var(--navy);border-radius:2px;
   transition:transform .3s ease, opacity .3s ease
 }
-.hamburger-btn.open .bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger-btn.open .bar:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .hamburger-btn.open .bar:nth-child(2){opacity:0;transform:scaleX(0)}
-.hamburger-btn.open .bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hamburger-btn.open .bar:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
 .drawer-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,0);
@@ -622,11 +594,10 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
     align-items:center;
     justify-content:flex-end;
   }
-  .cco-actions>.nav-export-btn,
-  .cco-actions>.nav-ifood-btn,
-  .cco-actions>.nav-dash-btn,
-  .cco-actions>.nav-func-btn,
-  .cco-actions>.theme-btn{display:none!important}
+  /* `!important` porque o JS mostra/esconde esses botões por
+     `style.display`, que ganharia de uma regra normal. */
+  .cco-actions [data-cco-nav]{display:none!important}
+  .cco-actions .topbar-tabs{display:none}
   .hamburger-btn{display:flex}
 
   /* MAIN */
@@ -752,32 +723,37 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
         <button class="hamburger" id="hamburger" aria-label="Abrir menu">
           <span></span><span></span><span></span>
         </button>
-        <div>
+        <div class="topbar-context">
           <div class="topbar-title">Escala CCO</div>
           <div class="topbar-subtitle">Centro de Controle de Operações</div>
         </div>
       </div>
       <div class="topbar-right cco-actions">
-        <button class="nav-export-btn" id="navExportBtn" onclick="abrirModalExport()" title="Exportar planilha iFood">
+        <div class="topbar-tabs">
+          <button class="btn btn-ghost" data-cco-nav id="navCalBtn" onclick="voltarCalendario()" title="Voltar ao calendário" style="display:none">
+            Calendário
+          </button>
+          <button class="btn btn-ghost" data-cco-nav id="navDashBtn" onclick="toggleDashView()" title="Dashboard CCO" style="display:none">
+            Dashboard
+          </button>
+          <button class="btn btn-ghost" data-cco-nav id="navFuncBtn" onclick="toggleFuncView()" title="Gerenciar funcionários" style="display:none">
+            Funcionários
+          </button>
+          <button class="btn btn-ghost" data-cco-nav id="navHistoricoBtn" onclick="abrirModalHistorico()" title="Histórico de alterações" style="display:none">
+            Histórico
+          </button>
+        </div>
+        <button class="btn btn-ghost" data-cco-nav id="navExportBtn" onclick="abrirModalExport()" title="Exportar planilha iFood" style="display:none">
           Exportar iFood
         </button>
-        <a class="nav-ifood-btn" id="navIfoodBtn" href="https://empresas-app.ifood.com.br/auth/login" target="_blank" rel="noopener" title="Acessar iFood Benefícios">
+        <a class="btn btn-ghost" data-cco-nav id="navIfoodBtn" href="https://empresas-app.ifood.com.br/auth/login" target="_blank" rel="noopener" title="Acessar iFood Benefícios" style="display:none">
           iFood Benefícios
         </a>
-        <button class="nav-dash-btn" id="navDashBtn" onclick="toggleDashView()" title="Dashboard CCO">
-          Dashboard CCO
+        <button class="btn btn-ghost btn-icon theme-toggle" data-cco-nav id="btnTheme" onclick="toggleTheme()" title="Alternar modo claro/escuro" aria-label="Alternar modo claro/escuro">
+          <svg class="theme-toggle-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="theme-toggle-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
         </button>
-        <button class="nav-func-btn" id="navFuncBtn" onclick="toggleFuncView()" title="Gerenciar funcionários">
-          Funcionários
-        </button>
-        <button class="nav-func-btn" id="navHistoricoBtn" onclick="abrirModalHistorico()" title="Histórico de alterações" style="display:none">
-          🕓 Histórico
-        </button>
-        <button class="nav-func-btn" id="navCalBtn" onclick="voltarCalendario()" title="Voltar ao calendário" style="display:none">
-          Calendário
-        </button>
-        <button class="theme-btn" id="btnTheme" onclick="toggleTheme()" title="Alternar tema">☀️</button>
-        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu da Escala CCO">
+        <button class="btn btn-ghost btn-icon hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu da Escala CCO">
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
@@ -1232,7 +1208,7 @@ body.dark .hist-title{color:var(--text)}
 </div>
 
 <script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
-<script src="js/auth.js?v=20260724-aniversarios-v1"></script>
+<script src="js/auth.js?v=20260726-hub-ui-v1"></script>
 <script>
 // ─── HAMBURGER DRAWER ────────────────────────────────────────
 function toggleDrawer(){
@@ -1318,12 +1294,14 @@ function setupDrawerForUser(u){
 function toggleTheme(){
   const isDark = document.body.classList.toggle("dark");
   localStorage.setItem("cco-theme", isDark ? "dark" : "light");
-  const btn = document.getElementById("btnTheme");
-  if(btn) btn.textContent = isDark ? "🌙" : "☀️";
+  // O ícone é SVG e troca pelo `.is-dark` (regra `.theme-toggle` no
+  // layout.css). Antes era emoji trocado por textContent, o que apagava
+  // o conteúdo do botão e destoava do resto do Hub.
+  document.getElementById("btnTheme")?.classList.toggle("is-dark", isDark);
 }
 document.addEventListener("DOMContentLoaded", ()=>{
-  const btn = document.getElementById("btnTheme");
-  if(btn) btn.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️";
+  document.getElementById("btnTheme")
+    ?.classList.toggle("is-dark", document.body.classList.contains("dark"));
 });
 
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyeoa-8Vv2lze3okfNxSA20hOtwOo0dvB_wIaWBJujG0XbxgrXOkswON4fPrEHdeBAa/exec";

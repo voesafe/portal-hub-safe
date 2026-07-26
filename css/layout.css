@@ -504,6 +504,109 @@ html, body {
 }
 .topbar-period select:focus { border-color: var(--blue); }
 
+/* ── Contrato de ações do header ───────────────────────────────
+   Toda página do Hub monta a topbar com a mesma estrutura:
+
+     .topbar > .topbar-left  [ .hamburger, (marca injetada pelo auth.js), .topbar-context ]
+             > .topbar-right [ .topbar-status?, .topbar-tabs?, .topbar-period?, .btn* ]
+
+   As regras abaixo são o que faz um botão de header ter o mesmo
+   tamanho em Vendas, Escala CCO e Escala PAV. Botão de header é
+   menor que botão de conteúdo: use só `.btn .btn-ghost` ou
+   `.btn .btn-primary` e deixe a escala por conta daqui, sem
+   inventar classe própria por página.                            */
+.topbar-right > .btn,
+.topbar-right .topbar-tabs > .btn {
+  padding: 8px 16px;
+  font-size: .82rem;
+}
+.topbar-right > .btn.btn-icon,
+.topbar-right .topbar-tabs > .btn.btn-icon {
+  padding: 8px;
+  width: 34px;
+  height: 34px;
+  justify-content: center;
+  font-size: .9rem;
+  line-height: 1;
+}
+
+/* Separador entre grupos de ação (ex.: navegação | tema | menu). */
+.topbar-sep {
+  width: 1px;
+  height: 22px;
+  flex-shrink: 0;
+  background: var(--gray-200);
+}
+
+/* Pílula de estado (última sincronização, disparo automático, ...).
+   Substitui os indicadores que cada página desenhava por conta. */
+.topbar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 999px;
+  background: var(--white);
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  white-space: nowrap;
+}
+/* `display: inline-flex` acima ganharia do atributo `hidden`, que só traz
+   um `display: none` de baixa especificidade. Mesma armadilha da
+   `.cadastro-bulk-bar`. A página de Aniversários depende disso: a pílula
+   nasce com `hidden` e só aparece quando o status chega do servidor. */
+.topbar-status[hidden] { display: none; }
+.topbar-status-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--gray-300);
+}
+.topbar-status.is-ok    { border-color: rgba(46,204,113,.35); color: #1f8a4c; }
+.topbar-status.is-ok    .topbar-status-dot { background: var(--success); }
+.topbar-status.is-warn  { border-color: rgba(243,156,18,.35); color: #a96a05; }
+.topbar-status.is-warn  .topbar-status-dot { background: var(--warning); }
+.topbar-status.is-error { border-color: rgba(231,76,60,.35);  color: #b83224; }
+.topbar-status.is-error .topbar-status-dot { background: var(--danger); }
+
+/* Abas de sub-visão dentro do header (Escala PAV, Escala CCO).
+   São botões `.btn .btn-ghost` normais; `.is-active` é o estado
+   selecionado. Nada de gradiente ou emoji: o que diferencia a aba
+   ativa é o azul da marca, igual ao item ativo da sidebar. */
+.topbar-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+/* `.active` é aceito junto de `.is-active` porque a Escala PAV já
+   marcava a aba assim, em JS que também cuida dos filtros de base
+   dentro da página. Renomear ali só para casar com o nome novo daria
+   risco sem ganho. */
+.topbar-tabs > .btn.is-active,
+.topbar-tabs > .btn.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--white);
+}
+.topbar-tabs > .btn.is-active:hover,
+.topbar-tabs > .btn.active:hover {
+  background: var(--blue-dark);
+  border-color: var(--blue-dark);
+}
+
+/* Alternador de modo claro/escuro. Três telas têm modo escuro próprio
+   (Escala CCO, Escala PAV e NOTAMs) e cada uma desenhava o botão de um
+   jeito, com emoji diferente. Agora é o mesmo botão e o mesmo ícone:
+   marque `.is-dark` no próprio botão e o SVG troca sozinho. */
+.theme-toggle > svg { display: block; }
+.theme-toggle .theme-toggle-moon { display: none; }
+.theme-toggle.is-dark .theme-toggle-sun { display: none; }
+.theme-toggle.is-dark .theme-toggle-moon { display: block; }
+
 .hamburger {
   display: flex;
   flex-direction: column;
@@ -765,6 +868,14 @@ html, body {
     flex: 1 1 auto;
     justify-content: center;
   }
+  /* Botão de ícone tem largura fixa: esticar deixaria o ícone perdido
+     no meio de uma barra larga. */
+  .topbar-right > .btn.btn-icon { flex: 0 0 auto; }
+  .topbar-sep { display: none; }
+  /* A pílula é informação de apoio: no celular fica só o ponto colorido,
+     que já responde "está no ar ou não". */
+  .topbar-status { padding: 5px; gap: 0; }
+  .topbar-status > :not(.topbar-status-dot) { display: none; }
   .topbar-period { width: 100%; }
   .topbar-period select { flex: 1; }
   .card-actions { width: 100%; min-width: 0; }

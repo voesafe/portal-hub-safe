@@ -488,9 +488,14 @@ const Auth = {
     // seção sem nenhum item permitido não é renderizada.
     const ver = (pagina) => this.podeVer(pagina);
     // Monta uma seção só quando há ao menos um item permitido dentro dela.
+    // Os itens saem em ordem alfabética pelo rótulo, então incluir um item
+    // novo na lista não exige acertar a posição na mão.
+    // `def.visivel` cobre o item que não é uma página do Hub (a Planilha, que
+    // é link externo e depende de permissão própria, não de `podeVer`).
     const secaoSeTiver = (id, label, icone, itensDef, paginas) => {
       const conteudo = itensDef
-        .filter(def => ver(def.pagina))
+        .filter(def => (def.visivel ? def.visivel() : ver(def.pagina)))
+        .sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'))
         .map(def => item(def.href || def.pagina, def.label, def.icone, def.opcoes || { permitido: true }))
         .join('');
       return conteudo ? secao(id, label, icone, conteudo, paginas) : '';
@@ -503,65 +508,52 @@ const Auth = {
       </a>`
     ];
 
-    // NOTAMs — global (todos os logados). Operacional das bases SAFE.
-    if (ver('notams.html')) {
-      secoes.push(`<a href="notams.html" class="menu-dashboard${path === 'notams.html' ? ' active' : ''}">
-        <span class="nav-icon" aria-hidden="true">${this.iconSvg('notam')}</span>
-        <span>NOTAMs</span>
-      </a>`);
-    }
-
-    if (ver('dashboard.html')) {
-      secoes.push(`<a href="dashboard.html" class="menu-dashboard${path === 'dashboard.html' ? ' active' : ''}">
-        <span class="nav-icon" aria-hidden="true">${this.iconSvg('dashboard')}</span>
-        <span>Dashboard de Vendas</span>
-      </a>`);
-    }
+    // As seções vêm em ordem alfabética, e o Início fica fixo no topo por ser
+    // a entrada da casa, não um módulo. Ao criar uma seção nova, insira na
+    // posição alfabética; os ITENS dentro dela o `secaoSeTiver` já ordena.
+    secoes.push(secaoSeTiver('administracao', 'Administração', 'administracao', [
+      { pagina: 'aniversarios.html', label: 'Aniversários', icone: 'aniversario' },
+      { pagina: 'cadastro-alunos.html', label: 'Cadastro de Aluno', icone: 'aluno' },
+      { pagina: 'safe-minions.html', label: 'SAFE MINIONS', icone: 'minions' },
+      {
+        label: 'Planilha',
+        icone: 'planilha',
+        href: 'https://docs.google.com/spreadsheets/d/1zUHGTAC8TUhD6v1k-7OLeDQRlj99J0BMbimScZD2SoI/edit?gid=1905416248#gid=1905416248',
+        visivel: () => this.temPermissao('planilha_admin.abrir'),
+        opcoes: { externo: true, permitido: true, destino: 'planilha-administrativa' }
+      }
+    ], ['aniversarios.html', 'cadastro-alunos.html', 'safe-minions.html']));
 
     secoes.push(secaoSeTiver('comercial', 'Comercial', 'comercial', [
+      { pagina: 'dashboard.html', label: 'Dashboard de Vendas', icone: 'dashboard' },
       { pagina: 'vendas.html', label: 'Vendas', icone: 'vendas' }
-    ], ['vendas.html']));
+    ], ['dashboard.html', 'vendas.html']));
 
+    // NOTAMs entra aqui: é operacional das bases SAFE, mesma família de Escala.
+    // Continua global (todos os logados), quando o `NOTAMS_ATIVO` estiver ligado.
     secoes.push(secaoSeTiver('escala', 'Escala', 'escala', [
       { pagina: 'escala-cco.html', label: 'Escala CCO', icone: 'escala' },
       { pagina: 'escala-pav.html', label: 'Escala PAV de Base', icone: 'escala' },
-      { pagina: 'horas-voadas-inva.html', label: 'Horas Voadas INVA Mês', icone: 'horas' }
-    ], ['escala-cco.html', 'escala-pav.html', 'horas-voadas-inva.html']));
+      { pagina: 'horas-voadas-inva.html', label: 'Horas Voadas INVA Mês', icone: 'horas' },
+      { pagina: 'notams.html', label: 'NOTAMs', icone: 'notam' }
+    ], ['escala-cco.html', 'escala-pav.html', 'horas-voadas-inva.html', 'notams.html']));
+
+    secoes.push(secaoSeTiver('financeiro', 'Financeiro', 'financeiro', [
+      { pagina: 'concorrencia.html', label: 'Concorrência', icone: 'concorrencia' },
+      { pagina: 'controle-gastos.html', label: 'Controle de Gastos', icone: 'gastos' },
+      { pagina: 'faturamento.html', label: 'Faturamento', icone: 'faturamento' },
+      { pagina: 'fechamento-horas.html', label: 'Fechamento de Horas / Cotistas', icone: 'horas' }
+    ], ['concorrencia.html', 'controle-gastos.html', 'faturamento.html', 'fechamento-horas.html']));
 
     secoes.push(secaoSeTiver('portal-aluno', 'Portal do Aluno', 'academico', [
       { pagina: 'progresso-alunos.html', label: 'Progresso de Alunos', icone: 'academico' }
     ], ['progresso-alunos.html']));
 
-    // Administração — inclui a Planilha administrativa (permissão própria).
-    const itensAdm = [
-      ver('safe-minions.html') ? item('safe-minions.html', 'SAFE MINIONS', 'minions', { permitido: true }) : '',
-      ver('cadastro-alunos.html') ? item('cadastro-alunos.html', 'Cadastro de Aluno', 'aluno', { permitido: true }) : '',
-      ver('aniversarios.html') ? item('aniversarios.html', 'Aniversários', 'aniversario', { permitido: true }) : '',
-      this.temPermissao('planilha_admin.abrir')
-        ? item(
-            'https://docs.google.com/spreadsheets/d/1zUHGTAC8TUhD6v1k-7OLeDQRlj99J0BMbimScZD2SoI/edit?gid=1905416248#gid=1905416248',
-            'Planilha', 'planilha',
-            { externo: true, permitido: true, destino: 'planilha-administrativa' }
-          )
-        : ''
-    ].join('');
-    if (itensAdm) {
-      secoes.push(secao('administracao', 'Administração', 'administracao', itensAdm,
-        ['safe-minions.html', 'cadastro-alunos.html', 'aniversarios.html']));
-    }
-
-    secoes.push(secaoSeTiver('financeiro', 'Financeiro', 'financeiro', [
-      { pagina: 'faturamento.html', label: 'Faturamento', icone: 'faturamento' },
-      { pagina: 'concorrencia.html', label: 'Concorrência', icone: 'concorrencia' },
-      { pagina: 'controle-gastos.html', label: 'Controle de Gastos', icone: 'gastos' },
-      { pagina: 'fechamento-horas.html', label: 'Fechamento de Horas / Cotistas', icone: 'horas' }
-    ], ['faturamento.html', 'concorrencia.html', 'controle-gastos.html', 'fechamento-horas.html']));
-
     secoes.push(secaoSeTiver('suporte', 'Suporte', 'suporte', [
+      { pagina: 'access-control.html', label: 'Controle de Acesso', icone: 'acesso' },
       { pagina: 'bases.html', label: 'Bases', icone: 'bases' },
-      { pagina: 'admin.html', label: 'Usuários', icone: 'usuarios' },
-      { pagina: 'access-control.html', label: 'Controle de Acesso', icone: 'acesso' }
-    ], ['bases.html', 'admin.html', 'access-control.html']));
+      { pagina: 'admin.html', label: 'Usuários', icone: 'usuarios' }
+    ], ['access-control.html', 'admin.html', 'bases.html']));
 
     nav.innerHTML = secoes.filter(Boolean).join('');
 
@@ -721,9 +713,12 @@ const Auth = {
     document.querySelectorAll('.topbar-left').forEach(topbarLeft => {
       if (topbarLeft.querySelector('.topbar-brand-link')) return;
 
-      const contexto = Array.from(topbarLeft.children).find(
-        el => !el.classList.contains('hamburger')
-      );
+      // Todas as páginas já marcam o bloco de título/subtítulo como
+      // `.topbar-context` no próprio HTML. O fallback pelo primeiro filho
+      // que não é o hamburger fica só para uma página nova que esqueça a
+      // classe: sem ela, a regra que esconde o título no celular não pega.
+      const contexto = topbarLeft.querySelector('.topbar-context')
+        || Array.from(topbarLeft.children).find(el => !el.classList.contains('hamburger'));
       if (contexto) contexto.classList.add('topbar-context');
 
       const link = document.createElement('a');

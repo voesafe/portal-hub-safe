@@ -108,8 +108,10 @@ const Aniversarios = {
     const ultima = this.dados.ultimaExecucao;
 
     pill.hidden = false;
-    pill.classList.toggle('ativo', ativo);
-    pill.classList.toggle('inativo', !ativo);
+    // `.is-ok` / `.is-warn` são os estados da pílula compartilhada
+    // (`.topbar-status` no layout.css), usada igual na página de NOTAMs.
+    pill.classList.toggle('is-ok', ativo);
+    pill.classList.toggle('is-warn', !ativo);
 
     if (ativo) {
       label.textContent = 'Envio automático ligado';

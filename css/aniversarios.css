@@ -13,62 +13,12 @@
 
 /* ── Estado do envio automático (pílula no header) ─────────────
    Discreta de propósito: fica verde quase sempre, então não deve
-   competir com os dados. O detalhe vive no title. */
-.aniv-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px 6px 12px;
-  border: 1px solid var(--gray-200);
-  border-radius: 999px;
-  background: var(--white);
-  font-size: .78rem;
-  font-weight: 600;
-  letter-spacing: .01em;
-  color: var(--gray-500);
-  white-space: nowrap;
-  cursor: default;
-  transition: border-color .18s ease, color .18s ease;
-}
+   competir com os dados. O detalhe vive no title.
 
-.aniv-pill[hidden] { display: none; }
-
-.aniv-pill-dot {
-  flex: none;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--gray-300);
-}
-
-/* Ligado: verde discreto com um halo suave — o "aceso" sem piscar. */
-.aniv-pill.ativo {
-  border-color: rgba(68, 168, 167, .4);
-  color: var(--teal-dark);
-}
-
-.aniv-pill.ativo .aniv-pill-dot {
-  background: var(--teal-dark);
-  box-shadow: 0 0 0 3px rgba(96, 192, 191, .25);
-}
-
-/* Desligado: âmbar, um pouco mais presente por ser o estado excepcional. */
-.aniv-pill.inativo {
-  border-color: rgba(243, 156, 18, .45);
-  background: rgba(243, 156, 18, .07);
-  color: #a4670a;
-}
-
-.aniv-pill.inativo .aniv-pill-dot {
-  background: var(--warning);
-  box-shadow: 0 0 0 3px rgba(243, 156, 18, .2);
-}
-
-/* Em tela estreita o header aperta: fica só o ponto, com o title explicando. */
-@media (max-width: 640px) {
-  .aniv-pill { padding: 6px; gap: 0; }
-  .aniv-pill-label { display: none; }
-}
+   O desenho da pílula agora é o `.topbar-status` compartilhado
+   (layout.css), o mesmo indicador que a página de NOTAMs usa: `.is-ok`
+   quando o envio está ligado, `.is-warn` quando está desligado. O
+   `[hidden]` e o recolhimento no celular também vêm de lá. */
 
 /* ── Indicadores ──────────────────────────────────────────── */
 .aniv-kpis {

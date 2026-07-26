@@ -2,8 +2,14 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diagnóstico — SAFE Hub</title>
-  <link rel="stylesheet" href="css/safe-theme.css?v=20260726-mobile-v2">
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+
+  <link rel="stylesheet" href="css/safe-theme.css?v=20260726-hub-ui-v1">
   <style>
     body { font-family: 'Montserrat', sans-serif; padding: 32px; background: #f4f6fa; }
     h2 { color: #1D2951; margin-top: 32px; }
@@ -75,7 +81,7 @@
 <div id="toast-container" class="toast-container"></div>
 <script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
 <script src="js/api.js?v=20260724-aniversarios-v1"></script>
-<script src="js/auth.js?v=20260724-aniversarios-v1"></script>
+<script src="js/auth.js?v=20260726-hub-ui-v1"></script>
 <script>
 function fmt(v){return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);}
 
