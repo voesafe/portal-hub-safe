@@ -184,3 +184,65 @@ Auditoria de bugs **visuais** de celular em todas as páginas do Hub. O desktop 
 4. **Miudezas:** `.modal-footer` ganhou `flex-wrap` ([safe-theme.css](css/safe-theme.css)); o `.toast-container` passou a respeitar as duas margens em ≤480px, como a Escala CCO já fazia no CSS dela; e o `.progresso-filter-actions` vira largura total quando os filtros empilham, valendo para as duas abas.
 
 **Versões de asset:** `layout`, `safe-theme`, `dashboard`, `safe-minions` e `progresso-alunos` estão em `?v=20260726-mobile-v2`; `concorrencia` em `mobile-v1`. O `safe-theme.css` e o `dashboard.css` **não tinham `?v=` nenhum** até aqui. Reparado de passagem: o `js/config.js` aparece com **quatro `?v=` diferentes** entre as páginas sendo o mesmo arquivo, ou seja, o cache-bust é por página e não por asset. Não foi mexido, mas é a origem do risco de servir arquivo velho.
+
+## Header e navegação unificados na auditoria de 2026-07-26
+
+Segunda frente do mesmo dia: o Hub nasceu da colagem de sistemas separados e cada um trouxe o header do lugar de origem. O shell (`app-shell` + sidebar + `main`) já era comum às 19 páginas; o que denunciava a costura era a topbar e uns detalhes de `<head>`.
+
+### Contrato de header (obrigatório em página nova)
+
+```html
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-context">
+      <div class="topbar-title">Título</div>
+      <div class="topbar-subtitle">Subtítulo</div>
+    </div>
+  </div>
+  <div class="topbar-right"><!-- ações --></div>
+</div>
+```
+
+A marca (logo + divisor) **não vai no HTML**: o `aplicarMarcaHub()` do [auth.js](js/auth.js) injeta entre o hamburger e o `.topbar-context`. O `.topbar-context` agora vem escrito no HTML de todas as páginas; o `auth.js` mantém o fallback pelo primeiro filho não-hamburger só para uma página nova que esqueça a classe. Sem essa classe, a regra que esconde o título em ≤480px não pega.
+
+**Componentes compartilhados no [layout.css](css/layout.css)**, criados porque três páginas desenhavam a mesma coisa de três jeitos:
+
+- **Escala do botão de header:** `.topbar-right > .btn` fixa padding e tamanho de fonte. **Use só `.btn .btn-ghost` ou `.btn .btn-primary` e não invente classe própria por página.** Foi exatamente isso que deixou a Escala CCO com cinco botões de cinco cores.
+- **`.topbar-status`:** pílula de estado com `.is-ok` / `.is-warn` / `.is-error`. Substituiu a `.aniv-pill` (Aniversários) e a `.notam-updated` (NOTAMs). ⚠️ Tem `.topbar-status[hidden]{display:none}` porque o `display:inline-flex` ganharia do atributo `hidden`, mesma armadilha da `.cadastro-bulk-bar`; Aniversários depende disso, a pílula nasce escondida.
+- **`.topbar-tabs`:** abas de sub-visão no header. Aceita `.is-active` **e** `.active` (a Escala PAV já usava `.active` em JS que também cuida dos filtros de base dentro da página; renomear ali seria risco sem ganho).
+- **`.theme-toggle`:** ícone SVG sol/lua, com `.is-dark` no próprio botão. As três telas com modo escuro próprio (CCO, PAV, NOTAMs) usavam **três emojis diferentes** trocados por `textContent`, o que ainda apagava o conteúdo do botão. **Ao ligar modo escuro em outra tela, marque `.is-dark` no botão, não troque texto.**
+
+### Escala CCO
+
+Os seis botões `nav-*` e o `theme-btn` viraram `.btn .btn-ghost`; o CSS deles saiu, junto com `.nav-users-btn` e `.nav-avatar`, que já eram mortos (sem elemento correspondente). **IDs e `onclick` ficaram intactos**, então nenhum JS mudou. ⚠️ O JS mostra/esconde por `style.display`, e o `display:none` vinha da classe antiga: por isso cada botão levou `style="display:none"` no markup. Abaixo de 768px continua trocando a fileira pelo drawer, agora via `[data-cco-nav]` (`!important`, senão o `style.display` do JS ganha) em vez de listar classe por classe. O `.hamburger-btn` do drawer manteve só as barras e a animação para "X"; o resto vem do `.btn-icon`.
+
+### Escala PAV
+
+A página tinha uma **segunda topbar inteira** dentro do `#appScreen`: logo próprio em base64, divisor, tema e um "Sair" que chamava o mesmo `Auth.logout()` do rodapé da sidebar. A topbar virou irmã de `.pav-app`, filha direta de `.main`, que é o que o `fixarTopbar()` procura (`.main > .topbar`). Com isso caiu o hack de `position:static` no mobile: a altura passa a ser medida por JS como em qualquer outra página. **Não devolva a topbar para dentro de `.pav-app`:** lá o `.pav-app .topbar` a repinta com os tokens escuros da PAV.
+
+⚠️ **Ao mover a topbar, o `.pav-main{padding-top:0 !important}` virou uma armadilha e foi removido.** Ele existia porque quem compensava a barra fixa era o `#appScreen`. Com a topbar do Hub, quem compensa é o `.main`, e o `padding-top:0` escondia a primeira linha de ações do calendário (Replicar mês / Escalar por dia) atrás do header. O modo escuro da PAV no header agora vem de `body.dark .pav-main > .topbar`.
+
+### Ordem do menu da sidebar, decidida em 2026-07-26
+
+Decisão do Victor: **seções e itens em ordem alfabética**, com o **Início fixo no topo** (é a entrada da casa, não um módulo). Além disso, **NOTAMs saiu do nível principal e entrou em Escala** (é operacional das bases, mesma família) e **Dashboard de Vendas saiu do nível principal e entrou em Comercial**.
+
+- Ordem das seções: Administração, Comercial, Escala, Financeiro, Portal do Aluno, Suporte.
+- **Os itens dentro de cada seção são ordenados em tempo de execução** por `localeCompare(label, 'pt-BR')` no `secaoSeTiver`. Ao incluir item novo, **não precisa acertar a posição na mão**. Já as seções são ordenadas pela ordem dos `push`: aí sim insira no lugar alfabético.
+- `secaoSeTiver` ganhou `def.visivel` (predicado próprio) para o item que **não é página do Hub**: a Planilha administrativa é link externo e depende de `planilha_admin.abrir`, não de `podeVer`. Isso permitiu a Administração deixar de ser HTML montado à mão e entrar na mesma ordenação das outras.
+- ⚠️ O array `paginas` de cada seção é o que faz a seção **abrir sozinha** quando você está numa página dela. Ao mover um item de seção, mova a página nesse array também, senão o menu abre fechado na página ativa.
+- **NOTAMs continua visível para superadmin mesmo com `NOTAMS_ATIVO=false`**, porque `podeVer` faz bypass de superadmin antes de olhar `PAGINAS`. Comportamento pré-existente, só mudou de lugar no menu. Para os demais perfis segue escondido.
+- Os **cards da home** ([inicio.js](js/inicio.js)) têm ordem própria e **não** foram alfabetizados: o pedido foi sobre a sidebar.
+
+### `<head>` padronizado
+
+`theme-color` estava `#1D2951` em duas páginas e `#19213f` em dezessete; ficou `#19213f`, o valor do `manifest.webmanifest`. A CCO usava `favicon.ico` (agora `favicon.png`, como todas) e CCO e PAV bloqueavam pinch-zoom com `maximum-scale=1.0, user-scalable=no`, que saiu. As duas também carregavam Montserrat/Raleway por `<link>` próprio, com pesos diferentes do resto: os pesos 800/900 de Montserrat entraram no `@import` do [safe-theme.css](css/safe-theme.css) e os links duplicados saíram, então **fonte agora vem de um lugar só**. O `debug.html` ganhou manifest, favicon e viewport, e o `faturamento.css` ganhou o `?v=` que era o único a não ter.
+
+**Versões de asset:** `safe-theme`, `layout`, `auth.js`, `notams.css/js`, `aniversarios.css/js` e `faturamento.css` estão em `?v=20260726-hub-ui-v1`. Ao mexer em CSS ou JS compartilhado, bumpar em **todos** os HTML.
+
+### O que ficou de fora
+
+- Os itens do **drawer da Escala CCO** ainda usam emoji (📅 📊 👥 🕓), diferente dos SVG da sidebar do Hub. É conteúdo interno, não header. Próximo candidato.
+- A validação visual cobriu desktop e a faixa ≤768px. **Abaixo de 480px não foi verificado em navegador**: o Chrome headless da máquina trava o viewport em 500px por baixo, ignorando `--window-size`. As regras dessa faixa são aditivas e pequenas, mas se aparecer bug de mobile estreito, é aqui que ninguém olhou.
