@@ -1,219 +1,221 @@
-# Graph Report - portal-hub-safe  (2026-07-24)
+# Graph Report - .  (2026-07-26)
 
 ## Corpus Check
-- 74 files · ~491,977 words
+- 28 files · ~493,987 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 715 nodes · 678 edges · 182 communities (60 shown, 122 thin omitted)
-- Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 80 edges (avg confidence: 0.79)
-- Token cost: 0 input · 0 output
-
-## Graph Freshness
-- Built from commit: `105f07ce`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
+- 1029 nodes · 1419 edges · 175 communities (67 shown, 108 thin omitted)
+- Extraction: 82% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 247 edges (avg confidence: 0.85)
+- Token cost: 514,565 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Escala CCO — Backend & Export|Escala CCO — Backend & Export]]
-- [[_COMMUNITY_Vendas, Faturamento & Dashboard|Vendas, Faturamento & Dashboard]]
-- [[_COMMUNITY_CLAUDE.md · RBAC · NOTAMs|CLAUDE.md · RBAC · NOTAMs]]
-- [[_COMMUNITY_Alunos, Gastos & Fechamento de Horas|Alunos, Gastos & Fechamento de Horas]]
-- [[_COMMUNITY_SAFE MINIONS · Horas INVA · CAVOK|SAFE MINIONS · Horas INVA · CAVOK]]
+- [[_COMMUNITY_Escala PAV Frontend|Escala PAV Frontend]]
+- [[_COMMUNITY_RBAC e Gestão de Usuários|RBAC e Gestão de Usuários]]
+- [[_COMMUNITY_Matriz de Acesso por Cargo|Matriz de Acesso por Cargo]]
+- [[_COMMUNITY_Login e Proteção de Página|Login e Proteção de Página]]
+- [[_COMMUNITY_Padrões de UI e Armadilhas|Padrões de UI e Armadilhas]]
+- [[_COMMUNITY_Bases SAFE e Preview|Bases SAFE e Preview]]
+- [[_COMMUNITY_Dashboard e Faturamento|Dashboard e Faturamento]]
+- [[_COMMUNITY_Controle de Gastos|Controle de Gastos]]
+- [[_COMMUNITY_Cadastro de Aluno e Gastos|Cadastro de Aluno e Gastos]]
+- [[_COMMUNITY_SAFE MINIONS e Horas INVA|SAFE MINIONS e Horas INVA]]
+- [[_COMMUNITY_Controle de Acesso e Grupos|Controle de Acesso e Grupos]]
 - [[_COMMUNITY_Admin CLI|Admin CLI]]
-- [[_COMMUNITY_Escala CCO & PAV — AppViews|Escala CCO & PAV — App/Views]]
-- [[_COMMUNITY_Controle de Acesso (RBAC UI)|Controle de Acesso (RBAC UI)]]
-- [[_COMMUNITY_README  Setup|README / Setup]]
-- [[_COMMUNITY_Bases SAFE & Preview Redesign|Bases SAFE & Preview Redesign]]
-- [[_COMMUNITY_Login & Home Portal|Login & Home Portal]]
-- [[_COMMUNITY_Escala PAV — FechamentoStaff|Escala PAV — Fechamento/Staff]]
-- [[_COMMUNITY_Admin — Usuários & Login UI|Admin — Usuários & Login UI]]
-- [[_COMMUNITY_APIUI Helpers (api.js)|API/UI Helpers (api.js)]]
-- [[_COMMUNITY_APIUI Helpers (api.js)|API/UI Helpers (api.js)]]
-- [[_COMMUNITY_APIUI Helpers (api.js)|API/UI Helpers (api.js)]]
-- [[_COMMUNITY_APIUI Helpers (api.js)|API/UI Helpers (api.js)]]
-- [[_COMMUNITY_Cadastro de Aluno & Habilitações|Cadastro de Aluno & Habilitações]]
-- [[_COMMUNITY_Concorrência|Concorrência]]
-- [[_COMMUNITY_appsscript.json (manifest)|appsscript.json (manifest)]]
-- [[_COMMUNITY_Controle de Gastos (UI)|Controle de Gastos (UI)]]
-- [[_COMMUNITY_Faturamento (funções)|Faturamento (funções)]]
-- [[_COMMUNITY_Community 22|Community 22]]
-- [[_COMMUNITY_Community 23|Community 23]]
-- [[_COMMUNITY_Community 24|Community 24]]
-- [[_COMMUNITY_Community 25|Community 25]]
-- [[_COMMUNITY_Community 26|Community 26]]
-- [[_COMMUNITY_Community 27|Community 27]]
-- [[_COMMUNITY_Community 28|Community 28]]
-- [[_COMMUNITY_Community 29|Community 29]]
-- [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 32|Community 32]]
-- [[_COMMUNITY_Community 33|Community 33]]
-- [[_COMMUNITY_Community 34|Community 34]]
-- [[_COMMUNITY_Community 35|Community 35]]
-- [[_COMMUNITY_Community 36|Community 36]]
-- [[_COMMUNITY_Community 37|Community 37]]
-- [[_COMMUNITY_Community 38|Community 38]]
-- [[_COMMUNITY_Community 39|Community 39]]
-- [[_COMMUNITY_Community 40|Community 40]]
-- [[_COMMUNITY_Community 41|Community 41]]
-- [[_COMMUNITY_Community 42|Community 42]]
-- [[_COMMUNITY_Community 43|Community 43]]
-- [[_COMMUNITY_Community 44|Community 44]]
-- [[_COMMUNITY_Community 45|Community 45]]
-- [[_COMMUNITY_Community 46|Community 46]]
-- [[_COMMUNITY_Community 47|Community 47]]
-- [[_COMMUNITY_Community 48|Community 48]]
-- [[_COMMUNITY_Community 49|Community 49]]
-- [[_COMMUNITY_Community 50|Community 50]]
-- [[_COMMUNITY_Community 54|Community 54]]
-- [[_COMMUNITY_Community 55|Community 55]]
-- [[_COMMUNITY_Community 56|Community 56]]
-- [[_COMMUNITY_Community 57|Community 57]]
-- [[_COMMUNITY_Community 58|Community 58]]
-- [[_COMMUNITY_Community 59|Community 59]]
-- [[_COMMUNITY_Community 60|Community 60]]
-- [[_COMMUNITY_Community 62|Community 62]]
-- [[_COMMUNITY_Community 63|Community 63]]
-- [[_COMMUNITY_Community 64|Community 64]]
-- [[_COMMUNITY_Community 65|Community 65]]
-- [[_COMMUNITY_Community 66|Community 66]]
-- [[_COMMUNITY_Community 67|Community 67]]
-- [[_COMMUNITY_Community 68|Community 68]]
-- [[_COMMUNITY_Community 69|Community 69]]
-- [[_COMMUNITY_Community 70|Community 70]]
-- [[_COMMUNITY_Community 71|Community 71]]
-- [[_COMMUNITY_Community 72|Community 72]]
-- [[_COMMUNITY_Community 73|Community 73]]
-- [[_COMMUNITY_Community 74|Community 74]]
-- [[_COMMUNITY_Community 76|Community 76]]
-- [[_COMMUNITY_Community 77|Community 77]]
-- [[_COMMUNITY_Community 78|Community 78]]
-- [[_COMMUNITY_Community 79|Community 79]]
-- [[_COMMUNITY_Community 80|Community 80]]
-- [[_COMMUNITY_Community 81|Community 81]]
-- [[_COMMUNITY_Community 82|Community 82]]
-- [[_COMMUNITY_Community 83|Community 83]]
-- [[_COMMUNITY_Community 84|Community 84]]
-- [[_COMMUNITY_Community 85|Community 85]]
-- [[_COMMUNITY_Community 86|Community 86]]
-- [[_COMMUNITY_Community 87|Community 87]]
-- [[_COMMUNITY_Community 88|Community 88]]
-- [[_COMMUNITY_Community 90|Community 90]]
-- [[_COMMUNITY_Community 91|Community 91]]
-- [[_COMMUNITY_Community 92|Community 92]]
-- [[_COMMUNITY_Community 93|Community 93]]
-- [[_COMMUNITY_Community 94|Community 94]]
-- [[_COMMUNITY_Community 95|Community 95]]
-- [[_COMMUNITY_Community 96|Community 96]]
-- [[_COMMUNITY_Community 97|Community 97]]
-- [[_COMMUNITY_Community 98|Community 98]]
-- [[_COMMUNITY_Community 99|Community 99]]
-- [[_COMMUNITY_Community 100|Community 100]]
-- [[_COMMUNITY_Community 101|Community 101]]
-- [[_COMMUNITY_Community 102|Community 102]]
-- [[_COMMUNITY_Community 103|Community 103]]
-- [[_COMMUNITY_Community 104|Community 104]]
-- [[_COMMUNITY_Community 105|Community 105]]
-- [[_COMMUNITY_Community 106|Community 106]]
-- [[_COMMUNITY_Community 107|Community 107]]
-- [[_COMMUNITY_Community 108|Community 108]]
-- [[_COMMUNITY_Community 109|Community 109]]
-- [[_COMMUNITY_Community 110|Community 110]]
-- [[_COMMUNITY_Community 111|Community 111]]
-- [[_COMMUNITY_Community 112|Community 112]]
-- [[_COMMUNITY_Community 113|Community 113]]
-- [[_COMMUNITY_Community 114|Community 114]]
-- [[_COMMUNITY_Community 115|Community 115]]
-- [[_COMMUNITY_Community 117|Community 117]]
-- [[_COMMUNITY_Community 120|Community 120]]
-- [[_COMMUNITY_Community 121|Community 121]]
-- [[_COMMUNITY_Community 122|Community 122]]
-- [[_COMMUNITY_Community 123|Community 123]]
-- [[_COMMUNITY_Community 124|Community 124]]
-- [[_COMMUNITY_Community 125|Community 125]]
-- [[_COMMUNITY_Community 126|Community 126]]
-- [[_COMMUNITY_Community 127|Community 127]]
-- [[_COMMUNITY_Community 128|Community 128]]
-- [[_COMMUNITY_Community 129|Community 129]]
-- [[_COMMUNITY_Community 130|Community 130]]
-- [[_COMMUNITY_Community 131|Community 131]]
-- [[_COMMUNITY_Community 132|Community 132]]
-- [[_COMMUNITY_Community 134|Community 134]]
-- [[_COMMUNITY_Community 135|Community 135]]
-- [[_COMMUNITY_Community 136|Community 136]]
-- [[_COMMUNITY_Community 137|Community 137]]
-- [[_COMMUNITY_Community 138|Community 138]]
-- [[_COMMUNITY_Community 139|Community 139]]
-- [[_COMMUNITY_Community 140|Community 140]]
-- [[_COMMUNITY_Community 141|Community 141]]
-- [[_COMMUNITY_Community 142|Community 142]]
-- [[_COMMUNITY_Community 143|Community 143]]
-- [[_COMMUNITY_Community 144|Community 144]]
-- [[_COMMUNITY_Community 145|Community 145]]
-- [[_COMMUNITY_Community 146|Community 146]]
-- [[_COMMUNITY_Community 147|Community 147]]
-- [[_COMMUNITY_Community 149|Community 149]]
-- [[_COMMUNITY_Community 150|Community 150]]
-- [[_COMMUNITY_Community 151|Community 151]]
-- [[_COMMUNITY_Community 152|Community 152]]
-- [[_COMMUNITY_Community 153|Community 153]]
-- [[_COMMUNITY_Community 154|Community 154]]
-- [[_COMMUNITY_Community 155|Community 155]]
-- [[_COMMUNITY_Community 156|Community 156]]
-- [[_COMMUNITY_Community 157|Community 157]]
-- [[_COMMUNITY_Community 158|Community 158]]
-- [[_COMMUNITY_Community 159|Community 159]]
-- [[_COMMUNITY_Community 161|Community 161]]
-- [[_COMMUNITY_Community 162|Community 162]]
-- [[_COMMUNITY_Community 163|Community 163]]
-- [[_COMMUNITY_Community 164|Community 164]]
-- [[_COMMUNITY_Community 165|Community 165]]
-- [[_COMMUNITY_Community 166|Community 166]]
-- [[_COMMUNITY_Community 167|Community 167]]
-- [[_COMMUNITY_Setup do backend Apps Script (idempotente)|Setup do backend Apps Script (idempotente)]]
-- [[_COMMUNITY_Atualizar pela API CAVOK|Atualizar pela API CAVOK]]
-- [[_COMMUNITY_CLAUDE.md — Regras do Projeto SAFE Hub|CLAUDE.md — Regras do Projeto SAFE Hub]]
+- [[_COMMUNITY_Auditoria da Escala CCO|Auditoria da Escala CCO]]
+- [[_COMMUNITY_Cache e Dashboard da CCO|Cache e Dashboard da CCO]]
+- [[_COMMUNITY_Admin e Bases SAFE|Admin e Bases SAFE]]
+- [[_COMMUNITY_README de Instalação|README de Instalação]]
+- [[_COMMUNITY_Gating Legado por Atributo|Gating Legado por Atributo]]
+- [[_COMMUNITY_Aniversários e Fila Trello|Aniversários e Fila Trello]]
+- [[_COMMUNITY_Início e Login do Hub|Início e Login do Hub]]
+- [[_COMMUNITY_Sessão e SSO da CCO|Sessão e SSO da CCO]]
+- [[_COMMUNITY_Navegação e Drawer da CCO|Navegação e Drawer da CCO]]
+- [[_COMMUNITY_CLAUDE.md Regras do Projeto|CLAUDE.md Regras do Projeto]]
+- [[_COMMUNITY_Financeiro e Export iFood|Financeiro e Export iFood]]
+- [[_COMMUNITY_Camada API Compartilhada|Camada API Compartilhada]]
+- [[_COMMUNITY_Camada API Compartilhada (dup)|Camada API Compartilhada (dup)]]
+- [[_COMMUNITY_Camada API Compartilhada (dup 2)|Camada API Compartilhada (dup 2)]]
+- [[_COMMUNITY_Concorrência de Preços|Concorrência de Preços]]
+- [[_COMMUNITY_Funcionários da Escala CCO|Funcionários da Escala CCO]]
+- [[_COMMUNITY_Pagina NOTAMs|Pagina NOTAMs]]
+- [[_COMMUNITY_appsscript.json|appsscript.json]]
+- [[_COMMUNITY_Progresso de Alunos page|Progresso de Alunos page]]
+- [[_COMMUNITY_gerarXlsxIfood|gerarXlsxIfood]]
+- [[_COMMUNITY_Escala CCO App|Escala CCO App]]
+- [[_COMMUNITY_Escala CCO App|Escala CCO App]]
+- [[_COMMUNITY_vendas.js|vendas.js]]
+- [[_COMMUNITY_vendas.js|vendas.js]]
+- [[_COMMUNITY_vendas.js|vendas.js]]
+- [[_COMMUNITY_vendas.js|vendas.js]]
+- [[_COMMUNITY_renderHistorico|renderHistorico]]
+- [[_COMMUNITY_Horas Voadas INVA Mês|Horas Voadas INVA Mês]]
+- [[_COMMUNITY_preview-guard.js|preview-guard.js]]
+- [[_COMMUNITY_preview-guard.js|preview-guard.js]]
+- [[_COMMUNITY_preview-guard.js|preview-guard.js]]
+- [[_COMMUNITY_Script inline de proteção e|Script inline de proteção e]]
+- [[_COMMUNITY_Dashboard  Visão Geral|Dashboard / Visão Geral]]
+- [[_COMMUNITY_admin.js|admin.js]]
+- [[_COMMUNITY_Fechamento Mensal Tab|Fechamento Mensal Tab]]
+- [[_COMMUNITY_Fechamento Mensal Tab|Fechamento Mensal Tab]]
+- [[_COMMUNITY_atualizarPreviewExport|atualizarPreviewExport]]
+- [[_COMMUNITY_Progresso de Alunos Page|Progresso de Alunos Page]]
+- [[_COMMUNITY_Controle de Acesso|Controle de Acesso]]
+- [[_COMMUNITY_Controle de Acesso|Controle de Acesso]]
+- [[_COMMUNITY_Canais de Receita|Canais de Receita]]
+- [[_COMMUNITY_Progresso de Alunos Page|Progresso de Alunos Page]]
+- [[_COMMUNITY_Canais de Receita|Canais de Receita]]
+- [[_COMMUNITY_Progresso de Alunos Page|Progresso de Alunos Page]]
+- [[_COMMUNITY_Selecao em massa aba Prontos|Selecao em massa aba Prontos]]
+- [[_COMMUNITY_Concorrência Page|Concorrência Page]]
+- [[_COMMUNITY_Concorrência Page|Concorrência Page]]
+- [[_COMMUNITY_Concorrência Page|Concorrência Page]]
+- [[_COMMUNITY_Apple Touch Icon|Apple Touch Icon]]
+- [[_COMMUNITY_removerAcentos|removerAcentos]]
+- [[_COMMUNITY_CSS escopado em .pav-app dentro|CSS escopado em .pav-app dentro]]
+- [[_COMMUNITY_access-control.js|access-control.js]]
+- [[_COMMUNITY_admin.js|admin.js]]
+- [[_COMMUNITY_auth.js|auth.js]]
+- [[_COMMUNITY_bases.js|bases.js]]
+- [[_COMMUNITY_cadastro-alunos.js|cadastro-alunos.js]]
+- [[_COMMUNITY_concorrencia.js|concorrencia.js]]
 - [[_COMMUNITY_config.js|config.js]]
-- [[_COMMUNITY_Pagina Cadastro de Aluno (cadastro-alunos.html)|Pagina Cadastro de Aluno (cadastro-alunos.html)]]
-- [[_COMMUNITY_aniversarios.js|aniversarios.js]]
-- [[_COMMUNITY_Menu de acoes drop-up (posicionarMenuAcao)|Menu de acoes drop-up (posicionarMenuAcao)]]
+- [[_COMMUNITY_controle-gastos.js|controle-gastos.js]]
+- [[_COMMUNITY_dashboard.js|dashboard.js]]
+- [[_COMMUNITY_fechamento-horas.js|fechamento-horas.js]]
+- [[_COMMUNITY_horas-voadas-inva.js|horas-voadas-inva.js]]
+- [[_COMMUNITY_inicio.js|inicio.js]]
+- [[_COMMUNITY_progresso-alunos.js|progresso-alunos.js]]
+- [[_COMMUNITY_access-control.js|access-control.js]]
+- [[_COMMUNITY_admin.js|admin.js]]
+- [[_COMMUNITY_auth.js|auth.js]]
+- [[_COMMUNITY_bases.js|bases.js]]
+- [[_COMMUNITY_cadastro-alunos.js|cadastro-alunos.js]]
+- [[_COMMUNITY_concorrencia.js|concorrencia.js]]
+- [[_COMMUNITY_config.js|config.js]]
+- [[_COMMUNITY_controle-gastos.js|controle-gastos.js]]
+- [[_COMMUNITY_dashboard.js|dashboard.js]]
+- [[_COMMUNITY_fechamento-horas.js|fechamento-horas.js]]
+- [[_COMMUNITY_horas-voadas-inva.js|horas-voadas-inva.js]]
+- [[_COMMUNITY_inicio.js|inicio.js]]
+- [[_COMMUNITY_progresso-alunos.js|progresso-alunos.js]]
+- [[_COMMUNITY_access-control.js|access-control.js]]
+- [[_COMMUNITY_admin.js|admin.js]]
+- [[_COMMUNITY_auth.js|auth.js]]
+- [[_COMMUNITY_bases.js|bases.js]]
+- [[_COMMUNITY_cadastro-alunos.js|cadastro-alunos.js]]
+- [[_COMMUNITY_concorrencia.js|concorrencia.js]]
+- [[_COMMUNITY_config.js|config.js]]
+- [[_COMMUNITY_controle-gastos.js|controle-gastos.js]]
+- [[_COMMUNITY_dashboard.js|dashboard.js]]
+- [[_COMMUNITY_fechamento-horas.js|fechamento-horas.js]]
+- [[_COMMUNITY_horas-voadas-inva.js|horas-voadas-inva.js]]
+- [[_COMMUNITY_inicio.js|inicio.js]]
+- [[_COMMUNITY_progresso-alunos.js|progresso-alunos.js]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_PWA Mobile Icon|PWA Mobile Icon]]
+- [[_COMMUNITY_PWA Mobile Maskable Icon|PWA Mobile Maskable Icon]]
+- [[_COMMUNITY_SAFE Hub Logo|SAFE Hub Logo]]
+- [[_COMMUNITY_SAFE Escola de Aviação -|SAFE Escola de Aviação -]]
+- [[_COMMUNITY_Minion Mascot|Minion Mascot]]
+- [[_COMMUNITY_Importar XLS do CAVOK|Importar XLS do CAVOK]]
+- [[_COMMUNITY_Menu de acoes drop-up|Menu de acoes drop-up]]
 - [[_COMMUNITY_Armadilha table-layout fixed  nth-child|Armadilha table-layout fixed / nth-child]]
 - [[_COMMUNITY_Modelo de excecoes GRANTDENY|Modelo de excecoes GRANT/DENY]]
-- [[_COMMUNITY_Feature flag Auth.NOTAMS_ATIVO|Feature flag Auth.NOTAMS_ATIVO]]
-- [[_COMMUNITY_Padrao UI atualizacao otimista com rollback|Padrao UI atualizacao otimista com rollback]]
-- [[_COMMUNITY_Auditoria de alterações (LOG trail) — Escala CCO|Auditoria de alterações (LOG trail) — Escala CCO]]
-- [[_COMMUNITY_ehAuditor_  ehAdmin_ (guards server-side)|ehAuditor_ / ehAdmin_ (guards server-side)]]
+- [[_COMMUNITY_Padrao UI atualizacao otimista com|Padrao UI atualizacao otimista com]]
+- [[_COMMUNITY_Uso obrigatório do Graphify|Uso obrigatório do Graphify]]
+- [[_COMMUNITY_SAFE Hub Brand|SAFE Hub Brand]]
+- [[_COMMUNITY_SAFE Hub Brand|SAFE Hub Brand]]
+- [[_COMMUNITY_SAFE Hub Brand|SAFE Hub Brand]]
+- [[_COMMUNITY_Auditoria de alterações|Auditoria de alterações]]
+- [[_COMMUNITY_ehAuditor_  ehAdmin_|ehAuditor_ / ehAdmin_]]
 - [[_COMMUNITY_HUB_ADMIN_USERS  sentinel safe-hub-admin|HUB_ADMIN_USERS / sentinel safe-hub-admin]]
+- [[_COMMUNITY_Escala PAV pageapp|Escala PAV page/app]]
+- [[_COMMUNITY_SAFE Hub Favicon|SAFE Hub Favicon]]
+- [[_COMMUNITY_Acesso Negado|Acesso Negado]]
+- [[_COMMUNITY_Apple Touch Icon|Apple Touch Icon]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_PWA Mobile Icon|PWA Mobile Icon]]
+- [[_COMMUNITY_PWA Mobile Maskable Icon|PWA Mobile Maskable Icon]]
+- [[_COMMUNITY_SAFE Hub Logo|SAFE Hub Logo]]
+- [[_COMMUNITY_SAFE Escola de Aviação -|SAFE Escola de Aviação -]]
+- [[_COMMUNITY_Minion Mascot|Minion Mascot]]
+- [[_COMMUNITY_SAFE Hub Favicon|SAFE Hub Favicon]]
+- [[_COMMUNITY_preview-guard.js|preview-guard.js]]
+- [[_COMMUNITY_preview-guard.js|preview-guard.js]]
+- [[_COMMUNITY_preview-guard.js|preview-guard.js]]
+- [[_COMMUNITY_Acesso Negado|Acesso Negado]]
+- [[_COMMUNITY_Apple Touch Icon|Apple Touch Icon]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_PWA Mobile Icon|PWA Mobile Icon]]
+- [[_COMMUNITY_PWA Mobile Maskable Icon|PWA Mobile Maskable Icon]]
+- [[_COMMUNITY_SAFE Hub Logo|SAFE Hub Logo]]
+- [[_COMMUNITY_SAFE Escola de Aviação -|SAFE Escola de Aviação -]]
+- [[_COMMUNITY_Minion Mascot|Minion Mascot]]
+- [[_COMMUNITY_Bases SAFE Page|Bases SAFE Page]]
+- [[_COMMUNITY_SAFE Hub Favicon|SAFE Hub Favicon]]
+- [[_COMMUNITY_Acesso Negado|Acesso Negado]]
+- [[_COMMUNITY_Apple Touch Icon|Apple Touch Icon]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_SAFE Hub PWA Desktop Icon|SAFE Hub PWA Desktop Icon]]
+- [[_COMMUNITY_PWA Mobile Icon|PWA Mobile Icon]]
+- [[_COMMUNITY_PWA Mobile Maskable Icon|PWA Mobile Maskable Icon]]
+- [[_COMMUNITY_SAFE Hub Logo|SAFE Hub Logo]]
+- [[_COMMUNITY_SAFE Escola de Aviação -|SAFE Escola de Aviação -]]
+- [[_COMMUNITY_Minion Mascot|Minion Mascot]]
+- [[_COMMUNITY_Bases SAFE Page|Bases SAFE Page]]
+- [[_COMMUNITY_SAFE Hub Favicon|SAFE Hub Favicon]]
+- [[_COMMUNITY_Credenciais padrão|Credenciais padrão]]
+- [[_COMMUNITY_Integração da Escala CCO|Integração da Escala CCO]]
+- [[_COMMUNITY_Identidade única por e-mail unificando|Identidade única por e-mail unificando]]
+- [[_COMMUNITY_Integração direta com API CAVOK|Integração direta com API CAVOK]]
+- [[_COMMUNITY_Perfis de acesso|Perfis de acesso]]
+- [[_COMMUNITY_SAFE MINIONS processa arquivos localmente|SAFE MINIONS processa arquivos localmente]]
+- [[_COMMUNITY_Setup do backend Apps Script|Setup do backend Apps Script]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Concorrência (page)` - 12 edges
-2. `SAFE Hub — Variante Refinado (Início)` - 12 edges
-3. `SAFE Hub — Variante Clean / SaaS (Início)` - 12 edges
-4. `Controle de Gastos (page)` - 12 edges
-5. `SETUP — Passo a passo completo` - 11 edges
-6. `CLAUDE.md — Regras do Projeto SAFE Hub` - 10 edges
-7. `PAV · Fechamento Financeiro` - 10 edges
-8. `Admin — Gestão de Usuários (page)` - 10 edges
-9. `cmdSenha()` - 9 edges
-10. `cmdRemover()` - 9 edges
+1. `css/layout.css` - 30 edges
+2. `Fechamento de Horas / Cotistas page (fechamento-horas.html)` - 26 edges
+3. `Vendas page (vendas.html)` - 26 edges
+4. `Pagina Cadastro de Aluno (cadastro-alunos.html)` - 23 edges
+5. `Pagina NOTAMs (notams.html)` - 22 edges
+6. `Página Visão Geral (Dashboard)` - 22 edges
+7. `Progresso de Alunos page (progresso-alunos.html)` - 21 edges
+8. `Página Horas Voadas INVA Mês` - 21 edges
+9. `Página Aniversários` - 20 edges
+10. `Controle de Acesso page (access-control.html)` - 19 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Toggle modo claro/escuro escopado (notam-theme-btn)` --semantically_similar_to--> `Modo escuro (body.dark)`  [INFERRED] [semantically similar]
-  notams.html → escala-cco.html
+- `Progresso de Alunos page (progresso-alunos.html)` --semantically_similar_to--> `Página Aniversários`  [INFERRED] [semantically similar]
+  progresso-alunos.html → /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/aniversarios.html
 - `Gestão de Usuários page (admin.html)` --conceptually_related_to--> `RBAC — grupos e permissões efetivas`  [INFERRED]
   admin.html → access-control.html
-- `Escala PAV — Seletor Operacional (preview)` --semantically_similar_to--> `Trava de gravação (somente leitura)`  [INFERRED] [semantically similar]
-  preview/pav/index.html → preview/index.html
-- `Pagina Escala CCO (escala-cco.html)` --references--> `RBAC baseado em permissoesEfetivas`  [INFERRED]
-  escala-cco.html → CLAUDE.md
-- `Concorrência (page)` --references--> `css/layout.css`  [EXTRACTED]
-  concorrencia.html → admin.html
+- `step4() resumo de faturamento por canal` --semantically_similar_to--> `renderTabelaFat()`  [INFERRED] [semantically similar]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/debug.html → faturamento.html
+- `css/access-control.css (Controle de Acesso)` --conceptually_related_to--> `css/layout.css`  [INFERRED]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/access-control.html → admin.html
+- `css/aniversarios.css (Aniversários)` --conceptually_related_to--> `css/layout.css`  [INFERRED]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/aniversarios.html → admin.html
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
+- **Fluxo stale-while-revalidate do cache local PAV** — escala_pav_lercachepav, escala_pav_gravarcachepav, escala_pav_entrarnoapp, escala_pav_carregarfinanceiro, escala_pav_atualizarpreviewexport, escala_pav_stale_while_revalidate [EXTRACTED 1.00]
+- **Gate de permissões da Escala PAV (RBAC + perfil legado)** — escala_pav_configuraracessospav, escala_pav_aplicaracessospav, escala_pav_acessos, escala_pav_setactiveview, escala_pav_bootstrap, escala_pav_auth_integracao_hub [EXTRACTED 1.00]
+- **Fluxo de edição pendente e salvamento da escala** — escala_pav_escalaeditada, escala_pav_moverpav, escala_pav_modaldiaconfirm, escala_pav_escalarsemana, escala_pav_replicarmes, escala_pav_salvarescala, escala_pav_beforeunload_guard [EXTRACTED 1.00]
+- **Fluxo do Histórico de auditoria (gate → getLog → render)** — escala_cco_canviewlog_gate, escala_cco_abrirmodalhistorico, escala_cco_carregarhistorico, escala_cco_histentries, escala_cco_renderhistorico, escala_cco_actor_vs_by [EXTRACTED 1.00]
+- **Serialização de escritas na escala (fila + otimista + leitura pós-commit)** — escala_cco_toggleshift, escala_cco_gaswrite, escala_cco_gaswritechain, escala_cco_loadmonth, escala_cco_optimistic_rollback_turno, escala_cco_schedule_fixes [EXTRACTED 1.00]
+- **Fluxo de exportação iFood (2 etapas → XLSX)** — escala_cco_abrirmodalexport, escala_cco_atualizarpreviewexport, escala_cco_exportirparaconfirmacao, escala_cco_exportconfirmarexportacao, escala_cco_gerarxlsxifood, escala_cco_computefinformonth, escala_cco_layout_planilha_ifood [EXTRACTED 1.00]
+- **Invariantes de layout mobile da auditoria 2026-07-26** — claude_layout_mobile_invariantes, claude_sidebar_height_dvh, claude_concorrencia_grids_separados, claude_escala_pav_topbar, claude_cache_bust [EXTRACTED 1.00]
+- **Cadeia RBAC do frontend: catálogo, cargo e matriz de acessos** — claude_rbac, claude_auth_paginas, claude_cargos_matriz_rbac, admin_select_cargo, admin_matriz_acesso, admin_select_perfil_legado [INFERRED 0.85]
+- **Template e entrega do e-mail de aniversário** — claude_modulo_aniversarios, claude_logo_embutido_cid, claude_modo_escuro_gmail, claude_descadastro_sem_login, claude_entrega_email [EXTRACTED 1.00]
+- **Pilha de assets carregada por toda página do Hub** — css_safe_theme, css_layout, js_config, js_api, js_auth, app_shell_layout [EXTRACTED 1.00]
+- **Padrão de faixa de KPIs repetido nos módulos** — dashboard_kpis, aniv_kpis, fh_kpis, horas_inva_kpis, progresso_kpis, access_control_kpis [INFERRED 0.85]
+- **Ingestão de dados do CAVOK por três telas distintas** — cadastro_upload_cavok, fh_modal_upload, fh_btn_cavok_api, horas_inva_btn_sincronizar, xlsx_local_safe_minions, xlsx_cdn [INFERRED 0.85]
 - **Fluxo de auditoria: actor (autor real) vs by (auth), gravado por logAudit_** — escala_cco_actor_param, escala_cco_by_param, escala_cco_logaudit, escala_cco_currentuser_autor, escala_cco_hub_admin_users_sentinel [EXTRACTED 0.90]
 - **Mutações que passam actor+by ao logAudit_** — escala_cco_setshift, escala_cco_setconfig, escala_cco_saveuser, escala_cco_toggleuseractive [EXTRACTED 0.90]
 - **Feature de auditoria/historico de alteracoes de turnos** — escala_cco_audit_log, escala_cco_getlog_action, escala_cco_historico_modal [INFERRED 0.85]
@@ -234,219 +236,263 @@
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_refinado_debug_receita_global_calculo, preview_refinado_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_refinado_escala_pav_view_calendario, preview_refinado_escala_pav_view_financeiro, preview_refinado_escala_pav_view_cadastro [INFERRED 0.80]
 
-## Communities (182 total, 122 thin omitted)
+## Communities (175 total, 108 thin omitted)
 
-### Community 0 - "Escala CCO — Backend & Export"
-Cohesion: 0.08
-Nodes (29): Auth.PAGINAS (fonte unica frontend), Cargos e grupos padrao (ACCESS_DEFAULT_GROUPS), Modulo NOTAMs (SBSJ/SDAM via AISWEB/DECEA), RBAC baseado em permissoesEfetivas, Param `actor` (autor real: Nome (email) da sessão SSO do Hub), Distinção `actor` vs `by` na auditoria, Trilha de auditoria LOG (quem alterou turnos), Param `by` (principal de auth / sentinel; governa guards) (+21 more)
+### Community 0 - "Escala PAV Frontend"
+Cohesion: 0.07
+Nodes (54): abrirModalDia(), abrirModalExport(), state.acessos (matriz de permissões da tela), api() — fetch wrapper to container-bound GAS backend, API_URL (backend container-bound da Escala PAV), aplicarAcessosPav(), aplicarEscala(), atualizarPreviewExport() (+46 more)
 
-### Community 1 - "Vendas, Faturamento & Dashboard"
+### Community 1 - "RBAC e Gestão de Usuários"
+Cohesion: 0.06
+Nodes (42): Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel, Diretório de Acessos Table, Gestão de Usuários (Admin) Page, Identidade Única por E-mail (concept), Modal Novo/Editar Usuário, Senha Padrão = CPF (rationale) (+34 more)
+
+### Community 2 - "Matriz de Acesso por Cargo"
+Cohesion: 0.06
+Nodes (41): access-control.html (gerenciar cargos), Campos operacionais do CCO (iniciais, cor, escala), Diretório de acessos (tabela de usuários com abas e filtros), Matriz de acessos por módulo (#u-matriz-acesso), Matriz RBAC de acesso por módulo (cargo + Ver/Editar), Modal de Usuário (criar/editar), Select de Cargo (#u-cargo), Select de perfil legado oculto (#u-perfil) (+33 more)
+
+### Community 3 - "Login e Proteção de Página"
+Cohesion: 0.07
+Nodes (20): Acesso Restrito (page), Botão "+ Nova base" começa hidden e é liberado por permissão, Login (page), fazerLogin() → Auth.login(), Login por e-mail corporativo, Tela de Login (index.html), AccessControl, Aniversarios (+12 more)
+
+### Community 4 - "Padrões de UI e Armadilhas"
+Cohesion: 0.07
+Nodes (38): Armadilha do table-layout fixed e das regras nth-child, Cadastro de Aluno: menu drop-up e seleção em massa, Guarda de nome inválido vindo do CAVOK, Padrão de UI: atualização otimista com rollback, KPIs de gastos, horas voadas e custo por hora, Aba Categorias de gastos (ativar/inativar), Aba Fechamento Mensal (editor por categoria e base), Aba Receita Total por Base (SJK e CPN) (+30 more)
+
+### Community 5 - "Bases SAFE e Preview"
+Cohesion: 0.13
+Nodes (34): Base Bragança Paulista, Base Jundiaí, Base Sorocaba, Preview de Redesign — SAFE Hub (Seletor), Trava de gravação (somente leitura), Redesign 1 · Refinado (card), Redesign 2 · Clean / SaaS (card), Redesign 3 · Dashboard denso (card) (+26 more)
+
+### Community 6 - "Dashboard e Faturamento"
 Cohesion: 0.06
 Nodes (34): KPI Receita Global (Vendas + Faturamento), Performance por Consultor (PAC) Chart, Dashboard / Visão Geral Page, Diagnóstico SAFE Hub Page, Detecção de Inconsistência MES/ANO vs DATA, Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale), Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page (+26 more)
 
-### Community 2 - "CLAUDE.md · RBAC · NOTAMs"
+### Community 7 - "Controle de Gastos"
+Cohesion: 0.08
+Nodes (32): Card de resumo da última importação, Importação do XLS do CAVOK (input file + label como botão), Chart.js 4.4.0 (CDN), Categorias de gastos (tabela + modal), Fechamento mensal (editor por base SJK/CPN), Controle de Gastos (page), Receita total por base, Visão Geral (KPIs + gráficos Chart.js) (+24 more)
+
+### Community 8 - "Cadastro de Aluno e Gastos"
+Cohesion: 0.06
+Nodes (31): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab (+23 more)
+
+### Community 9 - "SAFE MINIONS e Horas INVA"
+Cohesion: 0.06
+Nodes (31): Atualizar pela API CAVOK, Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Sincronizar CAVOK (Instrutores/Horas), Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos (+23 more)
+
+### Community 10 - "Controle de Acesso e Grupos"
 Cohesion: 0.11
-Nodes (19): Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab, Visão Geral Tab (Gastos), Visão Geral Tab (Horas por Mês), Acesso Somente Visualização (rationale) (+11 more)
+Nodes (29): Painel do catálogo de permissões, Overview de KPIs (grupos ativos, permissões catalogadas, usuários em grupos), Modal criar/editar grupo (nome, id, descrição, ativo, permissões), Controle de Acesso page (access-control.html), Painel de grupos de acesso com busca, Card "Você não possui acesso a este módulo", CSS embutido da página (não usa arquivo de módulo), Página Acesso restrito (+21 more)
 
-### Community 3 - "Alunos, Gastos & Fechamento de Horas"
-Cohesion: 0.09
-Nodes (23): Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos, Tipo PPA — Piloto Privado de Avião, Upload de Extrato SACI (.xlt/.xltx/.xlsx/.xls) (+15 more)
-
-### Community 4 - "SAFE MINIONS · Horas INVA · CAVOK"
+### Community 11 - "Admin CLI"
 Cohesion: 0.22
 Nodes (23): ajuda(), apiGet(), apiPost(), c, cmdAdicionar(), cmdListar(), cmdRemover(), cmdResetar() (+15 more)
 
-### Community 5 - "Admin CLI"
+### Community 12 - "Auditoria da Escala CCO"
 Cohesion: 0.10
-Nodes (22): Admin Panel — Valor por Turno Presencial, Calendário (Escala Mensal do Time), Dashboard de Métricas e Relatórios (CCO), Escala CCO App (Centro de Controle de Operações), Fechamento Financeiro (Total Pago no Mês/Ano), Exportar iFood (Planilha do Mês), iFood Benefícios (Plataforma de Pagamento), Ações Críticas (Escalar Dia / por Semana) (+14 more)
+Nodes (25): Cargos e grupos padrao (ACCESS_DEFAULT_GROUPS), RBAC baseado em permissoesEfetivas, Param `actor` (autor real: Nome (email) da sessão SSO do Hub), Distinção `actor` vs `by` na auditoria, Trilha de auditoria LOG (quem alterou turnos), Param `by` (principal de auth / sentinel; governa guards), Grade de calendario de turnos (calendarGrid), Permissão canViewLog (coluna O do usuarios) (+17 more)
 
-### Community 6 - "Escala CCO & PAV — App/Views"
-Cohesion: 0.14
-Nodes (20): Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel, Diretório de Acessos Table, Gestão de Usuários (Admin) Page, Identidade Única por E-mail (concept), Modal Novo/Editar Usuário, Senha Padrão = CPF (rationale) (+12 more)
+### Community 13 - "Cache e Dashboard da CCO"
+Cohesion: 0.15
+Nodes (22): applyScheduleFixes(monthKey, data), applyScheduleOverrides(data), dashCache (cache por mês do dashboard, inclui shiftValue histórico), gasWriteChain (fila serial de gravações), getScheduleOverrides(), initDash(), loadAllMonths() (carrega os 8 meses em paralelo, com cache), loadMonth() (+14 more)
 
-### Community 7 - "Controle de Acesso (RBAC UI)"
+### Community 14 - "Admin e Bases SAFE"
+Cohesion: 0.16
+Nodes (19): Card de alterar minha senha, Diretório de acessos (tabela + tabs + filtros), Admin — Gestão de Usuários (page), Grid de bases (unidades), Bases SAFE (page), Aviso de que os dados aparecem na página inicial, Modal de base (nova/editar unidade), Bases SAFE page (bases.html) (+11 more)
+
+### Community 15 - "README de Instalação"
 Cohesion: 0.11
 Nodes (18): 1. Configurar o Google Sheets, 2. Configurar o Apps Script, 3. Configurar o frontend, 4. Migrar dados históricos (opcional), 5. Deploy no GitHub Pages, Atualizações automáticas CAVOK, Configurar a Escala CCO, Configurar o Fechamento de Horas (+10 more)
 
-### Community 8 - "README / Setup"
-Cohesion: 0.25
-Nodes (17): Base Bragança Paulista, Base Jundiaí, Base Sorocaba, Preview de Redesign — SAFE Hub (Seletor), Trava de gravação (somente leitura), Redesign 1 · Refinado (card), Redesign 2 · Clean / SaaS (card), Redesign 3 · Dashboard denso (card) (+9 more)
+### Community 16 - "Gating Legado por Atributo"
+Cohesion: 0.19
+Nodes (16): Gestão de Usuários page (admin.html), Controle de Gastos page (controle-gastos.html), Grade de KPIs (vendas, receita global, receita, total geral, ticket, leads), Seletor de mês/ano na topbar, Gating legado por atributo (data-admin-only / data-finance-only / data-write-only / data-pac-only), Faturamento page (faturamento.html), Filtros da aba Por Curso (curso, nome, e-mail), Coluna PAC removida do DOM para não-admin (+8 more)
 
-### Community 9 - "Bases SAFE & Preview Redesign"
+### Community 17 - "Aniversários e Fila Trello"
+Cohesion: 0.16
+Nodes (17): Bloco "Hoje" (aniversariantes do dia), Bloco "Próximos 7 dias", Faixa de KPIs de aniversários (render via JS em #aniv-kpis), Pílula de estado do envio automático no header (.aniv-pill), Tabela de aniversariantes do mês com seletor de mês, Página Aniversários, Pagina Cadastro de Aluno (cadastro-alunos.html), Barra de seleção em massa (sincronizar selecionados) (+9 more)
+
+### Community 18 - "Início e Login do Hub"
 Cohesion: 0.12
 Nodes (16): Bases SAFE Page, Login Page (SAFE Hub), Redireciona se já logado (localStorage/sessionStorage), Bases SAFE (Início), Início (Home Portal) Page, Módulos do SAFE Hub (por Perfil), Login Page (SAFE Hub), Redireciona se já logado (localStorage/sessionStorage) (+8 more)
 
-### Community 10 - "Login & Home Portal"
+### Community 19 - "Sessão e SSO da CCO"
+Cohesion: 0.25
+Nodes (15): Par de parâmetros by (auth) e actor (autor real do LOG), alternarAtivoFunc(username, reativar), alternarAtivoUser(uname, novoAtivo), Bootstrap DOMContentLoaded (SSO do Hub → sessão CCO), Gate canViewLog (quem enxerga o Histórico), currentUser (sessão ativa da Escala CCO), GAS_URL (endpoint do backend container-bound da Escala CCO), gasRequest(action, payload) (+7 more)
+
+### Community 20 - "Navegação e Drawer da CCO"
+Cohesion: 0.17
+Nodes (14): doLogin(e) (login próprio por e-mail + senha), drawerAction(action) (roteador de navegação do drawer), iniciarApp(u) (monta a UI conforme o papel), iniciarShellHub() (sidebar/hamburger do Hub), limparApp() (reset de UI entre sessões), setupDrawerForUser(u), syncDrawerState(), toggleDashView() (+6 more)
+
+### Community 21 - "CLAUDE.md Regras do Projeto"
+Cohesion: 0.17
+Nodes (11): Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09, Auditoria de alterações (Escala CCO) — desde 2026-07-22, Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20), Cargos e tela de criação de usuário (desde 2026-07-09), CLAUDE.md — Regras do Projeto SAFE Hub, Confiabilidade do grafo, Uso obrigatorio do Graphify, Módulo Aniversários de alunos — desde 2026-07-24 (+3 more)
+
+### Community 22 - "Financeiro e Export iFood"
+Cohesion: 0.20
+Nodes (12): computeFinForMonth(idx) (totais por turno e por usuário), criarCardUser(uname, isAtivo), editarUser(uname), exportIrParaConfirmacao() (etapa 2 do modal), Flag financeiroExclude (esconde alguém do financeiro e da exportação), formatCPF(v), formatPhone(v), isFinanceiro() (+4 more)
+
+### Community 26 - "Concorrência de Preços"
+Cohesion: 0.29
+Nodes (10): Concorrência (page), Comparativo de preços por curso + filtro, Escola concorrente, Barra de filtro por curso, Modal de concorrente (nova/editar), Modal de preço SAFE, Página Concorrência, Preço SAFE comparativo (+2 more)
+
+### Community 27 - "Funcionários da Escala CCO"
+Cohesion: 0.24
+Nodes (11): abrirModalNovoFunc(), Colisão de nome: toggleVerInativos definida duas vezes, criarCardFunc(u), editarFunc(username), histNomes(csv) (resolve usernames do LOG em nomes), isAdmin(), renderColorOptions(), renderFuncList() (+3 more)
+
+### Community 28 - "Pagina NOTAMs"
 Cohesion: 0.27
-Nodes (17): Módulo Escala CCO, Exportar iFood (fechamento PAV), PAV · Fechamento Financeiro, PAV · Calendário Operacional, PAV · Cadastro de PAVs, Ana Prado (PAV · SJK), André Lima (PAV · CPN), Base CPN · Campinas (+9 more)
+Nodes (10): Modulo NOTAMs (SBSJ/SDAM via AISWEB/DECEA), css/notams.css (NOTAMs), Abas por aeroporto SBSJ/SDAM e filtros de status, Indicador da última atualização do cache, Chips de filtro (todos, ativos hoje, com impacto, futuros) com contadores, Aviso enquanto a API do DECEA não está conectada, Pagina NOTAMs (notams.html), Abas por aeroporto (Todos, SBSJ, SDAM) (+2 more)
 
-### Community 15 - "API/UI Helpers (api.js)"
-Cohesion: 0.33
-Nodes (6): css/layout.css, css/vendas.css, Curso picker multiselect, Vendas (page), Modal de Venda (nova/editar), Registro de Vendas (tabela + filtros)
-
-### Community 16 - "API/UI Helpers (api.js)"
+### Community 29 - "appsscript.json"
 Cohesion: 0.22
 Nodes (8): dependencies, exceptionLogging, oauthScopes, runtimeVersion, timeZone, webapp, access, executeAs
 
-### Community 17 - "Cadastro de Aluno & Habilitações"
+### Community 30 - "Progresso de Alunos page"
+Cohesion: 0.39
+Nodes (8): css/progresso-alunos.css (Progresso de Alunos), Progresso de Alunos page (progresso-alunos.html), Busca por nome ou e-mail na aba Por Aluno, Detalhe do aluno com cursos matriculados, KPIs de progresso (total, não iniciado, em andamento, concluído), Paginação anterior/próxima da lista de alunos, Tabela de alunos do curso com filtro de status, Abas Por Aluno / Por Curso
+
+### Community 31 - "gerarXlsxIfood"
 Cohesion: 0.29
-Nodes (6): Grid de bases (unidades), Bases SAFE (page), Modal de base (nova/editar unidade), css/bases.css, css/safe-theme.css, Bases
+Nodes (8): abrirModalHistorico(), exportConfirmarExportacao(), exportPDF(), gerarXlsxIfood(usersToShow, totals, monthIdx), Layout fixo da planilha do iFood Benefícios, loadScript(src) (carga sob demanda de libs de CDN), Regra de pagamento: só T1+T2 são pagos, NOT não entra no total, showToast(msg, type)
 
-### Community 18 - "Concorrência"
-Cohesion: 0.25
-Nodes (8): Chart.js 4.4.0 (CDN), Categorias de gastos (tabela + modal), Fechamento mensal (editor por base SJK/CPN), Controle de Gastos (page), Receita total por base, Visão Geral (KPIs + gráficos Chart.js), css/controle-gastos.css, ControleGastos
-
-### Community 19 - "appsscript.json (manifest)"
-Cohesion: 0.25
-Nodes (8): Concorrência (page), Comparativo de preços por curso + filtro, Escola concorrente, Modal de concorrente (nova/editar), Modal de preço SAFE, Preço SAFE comparativo, css/concorrencia.css, Concorrencia
-
-### Community 20 - "Controle de Gastos (UI)"
-Cohesion: 0.18
-Nodes (11): access-control.html (gerenciar cargos), Card de alterar minha senha, Campos operacionais do CCO (iniciais, cor, escala), Diretório de acessos (tabela + tabs + filtros), Admin — Gestão de Usuários (page), Matriz RBAC de acesso por módulo (cargo + Ver/Editar), Modal de Usuário (criar/editar), css/admin.css (+3 more)
-
-### Community 21 - "Faturamento (funções)"
-Cohesion: 0.67
-Nodes (3): Barra de selecao em massa (#cadastro-bulk-bar), Abas de filtro (ativos/pendentes/trello/...), Selecao em massa aba Prontos Trello
-
-### Community 22 - "Community 22"
-Cohesion: 0.29
-Nodes (5): api() — fetch wrapper to container-bound GAS backend, carregarEscala(), carregarFinanceiro(), carregarPAVs(), entrarNoApp()
-
-### Community 23 - "Community 23"
-Cohesion: 0.25
-Nodes (4): abrirEdicaoMes(), carregarFaturamento(), excluirCanal(), renderTabelaFat()
-
-### Community 24 - "Community 24"
+### Community 32 - "Escala CCO App"
 Cohesion: 0.25
 Nodes (8): Admin Panel — Valor por Turno Presencial, Calendário (Escala Mensal do Time), Dashboard de Métricas e Relatórios (CCO), Escala CCO App (Centro de Controle de Operações), Fechamento Financeiro (Total Pago no Mês/Ano), Exportar iFood (Planilha do Mês), Gerenciar Funcionários (CCO), iFood Benefícios (Plataforma de Pagamento)
 
-### Community 25 - "Community 25"
+### Community 33 - "Escala CCO App"
 Cohesion: 0.25
 Nodes (8): Admin Panel — Valor por Turno Presencial, Calendário (Escala Mensal do Time), Dashboard de Métricas e Relatórios (CCO), Escala CCO App (Centro de Controle de Operações), Fechamento Financeiro (Total Pago no Mês/Ano), Exportar iFood (Planilha do Mês), Gerenciar Funcionários (CCO), iFood Benefícios (Plataforma de Pagamento)
 
-### Community 26 - "Community 26"
+### Community 34 - "vendas.js"
 Cohesion: 0.29
 Nodes (3): CURSOS_VENDAS, PACOTES_LEGADOS_CURSOS, Vendas
 
-### Community 27 - "Community 27"
+### Community 35 - "vendas.js"
 Cohesion: 0.29
 Nodes (3): CURSOS_VENDAS, PACOTES_LEGADOS_CURSOS, Vendas
 
-### Community 28 - "Community 28"
+### Community 36 - "vendas.js"
 Cohesion: 0.29
 Nodes (3): CURSOS_VENDAS, PACOTES_LEGADOS_CURSOS, Vendas
 
-### Community 29 - "Community 29"
+### Community 37 - "vendas.js"
 Cohesion: 0.29
 Nodes (3): CURSOS_VENDAS, PACOTES_LEGADOS_CURSOS, Vendas
 
-### Community 30 - "Community 30"
-Cohesion: 0.60
-Nodes (6): Controle de Acesso page (access-control.html), Gestão de Usuários page (admin.html), Controle de Gastos page (controle-gastos.html), Faturamento page (faturamento.html), RBAC — grupos e permissões efetivas, Vendas page (vendas.html)
+### Community 38 - "renderHistorico"
+Cohesion: 0.40
+Nodes (6): carregarHistorico() (action getLog), Alvo do LOG chega como AAAA-MM-DD e é reformatado no cliente, histEntries (cache local do getLog), histFmtData(ts), histTurnoLabel(t) (t1/t2/ho → T1/T2/NOT), renderHistorico() (linha do tempo antes → depois)
 
-### Community 31 - "Community 31"
+### Community 39 - "Horas Voadas INVA Mês"
 Cohesion: 0.33
 Nodes (6): Horas Voadas INVA Mês (page), Instrutor INVA cadastrado (CLT/Eventual), Sincronização de horas com o CAVOK, SAFE MINIONS (page), Análise de mínimos ANAC IS 141-007, Tipos de habilitação (PPA, PC/IFR, INVA)
 
-### Community 32 - "Community 32"
+### Community 40 - "preview-guard.js"
 Cohesion: 0.47
 Nodes (4): buildBar(), flash(), getAction(), urlFor()
 
-### Community 33 - "Community 33"
+### Community 41 - "preview-guard.js"
 Cohesion: 0.47
 Nodes (4): buildBar(), flash(), getAction(), urlFor()
 
-### Community 34 - "Community 34"
+### Community 42 - "preview-guard.js"
 Cohesion: 0.47
 Nodes (4): buildBar(), flash(), getAction(), urlFor()
 
-### Community 35 - "Community 35"
+### Community 43 - "Script inline de proteção e"
 Cohesion: 0.40
-Nodes (4): Acesso Restrito (page), Login (page), Login por e-mail corporativo, Inicio
+Nodes (4): Botão Voltar (history.back com fallback para inicio.html), Script inline de proteção e preenchimento da tela de acesso negado, Parâmetro de query ?recurso= com o nome do módulo bloqueado, Auth.proteger()
 
-### Community 36 - "Community 36"
+### Community 44 - "Dashboard / Visão Geral"
 Cohesion: 0.40
 Nodes (5): Dashboard / Visão Geral (page), KPI Receita Global (Vendas + Faturamento), KPIs de vendas (ticket médio, leads, ranking cursos, performance por consultor), Diagnóstico (page), Diagnóstico de divergência KPI x Faturamento
 
-### Community 37 - "Community 37"
+### Community 45 - "admin.js"
 Cohesion: 0.40
 Nodes (4): Admin, RBAC_CARGOS_OFERECIDOS, RBAC_MODULOS, RBAC_PERMS_BASE
 
-### Community 38 - "Community 38"
+### Community 46 - "Fechamento Mensal Tab"
 Cohesion: 0.40
 Nodes (5): Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fechamento Mensal Tab (Horas por Aeronave), Importar Relatório Cavok (XLS/XLSX), Visão Geral Tab (Horas por Mês)
 
-### Community 39 - "Community 39"
+### Community 47 - "Fechamento Mensal Tab"
 Cohesion: 0.40
 Nodes (5): Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fechamento Mensal Tab (Horas por Aeronave), Importar Relatório Cavok (XLS/XLSX), Visão Geral Tab (Horas por Mês)
 
-### Community 40 - "Community 40"
+### Community 48 - "atualizarPreviewExport"
+Cohesion: 0.50
+Nodes (4): abrirModalExport(), atualizarPreviewExport(), fmtMoedaCco(v), fmtR$(v, short)
+
+### Community 49 - "Progresso de Alunos Page"
 Cohesion: 0.50
 Nodes (4): Portal Newzenler (fonte de progresso), Por Aluno Tab, Por Curso Tab, Progresso de Alunos Page
 
-### Community 41 - "Community 41"
+### Community 50 - "Controle de Acesso"
 Cohesion: 0.50
 Nodes (4): RBAC — Grupos e Permissões Efetivas, Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel
 
-### Community 42 - "Community 42"
+### Community 51 - "Controle de Acesso"
 Cohesion: 0.50
 Nodes (4): RBAC — Grupos e Permissões Efetivas, Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel
 
-### Community 43 - "Community 43"
+### Community 52 - "Canais de Receita"
 Cohesion: 0.50
 Nodes (4): Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page, Modal Lançar Faturamento, Total exclui Vendas Comercial (rationale)
 
-### Community 44 - "Community 44"
+### Community 53 - "Progresso de Alunos Page"
 Cohesion: 0.50
 Nodes (4): Portal Newzenler (fonte de progresso), Por Aluno Tab, Por Curso Tab, Progresso de Alunos Page
 
-### Community 45 - "Community 45"
+### Community 54 - "Canais de Receita"
 Cohesion: 0.50
 Nodes (4): Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page, Modal Lançar Faturamento, Total exclui Vendas Comercial (rationale)
 
-### Community 46 - "Community 46"
+### Community 55 - "Progresso de Alunos Page"
 Cohesion: 0.50
 Nodes (4): Portal Newzenler (fonte de progresso), Por Aluno Tab, Por Curso Tab, Progresso de Alunos Page
 
-### Community 47 - "Community 47"
+### Community 56 - "Selecao em massa aba Prontos"
+Cohesion: 0.67
+Nodes (3): Barra de selecao em massa (#cadastro-bulk-bar), Abas de filtro (ativos/pendentes/trello/...), Selecao em massa aba Prontos Trello
+
+### Community 57 - "Concorrência Page"
 Cohesion: 0.67
 Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
 
-### Community 48 - "Community 48"
+### Community 58 - "Concorrência Page"
 Cohesion: 0.67
 Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
 
-### Community 49 - "Community 49"
+### Community 59 - "Concorrência Page"
 Cohesion: 0.67
 Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
 
-### Community 169 - "Atualizar pela API CAVOK"
-Cohesion: 0.10
-Nodes (20): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Atualizar pela API CAVOK, Fechamento de Horas / Cotistas Page, Fechamento Mensal Tab (Horas por Aeronave), Importar Relatório Cavok (XLS/XLSX), Sincronizar CAVOK (Instrutores/Horas) (+12 more)
-
-### Community 170 - "CLAUDE.md — Regras do Projeto SAFE Hub"
-Cohesion: 0.17
-Nodes (11): Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09, Auditoria de alterações (Escala CCO) — desde 2026-07-22, Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20), Cargos e tela de criação de usuário (desde 2026-07-09), CLAUDE.md — Regras do Projeto SAFE Hub, Confiabilidade do grafo, Módulo Aniversários de alunos — desde 2026-07-24, Módulo NOTAMs (bases SAFE) — desde 2026-07-17 (+3 more)
+## Ambiguous Edges - Review These
+- `carregarFaturamento()` → `KPIs de gastos, horas voadas e custo por hora`  [AMBIGUOUS]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/controle-gastos.html · relation: conceptually_related_to
+- `Auth.PAGINAS (fonte unica frontend)` → `Sidebar estática do admin com data-admin-only/data-finance-only`  [AMBIGUOUS]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/admin.html · relation: conceptually_related_to
+- `gasWriteChain (fila serial de gravações)` → `loadAllMonths() (carrega os 8 meses em paralelo, com cache)`  [AMBIGUOUS]
+  /Users/macbookpro/Documents/01. Código VSCODE SAFE/portal-hub-safe/escala-cco.html · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **311 isolated node(s):** `https`, `http`, `readline`, `crypto`, `c` (+306 more)
+- **344 isolated node(s):** `https`, `http`, `readline`, `crypto`, `c` (+339 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **122 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **108 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Horas Voadas INVA Mês Page` connect `Alunos, Gastos & Fechamento de Horas` to `Atualizar pela API CAVOK`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
-- **What connects `https`, `http`, `readline` to the rest of the system?**
-  _323 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Escala CCO — Backend & Export` be split into smaller, more focused modules?**
-  _Cohesion score 0.0812807881773399 - nodes in this community are weakly interconnected._
-- **Should `Vendas, Faturamento & Dashboard` be split into smaller, more focused modules?**
-  _Cohesion score 0.06417112299465241 - nodes in this community are weakly interconnected._
-- **Should `CLAUDE.md · RBAC · NOTAMs` be split into smaller, more focused modules?**
-  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
-- **Should `Alunos, Gastos & Fechamento de Horas` be split into smaller, more focused modules?**
-  _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
-- **Should `Admin CLI` be split into smaller, more focused modules?**
-  _Cohesion score 0.1038961038961039 - nodes in this community are weakly interconnected._
+- **What is the exact relationship between `carregarFaturamento()` and `KPIs de gastos, horas voadas e custo por hora`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **What is the exact relationship between `Auth.PAGINAS (fonte unica frontend)` and `Sidebar estática do admin com data-admin-only/data-finance-only`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **What is the exact relationship between `gasWriteChain (fila serial de gravações)` and `loadAllMonths() (carrega os 8 meses em paralelo, com cache)`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **Why does `Pagina NOTAMs (notams.html)` connect `Pagina NOTAMs` to `Matriz de Acesso por Cargo`, `Login e Proteção de Página`, `Controle de Acesso e Grupos`, `Auditoria da Escala CCO`, `Admin e Bases SAFE`?**
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `Auth.PAGINAS (fonte unica frontend)` connect `Matriz de Acesso por Cargo` to `Pagina NOTAMs`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **Why does `Módulo Aniversários de alunos` connect `Matriz de Acesso por Cargo` to `Padrões de UI e Armadilhas`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+- **Are the 12 inferred relationships involving `css/layout.css` (e.g. with `css/access-control.css (Controle de Acesso)` and `css/aniversarios.css (Aniversários)`) actually correct?**
+  _`css/layout.css` has 12 INFERRED edges - model-reasoned connections that need verification._
