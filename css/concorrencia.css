@@ -231,11 +231,17 @@
 }
 
 /* ── Responsive ────────────────────────────────────────── */
+/* A última faixa é a das ações e precisa caber os dois `btn-icon` de 32px
+   (mais 1,5px de borda de cada lado) com 4px de gap, ou seja 74px. Ela era
+   de 60px e 48px: como a faixa é fixa e o `.conc-acoes` alinha à direita, os
+   botões transbordavam PARA A ESQUERDA e ficavam por cima da coluna de valor.
+   Ao mexer aqui, os três seletores têm que continuar com o MESMO template,
+   senão o cabeçalho desalinha das linhas (são grids separados). */
 @media (max-width: 900px) {
   .conc-thead,
   .conc-row,
   .conc-safe-row {
-    grid-template-columns: 2fr 1fr 1fr 60px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) 76px;
   }
   .conc-aeronave-col,
   .conc-obs { display: none; }
@@ -245,9 +251,13 @@
   .conc-thead,
   .conc-row,
   .conc-safe-row {
-    grid-template-columns: 1fr 1fr 48px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 76px;
   }
   .conc-thead > div:nth-child(3),
   .conc-row > div:nth-child(3),
   .conc-safe-row > div:nth-child(3) { display: none; }
+
+  /* Sem isto o texto e o botão disputam a mesma linha e o botão espreme
+     a frase até ela virar uma coluna de uma palavra por linha. */
+  .conc-safe-vazio { flex-wrap: wrap; }
 }

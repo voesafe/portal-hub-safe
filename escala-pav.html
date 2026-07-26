@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Raleway:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/safe-theme.css">
-  <link rel="stylesheet" href="css/layout.css?v=20260608-fixed-topbar">
+  <link rel="stylesheet" href="css/layout.css?v=20260726-mobile-v1">
   <style>
 /* ===== Escala PAV — estilos originais, escopados sob .pav-app ===== */
 /* ═══════════════════════════════════════════
@@ -683,10 +683,29 @@ body.dark .pav-app select.field-input{background-image:url("data:image/svg+xml,%
    RESPONSIVO MOBILE
 ══════════════════════════════════════════ */
 @media (max-width: 768px){
-  .pav-app .topbar{padding:0 12px;height:56px;gap:6px}
-  .pav-app #appScreen{padding-top:56px}
+  /* A topbar era `position:fixed` com `height:56px` e sem quebra de linha.
+     As 3 abas mais tema mais Sair pedem uns 350px, e o lado esquerdo mais
+     160px: em 390px não cabia, os dois lados colidiam no meio e o Sair saía
+     da tela (o `body` tem overflow-x:hidden, então nem dava para alcançar).
+     No celular ela passa a fluir no documento e a quebrar em duas faixas.
+     Assim NUNCA sobrepõe, por mais estreita que seja a tela ou por mais
+     botões que entrem aqui depois. O custo é a topbar rolar junto com o
+     conteúdo no celular, o que é preferível a um botão inacessível.
+     `position:static` anula o top/left/right herdados, e o `padding-top` do
+     #appScreen (que compensava a topbar fixa) tem que ir a zero junto. */
+  .pav-app .topbar{
+    position:static;
+    height:auto;min-height:56px;
+    flex-wrap:wrap;
+    padding:10px 12px;
+    gap:8px 6px; /* linha 8px, coluna 6px. Shorthand por último, senão ele
+                    zeraria um row-gap declarado antes. */
+  }
+  .pav-app #appScreen{padding-top:0}
+  .pav-app .topbar-right{flex-wrap:wrap;width:100%;justify-content:flex-start;gap:6px}
   .pav-app .topbar-divider,.pav-app .topbar-title{display:none}
   .pav-app .tab-btn{font-size:11px;padding:6px 8px}
+  .pav-app .btn-logout{font-size:11px;padding:6px 10px}
   .pav-app .topbar-logo-text{font-size:13px}
 
   .pav-app #viewCalendario,.pav-app #viewFinanceiro,.pav-app #viewCadastro{padding:12px}
@@ -733,7 +752,9 @@ body.dark .pav-app select.field-input{background-image:url("data:image/svg+xml,%
 }
 
 @media (max-width: 480px){
-  .pav-app .topbar{padding:0 10px}
+  /* Só o padding lateral. O vertical fica no valor do bloco de 768px,
+     senão a topbar volta a colar nos botões. */
+  .pav-app .topbar{padding-inline:10px}
   .pav-app .tab-btn{padding:5px 7px;font-size:10px}
 
   .pav-app .cal-day{min-height:70px;padding:4px}

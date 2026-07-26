@@ -18,9 +18,17 @@ html, body {
 }
 
 /* ── Sidebar ───────────────────────────────────────────────── */
+/* Altura TRAVADA na viewport, nunca `min-height`. Com min-height a sidebar
+   crescia junto com o menu (superadmin passa de 800px de itens), e como ela é
+   `position: fixed` com `overflow: hidden`, o rodapé com o usuário e o botão
+   Sair ficava abaixo da dobra sem nenhuma forma de rolar até ele. Com altura
+   fixa, quem rola é o `.sidebar-nav` (flex: 1) e o rodapé fica preso embaixo.
+   `dvh` acompanha a barra de endereço do navegador no celular; `vh` é o
+   fallback para navegadores sem suporte. */
 .sidebar {
   width: min(300px, 88vw);
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   background: var(--navy);
   display: flex;
   flex-direction: column;
@@ -39,6 +47,7 @@ html, body {
 .sidebar-brand {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 12px;
   padding: 20px 16px;
   border-bottom: 1px solid rgba(255,255,255,.08);
@@ -72,6 +81,10 @@ html, body {
 
 .sidebar-nav {
   flex: 1;
+  /* `min-height: 0` para o nav poder encolher abaixo do próprio conteúdo:
+     sem isso o item flex se recusa a diminuir e volta a empurrar o rodapé
+     para fora da tela. É o par obrigatório do `height` fixo acima. */
+  min-height: 0;
   padding: 14px 10px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -286,6 +299,7 @@ html, body {
 }
 
 .sidebar-footer {
+  flex-shrink: 0;
   padding: 12px 8px;
   border-top: 1px solid rgba(255,255,255,.08);
 }
