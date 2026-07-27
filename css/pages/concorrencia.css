@@ -5,7 +5,7 @@
 
 /* ── Comparativo por curso ─────────────────────────────── */
 .conc-bloco {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   margin-bottom: 20px;
@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: var(--navy);
+  background: var(--brand-surface);
   gap: 12px;
 }
 
@@ -25,7 +25,7 @@
   font-family: var(--font-title);
   font-size: .95rem;
   font-weight: 700;
-  color: var(--white);
+  color: var(--text-on-brand);
   margin: 0;
 }
 
@@ -52,7 +52,7 @@
 .conc-thead {
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
 }
 
 .conc-thead > div {
@@ -60,7 +60,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .07em;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }
 
 /* Linha SAFE — destaque */
@@ -75,10 +75,10 @@
 .conc-row {
   padding-top: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
   transition: background .15s;
 }
-.conc-row:hover { background: var(--off-white); }
+.conc-row:hover { background: var(--bg); }
 .conc-row:last-of-type { border-bottom: none; }
 
 .conc-separador {
@@ -92,7 +92,7 @@
 .conc-escola-nome {
   font-weight: 600;
   font-size: .875rem;
-  color: var(--navy);
+  color: var(--text);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -101,13 +101,13 @@
 
 .conc-by {
   font-size: .72rem;
-  color: var(--gray-400);
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
 .conc-aeronave {
   font-size: .72rem;
-  color: var(--gray-400);
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
@@ -120,7 +120,7 @@
 .conc-valor > .conc-val-num {
   font-weight: 700;
   font-size: .9rem;
-  color: var(--navy);
+  color: var(--text);
 }
 
 .conc-safe-row .conc-valor > span:first-child:not(.text-muted) {
@@ -129,18 +129,18 @@
 
 .conc-label {
   font-size: .7rem;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .conc-aeronave-col {
   font-size: .85rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .conc-obs {
   font-size: .82rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .conc-obs-text {
@@ -161,9 +161,9 @@
 .conc-vazio-curso {
   padding: 24px 20px;
   font-size: .85rem;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-style: italic;
-  border-top: 1px dashed var(--gray-200);
+  border-top: 1px dashed var(--border);
 }
 
 .conc-safe-vazio {
@@ -175,7 +175,7 @@
   background: rgba(243,156,18,.04);
   border-left: 3px solid var(--warning);
   font-size: .85rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 /* ── Filtro topo ───────────────────────────────────────── */
@@ -188,13 +188,13 @@
 }
 
 .filtro-bar select {
-  border: 1.5px solid var(--gray-200);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 8px 12px;
   font-size: .875rem;
   font-family: var(--font-body);
-  color: var(--navy);
-  background: var(--white);
+  color: var(--text);
+  background: var(--surface);
   outline: none;
   transition: var(--transition);
   min-width: 220px;
@@ -217,7 +217,7 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  background: var(--white);
+  background: var(--surface);
   padding: 24px 32px;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
@@ -225,7 +225,7 @@
 .loading-card p {
   font-size: .82rem;
   font-weight: 600;
-  color: var(--gray-400);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: .05em;
 }

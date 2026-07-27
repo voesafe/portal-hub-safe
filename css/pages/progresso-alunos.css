@@ -18,7 +18,7 @@
 .progresso-tabs {
   display: flex;
   gap: 4px;
-  border-bottom: 2px solid var(--gray-200);
+  border-bottom: 2px solid var(--border);
   padding-bottom: 0;
   margin-bottom: 0;
 }
@@ -27,7 +27,7 @@
   padding: 10px 20px;
   font-size: .88rem;
   font-weight: 600;
-  color: var(--gray-500);
+  color: var(--text-muted);
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
@@ -36,8 +36,8 @@
   transition: var(--transition);
 }
 
-.progresso-tab:hover { color: var(--navy); }
-.progresso-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+.progresso-tab:hover { color: var(--text); }
+.progresso-tab.active { color: var(--text); border-bottom-color: var(--brand-surface); }
 
 .progresso-view { display: none; flex-direction: column; gap: 20px; }
 .progresso-view.active { display: flex; }
@@ -54,8 +54,8 @@
   align-items: center;
   gap: 14px;
   padding: 14px 18px;
-  background: var(--white);
-  border: 1.5px solid var(--gray-200);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   cursor: pointer;
   text-align: left;
@@ -64,14 +64,14 @@
 }
 
 .pa-aluno-card:hover   { border-color: var(--blue); box-shadow: var(--shadow-sm); }
-.pa-aluno-card.selected { border-color: var(--navy); background: var(--gray-100); }
+.pa-aluno-card.selected { border-color: var(--brand-surface); background: var(--surface-2); }
 
 .pa-aluno-avatar {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: var(--navy);
-  color: var(--white);
+  background: var(--brand-surface);
+  color: var(--text-on-brand);
   font-family: var(--font-title);
   font-weight: 800;
   font-size: 1.1rem;
@@ -82,11 +82,11 @@
 }
 
 .pa-aluno-info    { flex: 1; min-width: 0; }
-.pa-aluno-nome    { font-weight: 700; color: var(--navy); font-size: .9rem; }
-.pa-aluno-email   { font-size: .78rem; color: var(--gray-400); margin-top: 2px; }
-.pa-aluno-chevron { color: var(--gray-300); flex-shrink: 0; transition: var(--transition); }
+.pa-aluno-nome    { font-weight: 700; color: var(--text); font-size: .9rem; }
+.pa-aluno-email   { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+.pa-aluno-chevron { color: var(--text-subtle); flex-shrink: 0; transition: var(--transition); }
 .pa-aluno-card:hover .pa-aluno-chevron { color: var(--blue); transform: translateX(2px); }
-.pa-aluno-card.selected .pa-aluno-chevron { color: var(--navy); }
+.pa-aluno-card.selected .pa-aluno-chevron { color: var(--text); }
 
 /* ── Detalhe do aluno ──────────────────────────────────────── */
 .pa-detalhe-header {
@@ -94,9 +94,9 @@
   align-items: center;
   gap: 16px;
   padding: 20px 24px;
-  background: var(--navy);
+  background: var(--brand-surface);
   border-radius: var(--radius-md);
-  color: var(--white);
+  color: var(--text-on-brand);
 }
 
 .pa-detalhe-avatar {
@@ -137,18 +137,18 @@
   font-weight: 600;
   letter-spacing: .04em;
   text-transform: uppercase;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .progresso-filter-group select,
 .progresso-filter-group input {
   height: 38px;
-  border: 1.5px solid var(--gray-200);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 0 12px;
   font-size: .88rem;
-  color: var(--navy);
-  background: var(--white);
+  color: var(--text);
+  background: var(--surface);
   transition: border-color .2s;
   width: 100%;
 }
@@ -176,7 +176,7 @@
 }
 
 .progresso-kpi {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 16px 20px;
@@ -190,37 +190,37 @@
   font-weight: 700;
   letter-spacing: .05em;
   text-transform: uppercase;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .progresso-kpi-value {
   font-family: var(--font-title);
   font-size: 1.7rem;
   font-weight: 800;
-  color: var(--navy);
+  color: var(--text);
   line-height: 1.1;
 }
 
-.progresso-kpi--total   .progresso-kpi-value { color: var(--navy); }
-.progresso-kpi--ns      .progresso-kpi-value { color: var(--gray-400); }
+.progresso-kpi--total   .progresso-kpi-value { color: var(--text); }
+.progresso-kpi--ns      .progresso-kpi-value { color: var(--text-muted); }
 .progresso-kpi--prog    .progresso-kpi-value { color: var(--blue); }
 .progresso-kpi--done    .progresso-kpi-value { color: var(--success); }
 
 /* ── Tabela ────────────────────────────────────────────────── */
-.progresso-table-card { background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
+.progresso-table-card { background: var(--surface); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
 
 .progresso-table-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
   gap: 12px;
   flex-wrap: wrap;
 }
 
-.progresso-table-title { font-size: 1rem; font-weight: 700; color: var(--navy); }
-.progresso-table-sub   { font-size: .8rem; color: var(--gray-400); margin-top: 2px; }
+.progresso-table-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+.progresso-table-sub   { font-size: .8rem; color: var(--text-muted); margin-top: 2px; }
 
 .progresso-table-status-filter {
   display: flex;
@@ -233,15 +233,15 @@
   border-radius: 20px;
   font-size: .78rem;
   font-weight: 600;
-  border: 1.5px solid var(--gray-200);
-  color: var(--gray-500);
-  background: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface);
   cursor: pointer;
   transition: var(--transition);
 }
 
-.progresso-status-btn:hover   { border-color: var(--navy); color: var(--navy); }
-.progresso-status-btn.active  { background: var(--navy); border-color: var(--navy); color: var(--white); }
+.progresso-status-btn:hover   { border-color: var(--brand-surface); color: var(--text); }
+.progresso-status-btn.active  { background: var(--brand-surface); border-color: var(--brand-surface); color: var(--text-on-brand); }
 
 .progresso-table-wrap { overflow-x: auto; }
 
@@ -258,23 +258,23 @@
   font-weight: 700;
   letter-spacing: .05em;
   text-transform: uppercase;
-  color: var(--gray-500);
-  border-bottom: 2px solid var(--gray-100);
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
   white-space: nowrap;
-  background: var(--off-white);
+  background: var(--bg);
 }
 
 .progresso-table td {
   padding: 12px 16px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
 
 .progresso-table tbody tr:last-child td { border-bottom: none; }
-.progresso-table tbody tr:hover td { background: var(--off-white); }
+.progresso-table tbody tr:hover td { background: var(--bg); }
 
-.progresso-nome { font-weight: 600; color: var(--navy); }
-.progresso-email { font-size: .78rem; color: var(--gray-400); margin-top: 2px; }
+.progresso-nome { font-weight: 600; color: var(--text); }
+.progresso-email { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
 
 /* ── Barra de progresso ────────────────────────────────────── */
 .progresso-bar-wrap { display: flex; align-items: center; gap: 8px; min-width: 120px; }
@@ -282,7 +282,7 @@
 .progresso-bar-track {
   flex: 1;
   height: 7px;
-  background: var(--gray-100);
+  background: var(--surface-2);
   border-radius: 99px;
   overflow: hidden;
 }
@@ -295,7 +295,7 @@
 }
 
 .progresso-bar-fill--done  { background: var(--success); }
-.progresso-bar-fill--zero  { background: var(--gray-200); }
+.progresso-bar-fill--zero  { background: var(--surface-3); }
 
 /* Em andamento — % real indisponível: barra listrada animada */
 .progresso-bar-fill--indet {
@@ -318,7 +318,7 @@
 .progresso-bar-pct {
   font-size: .78rem;
   font-weight: 700;
-  color: var(--gray-500);
+  color: var(--text-muted);
   min-width: 30px;
   text-align: right;
 }
@@ -335,12 +335,12 @@
   white-space: nowrap;
 }
 
-.progresso-badge--ns   { background: var(--gray-100);   color: var(--gray-500); }
-.progresso-badge--prog { background: #EBF5FF;            color: var(--blue-dark); }
-.progresso-badge--done { background: #E6F9EE;            color: #1a8a42; }
+.progresso-badge--ns   { background: var(--surface-2);   color: var(--text-muted); }
+.progresso-badge--prog { background: var(--tint-info);            color: var(--blue-dark); }
+.progresso-badge--done { background: var(--tint-ok);            color: #1a8a42; }
 
 /* ── Data ──────────────────────────────────────────────────── */
-.progresso-date { font-size: .78rem; color: var(--gray-500); white-space: nowrap; }
+.progresso-date { font-size: .78rem; color: var(--text-muted); white-space: nowrap; }
 
 /* ── Paginação ─────────────────────────────────────────────── */
 .progresso-paginacao {
@@ -348,12 +348,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  border-top: 1px solid var(--gray-100);
+  border-top: 1px solid var(--border);
   gap: 12px;
   flex-wrap: wrap;
 }
 
-.progresso-paginacao-info { font-size: .82rem; color: var(--gray-500); }
+.progresso-paginacao-info { font-size: .82rem; color: var(--text-muted); }
 
 .progresso-paginacao-btns { display: flex; gap: 6px; }
 
@@ -365,7 +365,7 @@
   justify-content: center;
   padding: 60px 24px;
   gap: 10px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   text-align: center;
 }
 
@@ -375,7 +375,7 @@
 .progresso-loading-row td {
   text-align: center;
   padding: 48px;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }
 
 /* ── Responsivo ────────────────────────────────────────────── */

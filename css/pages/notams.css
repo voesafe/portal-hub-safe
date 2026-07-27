@@ -1,19 +1,26 @@
 /* ============================================================
    notams.css — Módulo NOTAMs (bases SAFE: SBSJ e SDAM)
    SAFE Hub · usa os tokens do safe-theme.css
-   Modo claro é o padrão; dark é opcional e ESCOPADO nesta página
-   (via body.notams-dark) — não afeta o resto do Hub.
+
+   O modo escuro daqui era escopado por `body.notams-dark`, com paleta
+   própria e um alternador só desta tela. Virou o modo escuro global do
+   Hub em 2026-07-27: os apelidos `--n-*` passaram a apontar para a
+   camada semântica e o bloco escuro inteiro deixou de ser necessário.
    ============================================================ */
 
 .notams-page {
-  /* tokens locais (claro = padrão do Hub) */
-  --n-surface:    var(--white);
-  --n-surface-2:  var(--gray-100);
-  --n-ink:        var(--navy);
-  --n-ink-soft:   var(--gray-500);
-  --n-ink-mute:   var(--gray-400);
-  --n-line:       var(--gray-200);
-  --n-line-soft:  var(--gray-100);
+  /* Apelidos locais. Apontam para o PAPEL, então acompanham o tema
+     sozinhos: não existe seletor de modo escuro neste arquivo. */
+  --n-surface:    var(--surface);
+  --n-surface-2:  var(--surface-2);
+  --n-ink:        var(--text);
+  --n-ink-soft:   var(--text-2);
+  --n-ink-mute:   var(--text-muted);
+  --n-line:       var(--border);
+  --n-line-soft:  var(--surface-2);
+
+  /* O NOTAM cru é bloco de terminal: escuro nos dois modos, de propósito.
+     Só aprofunda um tom no escuro para não brilhar contra o fundo. */
   --n-raw-bg:     #0e1530;
   --n-raw-ink:    #a8c7e6;
 
@@ -22,34 +29,9 @@
   gap: 20px;
 }
 
-/* ── Dark scoped (só nesta página) ─────────────────────────── */
-body.notams-dark { background: #0c1122; }
-body.notams-dark .main { background: #0c1122; }
-body.notams-dark .topbar {
-  background: #10162c;
-  border-bottom-color: #26314f;
-}
-body.notams-dark .topbar-title { color: #eaf0fb; }
-body.notams-dark .topbar-subtitle { color: #8093b5; }
-body.notams-dark .notams-page {
-  --n-surface:   #141b32;
-  --n-surface-2: #1b2440;
-  --n-ink:       #eaf0fb;
-  --n-ink-soft:  #a9b7d4;
-  --n-ink-mute:  #8093b5;
-  --n-line:      #26314f;
-  --n-line-soft: #1d2740;
-  --n-raw-bg:    #080d1c;
-  --n-raw-ink:   #8fb4dc;
-}
-
-/* ── Atualizado em (topbar) ────────────────────────────────── */
-/* Virou `.topbar-status` do layout.css, a mesma pílula que a página de
-   Aniversários usa. Aqui fica só o ajuste do modo escuro da página. */
-body.notams-dark .topbar-status {
-  background: transparent;
-  border-color: rgba(169,183,212,.28);
-  color: #a9b7d4;
+:root[data-theme="dark"] .notams-page {
+  --n-raw-bg:     #080d1c;
+  --n-raw-ink:    #8fb4dc;
 }
 
 /* ── Nota/aviso ────────────────────────────────────────────── */
@@ -108,9 +90,9 @@ body.notams-dark .topbar-status {
   cursor: pointer; transition: var(--transition);
   display: inline-flex; align-items: center; gap: 6px;
 }
-.notam-chip:hover { border-color: var(--gray-300); }
-.notam-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
-body.notams-dark .notam-chip.active { background: var(--blue-dark); border-color: var(--blue-dark); }
+.notam-chip:hover { border-color: var(--border-strong); }
+.notam-chip.active { background: var(--brand-surface); color: #fff; border-color: var(--brand-surface); }
+:root[data-theme="dark"] .notam-chip.active { background: var(--blue-dark); border-color: var(--blue-dark); }
 .notam-chip .cnt { font-size: .68rem; opacity: .7; font-variant-numeric: tabular-nums; }
 
 .notam-segmented {
@@ -181,7 +163,7 @@ body.notams-dark .notam-chip.active { background: var(--blue-dark); border-color
 }
 .notam:hover { box-shadow: var(--shadow-md); }
 .notam::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--gray-300);
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--border-strong);
 }
 .notam.sev-critico::before { background: var(--danger); }
 .notam.sev-atencao::before { background: var(--warning); }
@@ -202,10 +184,10 @@ body.notams-dark .notam-chip.active { background: var(--blue-dark); border-color
 .notam-badge.b-future { background: rgba(91,174,226,.14); color: var(--blue-dark); }
 .notam-badge.b-crit   { background: rgba(231,76,60,.13);  color: #c0392b; }
 .notam-badge.b-warn   { background: rgba(243,156,18,.15); color: #c77c0d; }
-body.notams-dark .notam-badge.b-live   { color: #5fd894; }
-body.notams-dark .notam-badge.b-future { color: #8fc7ee; }
-body.notams-dark .notam-badge.b-crit   { color: #f08a7e; }
-body.notams-dark .notam-badge.b-warn   { color: #f3bd6b; }
+:root[data-theme="dark"] .notam-badge.b-live   { color: #5fd894; }
+:root[data-theme="dark"] .notam-badge.b-future { color: #8fc7ee; }
+:root[data-theme="dark"] .notam-badge.b-crit   { color: #f08a7e; }
+:root[data-theme="dark"] .notam-badge.b-warn   { color: #f3bd6b; }
 
 .notam-valid { display: flex; gap: 18px; padding: 0 15px 12px 18px; flex-wrap: wrap; }
 .notam-valid .v { font-size: .74rem; color: var(--n-ink-soft); font-variant-numeric: tabular-nums; }
@@ -232,7 +214,7 @@ body.notams-dark .notam-badge.b-warn   { color: #f3bd6b; }
   display: inline-flex; align-items: center; gap: 5px; padding: 0;
 }
 .notam-mini-toggle:hover { text-decoration: underline; }
-body.notams-dark .notam-mini-toggle { color: var(--blue-light); }
+:root[data-theme="dark"] .notam-mini-toggle { color: var(--blue-light); }
 .notam-scope { margin-left: auto; font-size: .7rem; color: var(--n-ink-mute); }
 
 .notam-foot { text-align: center; font-size: .74rem; color: var(--n-ink-mute); padding: 4px 0 2px; }

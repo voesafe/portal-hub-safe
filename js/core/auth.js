@@ -437,7 +437,11 @@ const Auth = {
       fechar:        `<svg ${base}><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`,
       lock:          `<svg ${base}><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>`,
       logout:       `<svg ${base}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>`,
-      notam:        `<svg ${base}><path d="M2 12l20-8-4 18-6-6-4 4z"></path><path d="M12 16l-2-2"></path></svg>`
+      notam:        `<svg ${base}><path d="M2 12l20-8-4 18-6-6-4 4z"></path><path d="M12 16l-2-2"></path></svg>`,
+      sol:          `<svg ${base}><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>`,
+      lua:          `<svg ${base}><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg>`,
+      chave:        `<svg ${base}><circle cx="7.5" cy="15.5" r="3.5"></circle><path d="m10 13 8.5-8.5"></path><path d="m16 7 2 2"></path><path d="m19 4 2 2"></path></svg>`,
+      perfil:       `<svg ${base}><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a7 7 0 0 1 16 0v1"></path></svg>`
     };
     return icons[nome] || '';
   },
@@ -643,33 +647,486 @@ const Auth = {
 
   prepararLogoutSidebar() {
     const usuario = document.querySelector('.sidebar-user');
-    const footer  = document.querySelector('.sidebar-footer');
-    if (!usuario || !footer) return;
+    if (!usuario) return;
 
     if (usuario.id === 'btn-logout') {
       usuario.id = 'sidebar-user-current';
       usuario.removeAttribute('title');
     }
 
-    if (!document.getElementById('btn-logout')) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.id   = 'btn-logout';
-      btn.className = 'sidebar-logout';
-      btn.innerHTML = `
-        <span class="sidebar-logout-icon" aria-hidden="true">${this.iconSvg('logout')}</span>
-        <span class="sidebar-logout-label">Sair</span>
-      `;
-      footer.appendChild(btn);
-    }
-    this.inicializarLogoutSidebar();
+    // O Sair saiu daqui e virou item do menu do avatar, na topbar, em
+    // 2026-07-27. O rodapé da sidebar guarda só a identidade agora.
+    // A remoção fica porque a sidebar é montada por HTML em cada página:
+    // se algum arquivo antigo ainda trouxer o botão escrito à mão, ele
+    // some por aqui em vez de aparecer duplicado com o do menu.
+    document.getElementById('btn-logout')?.remove();
   },
 
-  inicializarLogoutSidebar() {
-    const btn = document.getElementById('btn-logout');
-    if (!btn || btn.dataset.bound === 'true') return;
-    btn.dataset.bound = 'true';
-    btn.addEventListener('click', () => this._confirmarLogout());
+  // ── Tema (claro/escuro) ───────────────────────────────────
+  // Claro é o padrão e o sistema operacional NÃO opina: quem quiser
+  // escuro pede pelo menu. Quem carimba antes da primeira pintura é a
+  // guarda inline no <head> de cada página; daqui para frente só
+  // mantemos os dois em acordo sobre a mesma chave.
+  TEMA_KEY: 'safe-hub-theme',
+  TEMA_COR_BARRA: { light: '#19213f', dark: '#0b1120' },
+
+  temaAtual() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  },
+
+  aplicarTema(tema) {
+    const escuro = tema === 'dark';
+    const raiz = document.documentElement;
+
+    if (escuro) raiz.setAttribute('data-theme', 'dark');
+    else raiz.removeAttribute('data-theme');
+
+    try { localStorage.setItem(this.TEMA_KEY, escuro ? 'dark' : 'light'); } catch (e) {}
+
+    // A barra do navegador no celular e a janela do PWA leem daqui.
+    // Sem isto o topo do aparelho segue navy com a página preta.
+    document.querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', this.TEMA_COR_BARRA[escuro ? 'dark' : 'light']);
+
+    document.querySelectorAll('.user-menu').forEach(menu => {
+      menu.querySelector('[data-acao="tema"] .user-menu-hint')
+        ?.replaceChildren(document.createTextNode(escuro ? 'Escuro' : 'Claro'));
+      const icone = menu.querySelector('[data-acao="tema"] .user-menu-icon');
+      if (icone) icone.innerHTML = this.iconSvg(escuro ? 'sol' : 'lua');
+    });
+
+    document.dispatchEvent(new CustomEvent('safe:tema', { detail: { tema: escuro ? 'dark' : 'light' } }));
+  },
+
+  alternarTema() {
+    this.aplicarTema(this.temaAtual() === 'dark' ? 'light' : 'dark');
+  },
+
+  // ── Menu do usuário (avatar na topbar) ────────────────────
+  // Injetado por JS nas 21 páginas, como a marca do Hub já era. Página
+  // nova não precisa escrever nada: basta ter `.topbar`, e o
+  // `.topbar-right` é criado aqui se faltar.
+  montarMenuUsuario() {
+    const sessao = this.getSessao();
+    if (!sessao) return;
+
+    document.querySelectorAll('.topbar').forEach(topbar => {
+      if (topbar.querySelector('.user-menu')) return;
+
+      // Filho DIRETO da topbar, irmão do `.topbar-right`, nunca dentro dele.
+      // Abaixo de 768px o `.topbar-right` vira uma faixa de largura inteira
+      // para caber os botões da página; com o avatar lá dentro ele descia
+      // junto e a topbar virava duas faixas, com o avatar solto na segunda.
+      // Como irmão, ele fica preso ao topo à direita, ao lado da marca, e
+      // são os botões da página que descem. É o arranjo do CAVOK.
+      const iniciais = this.iniciaisUsuario(sessao.nome);
+      const papel = this.eSuperadmin() ? 'Superadmin' : this.descricaoPerfil(sessao.perfil);
+      const escuro = this.temaAtual() === 'dark';
+
+      const menu = document.createElement('div');
+      menu.className = 'user-menu';
+      menu.innerHTML = `
+        <button type="button" class="user-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Menu do usuário">
+          <span class="user-menu-avatar" aria-hidden="true">${this.escaparHtml(iniciais)}</span>
+          <span class="user-menu-caret" aria-hidden="true">${this.iconSvg('chevron')}</span>
+        </button>
+        <div class="user-menu-popover" role="menu" hidden>
+          <div class="user-menu-head">
+            <span class="user-menu-avatar is-lg" aria-hidden="true">${this.escaparHtml(iniciais)}</span>
+            <div class="user-menu-ident">
+              <div class="user-menu-name">${this.escaparHtml(sessao.nome || '')}</div>
+              <div class="user-menu-role">${this.escaparHtml(papel || '')}</div>
+            </div>
+          </div>
+          <div class="user-menu-sep" role="separator"></div>
+          <button type="button" class="user-menu-item" role="menuitem" data-acao="tema">
+            <span class="user-menu-icon" aria-hidden="true">${this.iconSvg(escuro ? 'sol' : 'lua')}</span>
+            <span class="user-menu-label">Alternar modo</span>
+            <span class="user-menu-hint">${escuro ? 'Escuro' : 'Claro'}</span>
+          </button>
+          <button type="button" class="user-menu-item" role="menuitem" data-acao="senha">
+            <span class="user-menu-icon" aria-hidden="true">${this.iconSvg('chave')}</span>
+            <span class="user-menu-label">Mudar minha senha</span>
+          </button>
+          <button type="button" class="user-menu-item" role="menuitem" data-acao="dados">
+            <span class="user-menu-icon" aria-hidden="true">${this.iconSvg('perfil')}</span>
+            <span class="user-menu-label">Meus dados</span>
+          </button>
+          <div class="user-menu-sep" role="separator"></div>
+          <button type="button" class="user-menu-item is-danger" role="menuitem" data-acao="sair">
+            <span class="user-menu-icon" aria-hidden="true">${this.iconSvg('logout')}</span>
+            <span class="user-menu-label">Sair</span>
+          </button>
+        </div>
+      `;
+      topbar.appendChild(menu);
+      this._ligarMenuUsuario(menu);
+    });
+  },
+
+  _ligarMenuUsuario(menu) {
+    const gatilho  = menu.querySelector('.user-menu-trigger');
+    const popover  = menu.querySelector('.user-menu-popover');
+
+    const fechar = () => {
+      if (popover.hidden) return;
+      popover.hidden = true;
+      menu.classList.remove('is-open');
+      gatilho.setAttribute('aria-expanded', 'false');
+    };
+    const abrir = () => {
+      popover.hidden = false;
+      menu.classList.add('is-open');
+      gatilho.setAttribute('aria-expanded', 'true');
+      this._posicionarMenuUsuario(menu, popover);
+    };
+
+    gatilho.addEventListener('click', e => {
+      e.stopPropagation();
+      popover.hidden ? abrir() : fechar();
+    });
+
+    // Fecha ao clicar fora e no Esc. Sem isto o popover fica presente na
+    // tela ao navegar por teclado e cobre o conteúdo abaixo.
+    document.addEventListener('click', e => { if (!menu.contains(e.target)) fechar(); });
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape' || popover.hidden) return;
+      fechar();
+      gatilho.focus();
+    });
+
+    popover.addEventListener('click', e => {
+      const item = e.target.closest('.user-menu-item');
+      if (!item) return;
+      const acao = item.dataset.acao;
+      if (acao !== 'tema') fechar();
+
+      if (acao === 'tema')  this.alternarTema();
+      if (acao === 'senha') this.abrirTrocarSenha();
+      if (acao === 'dados') this.abrirMeusDados();
+      if (acao === 'sair')  this._confirmarLogout();
+    });
+  },
+
+  // O popover abre alinhado à direita do gatilho. Em tela estreita isso
+  // o joga para fora da janela, então ele passa a se ancorar na borda da
+  // topbar. É a mesma armadilha do menu de ações do Cadastro de Aluno,
+  // que precisou de `drop-up` pelo mesmo motivo, só que no outro eixo.
+  _posicionarMenuUsuario(menu, popover) {
+    popover.classList.remove('is-edge');
+    const caixa = popover.getBoundingClientRect();
+    if (caixa.left < 8) popover.classList.add('is-edge');
+  },
+
+  // ── Avatar (foto do usuário) ──────────────────────────────
+  // 128px é o dobro do maior lugar onde a foto aparece (40px no cabeçalho
+  // do menu), o que cobre tela retina sem pesar. A 128px em JPEG 0.8 a
+  // imagem fica em ~8 KB de base64, contra o teto de 50.000 caracteres da
+  // célula do Sheets, onde ela é guardada. Ver `salvarMeuAvatar`.
+  AVATAR_PX: 128,
+  AVATAR_QUALIDADE: 0.8,
+  AVATAR_MAX_ARQUIVO: 8 * 1024 * 1024,
+
+  avatarDaSessao() {
+    const url = this.getSessao()?.avatar;
+    return typeof url === 'string' && url.startsWith('data:image/') ? url : '';
+  },
+
+  // Lê o arquivo escolhido, recorta no centro em 1:1 e reduz para 128px.
+  // Tudo no navegador: o que sobe são os ~8 KB finais, não os 4 MB que a
+  // câmera do celular produz. Devolve o data URI, ou lança com o motivo.
+  _prepararAvatar(arquivo) {
+    return new Promise((resolve, reject) => {
+      if (!arquivo) return reject(new Error('Nenhuma imagem escolhida.'));
+      if (!/^image\//.test(arquivo.type)) return reject(new Error('Escolha um arquivo de imagem.'));
+      if (arquivo.size > this.AVATAR_MAX_ARQUIVO) return reject(new Error('Imagem muito grande. O limite é 8 MB.'));
+
+      const leitor = new FileReader();
+      leitor.onerror = () => reject(new Error('Não consegui ler o arquivo.'));
+      leitor.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Não consegui abrir essa imagem.'));
+        img.onload = () => {
+          try {
+            const lado = this.AVATAR_PX;
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = lado;
+            const ctx = canvas.getContext('2d');
+
+            // Recorte central quadrado: a foto costuma ser retrato ou
+            // paisagem, e esticar para o quadrado deforma o rosto.
+            const corte = Math.min(img.width, img.height);
+            const sx = (img.width - corte) / 2;
+            const sy = (img.height - corte) / 2;
+
+            // Fundo branco antes de desenhar: PNG com transparência viraria
+            // preto no JPEG, que não tem canal alfa.
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, lado, lado);
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, sx, sy, corte, corte, 0, 0, lado, lado);
+
+            const uri = canvas.toDataURL('image/jpeg', this.AVATAR_QUALIDADE);
+            if (uri.length > 40000) return reject(new Error('Imagem complexa demais. Tente outra foto.'));
+            resolve(uri);
+          } catch (e) {
+            reject(new Error('Não consegui processar essa imagem.'));
+          }
+        };
+        img.src = leitor.result;
+      };
+      leitor.readAsDataURL(arquivo);
+    });
+  },
+
+  // Pinta a foto (ou as iniciais) em todo avatar da tela de uma vez: o do
+  // menu, o do cabeçalho do popover, o do rodapé da sidebar e o do modal.
+  pintarAvatares() {
+    const sessao = this.getSessao();
+    if (!sessao) return;
+    const foto = this.avatarDaSessao();
+    const iniciais = this.iniciaisUsuario(sessao.nome);
+
+    document.querySelectorAll('.user-menu-avatar, .sidebar-avatar').forEach(el => {
+      el.classList.toggle('tem-foto', !!foto);
+      if (foto) {
+        el.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = foto;
+        img.alt = '';
+        img.setAttribute('aria-hidden', 'true');
+        el.appendChild(img);
+      } else {
+        el.textContent = iniciais;
+      }
+    });
+  },
+
+  iniciaisUsuario(nome) {
+    const partes = String(nome || '').trim().split(/\s+/).filter(Boolean);
+    if (!partes.length) return '?';
+    if (partes.length === 1) return partes[0].charAt(0).toUpperCase();
+    return (partes[0].charAt(0) + partes[partes.length - 1].charAt(0)).toUpperCase();
+  },
+
+  escaparHtml(texto) {
+    return String(texto ?? '').replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  },
+
+  // Abre um `.modal-overlay` e devolve { overlay, fechar }. Os modais do
+  // menu do usuário precisam existir nas 21 páginas, então nascem por JS
+  // em vez de virar markup repetido em cada HTML.
+  _abrirModal(id, html) {
+    document.getElementById(id)?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = id;
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = html;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('open'));
+
+    const fechar = () => {
+      overlay.classList.remove('open');
+      document.removeEventListener('keydown', aoTeclar);
+      setTimeout(() => overlay.remove(), 250);
+    };
+    const aoTeclar = e => { if (e.key === 'Escape') fechar(); };
+
+    document.addEventListener('keydown', aoTeclar);
+    overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });
+    overlay.querySelectorAll('[data-fechar]').forEach(b => b.addEventListener('click', fechar));
+
+    return { overlay, fechar };
+  },
+
+  abrirTrocarSenha() {
+    const { overlay, fechar } = this._abrirModal('modal-trocar-senha', `
+      <div class="modal" style="max-width:420px">
+        <div class="modal-header">
+          <h3 style="font-size:1rem">Mudar minha senha</h3>
+          <button class="modal-close" data-fechar aria-label="Fechar">${this.iconSvg('fechar')}</button>
+        </div>
+        <!-- novalidate: com a validação nativa ligada, o minlength barra o
+             submit antes do nosso validador rodar, e o usuário leva a bolha
+             cinza do navegador em vez da mensagem do modal. Ficava um erro
+             estilizado e o outro não, sem razão aparente. Os atributos ficam
+             para o gerenciador de senhas, mas quem decide é o JS. -->
+        <form class="modal-body" id="form-trocar-senha" style="padding-top:14px" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="ts-atual">Senha atual</label>
+            <input class="form-control" type="password" id="ts-atual" autocomplete="current-password" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ts-nova">Nova senha</label>
+            <input class="form-control" type="password" id="ts-nova" autocomplete="new-password" minlength="6" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ts-conf">Confirmar nova senha</label>
+            <input class="form-control" type="password" id="ts-conf" autocomplete="new-password" minlength="6" required>
+          </div>
+          <p class="modal-erro" id="ts-erro" hidden></p>
+        </form>
+        <div class="modal-footer">
+          <button class="btn btn-ghost btn-sm" type="button" data-fechar>Cancelar</button>
+          <button class="btn btn-primary btn-sm" type="submit" form="form-trocar-senha" id="ts-salvar">Salvar</button>
+        </div>
+      </div>
+    `);
+
+    const form  = overlay.querySelector('#form-trocar-senha');
+    const erro  = overlay.querySelector('#ts-erro');
+    const botao = overlay.querySelector('#ts-salvar');
+    overlay.querySelector('#ts-atual').focus();
+
+    const mostrarErro = msg => {
+      erro.textContent = msg;
+      erro.hidden = false;
+    };
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      erro.hidden = true;
+
+      const atual = overlay.querySelector('#ts-atual').value;
+      const nova  = overlay.querySelector('#ts-nova').value;
+      const conf  = overlay.querySelector('#ts-conf').value;
+
+      if (!atual)           return mostrarErro('Informe a senha atual.');
+      if (nova.length < 6)  return mostrarErro('A nova senha precisa ter pelo menos 6 caracteres.');
+      if (nova !== conf)    return mostrarErro('A confirmação não bate com a nova senha.');
+      if (nova === atual)   return mostrarErro('A nova senha é igual à atual.');
+
+      // Sem otimista: quem valida a senha atual é o servidor, e fingir
+      // sucesso aqui diria "senha alterada" para uma troca recusada.
+      botao.disabled = true;
+      botao.textContent = 'Salvando...';
+
+      const res = await this.alterarSenha(atual, nova);
+
+      botao.disabled = false;
+      botao.textContent = 'Salvar';
+
+      if (!res?.ok) return mostrarErro(res?.error || 'Não foi possível alterar a senha.');
+
+      fechar();
+      toast('Senha alterada.', 'success');
+    });
+  },
+
+  abrirMeusDados() {
+    const sessao = this.getSessao();
+    if (!sessao) return;
+
+    const papel = this.eSuperadmin() ? 'Superadmin' : this.descricaoPerfil(sessao.perfil);
+    const modulos = Array.isArray(sessao.permissoesEfetivas) ? sessao.permissoesEfetivas.length : 0;
+    const hora = ms => {
+      const d = new Date(Number(ms) || 0);
+      return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+    };
+
+    const linhas = [
+      ['Nome', sessao.nome],
+      ['E-mail', sessao.email],
+      ['Código PAC', sessao.pac],
+      ['Cargo', papel],
+      ['Permissões ativas', modulos ? `${modulos} permissões` : '—'],
+      ['Sessão iniciada', hora(sessao.loginEm)],
+      ['Sessão expira', hora(sessao.expiraEm)]
+    ];
+
+    const ehCco = String(sessao.perfil || '').toLowerCase().indexOf('cco_') === 0;
+
+    const { overlay } = this._abrirModal('modal-meus-dados', `
+      <div class="modal" style="max-width:440px">
+        <div class="modal-header">
+          <h3 style="font-size:1rem">Meus dados</h3>
+          <button class="modal-close" data-fechar aria-label="Fechar">${this.iconSvg('fechar')}</button>
+        </div>
+        <div class="modal-body" style="padding-top:14px">
+          <div class="dados-foto">
+            <span class="user-menu-avatar is-xl" id="md-avatar" aria-hidden="true"></span>
+            <div class="dados-foto-acoes">
+              <div class="dados-foto-titulo">Foto de perfil</div>
+              ${ehCco
+                ? `<p class="dados-foto-dica">A foto de usuários da Escala CCO é gerenciada no sistema dela.</p>`
+                : `<div class="dados-foto-botoes">
+                     <button class="btn btn-ghost btn-sm" type="button" id="md-enviar">Enviar foto</button>
+                     <button class="btn btn-ghost btn-sm" type="button" id="md-remover" ${this.avatarDaSessao() ? '' : 'hidden'}>Remover</button>
+                   </div>
+                   <input type="file" id="md-arquivo" accept="image/*" hidden>
+                   <p class="dados-foto-dica">Recortada no centro e reduzida para 128px aqui mesmo, antes de subir.</p>`}
+            </div>
+          </div>
+          <p class="modal-erro" id="md-erro" hidden></p>
+          <dl class="dados-lista">
+            ${linhas.map(([rotulo, valor]) => `
+              <div class="dados-linha">
+                <dt>${this.escaparHtml(rotulo)}</dt>
+                <dd>${this.escaparHtml(valor || '—')}</dd>
+              </div>
+            `).join('')}
+          </dl>
+          <p class="dados-nota">Para corrigir nome, e-mail ou cargo, procure um administrador do Hub. Estes campos não são editáveis por aqui.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost btn-sm" type="button" data-fechar>Fechar</button>
+        </div>
+      </div>
+    `);
+
+    this.pintarAvatares();
+    if (ehCco) return;
+
+    const erro     = overlay.querySelector('#md-erro');
+    const arquivo  = overlay.querySelector('#md-arquivo');
+    const btEnviar = overlay.querySelector('#md-enviar');
+    const btRemover= overlay.querySelector('#md-remover');
+
+    const mostrarErro = msg => { erro.textContent = msg; erro.hidden = false; };
+
+    // Sem otimista: quem valida e persiste é o servidor, e a foto some no
+    // próximo login se a gravação falhar. Fingir mostraria a nova foto numa
+    // troca recusada. O botão vira "Enviando..." no lugar.
+    const gravar = async (uri, botao, rotulo) => {
+      erro.hidden = true;
+      const textoOriginal = botao.textContent;
+      botao.disabled = btEnviar.disabled = true;
+      botao.textContent = rotulo;
+
+      const res = await API.salvarAvatar(uri);
+
+      botao.disabled = btEnviar.disabled = false;
+      botao.textContent = textoOriginal;
+
+      if (!res?.ok) return mostrarErro(res?.error || 'Não foi possível salvar a foto.');
+
+      // A sessão em localStorage é a fonte que todas as páginas leem, e o
+      // Hub recarrega a página inteira a cada navegação: sem atualizar aqui,
+      // a foto nova só apareceria no próximo login.
+      this.salvarSessao({ ...this.getSessao(), avatar: uri });
+      this.pintarAvatares();
+      btRemover.hidden = !uri;
+      toast(uri ? 'Foto atualizada.' : 'Foto removida.', 'success');
+    };
+
+    btEnviar.addEventListener('click', () => arquivo.click());
+    btRemover.addEventListener('click', () => gravar('', btRemover, 'Removendo...'));
+
+    arquivo.addEventListener('change', async () => {
+      const f = arquivo.files?.[0];
+      arquivo.value = '';   // permite reescolher o mesmo arquivo depois de um erro
+      if (!f) return;
+      erro.hidden = true;
+      try {
+        const uri = await this._prepararAvatar(f);
+        await gravar(uri, btEnviar, 'Enviando...');
+      } catch (e) {
+        mostrarErro(e.message || 'Não consegui usar essa imagem.');
+      }
+    });
   },
 
   // Modal de confirmação de logout (sem confirm() nativo)
@@ -689,7 +1146,7 @@ const Auth = {
           </button>
         </div>
         <div class="modal-body" style="padding-top:12px;padding-bottom:8px">
-          <p style="font-size:.9rem;color:var(--gray-500)">Você será redirecionado para a página de login.</p>
+          <p style="font-size:.9rem;color:var(--text-muted)">Você será redirecionado para a página de login.</p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-ghost btn-sm" id="ml-cancelar">Cancelar</button>
@@ -725,7 +1182,16 @@ const Auth = {
       link.className = 'topbar-brand-link';
       link.href = paginaInicial;
       link.setAttribute('aria-label', 'Ir para a página inicial');
-      link.innerHTML = '<img src="assets/img/safe-logo-horizontal.png" alt="SAFE Escola de Aviação">';
+      // Duas imagens, uma por modo, escolhidas por CSS. O lettering da
+      // marca é navy e some no fundo escuro; a variante clara troca só o
+      // navy e preserva o azul e o verde do símbolo. Ficam as duas no DOM
+      // de propósito: trocar o `src` por JS no alternar piscaria a marca,
+      // e no carregamento a guarda do <head> já resolveu o tema antes da
+      // primeira pintura, então o navegador só busca a que vai aparecer.
+      link.innerHTML = `
+        <img class="topbar-brand-claro" src="assets/img/safe-logo-horizontal.png" alt="SAFE Escola de Aviação">
+        <img class="topbar-brand-escuro" src="assets/img/safe-logo-horizontal-dark.png" alt="" aria-hidden="true">
+      `;
 
       const divisor = document.createElement('span');
       divisor.className = 'topbar-brand-divider';
@@ -768,13 +1234,17 @@ const Auth = {
     if (!sessao) return;
 
     this.aplicarMarcaHub();
+    this.montarMenuUsuario();
+    // Depois do menu: ele entra na topbar e pode mudar a altura dela, que
+    // é justamente o que o fixarTopbar mede para alimentar a
+    // `--topbar-current-h`. Medir antes daria um valor velho.
     this.fixarTopbar();
     this.montarMenuSidebar();
     this.prepararLogoutSidebar();
 
-    document.querySelectorAll('.sidebar-avatar').forEach(el => {
-      el.textContent = sessao.nome.charAt(0).toUpperCase();
-    });
+    // Pinta foto ou iniciais no avatar do menu e no do rodapé da sidebar,
+    // depois que os dois já existem no DOM.
+    this.pintarAvatares();
     document.querySelectorAll('.sidebar-user-name').forEach(el => {
       el.textContent = sessao.nome;
     });

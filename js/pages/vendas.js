@@ -528,7 +528,7 @@ const Vendas = {
         <td class="col-lead" data-label="Lead Novo">
           <span class="badge ${v.leadNovo === 'Sim' || v.leadNovo === 'SIM' ? 'badge-green' : 'badge-navy'}">${v.leadNovo || '—'}</span>
         </td>
-        <td class="col-valor" data-label="Valor" style="text-align:right;font-weight:700;color:var(--navy);white-space:nowrap">${formatBRL(this._numeroVenda(v.valor))}</td>
+        <td class="col-valor" data-label="Valor" style="text-align:right;font-weight:700;color:var(--text);white-space:nowrap">${formatBRL(this._numeroVenda(v.valor))}</td>
         <td data-label="Ação" style="white-space:nowrap">${Auth.podeEditar() ? `
           <button class="btn btn-ghost btn-sm btn-icon" onclick="Vendas.editar('${v.id}')" title="Editar">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -782,7 +782,7 @@ const Vendas = {
     const tbody = document.getElementById('tabela-vendas');
     if (!tbody || !on) return;
     const cols = Auth.eAdmin() ? 8 : 7;
-    const shimmer = `<td><div style="height:13px;border-radius:4px;background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite"></div></td>`;
+    const shimmer = `<td><div style="height:13px;border-radius:4px;background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface-3) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite"></div></td>`;
     tbody.innerHTML = Array.from({ length: 7 }, (_, i) =>
       `<tr class="sk-row" style="opacity:${1 - i * 0.1}">${Array.from({ length: cols }, () => shimmer).join('')}</tr>`
     ).join('');

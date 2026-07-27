@@ -12,9 +12,9 @@
   display: inline-flex;
   gap: 4px;
   padding: 4px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
 }
 
 .fechamento-tabs {
@@ -27,7 +27,7 @@
   min-height: 38px;
   padding: 8px 15px;
   border-radius: 4px;
-  color: var(--gray-500);
+  color: var(--text-muted);
   font-size: .8rem;
   font-weight: 700;
   transition: var(--transition);
@@ -41,14 +41,14 @@
 
 .fechamento-tab:hover,
 .fechamento-aircraft-tab:hover {
-  color: var(--navy);
-  background: var(--gray-100);
+  color: var(--text);
+  background: var(--surface-2);
 }
 
 .fechamento-tab.active,
 .fechamento-aircraft-tab.active {
-  color: var(--white);
-  background: var(--navy);
+  color: var(--text-on-brand);
+  background: var(--brand-surface);
 }
 
 .fechamento-view {
@@ -88,7 +88,7 @@
 
 .fechamento-card-sub {
   margin-top: 3px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .73rem;
 }
 
@@ -112,7 +112,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .82rem;
 }
 
@@ -127,9 +127,9 @@
   gap: 18px;
   margin-bottom: 18px;
   padding: 15px 18px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   box-shadow: var(--shadow-sm);
 }
 
@@ -137,7 +137,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--navy);
+  color: var(--text);
 }
 
 .fechamento-status {
@@ -165,7 +165,7 @@
 
 .fechamento-audit {
   margin-top: 4px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .72rem;
 }
 
@@ -217,9 +217,9 @@
 .fechamento-table tfoot th,
 .fechamento-table tfoot td {
   padding: 13px 16px;
-  border-top: 1px solid var(--gray-200);
-  background: #f8fafc;
-  color: var(--navy);
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
   font-weight: 800;
 }
 
@@ -255,7 +255,7 @@
 .fechamento-hour-input:disabled,
 .fechamento-metric-input:disabled {
   border-color: transparent;
-  color: var(--navy);
+  color: var(--text);
   background: transparent;
   opacity: 1;
 }
@@ -263,7 +263,7 @@
 .fechamento-metricas {
   display: grid;
   grid-template-columns: minmax(230px, 1fr) 120px;
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
@@ -274,18 +274,18 @@
   display: flex;
   align-items: center;
   padding: 10px 14px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
 }
 
 .fechamento-metrica-label {
-  color: var(--gray-600);
+  color: var(--text-2);
   font-size: .81rem;
   font-weight: 600;
 }
 
 .fechamento-metrica-value {
   justify-content: flex-end;
-  border-left: 1px solid var(--gray-100);
+  border-left: 1px solid var(--border);
 }
 
 .fechamento-metrica-label:nth-last-child(-n+2),
@@ -304,7 +304,7 @@
   grid-template-columns: 10px minmax(0, 1fr);
   gap: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
 }
 
 .fechamento-history-item:last-child {
@@ -321,14 +321,14 @@
 }
 
 .fechamento-history-title {
-  color: var(--navy);
+  color: var(--text);
   font-size: .79rem;
   font-weight: 700;
 }
 
 .fechamento-history-meta {
   margin-top: 2px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .68rem;
   overflow-wrap: anywhere;
 }
@@ -338,7 +338,7 @@
 }
 
 .fechamento-modal-copy {
-  color: var(--gray-500);
+  color: var(--text-muted);
   font-size: .84rem;
   line-height: 1.65;
 }
@@ -351,10 +351,10 @@
   justify-content: center;
   gap: 7px;
   margin-top: 17px;
-  border: 2px dashed var(--gray-300);
+  border: 2px dashed var(--border-strong);
   border-radius: var(--radius-sm);
-  color: var(--gray-500);
-  background: var(--off-white);
+  color: var(--text-muted);
+  background: var(--bg);
   cursor: pointer;
   transition: var(--transition);
 }
@@ -371,7 +371,7 @@
 }
 
 .fechamento-upload-zone strong {
-  color: var(--navy);
+  color: var(--text);
   font-size: .86rem;
 }
 
@@ -384,10 +384,10 @@
   overflow: auto;
   margin-top: 15px;
   padding: 13px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: #f8fafc;
-  color: var(--gray-600);
+  background: var(--surface-2);
+  color: var(--text-2);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: .72rem;
   white-space: pre-wrap;
@@ -405,14 +405,14 @@
 
 .fechamento-review-item {
   padding: 12px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--off-white);
+  background: var(--bg);
 }
 
 .fechamento-review-item span {
   display: block;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -421,7 +421,7 @@
 .fechamento-review-item strong {
   display: block;
   margin-top: 3px;
-  color: var(--navy);
+  color: var(--text);
   font-size: 1.05rem;
 }
 
@@ -455,11 +455,11 @@
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   box-shadow: var(--shadow-md);
-  color: var(--navy);
+  color: var(--text);
   font-size: .82rem;
   font-weight: 700;
 }

@@ -17,7 +17,7 @@
 
 .cadastro-card-subtitle {
   margin-top: 3px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .78rem;
 }
 
@@ -33,8 +33,8 @@
   gap: 6px;
   padding: 7px 10px;
   border-radius: 999px;
-  background: var(--gray-100);
-  color: var(--gray-600);
+  background: var(--surface-2);
+  color: var(--text-2);
   font-size: .78rem;
   font-weight: 700;
 }
@@ -47,7 +47,7 @@
 .cadastro-table-header {
   align-items: flex-start;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
 }
 
 .cadastro-table-tools {
@@ -62,7 +62,7 @@
   display: grid;
   gap: 4px;
   min-width: 190px;
-  color: var(--gray-500);
+  color: var(--text-muted);
   font-size: .7rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -76,13 +76,13 @@
 .cadastro-sort {
   min-width: 190px;
   border-color: rgba(142, 164, 192, .34);
-  background-color: var(--white);
+  background-color: var(--surface);
 }
 
 .cadastro-search {
   max-width: 320px;
   border-color: rgba(142, 164, 192, .34);
-  background-color: var(--white);
+  background-color: var(--surface);
 }
 
 .cadastro-tabs {
@@ -92,7 +92,7 @@
   margin: 0 -4px 16px;
   padding: 12px 4px 4px;
   overflow-x: auto;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
   background: transparent;
 }
 
@@ -105,7 +105,7 @@
   flex: 0 0 auto;
   padding: 8px 12px;
   border-radius: 8px;
-  color: var(--gray-500);
+  color: var(--text-muted);
   font-size: .78rem;
   font-weight: 800;
   transition: var(--transition);
@@ -121,13 +121,13 @@
 
 .cadastro-tab.active {
   background: rgba(91, 174, 226, .12);
-  color: var(--navy);
+  color: var(--text);
   box-shadow: inset 0 0 0 1px rgba(91, 174, 226, .18);
 }
 
 .cadastro-tab:hover {
   background: rgba(142, 164, 192, .12);
-  color: var(--navy);
+  color: var(--text);
 }
 
 .cadastro-aluno-cell strong {
@@ -138,7 +138,7 @@
 .cadastro-muted {
   display: block;
   margin-top: 3px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .72rem;
 }
 
@@ -176,7 +176,7 @@
 .cadastro-status.nao_elegivel_s141,
 .cadastro-status.inativo {
   background: rgba(142, 164, 192, .16);
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .cadastro-status.atencao {
@@ -185,7 +185,7 @@
 }
 
 .cadastro-cpf-button {
-  color: var(--navy);
+  color: var(--text);
   font: inherit;
   font-variant-numeric: tabular-nums;
   text-align: left;
@@ -232,9 +232,9 @@
   display: none;
   min-width: 168px;
   padding: 6px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 12px 28px rgba(29, 41, 81, .16);
 }
 
@@ -255,7 +255,7 @@
   width: 100%;
   padding: 8px 9px;
   border-radius: 6px;
-  color: var(--navy);
+  color: var(--text);
   font-size: .76rem;
   font-weight: 800;
   text-align: left;
@@ -264,7 +264,7 @@
 
 .cadastro-action-popover button:hover,
 .cadastro-action-popover a:hover {
-  background: var(--gray-100);
+  background: var(--surface-2);
 }
 
 /* ===== Seleção em massa (visível só na aba Prontos Trello) ===== */
@@ -298,15 +298,15 @@
   flex-wrap: wrap;
   margin: 0 0 12px;
   padding: 10px 14px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--gray-50, #f4f6fb);
+  background: var(--surface-2);
 }
 
 .cadastro-bulk-info {
   font-size: .82rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--text);
 }
 
 .cadastro-bulk-actions {
@@ -325,7 +325,7 @@
 
 .cadastro-alunos-page .table-wrapper {
   overflow-x: auto;
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--border);
   border-radius: 10px;
 }
 
@@ -448,7 +448,7 @@
 
   .table-cadastro-alunos tbody tr {
     padding: 12px 0;
-    border-bottom: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--border);
     border-radius: 8px;
   }
 
@@ -471,7 +471,7 @@
 
   .table-cadastro-alunos tbody td::before {
     content: attr(data-label);
-    color: var(--gray-500);
+    color: var(--text-muted);
     font-size: .72rem;
     font-weight: 800;
     text-transform: uppercase;

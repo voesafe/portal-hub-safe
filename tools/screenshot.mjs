@@ -28,6 +28,8 @@
  *   --mobile           390x844 com emulação de iPhone (DPR 3, touch)
  *   --menu             abre a sidebar e todas as seções antes de capturar
  *   --full             página inteira, não só a dobra
+ *   --dark             modo escuro do Hub (padrão: claro, como no produto)
+ *   --usermenu         abre o menu do avatar antes de capturar
  *   --online           deixa o Apps Script responder (padrão: bloqueado)
  *   --base <url>       servidor (padrão http://127.0.0.1:8080)
  *
@@ -81,7 +83,9 @@ const mobile = flag('mobile');
 const largura = Number(valor('w', mobile ? 390 : 1440));
 const altura = Number(valor('h', mobile ? 844 : 900));
 const base = valor('base', 'http://127.0.0.1:8080').replace(/\/$/, '');
-const saida = resolve(valor('out', join(AQUI, 'shots', basename(pagina, '.html') + (mobile ? '-mobile' : '') + '.png')));
+const escuro = flag('dark');
+const saida = resolve(valor('out', join(AQUI, 'shots',
+  basename(pagina, '.html') + (mobile ? '-mobile' : '') + (escuro ? '-dark' : '') + '.png')));
 
 const executablePath = acharChrome();
 if (!executablePath) {
@@ -133,6 +137,12 @@ try {
     });
   });
 
+  // O tema mora na MESMA chave que a guarda anti-flash do <head> lê. Gravar
+  // aqui, antes de navegar, é o que reproduz o caminho real: a guarda carimba
+  // o `data-theme` antes da primeira pintura. Forçar o atributo depois do load
+  // pularia justamente a parte que a gente quer conferir.
+  await page.evaluate((v) => localStorage.setItem('safe-hub-theme', v), escuro ? 'dark' : 'light');
+
   await page.goto(`${base}/${pagina}`, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
   // Espera a topbar aparecer no DOM: é o sinal de que o auth.js passou e
@@ -162,6 +172,11 @@ try {
       document.querySelectorAll('.menu-section').forEach(s => s.classList.add('open'));
     });
     await page.waitForTimeout(400); // deixa a transição da sidebar terminar
+  }
+
+  if (flag('usermenu')) {
+    await page.click('.user-menu-trigger').catch(() => console.warn('aviso: menu do usuário não encontrado.'));
+    await page.waitForTimeout(250);
   }
 
   await page.screenshot({ path: saida, fullPage: flag('full') });

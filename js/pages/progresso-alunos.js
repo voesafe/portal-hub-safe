@@ -239,7 +239,7 @@ const ProgressoAlunos = {
     const tbody = document.getElementById('pa-tbody');
     const btn   = document.getElementById('pa-btn-buscar');
     if (on) {
-      tbody.innerHTML = `<tr><td colspan="6"><div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:48px;color:var(--gray-400)">
+      tbody.innerHTML = `<tr><td colspan="6"><div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:48px;color:var(--text-muted)">
         <div class="spinner"></div><span>Consultando API Newzenler...</span>
       </div></td></tr>`;
       btn.disabled = true;
@@ -338,7 +338,7 @@ const ProgressoAlunos = {
       </div>`;
 
     sub.textContent = 'Consultando todos os cursos em paralelo...';
-    tbody.innerHTML = `<tr><td colspan="6"><div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:40px;color:var(--gray-400)">
+    tbody.innerHTML = `<tr><td colspan="6"><div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:40px;color:var(--text-muted)">
       <div class="spinner"></div><span>Buscando cursos matriculados...</span>
     </div></td></tr>`;
 

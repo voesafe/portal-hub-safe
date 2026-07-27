@@ -3,13 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- tema:guarda-anti-flash -->
+  <script>
+    /* Carimba o modo escuro no <html> ANTES da primeira pintura.
+       O Hub recarrega a pagina inteira a cada item da sidebar, entao sem
+       isto quem usa escuro leva um clarao branco a cada navegacao.
+       Precisa ser inline e sincrono no <head>: um arquivo externo chega
+       tarde demais. Claro e o padrao e o sistema operacional nao opina,
+       por decisao de produto, so entra no escuro quem pedir no menu. */
+    (function () {
+      try {
+        var t = localStorage.getItem('safe-hub-theme');
+        /* herda a preferencia de quem ja usava o escuro so dos NOTAMs */
+        if (!t && localStorage.getItem('notams-theme') === 'dark') t = 'dark';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
   <title>Diagnóstico — SAFE Hub</title>
   <link rel="manifest" href="manifest.webmanifest?v=20260706">
   <meta name="theme-color" content="#19213f">
   <link rel="icon" type="image/png" href="favicon.png?v=20260706">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
 
-  <link rel="stylesheet" href="css/safe-theme.css?v=20260726-hub-ui-v1">
+  <link rel="stylesheet" href="css/core/safe-theme.css?v=20260727-tema-global-v1">
   <style>
     body { font-family: 'Montserrat', sans-serif; padding: 32px; background: #f4f6fa; }
     h2 { color: #1D2951; margin-top: 32px; }
@@ -79,9 +96,9 @@
 <div class="card"><h2>5. Comparacao final</h2><div id="res-comparacao"><em style="color:#999">Aguardando...</em></div></div>
 
 <div id="toast-container" class="toast-container"></div>
-<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
-<script src="js/api.js?v=20260724-aniversarios-v1"></script>
-<script src="js/auth.js?v=20260726-hub-ui-v1"></script>
+<script src="js/core/config.js?v=20260727-tema-global-v1"></script>
+<script src="js/core/api.js?v=20260727-avatar-v1"></script>
+<script src="js/core/auth.js?v=20260727-avatar-v1"></script>
 <script>
 function fmt(v){return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);}
 

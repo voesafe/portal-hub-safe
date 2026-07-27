@@ -3,14 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- tema:guarda-anti-flash -->
+  <script>
+    /* Carimba o modo escuro no <html> ANTES da primeira pintura.
+       O Hub recarrega a pagina inteira a cada item da sidebar, entao sem
+       isto quem usa escuro leva um clarao branco a cada navegacao.
+       Precisa ser inline e sincrono no <head>: um arquivo externo chega
+       tarde demais. Claro e o padrao e o sistema operacional nao opina,
+       por decisao de produto, so entra no escuro quem pedir no menu. */
+    (function () {
+      try {
+        var t = localStorage.getItem('safe-hub-theme');
+        /* herda a preferencia de quem ja usava o escuro so dos NOTAMs */
+        if (!t && localStorage.getItem('notams-theme') === 'dark') t = 'dark';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
   <title>Concorrência — SAFE Hub</title>
   <link rel="manifest" href="manifest.webmanifest?v=20260706">
   <meta name="theme-color" content="#19213f">
   <link rel="icon" type="image/png" href="favicon.png?v=20260706">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
-  <link rel="stylesheet" href="css/safe-theme.css?v=20260726-hub-ui-v1">
-  <link rel="stylesheet" href="css/layout.css?v=20260726-hub-ui-v1">
-  <link rel="stylesheet" href="css/concorrencia.css?v=20260726-mobile-v1">
+  <link rel="stylesheet" href="css/core/safe-theme.css?v=20260727-tema-global-v1">
+  <link rel="stylesheet" href="css/core/layout.css?v=20260727-avatar-v1">
+  <link rel="stylesheet" href="css/pages/concorrencia.css?v=20260727-tema-global-v1">
 </head>
 <body>
 
@@ -185,7 +202,7 @@
 
       <div style="background:rgba(96,192,191,.08);border:1px solid rgba(96,192,191,.2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:20px">
         <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal-dark);margin-bottom:2px">Curso</div>
-        <div id="fs-curso-display" style="font-weight:700;color:var(--navy);font-size:.95rem"></div>
+        <div id="fs-curso-display" style="font-weight:700;color:var(--text);font-size:.95rem"></div>
         <input type="hidden" id="fs-curso">
       </div>
 
@@ -213,9 +230,9 @@
   </div>
 </div>
 
-<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
-<script src="js/api.js?v=20260724-aniversarios-v1"></script>
-<script src="js/auth.js?v=20260726-hub-ui-v1"></script>
-<script src="js/concorrencia.js?v=20260715-instant-v1"></script>
+<script src="js/core/config.js?v=20260727-tema-global-v1"></script>
+<script src="js/core/api.js?v=20260727-avatar-v1"></script>
+<script src="js/core/auth.js?v=20260727-avatar-v1"></script>
+<script src="js/pages/concorrencia.js?v=20260727-tema-global-v1"></script>
 </body>
 </html>

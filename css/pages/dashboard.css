@@ -14,7 +14,7 @@
 .kpi-skeleton {
   height: 36px;
   border-radius: 6px;
-  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   margin: 4px 0;
@@ -23,7 +23,7 @@
   height: 12px;
   width: 60%;
   border-radius: 4px;
-  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   margin-top: 6px;
@@ -47,7 +47,7 @@
 }
 .kpi-delta.up   { background: rgba(46,204,113,.12); color: #27ae60; }
 .kpi-delta.down { background: rgba(231,76,60,.12);  color: #c0392b; }
-.kpi-delta.neutral { background: var(--gray-100); color: var(--gray-400); }
+.kpi-delta.neutral { background: var(--surface-2); color: var(--text-muted); }
 
 /* ── Tooltip sidebar collapsed ─────────────────────────── */
 .nav-item { position: relative; }
@@ -58,7 +58,7 @@
   top: 50%;
   transform: translateY(-50%);
   background: var(--navy-deep);
-  color: var(--white);
+  color: var(--text-on-brand);
   font-size: .78rem;
   font-weight: 600;
   padding: 5px 10px;
@@ -105,12 +105,12 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--gray-300);
+  color: var(--text-subtle);
   gap: 8px;
 }
 .chart-empty svg { opacity: .35; }
 .chart-empty p {
   font-size: .82rem;
   font-weight: 500;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }

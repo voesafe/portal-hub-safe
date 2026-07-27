@@ -13,7 +13,6 @@ const Notams = {
   async init() {
     if (!Auth.proteger(true)) return;
     Auth.preencherUI();
-    this.initTema();
     this.initControles();
     this.initSidebar();
     await this.carregar();
@@ -245,25 +244,6 @@ const Notams = {
     });
   },
 
-  // ── Tema (claro padrão; escuro opcional, escopado) ───────
-  initTema() {
-    let tema = 'light';
-    try { tema = localStorage.getItem('notams-theme') || 'light'; } catch (e) {}
-    this._aplicarTema(tema);
-    document.getElementById('notam-theme-btn')?.addEventListener('click', () => {
-      const atual = document.body.classList.contains('notams-dark') ? 'dark' : 'light';
-      this._aplicarTema(atual === 'dark' ? 'light' : 'dark');
-    });
-  },
-
-  _aplicarTema(tema) {
-    const dark = tema === 'dark';
-    document.body.classList.toggle('notams-dark', dark);
-    // Ícone SVG compartilhado do Hub: o `.is-dark` troca sol por lua na
-    // regra `.theme-toggle` do layout.css. Era emoji via textContent.
-    document.getElementById('notam-theme-btn')?.classList.toggle('is-dark', dark);
-    try { localStorage.setItem('notams-theme', dark ? 'dark' : 'light'); } catch (e) {}
-  },
 
   // ── Auxiliares ───────────────────────────────────────────
   _aeroportosDosNotams() {

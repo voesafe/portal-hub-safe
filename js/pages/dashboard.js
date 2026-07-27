@@ -138,7 +138,7 @@ const Dashboard = {
 
       const sub = document.getElementById('kpi-receita-global-sub');
       if (sub) sub.innerHTML =
-        `<span style="font-size:.7rem;color:var(--gray-400)">Vendas ${formatBRL(receitaVendas)} + Fat. ${formatBRL(receitaFat)}</span>`;
+        `<span style="font-size:.7rem;color:var(--text-muted)">Vendas ${formatBRL(receitaVendas)} + Fat. ${formatBRL(receitaFat)}</span>`;
     }
 
     // Badges de variação (usa dados do mês anterior se disponível)
@@ -326,14 +326,14 @@ const Dashboard = {
     const max = sorted[0][1];
     tbody.innerHTML = sorted.map(([curso, qtd], i) => `
       <tr>
-        <td style="width:24px;color:var(--gray-300);font-size:.8rem">${i+1}</td>
+        <td style="width:24px;color:var(--text-subtle);font-size:.8rem">${i+1}</td>
         <td>
-          <div style="font-size:.85rem;font-weight:500;color:var(--navy);margin-bottom:4px" title="${curso}">${curso}</div>
-          <div style="height:4px;background:var(--gray-100);border-radius:2px;overflow:hidden">
+          <div style="font-size:.85rem;font-weight:500;color:var(--text);margin-bottom:4px" title="${curso}">${curso}</div>
+          <div style="height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden">
             <div style="height:100%;width:${(qtd/max*100).toFixed(0)}%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px;transition:width .6s ease"></div>
           </div>
         </td>
-        <td style="text-align:right;font-weight:700;color:var(--navy);font-size:.9rem">${qtd}</td>
+        <td style="text-align:right;font-weight:700;color:var(--text);font-size:.9rem">${qtd}</td>
       </tr>
     `).join('');
   },

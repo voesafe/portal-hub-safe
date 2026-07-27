@@ -144,6 +144,10 @@ const API = {
   async getControleAcesso() { return this.get('access-control', {}, false); },
   async salvarGrupoAcesso(dados) { return this.post('salvar-access-group', dados); },
 
+  // Foto do próprio usuário. String vazia remove. Sem cache: é escrita,
+  // e o resultado vai direto para a sessão em localStorage.
+  async salvarAvatar(avatar) { return this.post('salvar-avatar', { avatar: avatar || '' }); },
+
   // ── NOTAMs (leitura do cache; global p/ todos os logados) ──
   async getNotams() { return this.get('notams', {}, true); },
 
@@ -337,7 +341,7 @@ function btnLoading(btn, loading) {
 
 // Skeleton loader para tabelas
 function skeletonTabela(tbody, colunas = 5, linhas = 5) {
-  const shimmer = `<td><div style="height:14px;background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:4px"></div></td>`;
+  const shimmer = `<td><div style="height:14px;background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface-3) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:4px"></div></td>`;
   tbody.innerHTML = Array.from({ length: linhas }, () =>
     `<tr>${Array.from({ length: colunas }, () => shimmer).join('')}</tr>`
   ).join('');

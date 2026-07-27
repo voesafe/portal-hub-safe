@@ -13,9 +13,26 @@
 <meta name="apple-mobile-web-app-title" content="SAFE" />
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- tema:guarda-anti-flash -->
+  <script>
+    /* Carimba o modo escuro no <html> ANTES da primeira pintura.
+       O Hub recarrega a pagina inteira a cada item da sidebar, entao sem
+       isto quem usa escuro leva um clarao branco a cada navegacao.
+       Precisa ser inline e sincrono no <head>: um arquivo externo chega
+       tarde demais. Claro e o padrao e o sistema operacional nao opina,
+       por decisao de produto, so entra no escuro quem pedir no menu. */
+    (function () {
+      try {
+        var t = localStorage.getItem('safe-hub-theme');
+        /* herda a preferencia de quem ja usava o escuro so dos NOTAMs */
+        if (!t && localStorage.getItem('notams-theme') === 'dark') t = 'dark';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
 <title>Escala CCO — SAFE Hub</title>
-<link rel="stylesheet" href="css/safe-theme.css?v=20260726-hub-ui-v1">
-<link rel="stylesheet" href="css/layout.css?v=20260726-hub-ui-v1">
+<link rel="stylesheet" href="css/core/safe-theme.css?v=20260727-tema-global-v1">
+<link rel="stylesheet" href="css/core/layout.css?v=20260727-avatar-v1">
 <style>
 :root {
   --navy:#1D2951;--blue:#5BAEE2;--teal:#60C0BF;
@@ -27,7 +44,7 @@
   --shadow:0 1px 3px rgba(29,41,81,.06),0 4px 12px rgba(29,41,81,.04);
   --shadow2:0 2px 8px rgba(29,41,81,.09),0 8px 24px rgba(29,41,81,.06);
 }
-body.dark {
+:root[data-theme="dark"] body{
   --bg:#0F1729;--surface:#1A2440;
   --border:#2A3654;--border2:#3A4970;
   --text:#E8EFFA;--text2:#A0B0CC;--muted:#6B7B99;
@@ -35,67 +52,67 @@ body.dark {
   --shadow:0 1px 3px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.2);
   --shadow2:0 2px 8px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
 }
-body.dark #loginScreen{background:linear-gradient(135deg,#0F1729 0%,#1A2440 50%,#16352A 100%)}
-body.dark .login-title{color:var(--text)}
-body.dark .topbar{background:#0A1020;border-bottom-color:var(--border)}
-body.dark .topbar-title{color:var(--text)}
-body.dark .topbar-subtitle{color:var(--muted)}
-body.dark .day-card{background:var(--surface)}
-body.dark .day-header{background:#22304F;border-bottom-color:var(--border)}
-body.dark .day-num{color:var(--text)}
-body.dark .day-dow{color:#8A9BBB}
-body.dark .weekend .day-dow{color:var(--teal)}
-body.dark .day-card.complete{background:#1B3A2C;border-color:#2D5C45}
-body.dark .day-card.complete .day-header{background:#244A38}
-body.dark .day-card.complete .day-num,body.dark .day-card.complete .day-dow{color:#A8D9B8}
-body.dark .complete-check{color:#7CC894}
-body.dark .shift-row{border-bottom-color:rgba(255,255,255,.05)}
-body.dark .shift-label{color:#8A9BBB}
-body.dark .shift-ho .shift-label{color:rgba(96,192,191,.85)}
-body.dark .pdf-btn{background:#2A3A6B}
-body.dark .pdf-btn:hover{background:#374B85}
-body.dark .nav-btn{background:var(--surface);color:var(--text2);border-color:var(--border)}
-body.dark .nav-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
-body.dark .meus-dias-btn,body.dark .refresh-btn{background:var(--surface);border-color:var(--border);color:var(--text2)}
-body.dark .meus-dias-btn:hover,body.dark .refresh-btn:hover{border-color:var(--blue);color:var(--blue)}
-body.dark .admin-input,body.dark .login-field{background:#0F1729;border-color:var(--border);color:var(--text)}
-body.dark .fin-card,body.dark .fin-list-row{background:var(--surface);border-color:var(--border)}
-body.dark .fin-list-details{background:#0F1729;border-color:var(--border)}
-body.dark .fin-detail-value{color:var(--text)}
-body.dark .legend{color:var(--text2)}
-body.dark #monthLabel,body.dark .fin-name,body.dark .fin-amount,body.dark .fin-list-fullname,body.dark .fin-list-amount{color:var(--text)}
-body.dark .add-select{background:var(--surface);color:var(--text);border-color:var(--border)}
-body.dark .pav-chip,body.dark .day-double{background:#22304F}
-body.dark .toast{background:#0A1020;border:1px solid var(--border)}
-body.dark .section-title{color:var(--text)}
-body.dark .ifood-btn{background:var(--surface);border-color:#EA1D2C}
-body.dark .ifood-btn-text{color:#ff8a8a}
-body.dark .func-card{background:var(--surface);border-color:var(--border)}
-body.dark .func-card-name{color:var(--text)}
-body.dark .func-card-info{color:var(--text2)}
-body.dark .func-modal{background:var(--surface);border-color:var(--border)}
-body.dark .func-modal-title{color:var(--text)}
-body.dark .func-input{background:#0F1729;border-color:var(--border);color:var(--text)}
-body.dark .func-input:focus{border-color:var(--blue)}
-body.dark .func-label{color:var(--text2)}
-body.dark .func-modal-overlay{background:rgba(0,0,0,.6)}
-body.dark .filter-tab{background:var(--surface);border-color:var(--border);color:var(--text2)}
-body.dark .filter-tab.active{background:var(--navy);color:#fff}
+:root[data-theme="dark"] #loginScreen{background:linear-gradient(135deg,#0F1729 0%,#1A2440 50%,#16352A 100%)}
+:root[data-theme="dark"] .login-title{color:var(--text)}
+:root[data-theme="dark"] .topbar{background:#0A1020;border-bottom-color:var(--border)}
+:root[data-theme="dark"] .topbar-title{color:var(--text)}
+:root[data-theme="dark"] .topbar-subtitle{color:var(--muted)}
+:root[data-theme="dark"] .day-card{background:var(--surface)}
+:root[data-theme="dark"] .day-header{background:#22304F;border-bottom-color:var(--border)}
+:root[data-theme="dark"] .day-num{color:var(--text)}
+:root[data-theme="dark"] .day-dow{color:#8A9BBB}
+:root[data-theme="dark"] .weekend .day-dow{color:var(--teal)}
+:root[data-theme="dark"] .day-card.complete{background:#1B3A2C;border-color:#2D5C45}
+:root[data-theme="dark"] .day-card.complete .day-header{background:#244A38}
+:root[data-theme="dark"] .day-card.complete .day-num,:root[data-theme="dark"] .day-card.complete .day-dow{color:#A8D9B8}
+:root[data-theme="dark"] .complete-check{color:#7CC894}
+:root[data-theme="dark"] .shift-row{border-bottom-color:rgba(255,255,255,.05)}
+:root[data-theme="dark"] .shift-label{color:#8A9BBB}
+:root[data-theme="dark"] .shift-ho .shift-label{color:rgba(96,192,191,.85)}
+:root[data-theme="dark"] .pdf-btn{background:#2A3A6B}
+:root[data-theme="dark"] .pdf-btn:hover{background:#374B85}
+:root[data-theme="dark"] .nav-btn{background:var(--surface);color:var(--text2);border-color:var(--border)}
+:root[data-theme="dark"] .nav-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+:root[data-theme="dark"] .meus-dias-btn,:root[data-theme="dark"] .refresh-btn{background:var(--surface);border-color:var(--border);color:var(--text2)}
+:root[data-theme="dark"] .meus-dias-btn:hover,:root[data-theme="dark"] .refresh-btn:hover{border-color:var(--blue);color:var(--blue)}
+:root[data-theme="dark"] .admin-input,:root[data-theme="dark"] .login-field{background:#0F1729;border-color:var(--border);color:var(--text)}
+:root[data-theme="dark"] .fin-card,:root[data-theme="dark"] .fin-list-row{background:var(--surface);border-color:var(--border)}
+:root[data-theme="dark"] .fin-list-details{background:#0F1729;border-color:var(--border)}
+:root[data-theme="dark"] .fin-detail-value{color:var(--text)}
+:root[data-theme="dark"] .legend{color:var(--text2)}
+:root[data-theme="dark"] #monthLabel,:root[data-theme="dark"] .fin-name,:root[data-theme="dark"] .fin-amount,:root[data-theme="dark"] .fin-list-fullname,:root[data-theme="dark"] .fin-list-amount{color:var(--text)}
+:root[data-theme="dark"] .add-select{background:var(--surface);color:var(--text);border-color:var(--border)}
+:root[data-theme="dark"] .pav-chip,:root[data-theme="dark"] .day-double{background:#22304F}
+:root[data-theme="dark"] .toast{background:#0A1020;border:1px solid var(--border)}
+:root[data-theme="dark"] .section-title{color:var(--text)}
+:root[data-theme="dark"] .ifood-btn{background:var(--surface);border-color:#EA1D2C}
+:root[data-theme="dark"] .ifood-btn-text{color:#ff8a8a}
+:root[data-theme="dark"] .func-card{background:var(--surface);border-color:var(--border)}
+:root[data-theme="dark"] .func-card-name{color:var(--text)}
+:root[data-theme="dark"] .func-card-info{color:var(--text2)}
+:root[data-theme="dark"] .func-modal{background:var(--surface);border-color:var(--border)}
+:root[data-theme="dark"] .func-modal-title{color:var(--text)}
+:root[data-theme="dark"] .func-input{background:#0F1729;border-color:var(--border);color:var(--text)}
+:root[data-theme="dark"] .func-input:focus{border-color:var(--blue)}
+:root[data-theme="dark"] .func-label{color:var(--text2)}
+:root[data-theme="dark"] .func-modal-overlay{background:rgba(0,0,0,.6)}
+:root[data-theme="dark"] .filter-tab{background:var(--surface);border-color:var(--border);color:var(--text2)}
+:root[data-theme="dark"] .filter-tab.active{background:var(--brand-surface);color:#fff}
 
 /* ── FUNCIONÁRIOS VIEW ─────────────────────────────────── */
 .func-view{display:none}
 .func-view.active{display:block}
 .func-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
-.func-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:24px;color:var(--navy);letter-spacing:-.5px}
+.func-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:24px;color:var(--text);letter-spacing:-.5px}
 .func-actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn-novo-func{background:var(--navy);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;transition:background .2s;box-shadow:var(--shadow)}
+.btn-novo-func{background:var(--brand-surface);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;transition:background .2s;box-shadow:var(--shadow)}
 .btn-novo-func:hover{background:#263a6a}
 .btn-ver-inativos{background:var(--surface);color:var(--text2);border:1px solid var(--border);padding:9px 18px;border-radius:8px;font-family:var(--font);font-weight:600;font-size:13px;cursor:pointer;transition:all .2s}
 .btn-ver-inativos:hover{border-color:var(--blue);color:var(--blue)}
 
 .filter-tabs{display:flex;gap:8px;margin-bottom:20px}
 .filter-tab{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:7px 16px;border-radius:8px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
-.filter-tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.filter-tab.active{background:var(--brand-surface);border-color:var(--text);color:#fff}
 
 .func-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .func-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
@@ -103,7 +120,7 @@ body.dark .filter-tab.active{background:var(--navy);color:#fff}
 .func-card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .func-card-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
 .func-card-name-block{flex:1;min-width:0}
-.func-card-name{font-weight:700;font-size:14px;color:var(--navy);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.func-card-name{font-weight:700;font-size:14px;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .func-card-username{font-size:11px;color:var(--muted);font-weight:500}
 .func-card-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
 .func-card-status.ativo{background:rgba(96,192,191,.15);color:var(--teal)}
@@ -120,7 +137,7 @@ body.dark .filter-tab.active{background:var(--navy);color:#fff}
 .func-modal-overlay{position:fixed;inset:0;background:rgba(29,41,81,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
 .func-modal-overlay.open{display:flex}
 .func-modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2);animation:fadeUp .25s ease}
-.func-modal-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:20px;color:var(--navy);margin-bottom:20px;letter-spacing:-.3px}
+.func-modal-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:20px;color:var(--text);margin-bottom:20px;letter-spacing:-.3px}
 .func-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .func-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .func-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase}
@@ -131,14 +148,14 @@ body.dark .filter-tab.active{background:var(--navy);color:#fff}
 .func-color-opt{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
 .func-color-opt.sel{border-color:var(--text);transform:scale(1.1)}
 .func-modal-info{background:rgba(91,174,226,.08);border:1px solid rgba(91,174,226,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:14px;line-height:1.5}
-body.dark .func-modal-info{background:rgba(91,174,226,.12);border-color:rgba(91,174,226,.3);color:#9ed1f0}
+:root[data-theme="dark"] .func-modal-info{background:rgba(91,174,226,.12);border-color:rgba(91,174,226,.3);color:#9ed1f0}
 .func-check{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13.5px;color:var(--text);font-weight:500}
 .func-check input{width:17px;height:17px;accent-color:var(--blue);cursor:pointer;flex-shrink:0}
 .func-check-hint{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.45;padding-left:26px}
 .func-modal-actions{display:flex;gap:10px;margin-top:18px}
 .btn-func-cancel{flex:1;background:transparent;border:1px solid var(--border);color:var(--text2);padding:11px;border-radius:8px;font-family:var(--font);font-weight:600;font-size:14px;cursor:pointer;transition:all .2s}
 .btn-func-cancel:hover{border-color:var(--text2)}
-.btn-func-save{flex:2;background:var(--navy);color:#fff;border:none;padding:11px;border-radius:8px;font-family:var(--font);font-weight:700;font-size:14px;cursor:pointer;transition:background .2s}
+.btn-func-save{flex:2;background:var(--brand-surface);color:#fff;border:none;padding:11px;border-radius:8px;font-family:var(--font);font-weight:700;font-size:14px;cursor:pointer;transition:background .2s}
 .btn-func-save:hover{background:#263a6a}
 
 /* Os botões de navegação do header usam o sistema `.btn` do Hub
@@ -149,16 +166,16 @@ body.dark .func-modal-info{background:rgba(91,174,226,.12);border-color:rgba(91,
 /* ── DASHBOARD ─────────────────────────────────────────── */
 .dash-view{display:none}
 .dash-view.active{display:block}
-.dash-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:24px;color:var(--navy);letter-spacing:-.5px;margin-bottom:6px}
-body.dark .dash-title{color:var(--text)}
+.dash-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:24px;color:var(--text);letter-spacing:-.5px;margin-bottom:6px}
+:root[data-theme="dark"] .dash-title{color:var(--text)}
 .dash-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
 
 .dash-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:28px}
 .dash-kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
-body.dark .dash-kpi{background:var(--surface);border-color:var(--border)}
+:root[data-theme="dark"] .dash-kpi{background:var(--surface);border-color:var(--border)}
 .dash-kpi-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
-.dash-kpi-value{font-family:'Raleway',sans-serif;font-size:26px;font-weight:800;color:var(--navy);letter-spacing:-.5px}
-body.dark .dash-kpi-value{color:var(--text)}
+.dash-kpi-value{font-family:'Raleway',sans-serif;font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+:root[data-theme="dark"] .dash-kpi-value{color:var(--text)}
 .dash-kpi-sub{font-size:11px;color:var(--muted);margin-top:4px}
 .dash-kpi-accent{border-left:3px solid var(--blue)}
 .dash-kpi-accent2{border-left:3px solid var(--teal)}
@@ -166,9 +183,9 @@ body.dark .dash-kpi-value{color:var(--text)}
 .dash-kpi-accent4{border-left:3px solid #6A4C93}
 
 .dash-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);margin-bottom:20px}
-body.dark .dash-section{background:var(--surface);border-color:var(--border)}
+:root[data-theme="dark"] .dash-section{background:var(--surface);border-color:var(--border)}
 .dash-section-title{font-size:13px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
-body.dark .dash-section-title{color:var(--muted)}
+:root[data-theme="dark"] .dash-section-title{color:var(--muted)}
 
 /* Gráfico de barras mensal */
 .chart-bars{display:flex;align-items:flex-end;gap:8px;height:140px;padding-bottom:24px;position:relative}
@@ -186,7 +203,7 @@ body.dark .dash-section-title{color:var(--muted)}
 .rank-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px;flex-shrink:0}
 .rank-info{flex:1;min-width:0}
 .rank-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-body.dark .rank-name{color:var(--text)}
+:root[data-theme="dark"] .rank-name{color:var(--text)}
 .rank-bar-wrap{flex:2;position:relative}
 .rank-bar-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
 .rank-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
@@ -195,17 +212,17 @@ body.dark .rank-name{color:var(--text)}
 /* Dias trabalhados grid */
 .dias-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .dias-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
-body.dark .dias-item{background:#0F1729}
+:root[data-theme="dark"] .dias-item{background:#0F1729}
 .dias-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px;flex-shrink:0}
 .dias-info{flex:1;min-width:0}
 .dias-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-body.dark .dias-name{color:var(--text)}
+:root[data-theme="dark"] .dias-name{color:var(--text)}
 .dias-count{font-size:11px;color:var(--muted)}
 .dias-val{font-size:13px;font-weight:700;color:var(--blue)}
 
 .dash-loading{text-align:center;padding:60px;color:var(--muted);font-size:14px}
 .dash-mes-select{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-family:var(--font);font-size:12px;color:var(--text);cursor:pointer;outline:none}
-body.dark .dash-mes-select{background:#0F1729;border-color:var(--border);color:var(--text)}
+:root[data-theme="dark"] .dash-mes-select{background:#0F1729;border-color:var(--border);color:var(--text)}
 
 @media(max-width:600px){
   .dash-kpis{grid-template-columns:1fr 1fr}
@@ -224,12 +241,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 #loginScreen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:100;background:linear-gradient(135deg,#EDF3FB 0%,#F8FAFF 50%,#EAF4F4 100%)}
 .login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:380px;text-align:center;box-shadow:var(--shadow2);animation:fadeUp .45s ease}
 .login-logo{width:120px;height:auto;margin:0 auto 20px;display:block}
-.login-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:22px;color:var(--navy);margin-bottom:4px;letter-spacing:-.5px}
+.login-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:22px;color:var(--text);margin-bottom:4px;letter-spacing:-.5px}
 .login-sub{font-size:10px;color:var(--muted);margin-bottom:32px;letter-spacing:2px;text-transform:uppercase;font-weight:600}
 .login-field{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:13px 16px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;margin-bottom:10px;transition:border-color .2s,box-shadow .2s;text-align:left}
 .login-field:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(91,174,226,.12)}
 .login-field::placeholder{color:var(--muted)}
-.login-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:14px;font-family:var(--font);font-weight:700;font-size:14px;cursor:pointer;margin-top:6px;letter-spacing:.5px;transition:background .2s,transform .1s;touch-action:manipulation}
+.login-btn{width:100%;background:var(--brand-surface);color:#fff;border:none;border-radius:8px;padding:14px;font-family:var(--font);font-weight:700;font-size:14px;cursor:pointer;margin-top:6px;letter-spacing:.5px;transition:background .2s,transform .1s;touch-action:manipulation}
 .login-btn:hover{background:#263a6a}.login-btn:active{transform:scale(.98)}.login-btn:disabled{opacity:.5;cursor:not-allowed}
 .login-error{font-size:12px;color:#e05555;margin-top:10px;min-height:16px;font-weight:500}
 
@@ -264,7 +281,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .btn-user-action{flex:1;background:transparent;border:1px solid var(--border);color:var(--text2);padding:7px 10px;border-radius:6px;font-family:var(--font);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
 .btn-user-action:hover{border-color:var(--blue);color:var(--blue)}
 .btn-user-action.danger:hover{border-color:#e05555;color:#e05555}
-body.dark .user-card-info{color:var(--text2)}
+:root[data-theme="dark"] .user-card-info{color:var(--text2)}
 
 /* USER MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(15,23,41,.6);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
@@ -326,16 +343,16 @@ body.dark .user-card-info{color:var(--text2)}
 /* No modo claro os botões do header já vêm prontos do `.btn .btn-ghost`.
    Só o modo escuro da CCO precisa de ajuste, porque o `.btn-ghost` é
    desenhado para fundo claro e aqui a topbar fica escura. */
-body.dark .cco-hub-main .topbar .btn-ghost{
+:root[data-theme="dark"] .cco-hub-main .topbar .btn-ghost{
   color:var(--text);
   background:var(--surface);
   border-color:var(--border);
 }
-body.dark .cco-hub-main .topbar .btn-ghost:hover{
+:root[data-theme="dark"] .cco-hub-main .topbar .btn-ghost:hover{
   background:var(--bg-3, var(--bg));
   border-color:var(--blue);
 }
-body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
+:root[data-theme="dark"] .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 
 /* ADMIN */
 .admin-panel{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--radius);padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow)}
@@ -351,7 +368,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 /* MONTH NAV */
 .month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
 .month-nav-left{display:flex;align-items:center;gap:12px}
-#monthLabel{font-family:'Raleway',sans-serif;font-weight:800;font-size:26px;color:var(--navy);letter-spacing:-.5px}
+#monthLabel{font-family:'Raleway',sans-serif;font-weight:800;font-size:26px;color:var(--text);letter-spacing:-.5px}
 .month-btns{display:flex;gap:6px}
 .nav-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:16px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);touch-action:manipulation}
 .nav-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
@@ -368,7 +385,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 .refresh-btn{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:7px 14px;border-radius:8px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
 .refresh-btn:hover{border-color:var(--blue);color:var(--blue)}
 .refresh-btn.spinning svg{animation:spin .8s linear infinite}
-.pdf-btn{display:flex;align-items:center;gap:6px;background:var(--navy);border:none;color:#fff;padding:7px 14px;border-radius:8px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:background .2s;box-shadow:var(--shadow)}
+.pdf-btn{display:flex;align-items:center;gap:6px;background:var(--brand-surface);border:none;color:#fff;padding:7px 14px;border-radius:8px;font-size:12px;font-family:var(--font);font-weight:600;cursor:pointer;transition:background .2s;box-shadow:var(--shadow)}
 .pdf-btn:hover{background:#263a6a}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -387,7 +404,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 .day-card.complete .day-header{background:#E8F7EE}
 .day-header{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border-bottom:1px solid var(--border);background:#FAFBFE}
 .day-header-left{display:flex;align-items:baseline;gap:5px}
-.day-num{font-family:'Raleway',sans-serif;font-weight:800;font-size:18px;color:var(--navy);line-height:1}
+.day-num{font-family:'Raleway',sans-serif;font-weight:800;font-size:18px;color:var(--text);line-height:1}
 .day-dow{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 .weekend .day-dow{color:var(--teal)}
 .today .day-num{color:var(--blue)}
@@ -411,7 +428,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 /* DOUBLE SHIFT ROW (user in T1+T2) */
 .double-row{display:flex;align-items:center;padding:5px 9px;gap:5px;border-bottom:1px solid #F1F5FB;background:rgba(91,174,226,.04)}
 .double-label{font-size:9px;font-weight:700;color:var(--blue);white-space:nowrap;width:76px;flex-shrink:0}
-.double-name{font-size:10px;font-weight:700;color:var(--navy);flex:1}
+.double-name{font-size:10px;font-weight:700;color:var(--text);flex:1}
 .double-badge{font-size:8px;font-weight:700;background:var(--blue);color:#fff;border-radius:4px;padding:1px 5px;white-space:nowrap}
 
 /* ADMIN SHIFT CONTROLS */
@@ -428,11 +445,11 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 .fin-card:hover{border-color:var(--border2);box-shadow:var(--shadow2)}
 .fin-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
 .fin-info{flex:1}
-.fin-name{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:5px}
+.fin-name{font-weight:700;font-size:13px;color:var(--text);margin-bottom:5px}
 .fin-shifts{display:flex;gap:8px;font-size:10px;color:var(--muted);font-weight:600}
 .ho-tag{color:var(--teal)}
 .fin-total{text-align:right;flex-shrink:0}
-.fin-amount{font-family:'Raleway',sans-serif;font-weight:800;font-size:17px;color:var(--navy);letter-spacing:-.5px}
+.fin-amount{font-family:'Raleway',sans-serif;font-weight:800;font-size:17px;color:var(--text);letter-spacing:-.5px}
 .fin-sub{font-size:10px;color:var(--muted);margin-top:2px}
 
 /* FINANCIALS - PERFIL FINANCEIRO (lista detalhada) */
@@ -442,11 +459,11 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 .fin-list-top{display:flex;align-items:center;gap:16px;padding:18px 22px;border-bottom:1px solid var(--border)}
 .fin-list-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
 .fin-list-identity{flex:1}
-.fin-list-fullname{font-weight:700;font-size:15px;color:var(--navy);letter-spacing:-.3px;margin-bottom:3px}
+.fin-list-fullname{font-weight:700;font-size:15px;color:var(--text);letter-spacing:-.3px;margin-bottom:3px}
 .fin-list-shifts{display:flex;gap:10px;font-size:11px;color:var(--muted);font-weight:600}
 .fin-list-shifts .ho-tag{color:var(--teal)}
 .fin-list-total{text-align:right;flex-shrink:0}
-.fin-list-amount{font-family:'Raleway',sans-serif;font-weight:800;font-size:22px;color:var(--navy);letter-spacing:-.5px}
+.fin-list-amount{font-family:'Raleway',sans-serif;font-weight:800;font-size:22px;color:var(--text);letter-spacing:-.5px}
 .fin-list-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .fin-list-details{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--bg)}
 .fin-detail-item{padding:13px 22px;display:flex;flex-direction:column;gap:3px;border-right:1px solid var(--border)}
@@ -472,7 +489,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 
 /* TOAST */
 #toastContainer{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{background:var(--navy);color:#fff;border-radius:8px;padding:11px 17px;font-size:13px;font-weight:600;opacity:0;transform:translateY(8px);transition:all .3s;max-width:300px;box-shadow:var(--shadow2)}
+.toast{background:var(--brand-surface);color:#fff;border-radius:8px;padding:11px 17px;font-size:13px;font-weight:600;opacity:0;transform:translateY(8px);transition:all .3s;max-width:300px;box-shadow:var(--shadow2)}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast-success{background:#1a7a5e}.toast-error{background:#b93333}
 
@@ -483,7 +500,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 
 /* FINANCEIRO ONLY VIEW */
 .fin-only-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.fin-only-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:22px;color:var(--navy);letter-spacing:-.5px}
+.fin-only-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:22px;color:var(--text);letter-spacing:-.5px}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spinscale{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(.78)}100%{transform:rotate(360deg) scale(1)}}
@@ -499,7 +516,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
   gap:4px;flex-shrink:0
 }
 .hamburger-btn .bar{
-  width:16px;height:2px;background:var(--navy);border-radius:2px;
+  width:16px;height:2px;background:var(--brand-surface);border-radius:2px;
   transition:transform .3s ease, opacity .3s ease
 }
 .hamburger-btn.open .bar:nth-child(1){transform:translateY(6px) rotate(45deg)}
@@ -516,7 +533,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
 .drawer{
   position:fixed;top:0;right:0;bottom:0;
   width:min(300px,85vw);
-  background:var(--navy);
+  background:var(--brand-surface);
   z-index:99;
   transform:translateX(100%);
   transition:transform .35s cubic-bezier(.4,0,.2,1);
@@ -524,7 +541,7 @@ body.dark .cco-hub-main .topbar .hamburger-btn .bar{background:var(--text)}
   box-shadow:-8px 0 32px rgba(0,0,0,.35)
 }
 .drawer.open{transform:translateX(0)}
-body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
+:root[data-theme="dark"] .drawer{background:#0A1020;border-left:1px solid var(--border)}
 
 .drawer-header{
   display:flex;align-items:center;justify-content:space-between;
@@ -558,22 +575,6 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 .drawer-item.active-view .drawer-item-desc{color:rgba(91,174,226,.7)}
 
 .drawer-footer{padding:12px;border-top:1px solid rgba(255,255,255,.08)}
-.drawer-theme-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;margin-bottom:8px}
-.drawer-theme-label{font-size:13px;font-weight:500;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:8px}
-.drawer-toggle{position:relative;width:42px;height:24px;cursor:pointer}
-.drawer-toggle input{opacity:0;width:0;height:0;position:absolute}
-.drawer-toggle-track{
-  position:absolute;inset:0;border-radius:12px;
-  background:rgba(255,255,255,.15);transition:background .2s
-}
-.drawer-toggle input:checked + .drawer-toggle-track{background:var(--blue)}
-.drawer-toggle-thumb{
-  position:absolute;top:3px;left:3px;
-  width:18px;height:18px;border-radius:50%;
-  background:#fff;transition:transform .2s;
-  box-shadow:0 1px 3px rgba(0,0,0,.3)
-}
-.drawer-toggle input:checked ~ .drawer-toggle-thumb{transform:translateX(18px)}
 .drawer-logout{
   display:flex;align-items:center;gap:10px;
   width:100%;padding:12px 14px;border-radius:10px;
@@ -749,10 +750,6 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
         <a class="btn btn-ghost" data-cco-nav id="navIfoodBtn" href="https://empresas-app.ifood.com.br/auth/login" target="_blank" rel="noopener" title="Acessar iFood Benefícios" style="display:none">
           iFood Benefícios
         </a>
-        <button class="btn btn-ghost btn-icon theme-toggle" data-cco-nav id="btnTheme" onclick="toggleTheme()" title="Alternar modo claro/escuro" aria-label="Alternar modo claro/escuro">
-          <svg class="theme-toggle-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-          <svg class="theme-toggle-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-        </button>
         <button class="btn btn-ghost btn-icon hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu da Escala CCO">
           <span class="bar"></span>
           <span class="bar"></span>
@@ -859,21 +856,6 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
     </div>
 
     <div class="drawer-footer">
-      <div class="drawer-theme-row">
-        <div class="drawer-theme-label">
-          <span id="drawerThemeIcon">☀️</span> Modo escuro
-        </div>
-        <label class="drawer-toggle">
-          <input type="checkbox" id="drawerThemeToggle" onchange="toggleThemeDrawer()">
-          <div class="drawer-toggle-track"></div>
-          <div class="drawer-toggle-thumb"></div>
-        </label>
-      </div>
-      <button class="drawer-logout" onclick="doLogout();closeDrawer()">
-        <span>🚪</span> Sair da conta
-      </button>
-    </div>
-  </div>
 
   <main class="cco-main">
     <div id="adminPanel" style="display:none" class="admin-panel">
@@ -1059,8 +1041,8 @@ body.dark .drawer{background:#0A1020;border-left:1px solid var(--border)}
 .hist-modal-overlay.open{display:flex}
 .hist-modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:760px;max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow2);animation:fadeUp .25s ease;overflow:hidden}
 .hist-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 24px 14px}
-.hist-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:20px;color:var(--navy);letter-spacing:-.3px}
-body.dark .hist-title{color:var(--text)}
+.hist-title{font-family:'Raleway',sans-serif;font-weight:800;font-size:20px;color:var(--text);letter-spacing:-.3px}
+:root[data-theme="dark"] .hist-title{color:var(--text)}
 .hist-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .hist-close{background:transparent;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1;padding:4px 8px;border-radius:8px}
 .hist-close:hover{background:rgba(0,0,0,.06);color:var(--text)}
@@ -1207,8 +1189,8 @@ body.dark .hist-title{color:var(--text)}
   </div>
 </div>
 
-<script src="js/config.js?v=20260704-cadastro-alunos-v1"></script>
-<script src="js/auth.js?v=20260726-hub-ui-v1"></script>
+<script src="js/core/config.js?v=20260727-tema-global-v1"></script>
+<script src="js/core/auth.js?v=20260727-avatar-v1"></script>
 <script>
 // ─── HAMBURGER DRAWER ────────────────────────────────────────
 function toggleDrawer(){
@@ -1237,11 +1219,6 @@ function syncDrawerState(){
   document.getElementById("dItemCal")?.classList.toggle("active-view", isCal);
   document.getElementById("dItemDash")?.classList.toggle("active-view", isDash);
   document.getElementById("dItemFunc")?.classList.toggle("active-view", isFunc);
-  // Sync toggle de tema
-  const isDark = document.body.classList.contains("dark");
-  const tog = document.getElementById("drawerThemeToggle");
-  if(tog) tog.checked = isDark;
-  document.getElementById("drawerThemeIcon").textContent = isDark ? "🌙" : "☀️";
 }
 
 function drawerAction(action){
@@ -1261,11 +1238,6 @@ function drawerAction(action){
   }, 300);
 }
 
-function toggleThemeDrawer(){
-  toggleTheme();
-  const isDark = document.body.classList.contains("dark");
-  document.getElementById("drawerThemeIcon").textContent = isDark ? "🌙" : "☀️";
-}
 
 function setupDrawerForUser(u){
   // Avatar e nome
@@ -1286,23 +1258,11 @@ function setupDrawerForUser(u){
   document.getElementById("drawerFin").style.display  = isFin   ? "" : "none";
 }
 
-// ─── DARK MODE ───────────────────────────────────────────────
-(function(){
-  const saved = localStorage.getItem("cco-theme");
-  if(saved === "dark") document.body.classList.add("dark");
-})();
-function toggleTheme(){
-  const isDark = document.body.classList.toggle("dark");
-  localStorage.setItem("cco-theme", isDark ? "dark" : "light");
-  // O ícone é SVG e troca pelo `.is-dark` (regra `.theme-toggle` no
-  // layout.css). Antes era emoji trocado por textContent, o que apagava
-  // o conteúdo do botão e destoava do resto do Hub.
-  document.getElementById("btnTheme")?.classList.toggle("is-dark", isDark);
-}
-document.addEventListener("DOMContentLoaded", ()=>{
-  document.getElementById("btnTheme")
-    ?.classList.toggle("is-dark", document.body.classList.contains("dark"));
-});
+/* O modo escuro daqui era local: classe `body.dark`, chave
+   `cco-theme` no localStorage, um botao na topbar e um interruptor no
+   drawer. Virou o modo escuro global do Hub em 2026-07-27 e agora mora
+   no menu do usuario (Auth.alternarTema). Os seletores `body.dark` do
+   CSS acima viraram `:root[data-theme="dark"]`. */
 
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyeoa-8Vv2lze3okfNxSA20hOtwOo0dvB_wIaWBJujG0XbxgrXOkswON4fPrEHdeBAa/exec";
 

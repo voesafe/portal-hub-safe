@@ -28,8 +28,8 @@
 }
 
 .aniv-kpi {
-  background: var(--white);
-  border: 1px solid var(--gray-200);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 18px 20px;
 }
@@ -38,23 +38,23 @@
   font-size: 1.9rem;
   font-weight: 700;
   line-height: 1.1;
-  color: var(--navy);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
 .aniv-kpi-label {
   margin-top: 5px;
   font-size: .82rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
   line-height: 1.4;
 }
 
 .aniv-kpi-destaque {
-  background: var(--navy);
-  border-color: var(--navy);
+  background: var(--brand-surface);
+  border-color: var(--brand-surface);
 }
 
-.aniv-kpi-destaque .aniv-kpi-valor { color: var(--white); }
+.aniv-kpi-destaque .aniv-kpi-valor { color: var(--text-on-brand); }
 .aniv-kpi-destaque .aniv-kpi-label { color: var(--blue-light); }
 
 .aniv-kpi-ok     .aniv-kpi-valor { color: var(--teal-dark); }
@@ -86,13 +86,13 @@
   margin: 0;
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--text);
 }
 
 .aniv-bloco-sub {
   margin: 3px 0 0;
   font-size: .85rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .aniv-select-mes {
@@ -112,8 +112,8 @@
   align-items: center;
   gap: 16px;
   padding: 14px 16px;
-  background: var(--off-white);
-  border: 1px solid var(--gray-200);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
 }
 
@@ -122,8 +122,8 @@
   width: 54px;
   text-align: center;
   padding: 6px 0;
-  background: var(--white);
-  border: 1px solid var(--gray-200);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
 
@@ -132,7 +132,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.1;
-  color: var(--navy);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -141,14 +141,14 @@
   font-size: .65rem;
   font-weight: 700;
   letter-spacing: .08em;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }
 
 .aniv-card-info { flex: 1 1 auto; min-width: 0; }
 
 .aniv-card-nome {
   font-weight: 600;
-  color: var(--navy);
+  color: var(--text);
   margin-bottom: 3px;
 }
 
@@ -157,7 +157,7 @@
   flex-wrap: wrap;
   gap: 4px 14px;
   font-size: .82rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .aniv-card-email {
@@ -178,7 +178,7 @@
 
 .aniv-quando {
   font-size: .82rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 /* ── Tags de situação ─────────────────────────────────────── */
@@ -202,8 +202,8 @@
 }
 
 .aniv-tag-neutro {
-  background: var(--gray-100);
-  color: var(--gray-500);
+  background: var(--surface-2);
+  color: var(--text-muted);
 }
 
 .aniv-tag-erro {
@@ -227,7 +227,7 @@
 .aniv-vazio {
   padding: 26px 10px;
   text-align: center;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .9rem;
 }
 
@@ -236,20 +236,20 @@
 
 .table-aniversarios .aniv-td-dia {
   font-weight: 700;
-  color: var(--navy);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
   width: 58px;
 }
 
 .table-aniversarios .aniv-td-email {
   font-size: .84rem;
-  color: var(--gray-500);
+  color: var(--text-muted);
 }
 
 .table-aniversarios .aniv-td-vazio {
   text-align: center;
   padding: 26px 10px;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }
 
 .table-aniversarios .aniv-linha-hoje {

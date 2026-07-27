@@ -26,25 +26,41 @@ portal-hub-safe/
 ├── acesso-negado.html     # Aviso padronizado para módulos restritos
 ├── assets/
 │   ├── img/logo.png
+│   ├── img/safe-logo-horizontal.png       # marca da topbar (modo claro)
+│   ├── img/safe-logo-horizontal-dark.png  # mesma marca com o lettering claro
 │   └── safe-minions/      # Imagem, áudio e biblioteca XLSX local
 ├── css/
-│   ├── safe-theme.css
-│   ├── layout.css
-│   ├── inicio.css
-│   ├── controle-gastos.css
-│   └── fechamento-horas.css
-└── js/
-    ├── config.js          # Configuração central (URL do Apps Script)
-    ├── auth.js            # Autenticação, sessão, permissões e menu
-    ├── api.js             # Comunicação com o backend e cache
-    ├── inicio.js
-    ├── dashboard.js
-    ├── vendas.js
-    ├── concorrencia.js
-    ├── admin.js
-    ├── controle-gastos.js
-    └── fechamento-horas.js
+│   ├── core/              # compartilhado por TODAS as páginas
+│   │   ├── safe-theme.css # paleta, camada semântica e componentes
+│   │   └── layout.css     # sidebar, topbar, menu do usuário e grid
+│   └── pages/             # um arquivo por página
+│       ├── inicio.css
+│       ├── controle-gastos.css
+│       └── ...
+├── js/
+│   ├── core/              # compartilhado por TODAS as páginas
+│   │   ├── config.js      # Configuração central (URL do Apps Script)
+│   │   ├── auth.js        # Sessão, permissões, menu, tema e marca
+│   │   └── api.js         # Comunicação com o backend e cache
+│   └── pages/             # um arquivo por página
+│       ├── inicio.js
+│       ├── dashboard.js
+│       └── ...
+├── apps-script/           # fonte do backend (não é servido como página)
+└── tools/                 # ferramentas de desenvolvimento
+    ├── screenshot.mjs     # captura de tela por CDP, para conferência de UI
+    └── admin-cli.js       # administração de usuários pelo terminal
 ```
+
+A divisão `core/` e `pages/` não é cosmética. **Mexeu em algo de `core/`, o
+`?v=` precisa subir nos 21 HTML**, porque todos carregam aquele arquivo. Em
+`pages/`, só o HTML da página em questão. O caminho passou a dizer isso
+sozinho, em vez de depender de alguém lembrar.
+
+Os arquivos `.html` ficam na raiz **de propósito**: o GitHub Pages serve da
+raiz, então cada um é uma URL pública (`hub.voesafe.com.br/vendas.html`), e os
+nomes também são as chaves de `Auth.PAGINAS`. Mover qualquer um quebra link
+salvo, menu e proteção de rota ao mesmo tempo.
 
 ---
 
@@ -106,7 +122,7 @@ Depois de adicionar `ControleGastos.gs` e atualizar os demais arquivos:
    disponíveis de janeiro a abril.
 4. Se `elaine.souza@voesafe.com.br` existir em `USUARIOS`, o perfil será
    atualizado para `financeiro`.
-5. Publique uma nova versão do App da Web e mantenha a URL em `js/config.js`.
+5. Publique uma nova versão do App da Web e mantenha a URL em `js/core/config.js`.
 6. Peça para Elaine sair e entrar novamente, para receber o novo perfil e a
    sessão segura do módulo financeiro.
 
@@ -131,7 +147,7 @@ O fechamento usa uma planilha operacional separada da base comercial.
 2. Confirme que `CAVOK_HORAS_SERVICE_URL` aponta para a implantação do serviço
    de Horas Voadas INVA mantido pelo TI.
 3. Publique uma nova versão do App da Web do Hub.
-4. Em `js/config.js`, mantenha `CAVOK_FECHAMENTO_API_ENABLED` como `true`.
+4. Em `js/core/config.js`, mantenha `CAVOK_FECHAMENTO_API_ENABLED` como `true`.
 
 A importação consulta todos os dias da competência, consolida as horas por
 aeronave e aplica as mesmas exclusões de cotistas do arquivo XLS. Os valores
@@ -190,7 +206,7 @@ restrito ao perfil `master`.
 
 ### 3. Configurar o frontend
 
-Abra `js/config.js` e substitua:
+Abra `js/core/config.js` e substitua:
 ```js
 API_URL: 'SUA_URL_DO_APPS_SCRIPT_AQUI',
 ```
@@ -274,9 +290,9 @@ e visibilidade da escala continuam sendo definidas no sistema de origem.
 2. Preencha nome, PAC (identificador de login), email, perfil
 3. Depois, adicione o novo PAC no `<select>` de `index.html` e `vendas.html`
 
-**Alterar cores:** edite as variáveis em `css/safe-theme.css` (seção `:root`)
+**Alterar cores:** edite as variáveis em `css/core/safe-theme.css` (seção `:root`)
 
-**Adicionar origem de lead:** edite o array `ORIGENS` em `js/config.js` e o `<select>` em `vendas.html`
+**Adicionar origem de lead:** edite o array `ORIGENS` em `js/core/config.js` e o `<select>` em `vendas.html`
 
 ---
 

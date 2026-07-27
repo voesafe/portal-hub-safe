@@ -7,28 +7,28 @@
   gap: 4px;
   margin-bottom: 20px;
   padding: 4px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
 }
 
 .horas-inva-tab {
   padding: 9px 15px;
   border-radius: 5px;
-  color: var(--gray-500);
+  color: var(--text-muted);
   font-size: .8rem;
   font-weight: 700;
   transition: var(--transition);
 }
 
 .horas-inva-tab:hover {
-  color: var(--navy);
-  background: var(--gray-100);
+  color: var(--text);
+  background: var(--surface-2);
 }
 
 .horas-inva-tab.active {
-  color: var(--white);
-  background: var(--navy);
+  color: var(--text-on-brand);
+  background: var(--brand-surface);
 }
 
 .horas-inva-view {
@@ -69,7 +69,7 @@
 .horas-inva-card-subtitle,
 .horas-inva-form-heading p {
   margin-top: 3px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .77rem;
 }
 
@@ -106,7 +106,7 @@
 
 .horas-inva-empty {
   padding: 34px 16px !important;
-  color: var(--gray-400) !important;
+  color: var(--text-muted) !important;
   text-align: center;
 }
 
@@ -121,7 +121,7 @@
   gap: 14px;
   margin-bottom: 26px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
 }
 
 .horas-inva-form-heading h2 {
@@ -136,7 +136,7 @@
   justify-content: center;
   flex: 0 0 42px;
   border-radius: 12px;
-  color: var(--white);
+  color: var(--text-on-brand);
   background: linear-gradient(135deg, var(--blue), var(--teal));
   font-size: 1.5rem;
 }

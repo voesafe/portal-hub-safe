@@ -4,11 +4,6 @@
     "ast_hash": "f9ad9b382c5fa4895298d3668c659226",
     "semantic_hash": "f9ad9b382c5fa4895298d3668c659226"
   },
-  "admin-cli.js": {
-    "mtime": 1780839955.3947942,
-    "ast_hash": "1d8210ca98ce3965650c18533ee802d4",
-    "semantic_hash": "1d8210ca98ce3965650c18533ee802d4"
-  },
   "apps-script/appsscript.json": {
     "mtime": 1784937094.4777584,
     "ast_hash": "ce9f6b4b4f09417a824c3dd18eb2ca8f",
@@ -18,81 +13,6 @@
     "mtime": 1780757852.9530704,
     "ast_hash": "31e9848e80e1ddf43c5aa31009cd2b7b",
     "semantic_hash": "31e9848e80e1ddf43c5aa31009cd2b7b"
-  },
-  "js/access-control.js": {
-    "mtime": 1783527956.4786665,
-    "ast_hash": "50e5a50872bb70aa4b148351c87814e9",
-    "semantic_hash": "50e5a50872bb70aa4b148351c87814e9"
-  },
-  "js/admin.js": {
-    "mtime": 1784136472.1294935,
-    "ast_hash": "e37373441a9e381104d4538952fa1b72",
-    "semantic_hash": "e37373441a9e381104d4538952fa1b72"
-  },
-  "js/api.js": {
-    "mtime": 1784938712.6970255,
-    "ast_hash": "93786a18f31835df8d95ec6dbd71b5a9",
-    "semantic_hash": "93786a18f31835df8d95ec6dbd71b5a9"
-  },
-  "js/auth.js": {
-    "mtime": 1785109941.3976326,
-    "ast_hash": "d6a69b7e80e24d4b3b7182f87ef76059",
-    "semantic_hash": ""
-  },
-  "js/bases.js": {
-    "mtime": 1784136472.1297796,
-    "ast_hash": "5320511d7d6082e676f174f1fa8152af",
-    "semantic_hash": "5320511d7d6082e676f174f1fa8152af"
-  },
-  "js/cadastro-alunos.js": {
-    "mtime": 1784938712.6967793,
-    "ast_hash": "7e3d01033994ecdeb5c3207f2554b0b9",
-    "semantic_hash": "7e3d01033994ecdeb5c3207f2554b0b9"
-  },
-  "js/concorrencia.js": {
-    "mtime": 1784136472.1299255,
-    "ast_hash": "637a6ae9d3e3ea90b7e0df90d929a43f",
-    "semantic_hash": "637a6ae9d3e3ea90b7e0df90d929a43f"
-  },
-  "js/config.js": {
-    "mtime": 1784934306.290775,
-    "ast_hash": "b0b74824368d60b0a755933f0bec5572",
-    "semantic_hash": "b0b74824368d60b0a755933f0bec5572"
-  },
-  "js/controle-gastos.js": {
-    "mtime": 1784136472.1300993,
-    "ast_hash": "a9f9eab017f86328ffce1967ebf9e0fe",
-    "semantic_hash": "a9f9eab017f86328ffce1967ebf9e0fe"
-  },
-  "js/dashboard.js": {
-    "mtime": 1780839955.3933463,
-    "ast_hash": "a62625553e24a5788d65c07a3cae1326",
-    "semantic_hash": "a62625553e24a5788d65c07a3cae1326"
-  },
-  "js/fechamento-horas.js": {
-    "mtime": 1781094438.253668,
-    "ast_hash": "73e8343cf81b81f274e9393a3f762240",
-    "semantic_hash": "73e8343cf81b81f274e9393a3f762240"
-  },
-  "js/horas-voadas-inva.js": {
-    "mtime": 1781094314.4087114,
-    "ast_hash": "025ea7d2d1f3d2093811129c21ab2b2f",
-    "semantic_hash": "025ea7d2d1f3d2093811129c21ab2b2f"
-  },
-  "js/inicio.js": {
-    "mtime": 1783612639.3605847,
-    "ast_hash": "b5d747ca865e1d520b18d911dab4cf79",
-    "semantic_hash": "b5d747ca865e1d520b18d911dab4cf79"
-  },
-  "js/progresso-alunos.js": {
-    "mtime": 1783528331.9282496,
-    "ast_hash": "aa41e90819c50ec79d35bdd6a5103f17",
-    "semantic_hash": "aa41e90819c50ec79d35bdd6a5103f17"
-  },
-  "js/vendas.js": {
-    "mtime": 1784136472.1302874,
-    "ast_hash": "3b7635520d632fd9efc87bdf6ecada07",
-    "semantic_hash": "3b7635520d632fd9efc87bdf6ecada07"
   },
   "preview/clean/assets/safe-minions/xlsx.full.min.js": {
     "mtime": 1783375451.4449642,
@@ -350,88 +270,88 @@
     "semantic_hash": "79d800d2eb3ad1c2e84fd7d8337170a1"
   },
   "README.md": {
-    "mtime": 1783254074.2197094,
-    "ast_hash": "224c64481ab8d1c4801df0aad2a267fe",
-    "semantic_hash": "224c64481ab8d1c4801df0aad2a267fe"
+    "mtime": 1785159400.2736046,
+    "ast_hash": "ef61a145d9cc65406095bad0ded5e7f1",
+    "semantic_hash": ""
   },
   "access-control.html": {
-    "mtime": 1785107884.7132833,
-    "ast_hash": "53d0ca5480cc67e93368ceabde6fd813",
+    "mtime": 1785161389.1866121,
+    "ast_hash": "38f5c4b1a95d3a3e1bbbc56cf600ff7e",
     "semantic_hash": ""
   },
   "acesso-negado.html": {
-    "mtime": 1785107884.7141857,
-    "ast_hash": "b969e1272ff9da65e48baad01300c89f",
+    "mtime": 1785161389.1907876,
+    "ast_hash": "4cade58be212d5fcbe490984b2cef3c1",
     "semantic_hash": ""
   },
   "admin.html": {
-    "mtime": 1785107884.7127266,
-    "ast_hash": "baff7aabe74f7be9e08e37c8c5b9e0ac",
+    "mtime": 1785161389.1844711,
+    "ast_hash": "84ddf0b59e9fc756f38595a2594816b1",
     "semantic_hash": ""
   },
   "bases.html": {
-    "mtime": 1785107884.713376,
-    "ast_hash": "850046c8b6a5fb2ee11d8af4a11c4571",
+    "mtime": 1785161389.186832,
+    "ast_hash": "061c4b2d86dc9ed0e1336b891fa1a7b6",
     "semantic_hash": ""
   },
   "cadastro-alunos.html": {
-    "mtime": 1785107884.7146752,
-    "ast_hash": "bc973f43a875c125c33cd5658e73c64c",
+    "mtime": 1785161389.1921964,
+    "ast_hash": "3e2599b15a702d43fd56c164e03f2df2",
     "semantic_hash": ""
   },
   "concorrencia.html": {
-    "mtime": 1785107884.7123563,
-    "ast_hash": "1efc3be12b6681ef6e60e2dd4596e0e7",
+    "mtime": 1785161389.1827848,
+    "ast_hash": "3dca9ca4e97ea90c2f3bc3b05f1f52e0",
     "semantic_hash": ""
   },
   "controle-gastos.html": {
-    "mtime": 1785107884.7143922,
-    "ast_hash": "c986beee75048aff1de3d4636c7e77ff",
+    "mtime": 1785161389.191481,
+    "ast_hash": "fe5e05bf2f63b07f093b53461e296a6a",
     "semantic_hash": ""
   },
   "dashboard.html": {
-    "mtime": 1785107884.713863,
-    "ast_hash": "4f14cbe5ee09a67a92d750ba4912a85a",
+    "mtime": 1785161389.1893907,
+    "ast_hash": "8b6572b51adeea74d74ae840cd16571d",
     "semantic_hash": ""
   },
   "debug.html": {
-    "mtime": 1785107884.7142873,
-    "ast_hash": "d9d29fb637485da446f6502b7ba95c9c",
+    "mtime": 1785161389.1910663,
+    "ast_hash": "923ce275627ef6b83e084ffba735c1c7",
     "semantic_hash": ""
   },
   "escala-cco.html": {
-    "mtime": 1785108976.0372279,
-    "ast_hash": "a31ebe4eb740e3dd25bb1b1f8344012f",
+    "mtime": 1785161389.193804,
+    "ast_hash": "82f6a3c5a4b93a4bc1a7e27dffce20c3",
     "semantic_hash": ""
   },
   "escala-pav.html": {
-    "mtime": 1785108812.3585985,
-    "ast_hash": "1474336b178ab77fe6c77b346da77ccd",
+    "mtime": 1785161389.185863,
+    "ast_hash": "bca202b7c412f0dcc4d7efef110522e2",
     "semantic_hash": ""
   },
   "faturamento.html": {
-    "mtime": 1785107884.713502,
-    "ast_hash": "d69103a35bf4d74b26229068f88bd370",
+    "mtime": 1785161389.1873963,
+    "ast_hash": "4b25bd3c2c6e227fe89bf0e07e8f373a",
     "semantic_hash": ""
   },
   "fechamento-horas.html": {
-    "mtime": 1785107884.7137506,
-    "ast_hash": "5e1f96273ce9b525702f11cece2cf589",
+    "mtime": 1785161389.1886818,
+    "ast_hash": "b7cc51eee4645962c23497458eb47f21",
     "semantic_hash": ""
   },
   "horas-voadas-inva.html": {
-    "mtime": 1785107884.7140975,
-    "ast_hash": "650a4f394e78ea69b7539747e068f9f6",
+    "mtime": 1785161389.1904325,
+    "ast_hash": "d95776bf72694535759897811634c91c",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785107884.7125034,
-    "ast_hash": "fc68f92a7875cc25d1211b64369c9f5a",
+    "mtime": 1785161389.1833994,
+    "ast_hash": "b55ec0d8fca2ef31469dcabb636b88a3",
     "semantic_hash": ""
   },
   "inicio.html": {
-    "mtime": 1785107884.712616,
-    "ast_hash": "86d28f7d711cf818f714950f65ae8ebe",
+    "mtime": 1785161389.1839464,
+    "ast_hash": "1aabec268b1cb6d0f31677c89ee47def",
     "semantic_hash": ""
   },
   "preview/clean/access-control.html": {
@@ -760,18 +680,18 @@
     "semantic_hash": "b8ea2b63c67dc9812d57dd618920198b"
   },
   "progresso-alunos.html": {
-    "mtime": 1785107884.71449,
-    "ast_hash": "6e95f7bc46c14022592660adf8ae1944",
+    "mtime": 1785161389.191674,
+    "ast_hash": "c0b929b19c64031de40f2d561fef16ac",
     "semantic_hash": ""
   },
   "safe-minions.html": {
-    "mtime": 1785107884.7140045,
-    "ast_hash": "4afcb964e79dd23e2000d702ff20c284",
+    "mtime": 1785161389.1900113,
+    "ast_hash": "3e735690a337950ad97d8d9a73b00249",
     "semantic_hash": ""
   },
   "vendas.html": {
-    "mtime": 1785107884.713608,
-    "ast_hash": "242933b1f50451ab58267ae5ee63ec1a",
+    "mtime": 1785161389.1880305,
+    "ast_hash": "3e7a297e642b5c181ce76f07e18354df",
     "semantic_hash": ""
   },
   "assets/icons/apple-touch-icon.png": {
@@ -975,28 +895,128 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1785110155.9529068,
-    "ast_hash": "bbe71e28299793c220af117b99ba422a",
-    "semantic_hash": ""
-  },
-  "js/notams.js": {
-    "mtime": 1785107827.1896586,
-    "ast_hash": "42bfebeaef1c61049ff01779c03345e0",
+    "mtime": 1785161415.0985458,
+    "ast_hash": "25edec3f2bf6b5add30a747ddc188b1a",
     "semantic_hash": ""
   },
   "notams.html": {
-    "mtime": 1785107884.7145846,
-    "ast_hash": "6cab82f8803aa35bf1439f2f83be1738",
+    "mtime": 1785161389.1919374,
+    "ast_hash": "fc217926d16784f680fd60130456a280",
     "semantic_hash": ""
   },
-  "js/aniversarios.js": {
+  "aniversarios.html": {
+    "mtime": 1785161389.186392,
+    "ast_hash": "c086aea0b8a45d934d1cb8e25463fe32",
+    "semantic_hash": ""
+  },
+  "tools/package.json": {
+    "mtime": 1785160196.5827594,
+    "ast_hash": "1fbee052a844da73ca58da9aff30311f",
+    "semantic_hash": ""
+  },
+  "tools/screenshot.mjs": {
+    "mtime": 1785158445.709292,
+    "ast_hash": "dae3d3e02caa314ed6dfbfce2b34d705",
+    "semantic_hash": ""
+  },
+  "js/core/api.js": {
+    "mtime": 1785161186.7185962,
+    "ast_hash": "b309879b3b57d50058b64d8b8557b929",
+    "semantic_hash": ""
+  },
+  "js/core/auth.js": {
+    "mtime": 1785161260.7789724,
+    "ast_hash": "14634cbff643bb10e960ff7de979f28b",
+    "semantic_hash": ""
+  },
+  "js/core/config.js": {
+    "mtime": 1784934306.290775,
+    "ast_hash": "b0b74824368d60b0a755933f0bec5572",
+    "semantic_hash": ""
+  },
+  "js/pages/access-control.js": {
+    "mtime": 1783527956.4786665,
+    "ast_hash": "50e5a50872bb70aa4b148351c87814e9",
+    "semantic_hash": ""
+  },
+  "js/pages/admin.js": {
+    "mtime": 1784136472.1294935,
+    "ast_hash": "e37373441a9e381104d4538952fa1b72",
+    "semantic_hash": ""
+  },
+  "js/pages/aniversarios.js": {
     "mtime": 1785107843.7795115,
     "ast_hash": "8087499ba80938b25555f51e065c9fdb",
     "semantic_hash": ""
   },
-  "aniversarios.html": {
-    "mtime": 1785107884.7131872,
-    "ast_hash": "c96d641f0053ad19a02ad82355b2ac67",
+  "js/pages/bases.js": {
+    "mtime": 1784136472.1297796,
+    "ast_hash": "5320511d7d6082e676f174f1fa8152af",
+    "semantic_hash": ""
+  },
+  "js/pages/cadastro-alunos.js": {
+    "mtime": 1784938712.6967793,
+    "ast_hash": "7e3d01033994ecdeb5c3207f2554b0b9",
+    "semantic_hash": ""
+  },
+  "js/pages/concorrencia.js": {
+    "mtime": 1785158828.4915776,
+    "ast_hash": "a30f7e7898502b9d91bd93bfcf97dd74",
+    "semantic_hash": ""
+  },
+  "js/pages/controle-gastos.js": {
+    "mtime": 1784136472.1300993,
+    "ast_hash": "a9f9eab017f86328ffce1967ebf9e0fe",
+    "semantic_hash": ""
+  },
+  "js/pages/dashboard.js": {
+    "mtime": 1785158828.4924843,
+    "ast_hash": "d14d8e95f73662e9af78ba3d93478022",
+    "semantic_hash": ""
+  },
+  "js/pages/fechamento-horas.js": {
+    "mtime": 1781094438.253668,
+    "ast_hash": "73e8343cf81b81f274e9393a3f762240",
+    "semantic_hash": ""
+  },
+  "js/pages/horas-voadas-inva.js": {
+    "mtime": 1781094314.4087114,
+    "ast_hash": "025ea7d2d1f3d2093811129c21ab2b2f",
+    "semantic_hash": ""
+  },
+  "js/pages/inicio.js": {
+    "mtime": 1783612639.3605847,
+    "ast_hash": "b5d747ca865e1d520b18d911dab4cf79",
+    "semantic_hash": ""
+  },
+  "js/pages/notams.js": {
+    "mtime": 1785158265.9325016,
+    "ast_hash": "dc005faef6f7247521a75b91ea5a8a46",
+    "semantic_hash": ""
+  },
+  "js/pages/progresso-alunos.js": {
+    "mtime": 1785158828.4931037,
+    "ast_hash": "a092bc94a029c44c746996fede6ecc0d",
+    "semantic_hash": ""
+  },
+  "js/pages/vendas.js": {
+    "mtime": 1785158828.4912138,
+    "ast_hash": "dca68cab8563acea63ad08955c1ffec3",
+    "semantic_hash": ""
+  },
+  "tools/admin-cli.js": {
+    "mtime": 1780839955.3947942,
+    "ast_hash": "1d8210ca98ce3965650c18533ee802d4",
+    "semantic_hash": ""
+  },
+  "assets/img/safe-logo-horizontal-dark.png": {
+    "mtime": 1785158667.265005,
+    "ast_hash": "42b6684ab8e5dba1a47654b78df1c201",
+    "semantic_hash": ""
+  },
+  "tools/preview.sh": {
+    "mtime": 1785160948.154818,
+    "ast_hash": "207c8512459de6d17e3da0f80e0b3e5e",
     "semantic_hash": ""
   }
 }

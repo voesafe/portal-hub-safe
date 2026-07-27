@@ -65,6 +65,112 @@
   --transition:  all .2s cubic-bezier(.4,0,.2,1);
 }
 
+/* ── Camada semântica ──────────────────────────────────────────
+   As variáveis acima são a PALETA: nomes de cor, valor fixo, iguais
+   nos dois modos. As de baixo são o PAPEL que a cor cumpre na tela,
+   e só elas mudam entre claro e escuro.
+
+   Regra ao escrever CSS novo: componente usa papel, nunca paleta.
+   `background: var(--surface)`, não `var(--white)`. A paleta continua
+   válida para o que é marca de verdade e não deve inverter: o azul de
+   um botão primário, o verde de sucesso, o vermelho de erro.
+
+   Os dois tokens que mais enganam:
+   `--navy` era cor de texto em 71 lugares e fundo de marca em 17. Como
+   texto virou `--text`, como fundo virou `--brand-surface`. `--white`
+   era fundo em 41 e texto sobre marca em 39: viraram `--surface` e
+   `--text-on-brand`. Se você escrever `--navy` num texto novo, ele fica
+   ilegível no escuro, e só no escuro, que é o jeito mais fácil de o
+   erro passar despercebido. */
+:root {
+  color-scheme: light;
+
+  --bg:            var(--off-white);
+  --surface:       var(--white);
+  --surface-2:     var(--gray-100);
+  --surface-3:     var(--gray-200);
+  --surface-sunken: var(--gray-100);
+
+  --text:          var(--navy);
+  --text-2:        var(--gray-600);
+  --text-muted:    var(--gray-400);
+  --text-subtle:   var(--gray-300);
+  --text-on-brand: var(--white);
+
+  --border:        var(--gray-200);
+  --border-strong: var(--gray-300);
+
+  --brand-surface:       var(--navy);
+  --brand-surface-hover: var(--navy-light);
+
+  /* Blocos de estado (aprovado / erro / aviso / info). O padrão antigo era
+     um par de hex do Tailwind escrito à mão em cada página, tipo fundo
+     `#f0fdf4` com texto `#166534`, repetido em seis arquivos. O fundo em
+     rgba funciona nos dois modos porque é translúcido: assenta sobre a
+     superfície de baixo em vez de impor a sua. Só a tinta precisa virar. */
+  --tint-ok:     rgba(46,204,113,.12);
+  --tint-erro:   rgba(231,76,60,.10);
+  --tint-aviso:  rgba(243,156,18,.12);
+  --tint-info:   rgba(91,174,226,.12);
+  --ink-ok:      #166534;
+  --ink-erro:    #991b1b;
+  --ink-aviso:   #92400e;
+  --ink-info:    #245f8c;
+}
+
+/* Claro é o padrão do Hub e não segue o sistema operacional: só entra no
+   escuro quem pedir pelo menu do usuário. Por isso não existe bloco
+   `@media (prefers-color-scheme: dark)` aqui, e não deve passar a existir.
+   Quem carimba o atributo é a guarda anti-flash no <head> de cada página,
+   antes da primeira pintura. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:            #0b1120;
+  --surface:       #141d33;
+  --surface-2:     #1c2745;
+  --surface-3:     #26345c;
+  --surface-sunken: #0e1628;
+
+  --text:          #eaf0fb;
+  --text-2:        #c2cee6;
+  --text-muted:    #8fa1c2;
+  --text-subtle:   #6d7fa3;
+  --text-on-brand: #ffffff;
+
+  --border:        #273354;
+  --border-strong: #37456d;
+
+  /* Um navy mais claro que o da paleta: o #1D2951 original quase some
+     contra o fundo #0b1120 e os blocos de marca perdiam o contorno. */
+  --brand-surface:       #243766;
+  --brand-surface-hover: #2e457c;
+
+  /* As sombras da paleta são rgba de navy, que no escuro não aparece.
+     Trocadas por preto, com mais opacidade para compensar. */
+  --shadow-sm:   0 1px 4px rgba(0,0,0,.35);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.45);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,.55);
+  --shadow-card: 0 2px 12px rgba(0,0,0,.40);
+
+  /* Semânticas ganham versão mais clara: o verde e o vermelho da paleta
+     foram escolhidos contra fundo branco e no escuro ficam abafados. */
+  --success:     #3ddc84;
+  --warning:     #f5b445;
+  --danger:      #ff6b5b;
+
+  /* Os fundos sobem um pouco (translúcido sobre escuro rende menos) e a
+     tinta inverte: os verdes/vermelhos escuros do modo claro somem aqui. */
+  --tint-ok:     rgba(61,220,132,.16);
+  --tint-erro:   rgba(255,107,91,.16);
+  --tint-aviso:  rgba(245,180,69,.16);
+  --tint-info:   rgba(91,174,226,.18);
+  --ink-ok:      #6ee7a4;
+  --ink-erro:    #ff9d92;
+  --ink-aviso:   #f7c777;
+  --ink-info:    #8fc7ee;
+}
+
 /* ── Reset & Base ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -72,8 +178,8 @@ html { font-size: 16px; scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  background: var(--off-white);
-  color: var(--navy);
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -88,7 +194,7 @@ h1, h2, h3, h4, h5 {
   font-family: var(--font-title);
   font-weight: 700;
   line-height: 1.25;
-  color: var(--navy);
+  color: var(--text);
 }
 
 h1 { font-size: 2rem; }
@@ -98,8 +204,8 @@ h4 { font-size: 1rem; }
 
 .text-sm    { font-size: .85rem; }
 .text-xs    { font-size: .75rem; }
-.text-muted { color: var(--gray-400); }
-.text-white { color: var(--white); }
+.text-muted { color: var(--text-muted); }
+.text-white { color: var(--text-on-brand); }
 .text-blue  { color: var(--blue); }
 .text-teal  { color: var(--teal); }
 .fw-600     { font-weight: 600; }
@@ -121,7 +227,7 @@ h4 { font-size: 1rem; }
 
 .btn-primary {
   background: var(--blue);
-  color: var(--white);
+  color: var(--text-on-brand);
 }
 .btn-primary:hover {
   background: var(--blue-dark);
@@ -130,8 +236,8 @@ h4 { font-size: 1rem; }
 }
 
 .btn-navy {
-  background: var(--navy);
-  color: var(--white);
+  background: var(--brand-surface);
+  color: var(--text-on-brand);
 }
 .btn-navy:hover {
   background: var(--navy-deep);
@@ -140,7 +246,7 @@ h4 { font-size: 1rem; }
 
 .btn-teal {
   background: var(--teal);
-  color: var(--white);
+  color: var(--text-on-brand);
 }
 .btn-teal:hover {
   background: var(--teal-dark);
@@ -149,17 +255,17 @@ h4 { font-size: 1rem; }
 
 .btn-ghost {
   background: transparent;
-  color: var(--navy);
-  border: 1.5px solid var(--gray-200);
+  color: var(--text);
+  border: 1.5px solid var(--border);
 }
 .btn-ghost:hover {
-  background: var(--gray-100);
-  border-color: var(--gray-300);
+  background: var(--surface-2);
+  border-color: var(--border-strong);
 }
 
 .btn-danger {
   background: var(--danger);
-  color: var(--white);
+  color: var(--text-on-brand);
 }
 .btn-danger:hover { background: #c0392b; }
 
@@ -174,7 +280,7 @@ h4 { font-size: 1rem; }
 
 /* ── Cards ─────────────────────────────────────────────────── */
 .card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 24px;
@@ -191,12 +297,12 @@ h4 { font-size: 1rem; }
   font-family: var(--font-title);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--text);
 }
 
 /* KPI Card */
 .kpi-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 24px;
@@ -223,18 +329,18 @@ h4 { font-size: 1rem; }
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .06em;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }
 .kpi-value {
   font-family: var(--font-title);
   font-size: 1.9rem;
   font-weight: 800;
-  color: var(--navy);
+  color: var(--text);
   line-height: 1;
 }
 .kpi-sub {
   font-size: .78rem;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }
 .kpi-icon {
   position: absolute;
@@ -248,7 +354,7 @@ h4 { font-size: 1rem; }
 }
 .kpi-icon.blue  { background: rgba(91,174,226,.12); color: var(--blue); }
 .kpi-icon.teal  { background: rgba(96,192,191,.12); color: var(--teal); }
-.kpi-icon.navy  { background: rgba(29,41,81,.08);   color: var(--navy); }
+.kpi-icon.navy  { background: rgba(29,41,81,.08);   color: var(--text); }
 .kpi-icon.green { background: rgba(46,204,113,.12); color: var(--success); }
 
 /* ── Formulários ───────────────────────────────────────────── */
@@ -261,18 +367,18 @@ h4 { font-size: 1rem; }
 .form-label {
   font-size: .8rem;
   font-weight: 600;
-  color: var(--gray-500);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: .04em;
 }
 .form-control {
   width: 100%;
   padding: 10px 14px;
-  border: 1.5px solid var(--gray-200);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   font-size: .9rem;
-  color: var(--navy);
-  background: var(--white);
+  color: var(--text);
+  background: var(--surface);
   transition: var(--transition);
   outline: none;
 }
@@ -280,7 +386,7 @@ h4 { font-size: 1rem; }
   border-color: var(--blue);
   box-shadow: 0 0 0 3px rgba(91,174,226,.15);
 }
-.form-control::placeholder { color: var(--gray-300); }
+.form-control::placeholder { color: var(--text-subtle); }
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -298,8 +404,8 @@ h4 { font-size: 1rem; }
   font-size: .875rem;
 }
 .table thead th {
-  background: var(--navy);
-  color: var(--white);
+  background: var(--brand-surface);
+  color: var(--text-on-brand);
   font-family: var(--font-title);
   font-size: .75rem;
   font-weight: 700;
@@ -312,13 +418,13 @@ h4 { font-size: 1rem; }
 .table thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
 .table thead th:last-child  { border-radius: 0 var(--radius-sm) 0 0; }
 .table tbody tr {
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--border);
   transition: var(--transition);
 }
-.table tbody tr:hover { background: var(--off-white); }
+.table tbody tr:hover { background: var(--bg); }
 .table tbody td {
   padding: 12px 16px;
-  color: var(--navy);
+  color: var(--text);
   vertical-align: middle;
 }
 .table tbody tr:last-child { border-bottom: none; }
@@ -336,7 +442,7 @@ h4 { font-size: 1rem; }
 }
 .badge-blue   { background: rgba(91,174,226,.12);  color: var(--blue-dark); }
 .badge-teal   { background: rgba(96,192,191,.12);  color: var(--teal-dark); }
-.badge-navy   { background: rgba(29,41,81,.08);    color: var(--navy); }
+.badge-navy   { background: rgba(29,41,81,.08);    color: var(--text); }
 .badge-green  { background: rgba(46,204,113,.12);  color: #27ae60; }
 .badge-orange { background: rgba(243,156,18,.12);  color: #d68910; }
 .badge-red    { background: rgba(231,76,60,.12);   color: #c0392b; }
@@ -361,7 +467,7 @@ h4 { font-size: 1rem; }
   pointer-events: all;
 }
 .modal {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   width: 100%;
@@ -387,10 +493,10 @@ h4 { font-size: 1rem; }
   width: 32px; height: 32px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: var(--gray-400);
+  color: var(--text-muted);
   transition: var(--transition);
 }
-.modal-close:hover { background: var(--gray-100); color: var(--navy); }
+.modal-close:hover { background: var(--surface-2); color: var(--text); }
 
 /* ── Toast / Alertas ───────────────────────────────────────── */
 .toast-container {
@@ -406,7 +512,7 @@ h4 { font-size: 1rem; }
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   min-width: 280px;
@@ -437,13 +543,13 @@ h4 { font-size: 1rem; }
 .spinner {
   width: 20px; height: 20px;
   border: 2px solid rgba(255,255,255,.3);
-  border-top-color: var(--white);
+  border-top-color: var(--surface);
   border-radius: 50%;
   animation: spin .7s linear infinite;
 }
 .spinner.dark {
   border-color: rgba(29,41,81,.15);
-  border-top-color: var(--navy);
+  border-top-color: var(--brand-surface);
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -481,7 +587,7 @@ h4 { font-size: 1rem; }
 .empty-state {
   text-align: center;
   padding: 48px 24px;
-  color: var(--gray-400);
+  color: var(--text-muted);
 }
 .empty-state .icon {
   font-size: 3rem;
@@ -493,15 +599,15 @@ h4 { font-size: 1rem; }
 /* Divider */
 .divider {
   border: none;
-  border-top: 1px solid var(--gray-100);
+  border-top: 1px solid var(--border);
   margin: 16px 0;
 }
 
 /* Scrollbar customizada */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* Garante que nada vaze */
 *, *::before, *::after { box-sizing: border-box; }
@@ -548,3 +654,39 @@ h4 { font-size: 1rem; }
 @media (max-width:  860px) { .col-lead    { display: none !important; } }
 @media (max-width:  680px) { .col-pac     { display: none !important; } }
 @media (max-width:  500px) { .col-curso   { display: none !important; } }
+
+/* ── Ajustes de componente no escuro ───────────────────────────
+   Tudo que a camada semântica não resolve sozinha mora AQUI, num
+   bloco só, para não voltar a espalhar seletor de tema por 18
+   arquivos como era antes de 2026-07-27.
+
+   O que não se resolve por token: tint de cor de marca escrito em
+   `rgba(...)` cru. Uma pastilha `rgba(91,174,226,.12)` foi calibrada
+   contra branco; sobre `--surface` escuro ela some, e o texto, que é
+   a variante ESCURA da cor, fica ilegível. A correção é sempre a
+   mesma dupla: sobe a opacidade do fundo e troca o texto pela
+   variante CLARA da mesma cor. */
+
+/* Pastilhas de status */
+:root[data-theme="dark"] .badge-blue   { background: rgba(91,174,226,.20); color: var(--blue-light); }
+:root[data-theme="dark"] .badge-teal   { background: rgba(96,192,191,.20); color: var(--teal-light); }
+:root[data-theme="dark"] .badge-navy   { background: rgba(255,255,255,.10); color: var(--text-2); }
+:root[data-theme="dark"] .badge-green  { background: rgba(61,220,132,.18);  color: #6ee7a4; }
+:root[data-theme="dark"] .badge-orange { background: rgba(245,180,69,.18);  color: #f7c777; }
+:root[data-theme="dark"] .badge-red    { background: rgba(255,107,91,.18);  color: #ff9d92; }
+
+/* Ícones de KPI */
+:root[data-theme="dark"] .kpi-icon.blue  { background: rgba(91,174,226,.20); }
+:root[data-theme="dark"] .kpi-icon.teal  { background: rgba(96,192,191,.20); }
+:root[data-theme="dark"] .kpi-icon.navy  { background: rgba(255,255,255,.10); }
+:root[data-theme="dark"] .kpi-icon.green { background: rgba(61,220,132,.18); }
+
+/* O spinner escuro nasceu para girar sobre fundo claro. No modo escuro
+   o nome engana: quem precisa de aro claro é ele. */
+:root[data-theme="dark"] .spinner.dark {
+  border-color: rgba(255,255,255,.18);
+  border-top-color: var(--text);
+}
+
+/* Cor de seleção de texto: a padrão do navegador assume fundo claro. */
+:root[data-theme="dark"] ::selection { background: rgba(91,174,226,.32); color: var(--text); }

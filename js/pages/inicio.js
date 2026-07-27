@@ -3,17 +3,12 @@
 // ============================================================
 
 const Inicio = {
+  // Só serve para o PRIMEIRO acesso de um navegador, antes de existir
+  // cache. Da segunda vez em diante quem manda é a resposta do servidor,
+  // guardada em `BASES_CACHE_KEY`. Ordem igual à que a planilha devolve
+  // hoje (São José primeiro), para o primeiro acesso não pintar numa
+  // ordem e trocar para outra alguns segundos depois.
   basesPadrao: [
-    {
-      nome: 'SAFE Campinas',
-      endereco: 'Rua Sylvia da Silva Braga, 415',
-      complemento: 'Terminal de Passageiros',
-      cidade: 'Campinas',
-      uf: 'SP',
-      cep: '13082-105',
-      email: 'contato@voesafe.com.br',
-      telefone: '(12) 99706-9562'
-    },
     {
       nome: 'SAFE Escola de Aviação',
       endereco: 'Rodovia dos Tamoios, Km 6,5',
@@ -21,6 +16,16 @@ const Inicio = {
       cidade: 'São José dos Campos',
       uf: 'SP',
       cep: '12228-845',
+      email: 'contato@voesafe.com.br',
+      telefone: '(12) 99706-9562'
+    },
+    {
+      nome: 'SAFE Campinas',
+      endereco: 'Rua Sylvia da Silva Braga, 415',
+      complemento: 'Terminal de Passageiros',
+      cidade: 'Campinas',
+      uf: 'SP',
+      cep: '13082-105',
       email: 'contato@voesafe.com.br',
       telefone: '(12) 99706-9562'
     }
@@ -283,10 +288,49 @@ const Inicio = {
     }).join('');
   },
 
-  async carregarBases() {
-    const res = await API.getBases();
-    const bases = res.ok ? (res.data || []).filter(base => base.ativa !== false) : this.basesPadrao;
-    this.renderizarBases(bases);
+  // ── Bases: pinta na hora, confere depois ──────────────────
+  // O endereço de uma base muda quando a base muda de lugar ou fecha, o
+  // que não acontece há anos. Esperar os ~10s do Apps Script para mostrar
+  // um dado que praticamente nunca muda deixava a home em "carregando" na
+  // parte mais visível dela. Agora a tela pinta com o que já se sabe e a
+  // conferência acontece em segundo plano: se o servidor discordar, a
+  // seção se corrige sozinha, sem ninguém esperando.
+  BASES_CACHE_KEY: 'safe-hub-bases',
+
+  basesConhecidas() {
+    try {
+      const bruto = localStorage.getItem(this.BASES_CACHE_KEY);
+      const lista = bruto ? JSON.parse(bruto) : null;
+      if (Array.isArray(lista) && lista.length) return lista;
+    } catch (e) {}
+    return this.basesPadrao;   // primeiro acesso do navegador
+  },
+
+  carregarBases() {
+    // O que está na tela agora, guardado ANTES de qualquer escrita: é com
+    // isto que a resposta do servidor será comparada. Reler o cache depois
+    // de gravar daria sempre igual, e a tela nunca se corrigiria.
+    const naTela = JSON.stringify(this.basesConhecidas());
+    this.renderizarBases(JSON.parse(naTela));
+
+    // Sem `await` de propósito: quem chama não deve ficar preso nisso.
+    API.getBases().then(res => {
+      if (!res?.ok) return;   // servidor fora: fica o que já está na tela
+      const bases = (res.data || []).filter(base => base.ativa !== false);
+      if (!bases.length) return;
+
+      const novo = JSON.stringify(bases);
+
+      // Gravar SEMPRE, repintar só se mudou: são coisas separadas.
+      // Amarrar a gravação à diferença deixava sem cache justamente o
+      // navegador cujos dados batem com o padrão, que é o caso comum, e
+      // ele seguia dependendo da constante do código para sempre.
+      try { localStorage.setItem(this.BASES_CACHE_KEY, novo); } catch (e) {}
+
+      // Repintar conteúdo idêntico faria a seção piscar do nada, uns dez
+      // segundos depois de a página já estar aberta e lida.
+      if (novo !== naTela) this.renderizarBases(bases);
+    });
   },
 
   setCarregando(ativo) {
@@ -317,7 +361,9 @@ const Inicio = {
     if (!Auth.podeVer('bases.html')) {
       if (secaoBases) secaoBases.hidden = true;
     } else {
-      await this.carregarBases();
+      // Sem `await`: pinta na hora com o que já se sabe e confere com o
+      // servidor em segundo plano. Ver `carregarBases`.
+      this.carregarBases();
     }
   }
 };

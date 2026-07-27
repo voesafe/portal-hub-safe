@@ -14,7 +14,7 @@
 .sk-row td div {
   height: 14px;
   border-radius: 4px;
-  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
@@ -33,14 +33,14 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--gray-400);
+  color: var(--text-muted);
   margin: 4px 0 16px;
 }
 .modal-section-title::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--gray-100);
+  background: var(--surface-2);
 }
 .modal-section-title svg { color: var(--blue); flex-shrink: 0; }
 
@@ -66,7 +66,7 @@
 
 .curso-picker-trigger svg {
   flex-shrink: 0;
-  color: var(--gray-400);
+  color: var(--text-muted);
   transition: transform .2s ease;
 }
 
@@ -87,9 +87,9 @@
   right: 0;
   display: none;
   padding: 10px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   box-shadow: var(--shadow-lg);
 }
 
@@ -116,14 +116,14 @@
   gap: 8px;
   padding: 8px 10px;
   border-radius: var(--radius-sm);
-  color: var(--navy);
+  color: var(--text);
   font-size: .88rem;
   text-align: left;
   transition: var(--transition);
 }
 
 .curso-picker-option:hover {
-  background: var(--gray-100);
+  background: var(--surface-2);
 }
 
 .curso-picker-option.selected {
@@ -138,9 +138,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--gray-300);
+  border: 1.5px solid var(--border-strong);
   border-radius: 4px;
-  color: var(--white);
+  color: var(--text-on-brand);
   font-size: .72rem;
   font-weight: 800;
 }
@@ -157,8 +157,8 @@
   gap: 12px;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid var(--gray-100);
-  color: var(--gray-400);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
   font-size: .78rem;
   font-weight: 600;
 }
@@ -171,7 +171,7 @@
 
 .curso-picker-empty {
   padding: 14px 10px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .86rem;
   text-align: center;
 }
@@ -190,8 +190,8 @@
   gap: 6px;
   padding: 5px 8px;
   border-radius: 999px;
-  background: var(--gray-100);
-  color: var(--navy);
+  background: var(--surface-2);
+  color: var(--text);
   font-size: .76rem;
   font-weight: 700;
 }

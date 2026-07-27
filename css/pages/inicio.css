@@ -9,11 +9,11 @@
   background:
     radial-gradient(circle at 96% 2%, rgba(91,174,226,.12), transparent 26%),
     radial-gradient(circle at 2% 98%, rgba(96,192,191,.10), transparent 22%),
-    #F3F6FB;
+    var(--bg);
 }
 
 .home-date {
-  color: var(--gray-500);
+  color: var(--text-muted);
   font-size: .78rem;
   font-weight: 600;
   text-transform: capitalize;
@@ -29,7 +29,7 @@
   overflow: hidden;
   padding: clamp(22px, 3.2vw, 38px) clamp(26px, 3.6vw, 44px);
   border-radius: 20px;
-  color: var(--white);
+  color: var(--text-on-brand);
   background: linear-gradient(118deg, #1b2650 0%, #26356b 56%, #3d8cc4 128%);
   box-shadow: 0 14px 36px rgba(29,41,81,.2);
 }
@@ -73,7 +73,7 @@
 
 .home-hero h1 {
   margin-bottom: 8px;
-  color: var(--white);
+  color: var(--text-on-brand);
   font-size: clamp(1.55rem, 2.8vw, 2.3rem);
   letter-spacing: -.03em;
 }
@@ -138,7 +138,7 @@
 }
 .home-section-heading p {
   max-width: 420px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .78rem;
   text-align: right;
 }
@@ -156,9 +156,9 @@
   flex-direction: column;
   overflow: hidden;
   padding: 22px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 3px 16px rgba(29,41,81,.06);
   transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
 }
@@ -177,7 +177,7 @@
 
 .home-module:hover {
   transform: translateY(-4px);
-  border-color: var(--module-accent-border, var(--gray-300));
+  border-color: var(--module-accent-border, var(--border-strong));
   box-shadow: 0 16px 38px rgba(29,41,81,.14);
 }
 .home-module:hover::before { transform: scaleX(1); }
@@ -206,7 +206,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--gray-300);
+  color: var(--text-subtle);
   transition: color .2s ease, transform .2s ease;
 }
 .home-module-arrow svg { width: 20px; height: 20px; }
@@ -220,7 +220,7 @@
   font-size: 1.02rem;
 }
 .home-module p {
-  color: var(--gray-500);
+  color: var(--text-muted);
   font-size: .78rem;
   line-height: 1.5;
 }
@@ -233,8 +233,8 @@
   gap: 5px;
   padding: 4px 9px;
   border-radius: 999px;
-  color: var(--gray-400);
-  background: var(--gray-100);
+  color: var(--text-muted);
+  background: var(--surface-2);
   font-size: .62rem;
   font-weight: 700;
   letter-spacing: .04em;
@@ -263,9 +263,9 @@
   flex-direction: column;
   overflow: hidden;
   padding: 16px 20px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: 14px;
-  background: var(--white);
+  background: var(--surface);
   box-shadow: 0 2px 12px rgba(29,41,81,.05);
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
@@ -301,13 +301,13 @@
 .home-base-icon svg { width: 19px; height: 19px; }
 .home-base h3 {
   margin-bottom: 1px;
-  color: var(--navy);
+  color: var(--text);
   font-size: .98rem;
   letter-spacing: .01em;
 }
 .home-base-city {
   display: block;
-  color: var(--gray-400);
+  color: var(--text-muted);
   font-size: .68rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -316,7 +316,16 @@
 .home-base address {
   display: grid;
   gap: 1px;
-  color: var(--gray-600);
+  /* `align-content: start` para as linhas ficarem coladas no topo, e
+     `flex: 1` para o bloco ESTICAR e engolir a sobra do card. É isso que
+     alinha a divisória dos contatos entre os dois cards: um endereço tem
+     complemento e o outro não, então sem esticar aqui a linha de cima
+     ficava mais alta num card do que no outro. Os cards já têm a mesma
+     altura, porque a grade estica por padrão; o que faltava era escolher
+     quem fica com o espaço que sobra. */
+  flex: 1;
+  align-content: start;
+  color: var(--text-2);
   font-size: .8rem;
   font-style: normal;
   line-height: 1.45;
@@ -329,17 +338,17 @@
   align-items: center;
   margin-top: 12px;
   padding-top: 11px;
-  border-top: 1px solid var(--gray-100);
+  border-top: 1px solid var(--border);
 }
 .home-base-contact {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--gray-600);
+  color: var(--text-2);
   font-size: .76rem;
   font-weight: 500;
 }
-.home-base-contact svg { width: 14px; height: 14px; color: var(--gray-400); flex-shrink: 0; }
+.home-base-contact svg { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
 a.home-base-contact:hover { color: var(--blue-dark); }
 a.home-base-contact:hover svg { color: var(--blue-dark); }
 .home-base-maplink {
@@ -361,9 +370,9 @@ a.home-base-contact:hover svg { color: var(--blue-dark); }
 .home-bases-loading {
   grid-column: 1 / -1;
   padding: 28px;
-  border: 1px dashed var(--gray-200);
+  border: 1px dashed var(--border);
   border-radius: 16px;
-  color: var(--gray-400);
+  color: var(--text-muted);
   text-align: center;
 }
 
@@ -374,8 +383,8 @@ a.home-base-contact:hover svg { color: var(--blue-dark); }
   gap: 16px;
   margin-top: 40px;
   padding: 20px 2px 4px;
-  border-top: 1px solid var(--gray-200);
-  color: var(--gray-400);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
   font-size: .68rem;
 }
 

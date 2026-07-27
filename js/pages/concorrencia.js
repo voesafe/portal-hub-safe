@@ -91,7 +91,7 @@ const Concorrencia = {
             </svg>
           </div>
           <p>${this.filtroCurso ? 'Nenhum dado cadastrado para este curso.' : 'Nenhum dado cadastrado ainda.'}</p>
-          <p style="font-size:.8rem;margin-top:6px;color:var(--gray-300)">
+          <p style="font-size:.8rem;margin-top:6px;color:var(--text-subtle)">
             Cadastre os preços SAFE e registre concorrentes para ver o comparativo.
           </p>
         </div>
@@ -381,8 +381,8 @@ const Concorrencia = {
           </button>
         </div>
         <div class="modal-body" style="padding-top:12px;padding-bottom:8px">
-          <p style="font-size:.9rem;color:var(--gray-500)">
-            Tem certeza que deseja excluir <strong style="color:var(--navy)">${nome || 'esta concorrente'}</strong>?
+          <p style="font-size:.9rem;color:var(--text-muted)">
+            Tem certeza que deseja excluir <strong style="color:var(--text)">${nome || 'esta concorrente'}</strong>?
             Esta ação não pode ser desfeita.
           </p>
         </div>

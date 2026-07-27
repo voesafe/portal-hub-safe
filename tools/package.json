@@ -4,7 +4,9 @@
   "type": "module",
   "description": "Ferramentas de desenvolvimento do SAFE Hub. Nao faz parte do site publicado.",
   "scripts": {
-    "shot": "node screenshot.mjs"
+    "preview": "bash preview.sh",
+    "shot": "node screenshot.mjs",
+    "shot:tudo": "node screenshot.mjs inicio.html && node screenshot.mjs inicio.html --dark && node screenshot.mjs vendas.html && node screenshot.mjs vendas.html --dark"
   },
   "dependencies": {
     "playwright-core": "^1.62.0"
