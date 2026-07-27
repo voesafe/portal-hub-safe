@@ -975,8 +975,8 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1785153455.5394378,
-    "ast_hash": "9f64bfdcf44412e433332a0df4e026a4",
+    "mtime": 1785110155.9529068,
+    "ast_hash": "bbe71e28299793c220af117b99ba422a",
     "semantic_hash": ""
   },
   "js/notams.js": {
@@ -997,16 +997,6 @@
   "aniversarios.html": {
     "mtime": 1785107884.7131872,
     "ast_hash": "c96d641f0053ad19a02ad82355b2ac67",
-    "semantic_hash": ""
-  },
-  "tools/package.json": {
-    "mtime": 1785110930.3305295,
-    "ast_hash": "f46a67d7a7fcd651b7dd1b25dadc079e",
-    "semantic_hash": ""
-  },
-  "tools/screenshot.mjs": {
-    "mtime": 1785110868.8554723,
-    "ast_hash": "0177be6563f2d165426959252e4527f3",
     "semantic_hash": ""
   }
 }

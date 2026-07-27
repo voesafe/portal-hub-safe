@@ -802,7 +802,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_access_control",
-      "community": 30,
+      "community": 3,
       "norm_label": "access-control.js"
     },
     {
@@ -812,7 +812,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "js_access_control_accesscontrol",
-      "community": 30,
+      "community": 3,
       "norm_label": "accesscontrol"
     },
     {
@@ -872,7 +872,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_aniversarios",
-      "community": 17,
+      "community": 3,
       "norm_label": "aniversarios.js"
     },
     {
@@ -882,7 +882,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "js_aniversarios_aniversarios",
-      "community": 17,
+      "community": 3,
       "norm_label": "aniversarios"
     },
     {
@@ -1012,7 +1012,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_auth",
-      "community": 43,
+      "community": 3,
       "norm_label": "auth.js"
     },
     {
@@ -1022,7 +1022,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "js_auth_auth",
-      "community": 43,
+      "community": 3,
       "norm_label": "auth"
     },
     {
@@ -1032,7 +1032,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_bases",
-      "community": 43,
+      "community": 3,
       "norm_label": "bases.js"
     },
     {
@@ -1042,7 +1042,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "js_bases_bases",
-      "community": 43,
+      "community": 3,
       "norm_label": "bases"
     },
     {
@@ -1052,7 +1052,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_cadastro_alunos",
-      "community": 43,
+      "community": 3,
       "norm_label": "cadastro-alunos.js"
     },
     {
@@ -1062,7 +1062,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "js_cadastro_alunos_cadastroalunos",
-      "community": 43,
+      "community": 3,
       "norm_label": "cadastroalunos"
     },
     {
@@ -1132,7 +1132,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_dashboard",
-      "community": 43,
+      "community": 3,
       "norm_label": "dashboard.js"
     },
     {
@@ -1142,7 +1142,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "js_dashboard_dashboard",
-      "community": 43,
+      "community": 3,
       "norm_label": "dashboard"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_fechamento_horas",
-      "community": 43,
+      "community": 3,
       "norm_label": "fechamento-horas.js"
     },
     {
@@ -1162,7 +1162,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "js_fechamento_horas_fechamentohoras",
-      "community": 43,
+      "community": 3,
       "norm_label": "fechamentohoras"
     },
     {
@@ -1172,7 +1172,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_horas_voadas_inva",
-      "community": 198,
+      "community": 3,
       "norm_label": "horas-voadas-inva.js"
     },
     {
@@ -1182,7 +1182,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "js_horas_voadas_inva_horasvoadasinva",
-      "community": 198,
+      "community": 3,
       "norm_label": "horasvoadasinva"
     },
     {
@@ -1212,7 +1212,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_notams",
-      "community": 28,
+      "community": 3,
       "norm_label": "notams.js"
     },
     {
@@ -1222,7 +1222,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "js_notams_notams",
-      "community": 28,
+      "community": 3,
       "norm_label": "notams"
     },
     {
@@ -1232,7 +1232,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_progresso_alunos",
-      "community": 199,
+      "community": 3,
       "norm_label": "progresso-alunos.js"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "js_progresso_alunos_progressoalunos",
-      "community": 199,
+      "community": 3,
       "norm_label": "progressoalunos"
     },
     {
@@ -1252,7 +1252,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_vendas",
-      "community": 16,
+      "community": 34,
       "norm_label": "vendas.js"
     },
     {
@@ -1262,7 +1262,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "js_vendas_cursos_vendas",
-      "community": 16,
+      "community": 34,
       "norm_label": "cursos_vendas"
     },
     {
@@ -1272,7 +1272,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "js_vendas_pacotes_legados_cursos",
-      "community": 16,
+      "community": 34,
       "norm_label": "pacotes_legados_cursos"
     },
     {
@@ -1282,7 +1282,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "js_vendas_vendas",
-      "community": 16,
+      "community": 34,
       "norm_label": "vendas"
     },
     {
@@ -1292,7 +1292,7 @@
       "source_location": "L806",
       "_origin": "ast",
       "id": "js_vendas_aplicarmascarabrl",
-      "community": 16,
+      "community": 34,
       "norm_label": "aplicarmascarabrl()"
     },
     {
@@ -1302,7 +1302,7 @@
       "source_location": "L814",
       "_origin": "ast",
       "id": "js_vendas_setinputbrl",
-      "community": 16,
+      "community": 34,
       "norm_label": "setinputbrl()"
     },
     {
@@ -1312,7 +1312,7 @@
       "source_location": "L825",
       "_origin": "ast",
       "id": "js_vendas_getinputbrl",
-      "community": 16,
+      "community": 34,
       "norm_label": "getinputbrl()"
     },
     {
@@ -2936,226 +2936,6 @@
       "norm_label": "getinputbrl()"
     },
     {
-      "label": "package.json",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "tools_package",
-      "community": 200,
-      "norm_label": "package.json"
-    },
-    {
-      "label": "name",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "tools_package_name",
-      "community": 200,
-      "norm_label": "name"
-    },
-    {
-      "label": "private",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "tools_package_private",
-      "community": 200,
-      "norm_label": "private"
-    },
-    {
-      "label": "type",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "tools_package_type",
-      "community": 200,
-      "norm_label": "type"
-    },
-    {
-      "label": "description",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "tools_package_description",
-      "community": 200,
-      "norm_label": "description"
-    },
-    {
-      "label": "scripts",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "tools_package_scripts",
-      "community": 200,
-      "norm_label": "scripts"
-    },
-    {
-      "label": "shot",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "tools_package_scripts_shot",
-      "community": 200,
-      "norm_label": "shot"
-    },
-    {
-      "label": "dependencies",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "tools_package_dependencies",
-      "community": 200,
-      "norm_label": "dependencies"
-    },
-    {
-      "label": "playwright-core",
-      "file_type": "code",
-      "source_file": "tools/package.json",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "tools_package_dependencies_playwright_core",
-      "community": 200,
-      "norm_label": "playwright-core"
-    },
-    {
-      "label": "screenshot.mjs",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "tools_screenshot",
-      "community": 34,
-      "norm_label": "screenshot.mjs"
-    },
-    {
-      "label": "AQUI",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L48",
-      "_origin": "ast",
-      "id": "tools_screenshot_aqui",
-      "community": 34,
-      "norm_label": "aqui"
-    },
-    {
-      "label": "acharChrome()",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L51",
-      "_origin": "ast",
-      "id": "tools_screenshot_acharchrome",
-      "community": 34,
-      "norm_label": "acharchrome()"
-    },
-    {
-      "label": "argv",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L68",
-      "_origin": "ast",
-      "id": "tools_screenshot_argv",
-      "community": 34,
-      "norm_label": "argv"
-    },
-    {
-      "label": "flag()",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L74",
-      "_origin": "ast",
-      "id": "tools_screenshot_flag",
-      "community": 34,
-      "norm_label": "flag()"
-    },
-    {
-      "label": "valor()",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L75",
-      "_origin": "ast",
-      "id": "tools_screenshot_valor",
-      "community": 34,
-      "norm_label": "valor()"
-    },
-    {
-      "label": "mobile",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L80",
-      "_origin": "ast",
-      "id": "tools_screenshot_mobile",
-      "community": 34,
-      "norm_label": "mobile"
-    },
-    {
-      "label": "largura",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L81",
-      "_origin": "ast",
-      "id": "tools_screenshot_largura",
-      "community": 34,
-      "norm_label": "largura"
-    },
-    {
-      "label": "altura",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L82",
-      "_origin": "ast",
-      "id": "tools_screenshot_altura",
-      "community": 34,
-      "norm_label": "altura"
-    },
-    {
-      "label": "base",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L83",
-      "_origin": "ast",
-      "id": "tools_screenshot_base",
-      "community": 34,
-      "norm_label": "base"
-    },
-    {
-      "label": "saida",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L84",
-      "_origin": "ast",
-      "id": "tools_screenshot_saida",
-      "community": 34,
-      "norm_label": "saida"
-    },
-    {
-      "label": "executablePath",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L86",
-      "_origin": "ast",
-      "id": "tools_screenshot_executablepath",
-      "community": 34,
-      "norm_label": "executablepath"
-    },
-    {
-      "label": "erros",
-      "file_type": "code",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L113",
-      "_origin": "ast",
-      "id": "tools_screenshot_erros",
-      "community": 34,
-      "norm_label": "erros"
-    },
-    {
       "label": "CLAUDE.md",
       "file_type": "document",
       "source_file": "CLAUDE.md",
@@ -3384,16 +3164,6 @@
       "id": "claude_o_que_ficou_de_fora",
       "community": 21,
       "norm_label": "o que ficou de fora"
-    },
-    {
-      "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L250",
-      "_origin": "ast",
-      "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
-      "community": 21,
-      "norm_label": "captura de tela das paginas (tools/), desde 2026-07-27"
     },
     {
       "label": "README.md",
@@ -6246,7 +6016,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 10,
       "norm_label": "controle de acesso page (access-control.html)",
       "id": "access_control_page"
     },
@@ -6272,7 +6042,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 3,
       "norm_label": "bases safe page (bases.html)",
       "id": "bases_page"
     },
@@ -6350,7 +6120,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 17,
       "norm_label": "progresso de alunos page (progresso-alunos.html)",
       "id": "progresso_alunos_page"
     },
@@ -6376,7 +6146,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 10,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "rbac_effective_permissions"
     },
@@ -7897,7 +7667,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "escala pav \u2014 seletor operacional (preview)",
       "id": "preview_pav_index_index"
     },
@@ -7910,7 +7680,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "modulo escala pav (staff de patio)",
       "id": "preview_pav_module"
     },
@@ -7923,7 +7693,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "pav \u00b7 calendario operacional",
       "id": "preview_pav_a_operacional_calendario"
     },
@@ -7936,7 +7706,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "pav \u00b7 fechamento financeiro",
       "id": "preview_pav_a_financeiro_fechamento"
     },
@@ -7949,7 +7719,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "pav \u00b7 cadastro de pavs",
       "id": "preview_pav_a_pavs_cadastro"
     },
@@ -7962,7 +7732,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "base cpn \u00b7 campinas",
       "id": "preview_pav_base_cpn"
     },
@@ -7975,7 +7745,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "base sjk \u00b7 sao jose dos campos",
       "id": "preview_pav_base_sjk"
     },
@@ -7988,7 +7758,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "perfil master (pav)",
       "id": "preview_pav_role_master"
     },
@@ -8001,7 +7771,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "perfil financeiro (pav)",
       "id": "preview_pav_role_financeiro"
     },
@@ -8014,7 +7784,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "carlos moraes (pav \u00b7 cpn)",
       "id": "preview_pav_carlos_moraes"
     },
@@ -8027,7 +7797,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "andre lima (pav \u00b7 cpn)",
       "id": "preview_pav_andre_lima"
     },
@@ -8040,7 +7810,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "bruno dias (pav \u00b7 cpn)",
       "id": "preview_pav_bruno_dias"
     },
@@ -8053,7 +7823,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "ana prado (pav \u00b7 sjk)",
       "id": "preview_pav_ana_prado"
     },
@@ -8066,7 +7836,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "marina reis (pav \u00b7 sjk)",
       "id": "preview_pav_marina_reis"
     },
@@ -8079,7 +7849,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "tiago souza (pav \u00b7 sjk)",
       "id": "preview_pav_tiago_souza"
     },
@@ -8092,7 +7862,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 30,
       "norm_label": "exportar ifood (fechamento pav)",
       "id": "preview_pav_a_financeiro_exportar_ifood"
     },
@@ -8235,7 +8005,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 3,
       "norm_label": "tela de login (index.html)",
       "id": "index_login_card"
     },
@@ -8248,7 +8018,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 3,
       "norm_label": "fazerlogin() \u2192 auth.login()",
       "id": "index_fazer_login"
     },
@@ -8274,7 +8044,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 14,
       "norm_label": "admin \u2014 gestao de usuarios (page)",
       "id": "admin_html"
     },
@@ -8287,7 +8057,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 14,
       "norm_label": "diretorio de acessos (tabela + tabs + filtros)",
       "id": "admin_diretorio_acessos"
     },
@@ -8326,7 +8096,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 14,
       "norm_label": "card de alterar minha senha",
       "id": "admin_alterar_senha"
     },
@@ -8352,7 +8122,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 3,
       "norm_label": "bases safe (page)",
       "id": "bases_html"
     },
@@ -8365,7 +8135,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 3,
       "norm_label": "grid de bases (unidades)",
       "id": "bases_grid"
     },
@@ -8378,7 +8148,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 3,
       "norm_label": "modal de base (nova/editar unidade)",
       "id": "bases_modal_base"
     },
@@ -8495,7 +8265,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
+      "community": 14,
       "norm_label": "vendas (page)",
       "id": "vendas_html"
     },
@@ -8508,7 +8278,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
+      "community": 14,
       "norm_label": "registro de vendas (tabela + filtros)",
       "id": "vendas_tabela_vendas"
     },
@@ -8547,7 +8317,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 14,
       "norm_label": "css/safe-theme.css",
       "id": "css_safe_theme"
     },
@@ -8560,7 +8330,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 14,
       "norm_label": "css/layout.css",
       "id": "css_layout"
     },
@@ -8573,7 +8343,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 14,
       "norm_label": "css/admin.css",
       "id": "css_admin"
     },
@@ -8586,7 +8356,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 3,
       "norm_label": "css/bases.css",
       "id": "css_bases"
     },
@@ -8625,7 +8395,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
+      "community": 14,
       "norm_label": "css/vendas.css",
       "id": "css_vendas"
     },
@@ -8638,7 +8408,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 16,
       "norm_label": "chart.js 4.4.0 (cdn)",
       "id": "chartjs_cdn"
     },
@@ -10622,7 +10392,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 31,
       "norm_label": "abrirmodalhistorico()",
       "id": "escala_cco_abrirmodalhistorico"
     },
@@ -12060,7 +11830,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 7,
       "norm_label": "container de toasts compartilhado",
       "id": "toast_container_pattern"
     },
@@ -12073,7 +11843,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 3,
       "norm_label": "protecao de pagina por permissao efetiva (auth.proteger*)",
       "id": "protecao_de_pagina_rbac"
     },
@@ -12190,7 +11960,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 10,
       "norm_label": "css/access-control.css (controle de acesso)",
       "id": "css_access_control"
     },
@@ -12242,7 +12012,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 118,
       "norm_label": "css/cadastro-alunos.css (cadastro de alunos)",
       "id": "css_cadastro_alunos"
     },
@@ -12268,7 +12038,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 16,
       "norm_label": "pagina visao geral (dashboard)",
       "id": "dashboard_page"
     },
@@ -12281,7 +12051,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 16,
       "norm_label": "css/dashboard.css (dashboard)",
       "id": "css_dashboard"
     },
@@ -12294,7 +12064,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 7,
       "norm_label": "css/fechamento-horas.css (fechamento de horas)",
       "id": "css_fechamento_horas"
     },
@@ -12307,7 +12077,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 198,
+      "community": 7,
       "norm_label": "pagina horas voadas inva mes",
       "id": "horas_voadas_inva_page"
     },
@@ -12320,7 +12090,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 198,
+      "community": 7,
       "norm_label": "css/horas-voadas-inva.css (horas voadas inva)",
       "id": "css_horas_voadas_inva"
     },
@@ -12359,7 +12129,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 17,
       "norm_label": "css/progresso-alunos.css (progresso de alunos)",
       "id": "css_progresso_alunos"
     },
@@ -12411,7 +12181,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 10,
       "norm_label": "painel de grupos de acesso com busca",
       "id": "access_control_painel_grupos"
     },
@@ -12424,7 +12194,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 10,
       "norm_label": "painel do catalogo de permissoes",
       "id": "access_control_catalogo_permissoes"
     },
@@ -12437,7 +12207,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 10,
       "norm_label": "modal criar/editar grupo (nome, id, descricao, ativo, permissoes)",
       "id": "access_control_modal_grupo"
     },
@@ -12450,7 +12220,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 3,
       "norm_label": "fecharmodal(id) chamada por onclick inline no html",
       "id": "fechar_modal_inline"
     },
@@ -12593,7 +12363,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 3,
       "norm_label": "aviso de que os dados aparecem na pagina inicial",
       "id": "bases_intro_aviso"
     },
@@ -12606,7 +12376,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 43,
+      "community": 3,
       "norm_label": "botao \"+ nova base\" comeca hidden e e liberado por permissao",
       "id": "bases_btn_nova_oculto"
     },
@@ -12749,7 +12519,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 16,
       "norm_label": "skeleton de carregamento nos kpis",
       "id": "dashboard_kpi_skeleton"
     },
@@ -12775,7 +12545,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 16,
       "norm_label": "grafico de receita nos ultimos 6 meses",
       "id": "dashboard_chart_receita"
     },
@@ -12788,7 +12558,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 16,
       "norm_label": "grafico de origem dos leads",
       "id": "dashboard_chart_origens"
     },
@@ -12801,7 +12571,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 16,
       "norm_label": "grafico de performance por consultor (pac)",
       "id": "dashboard_chart_pac"
     },
@@ -12814,7 +12584,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 16,
       "norm_label": "tabela de cursos mais vendidos",
       "id": "dashboard_ranking_cursos"
     },
@@ -12879,7 +12649,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 7,
       "norm_label": "graficos: horas por mes, sjk x cpq, alunos novos, distribuicao de horas",
       "id": "fh_charts"
     },
@@ -12970,7 +12740,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 198,
+      "community": 7,
       "norm_label": "abas dashboard / cadastrar instrutor",
       "id": "horas_inva_tabs"
     },
@@ -12983,7 +12753,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 198,
+      "community": 7,
       "norm_label": "kpis (instrutores, horas acumuladas, clt, eventuais)",
       "id": "horas_inva_kpis"
     },
@@ -12996,7 +12766,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 198,
+      "community": 7,
       "norm_label": "grafico de horas por instrutor",
       "id": "horas_inva_chart"
     },
@@ -13009,7 +12779,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 198,
+      "community": 7,
       "norm_label": "lista de instrutores com busca",
       "id": "horas_inva_tabela"
     },
@@ -13022,7 +12792,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 198,
+      "community": 7,
       "norm_label": "formulario de novo instrutor (nome, tipo, banco de horas)",
       "id": "horas_inva_form_instrutor"
     },
@@ -13061,7 +12831,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 3,
       "norm_label": "secao \"bases safe\" na home (#home-bases, aria-live)",
       "id": "inicio_bases_lista"
     },
@@ -13178,7 +12948,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 17,
       "norm_label": "abas por aluno / por curso",
       "id": "progresso_tabs"
     },
@@ -13204,7 +12974,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 17,
       "norm_label": "kpis de progresso (total, nao iniciado, em andamento, concluido)",
       "id": "progresso_kpis"
     },
@@ -13217,7 +12987,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 17,
       "norm_label": "tabela de alunos do curso com filtro de status",
       "id": "progresso_tabela_alunos"
     },
@@ -13230,7 +13000,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 17,
       "norm_label": "paginacao anterior/proxima da lista de alunos",
       "id": "progresso_paginacao"
     },
@@ -13243,7 +13013,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 17,
       "norm_label": "detalhe do aluno com cursos matriculados",
       "id": "progresso_detalhe_aluno"
     },
@@ -13256,7 +13026,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 17,
       "norm_label": "busca por nome ou e-mail na aba por aluno",
       "id": "progresso_busca_aluno"
     },
@@ -16764,206 +16534,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L9",
-      "weight": 1.0,
-      "source": "tools_package",
-      "target": "tools_package_dependencies",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "tools_package",
-      "target": "tools_package_description",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "tools_package",
-      "target": "tools_package_name",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "tools_package",
-      "target": "tools_package_private",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "tools_package",
-      "target": "tools_package_scripts",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "tools_package",
-      "target": "tools_package_type",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "tools_package_scripts",
-      "target": "tools_package_scripts_shot",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/package.json",
-      "source_location": "L10",
-      "weight": 1.0,
-      "source": "tools_package_dependencies",
-      "target": "tools_package_dependencies_playwright_core",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L51",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_acharchrome",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L82",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_altura",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_aqui",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L68",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_argv",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L83",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_base",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L113",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_erros",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L86",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_executablepath",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L74",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_flag",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L81",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_largura",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L80",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_mobile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L84",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_saida",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tools/screenshot.mjs",
-      "source_location": "L75",
-      "weight": 1.0,
-      "source": "tools_screenshot",
-      "target": "tools_screenshot_valor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -16999,16 +16569,6 @@
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_cadastro_de_aluno_menu_de_a\u00e7\u00f5es_e_sele\u00e7\u00e3o_em_massa_desde_2026_07_20",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L250",
-      "weight": 1.0,
-      "source": "claude_claude_md_regras_do_projeto_safe_hub",
-      "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "confidence_score": 1.0
     },
     {
@@ -28002,5 +27562,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "160ec55d9b643f8576df0454a99b204a9ef60830"
+  "built_at_commit": "e0fad4131869f2060874d49d9a8895ca9ec04532"
 }
