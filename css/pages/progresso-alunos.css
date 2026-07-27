@@ -336,7 +336,7 @@
 }
 
 .progresso-badge--ns   { background: var(--surface-2);   color: var(--text-muted); }
-.progresso-badge--prog { background: var(--tint-info);            color: var(--blue-dark); }
+.progresso-badge--prog { background: var(--tint-info);            color: var(--ink-blue); }
 .progresso-badge--done { background: var(--tint-ok);            color: #1a8a42; }
 
 /* ── Data ──────────────────────────────────────────────────── */

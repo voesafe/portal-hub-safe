@@ -362,7 +362,7 @@
 .fechamento-upload-zone:hover,
 .fechamento-upload-zone.dragover {
   border-color: var(--blue);
-  color: var(--blue-dark);
+  color: var(--ink-blue);
   background: rgba(91, 174, 226, .06);
 }
 

@@ -327,7 +327,7 @@
 }
 
 .gastos-cost-row td {
-  color: var(--teal-dark);
+  color: var(--ink-teal);
   font-weight: 700;
 }
 
@@ -351,7 +351,7 @@
 
 .gastos-icon-btn:hover {
   border-color: var(--blue);
-  color: var(--blue-dark);
+  color: var(--ink-blue);
   background: rgba(91, 174, 226, .08);
 }
 

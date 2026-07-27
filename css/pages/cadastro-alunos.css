@@ -164,7 +164,7 @@
 
 .cadastro-status.pronto_trello {
   background: rgba(91, 174, 226, .13);
-  color: var(--blue-dark);
+  color: var(--ink-blue);
 }
 
 .cadastro-status.concluido,
@@ -194,7 +194,7 @@
 }
 
 .cadastro-cpf-button:hover {
-  color: var(--blue-dark);
+  color: var(--ink-blue);
   text-decoration: underline;
   text-underline-offset: 3px;
 }

@@ -333,7 +333,10 @@ A seção "Bases SAFE" da [inicio.html](inicio.html) esperava o `getBases` para 
 
 ## Conferir a interface antes de publicar (tools/preview.sh)
 
-`./tools/preview.sh` sobe o Hub em `127.0.0.1:8080` e abre o navegador. **O login e os dados são os de produção**, com o código que ainda não subiu: o web app do Apps Script responde `Access-Control-Allow-Origin: *` e o POST usa `Content-Type: text/plain` de propósito, que é tipo "simples" e não dispara preflight de CORS. Não existe ambiente de homologação, e não é preciso: o frontend é estático e o backend é o mesmo dos dois lados.
+`./tools/preview.sh` sobe o Hub em `localhost:8080` e abre o navegador. `--fundo` devolve o terminal e o servidor sobrevive ao fechamento dele; `--parar` encerra. **O login e os dados são os de produção**, com o código que ainda não subiu: o web app do Apps Script responde `Access-Control-Allow-Origin: *` e o POST usa `Content-Type: text/plain` de propósito, que é tipo "simples" e não dispara preflight de CORS. Não existe ambiente de homologação, e não é preciso: o frontend é estático e o backend é o mesmo dos dois lados.
+
+- ⚠️ **O script abre DOIS sockets, um por pilha, e isso não é exagero.** O `python3 -m http.server --bind 127.0.0.1` escuta só em IPv4, e neste Mac o nome `localhost` resolve para `::1` (IPv6) **antes** do IPv4: o navegador tentava o IPv6, batia em porta fechada e a página não abria, com o servidor no ar e o `curl` funcionando. Também **não adianta** um socket IPv6 com `IPV6_V6ONLY` desligado: esse mapeamento só vale quando o bind é em `::` (qualquer endereço), o que abriria o servidor para a rede toda. Ligado a `::1` ele atende apenas IPv6, medido. Por isso são dois, `127.0.0.1` e `::1`, ambos presos ao laço local.
+- O servidor manda `Cache-Control: no-store`, senão conferir UI com o navegador servindo arquivo velho vira perda de tempo.
 
 - ⚠️ **Ler é seguro, salvar é real.** Não existe banco de teste. Para exercitar escrita, use registro descartável, ou aponte `CADASTRO_ALUNOS_SHEET_ID` para uma cópia (vale só para o módulo de alunos).
 - **A Escala CCO e a Escala PAV têm backend próprio** e também respondem local. A CCO é a única que precisa do backend de pé para sair da tela de login.

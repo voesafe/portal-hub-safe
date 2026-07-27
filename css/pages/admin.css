@@ -81,7 +81,7 @@
 
 .usuarios-tab.active span {
   background: rgba(91, 174, 226, .14);
-  color: var(--blue-dark);
+  color: var(--ink-blue);
 }
 
 .usuarios-subtitle,
@@ -122,7 +122,7 @@
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(91, 174, 226, .12);
-  color: var(--blue-dark);
+  color: var(--ink-blue);
   font-size: .72rem;
   font-weight: 700;
 }
@@ -170,12 +170,12 @@
 
 .origem-badge.origem-cco {
   background: rgba(96, 192, 191, .14);
-  color: var(--teal-dark);
+  color: var(--ink-teal);
 }
 
 .origem-badge.origem-hub {
   background: rgba(91, 174, 226, .14);
-  color: var(--blue-dark);
+  color: var(--ink-blue);
 }
 
 .campos-cco {
@@ -365,7 +365,7 @@
 }
 
 .usuario-rbac-header a {
-  color: var(--blue-dark);
+  color: var(--ink-blue);
   font-size: .72rem;
   font-weight: 800;
   white-space: nowrap;
@@ -720,7 +720,7 @@
   transition: var(--transition, all .15s);
 }
 .acesso-escopo::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }
-.acesso-escopo[data-escopo="todas"] { color: var(--blue-dark); border-color: var(--blue); }
+.acesso-escopo[data-escopo="todas"] { color: var(--ink-blue); border-color: var(--blue); }
 .acesso-escopo[data-escopo="todas"]::before { background: var(--blue); }
 .acesso-escopo:hover { border-color: var(--blue); }
 .acesso-escopo[hidden] { display: none; }

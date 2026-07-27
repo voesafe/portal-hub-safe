@@ -181,7 +181,7 @@
   text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
 }
 .notam-badge.b-live   { background: rgba(46,204,113,.14); color: #1e9e57; }
-.notam-badge.b-future { background: rgba(91,174,226,.14); color: var(--blue-dark); }
+.notam-badge.b-future { background: rgba(91,174,226,.14); color: var(--ink-blue); }
 .notam-badge.b-crit   { background: rgba(231,76,60,.13);  color: #c0392b; }
 .notam-badge.b-warn   { background: rgba(243,156,18,.15); color: #c77c0d; }
 :root[data-theme="dark"] .notam-badge.b-live   { color: #5fd894; }
@@ -195,7 +195,7 @@
   display: block; font-size: .64rem; text-transform: uppercase; letter-spacing: .06em;
   color: var(--n-ink-mute); font-weight: 700; margin-bottom: 1px;
 }
-.notam-valid .v.upcoming span { color: var(--blue-dark); font-weight: 700; }
+.notam-valid .v.upcoming span { color: var(--ink-blue); font-weight: 700; }
 
 .notam-body { margin: 0 15px 14px 18px; border-radius: 8px; overflow: hidden; }
 .notam-decoded { background: var(--n-surface-2); padding: 11px 13px; font-size: .85rem; color: var(--n-ink); border-left: 3px solid var(--teal); }
@@ -209,7 +209,7 @@
 
 .notam-foot { display: flex; align-items: center; gap: 12px; padding: 0 15px 13px 18px; }
 .notam-mini-toggle {
-  font-size: .73rem; font-weight: 600; color: var(--blue-dark);
+  font-size: .73rem; font-weight: 600; color: var(--ink-blue);
   background: none; border: none; cursor: pointer;
   display: inline-flex; align-items: center; gap: 5px; padding: 0;
 }

@@ -131,7 +131,7 @@ body.access-menu-open .sidebar-overlay {
   padding: 3px 8px;
   border-radius: 999px;
   background: rgba(91, 174, 226, .12);
-  color: var(--blue-dark);
+  color: var(--ink-blue);
   font-size: .66rem;
   font-weight: 800;
 }

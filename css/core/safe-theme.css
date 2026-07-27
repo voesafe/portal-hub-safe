@@ -116,6 +116,14 @@
   --ink-erro:    #991b1b;
   --ink-aviso:   #92400e;
   --ink-info:    #245f8c;
+
+  /* Azul e verde da marca usados como TEXTO. No claro sao exatamente os
+     mesmos tons de antes, entao nada muda; no escuro clareiam. Sem isto,
+     `--blue-dark` sobre superficie escura fica em ~3,7:1 e nao passa no
+     AA. Mesmo problema de duplo uso do `--navy`: como fundo continua
+     `--blue-dark`, como tinta usa estes. */
+  --ink-blue:    var(--blue-dark);
+  --ink-teal:    var(--teal-dark);
 }
 
 /* Claro é o padrão do Hub e não segue o sistema operacional: só entra no
@@ -169,6 +177,8 @@
   --ink-erro:    #ff9d92;
   --ink-aviso:   #f7c777;
   --ink-info:    #8fc7ee;
+  --ink-blue:    var(--blue-light);
+  --ink-teal:    var(--teal-light);
 }
 
 /* ── Reset & Base ──────────────────────────────────────────── */
@@ -440,8 +450,8 @@ h4 { font-size: 1rem; }
   text-transform: uppercase;
   letter-spacing: .05em;
 }
-.badge-blue   { background: rgba(91,174,226,.12);  color: var(--blue-dark); }
-.badge-teal   { background: rgba(96,192,191,.12);  color: var(--teal-dark); }
+.badge-blue   { background: rgba(91,174,226,.12);  color: var(--ink-blue); }
+.badge-teal   { background: rgba(96,192,191,.12);  color: var(--ink-teal); }
 .badge-navy   { background: rgba(29,41,81,.08);    color: var(--text); }
 .badge-green  { background: rgba(46,204,113,.12);  color: #27ae60; }
 .badge-orange { background: rgba(243,156,18,.12);  color: #d68910; }

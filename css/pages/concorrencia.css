@@ -124,7 +124,7 @@
 }
 
 .conc-safe-row .conc-valor > span:first-child:not(.text-muted) {
-  color: var(--teal-dark);
+  color: var(--ink-teal);
 }
 
 .conc-label {

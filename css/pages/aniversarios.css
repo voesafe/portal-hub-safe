@@ -57,7 +57,7 @@
 .aniv-kpi-destaque .aniv-kpi-valor { color: var(--text-on-brand); }
 .aniv-kpi-destaque .aniv-kpi-label { color: var(--blue-light); }
 
-.aniv-kpi-ok     .aniv-kpi-valor { color: var(--teal-dark); }
+.aniv-kpi-ok     .aniv-kpi-valor { color: var(--ink-teal); }
 .aniv-kpi-alerta .aniv-kpi-valor { color: var(--warning); }
 
 /* Falha de envio: o único lugar da página que usa vermelho, para o olho
@@ -193,7 +193,7 @@
 
 .aniv-tag-ok {
   background: rgba(96, 192, 191, .16);
-  color: var(--teal-dark);
+  color: var(--ink-teal);
 }
 
 .aniv-tag-alerta {
@@ -256,7 +256,7 @@
   background: rgba(91, 174, 226, .1);
 }
 
-.table-aniversarios .aniv-linha-hoje .aniv-td-dia { color: var(--blue-dark); }
+.table-aniversarios .aniv-linha-hoje .aniv-td-dia { color: var(--ink-blue); }
 
 /* ── Responsivo ───────────────────────────────────────────── */
 @media (max-width: 720px) {
