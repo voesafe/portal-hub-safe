@@ -245,4 +245,20 @@ Decisão do Victor: **seções e itens em ordem alfabética**, com o **Início f
 ### O que ficou de fora
 
 - Os itens do **drawer da Escala CCO** ainda usam emoji (📅 📊 👥 🕓), diferente dos SVG da sidebar do Hub. É conteúdo interno, não header. Próximo candidato.
-- A validação visual cobriu desktop e a faixa ≤768px. **Abaixo de 480px não foi verificado em navegador**: o Chrome headless da máquina trava o viewport em 500px por baixo, ignorando `--window-size`. As regras dessa faixa são aditivas e pequenas, mas se aparecer bug de mobile estreito, é aqui que ninguém olhou.
+- A validação visual cobriu desktop e a faixa ≤768px. A faixa abaixo de 480px ficou sem verificar no dia, e **foi conferida em 2026-07-27** com a ferramenta descrita na seção abaixo: Escala CCO, Escala PAV, Vendas, NOTAMs, Aniversários e Dashboard a 390px estão corretos (o `.topbar-context` some e a `.topbar-status` colapsa para o ponto, como projetado). Sobrou uma miudeza: nos NOTAMs a 390px o "Atualizar" estica na largura toda, porque `.topbar-right > .btn { flex: 1 1 auto }` foi pensado para dois botões e ali sobrou um. Não é defeito, e como alvo de toque ajuda.
+
+## Captura de tela das páginas (tools/), desde 2026-07-27
+
+`node tools/screenshot.mjs <pagina.html> [--mobile] [--menu] [--full] [--online]`, com o servidor estático de pé (`python3 -m http.server 8080 --bind 127.0.0.1`). Serve para conferir UI sem depender de olho humano em toda página. Fica em [tools/](tools/), fora do site publicado; `node_modules` e os PNGs são ignorados pelo git.
+
+**⚠️ Não volte a usar as flags one-shot do Chrome (`--headless --screenshot`) para isso.** Elas são recurso de depuração, não API de automação, e travam por três motivos medidos em 2026-07-27:
+
+1. **`--user-data-dir` com perfil novo trava o `--screenshot`.** Reproduzido numa página `file://` com só um `<h1>`, sem rede, dentro e fora do sandbox. Era a causa da maioria das travas. Sem a flag o Chrome usa o perfil padrão, e aí não dá para rodar duas capturas ao mesmo tempo nem garantir estado limpo, o que obrigava a `pkill` entre execuções.
+2. **`--window-size` tem piso de 500px no headless** e não emula dispositivo, então a faixa abaixo de 480px do Hub era invisível.
+3. **`--virtual-time-budget` é chute de tempo, não condição de espera.** Em página pesada dispara cedo ou fica girando.
+
+O script usa **`playwright-core`** (só a biblioteca, sem baixar navegador: acha o Chrome for Testing já no cache do `~/Library/Caches/ms-playwright` e aponta o `executablePath`). Passou de 30s com travas para ~3s por captura.
+
+- **O Apps Script é bloqueado por padrão** (`contexto.route` abortando `script.google.com`), porque a sessão semeada não tem token válido: o backend responderia "sessão inválida" e a página iria para o login. Bloqueado, ela mostra o estado de erro de conexão e o layout fica visível. `--online` libera, e é o que a **Escala CCO** precisa, porque com o backend fora ela fica presa na própria tela de login.
+- **⚠️ `Auth` não existe em `window`:** é `const` no topo do [auth.js](js/auth.js), e `const` de escopo global mora no escopo léxico, fora do objeto global. Dentro de `page.evaluate` use a referência solta (`Auth.salvarSessao(...)`), nunca `window.Auth`. O script chama o próprio `salvarSessao` do app justamente para não duplicar aqui a conta de expiração, dia e versão de sessão, que muda a cada relogin forçado.
+- A espera é por `.topbar` **anexada** ao DOM, não visível, porque a Escala CCO mantém a topbar oculta enquanto tenta o SSO. E o script **avisa em vez de falhar**: tela em estado inesperado tem que virar imagem para a gente olhar, não erro.
