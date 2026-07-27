@@ -350,8 +350,8 @@
     "semantic_hash": ""
   },
   "inicio.html": {
-    "mtime": 1785161389.1839464,
-    "ast_hash": "1aabec268b1cb6d0f31677c89ee47def",
+    "mtime": 1785162377.9030666,
+    "ast_hash": "44034a4eb76345971fe04851ba0601a6",
     "semantic_hash": ""
   },
   "preview/clean/access-control.html": {
@@ -895,8 +895,8 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1785161415.0985458,
-    "ast_hash": "25edec3f2bf6b5add30a747ddc188b1a",
+    "mtime": 1785162398.4101806,
+    "ast_hash": "6dae5142fc1acb9c0fca5a6ca10f6412",
     "semantic_hash": ""
   },
   "notams.html": {
@@ -985,8 +985,8 @@
     "semantic_hash": ""
   },
   "js/pages/inicio.js": {
-    "mtime": 1783612639.3605847,
-    "ast_hash": "b5d747ca865e1d520b18d911dab4cf79",
+    "mtime": 1785162304.657707,
+    "ast_hash": "8e6529c9b959707f2aaf143d794864ae",
     "semantic_hash": ""
   },
   "js/pages/notams.js": {

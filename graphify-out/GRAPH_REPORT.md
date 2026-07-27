@@ -1,7 +1,7 @@
 # Graph Report - portal-hub-safe  (2026-07-27)
 
 ## Corpus Check
-- 77 files · ~509,131 words
+- 77 files · ~509,345 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `019e5f34`
+- Built from commit: `c3b721d6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -392,8 +392,8 @@ Cohesion: 0.18
 Nodes (19): Card "Você não possui acesso a este módulo", CSS embutido da página (não usa arquivo de módulo), Página Acesso restrito, Grid de bases (unidades), Bases SAFE (page), Aviso de que os dados aparecem na página inicial, Modal de base (nova/editar unidade), Bases SAFE page (bases.html) (+11 more)
 
 ### Community 31 - "gerarXlsxIfood"
-Cohesion: 0.29
-Nodes (8): abrirModalHistorico(), exportConfirmarExportacao(), exportPDF(), gerarXlsxIfood(usersToShow, totals, monthIdx), Layout fixo da planilha do iFood Benefícios, loadScript(src) (carga sob demanda de libs de CDN), Regra de pagamento: só T1+T2 são pagos, NOT não entra no total, showToast(msg, type)
+Cohesion: 0.33
+Nodes (7): exportConfirmarExportacao(), exportPDF(), gerarXlsxIfood(usersToShow, totals, monthIdx), Layout fixo da planilha do iFood Benefícios, loadScript(src) (carga sob demanda de libs de CDN), Regra de pagamento: só T1+T2 são pagos, NOT não entra no total, showToast(msg, type)
 
 ### Community 32 - "Escala CCO App"
 Cohesion: 0.25
@@ -420,8 +420,8 @@ Cohesion: 0.29
 Nodes (3): CURSOS_VENDAS, PACOTES_LEGADOS_CURSOS, Vendas
 
 ### Community 38 - "renderHistorico"
-Cohesion: 0.40
-Nodes (6): carregarHistorico() (action getLog), Alvo do LOG chega como AAAA-MM-DD e é reformatado no cliente, histEntries (cache local do getLog), histFmtData(ts), histTurnoLabel(t) (t1/t2/ho → T1/T2/NOT), renderHistorico() (linha do tempo antes → depois)
+Cohesion: 0.33
+Nodes (7): abrirModalHistorico(), carregarHistorico() (action getLog), Alvo do LOG chega como AAAA-MM-DD e é reformatado no cliente, histEntries (cache local do getLog), histFmtData(ts), histTurnoLabel(t) (t1/t2/ho → T1/T2/NOT), renderHistorico() (linha do tempo antes → depois)
 
 ### Community 39 - "Horas Voadas INVA Mês"
 Cohesion: 0.33

@@ -3504,10 +3504,20 @@
       "norm_label": "verificacao"
     },
     {
-      "label": "Conferir a interface antes de publicar (tools/preview.sh)",
+      "label": "Bases na home: pinta na hora, confere depois, desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
       "source_location": "L319",
+      "_origin": "ast",
+      "id": "claude_bases_na_home_pinta_na_hora_confere_depois_desde_2026_07_27",
+      "community": 21,
+      "norm_label": "bases na home: pinta na hora, confere depois, desde 2026-07-27"
+    },
+    {
+      "label": "Conferir a interface antes de publicar (tools/preview.sh)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L333",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 21,
@@ -3517,7 +3527,7 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L328",
+      "source_location": "L342",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 21,
@@ -4489,7 +4499,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "gestao de usuarios (admin) page",
       "id": "preview_denso_admin_gestao_de_usuarios_page"
     },
@@ -4502,7 +4512,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "diretorio de acessos table",
       "id": "preview_denso_admin_diretorio_de_acessos"
     },
@@ -4515,7 +4525,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "modal novo/editar usuario",
       "id": "preview_denso_admin_modal_novo_usuario"
     },
@@ -4528,7 +4538,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "identidade unica por e-mail (concept)",
       "id": "preview_denso_admin_identidade_unica_por_email"
     },
@@ -4541,7 +4551,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "senha padrao = cpf (rationale)",
       "id": "preview_denso_admin_senha_padrao_cpf"
     },
@@ -5464,7 +5474,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "gestao de usuarios (admin) page",
       "id": "preview_refinado_admin_gestao_de_usuarios_page"
     },
@@ -5477,7 +5487,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "diretorio de acessos table",
       "id": "preview_refinado_admin_diretorio_de_acessos"
     },
@@ -5490,7 +5500,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "modal novo/editar usuario",
       "id": "preview_refinado_admin_modal_novo_usuario"
     },
@@ -5503,7 +5513,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "identidade unica por e-mail (concept)",
       "id": "preview_refinado_admin_identidade_unica_por_email"
     },
@@ -5516,7 +5526,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "senha padrao = cpf (rationale)",
       "id": "preview_refinado_admin_senha_padrao_cpf"
     },
@@ -6465,7 +6475,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "inicio / home portal page (inicio.html)",
       "id": "inicio_page"
     },
@@ -6478,7 +6488,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "progresso de alunos page (progresso-alunos.html)",
       "id": "progresso_alunos_page"
     },
@@ -6816,7 +6826,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "controle de acesso (rbac) page",
       "id": "preview_clean_access_control_access_control_page"
     },
@@ -6829,7 +6839,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "grupos de acesso panel",
       "id": "preview_clean_access_control_grupos_de_acesso"
     },
@@ -6842,7 +6852,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "catalogo de permissoes panel",
       "id": "preview_clean_access_control_catalogo_de_permissoes"
     },
@@ -6868,7 +6878,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "gestao de usuarios (admin) page",
       "id": "preview_clean_admin_gestao_de_usuarios_page"
     },
@@ -6881,7 +6891,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "diretorio de acessos table",
       "id": "preview_clean_admin_diretorio_de_acessos"
     },
@@ -6894,7 +6904,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "modal novo/editar usuario",
       "id": "preview_clean_admin_modal_novo_usuario"
     },
@@ -6907,7 +6917,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "identidade unica por e-mail (concept)",
       "id": "preview_clean_admin_identidade_unica_por_email"
     },
@@ -6920,7 +6930,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "senha padrao = cpf (rationale)",
       "id": "preview_clean_admin_senha_padrao_cpf"
     },
@@ -7219,7 +7229,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "gerenciar funcionarios (cco)",
       "id": "preview_clean_escala_cco_funcionarios"
     },
@@ -7778,7 +7788,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 1,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "preview_clean_rbac_grupos_e_permissoes"
     },
@@ -8025,7 +8035,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "escala pav \u2014 seletor operacional (preview)",
       "id": "preview_pav_index_index"
     },
@@ -8038,7 +8048,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "modulo escala pav (staff de patio)",
       "id": "preview_pav_module"
     },
@@ -8051,7 +8061,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "pav \u00b7 calendario operacional",
       "id": "preview_pav_a_operacional_calendario"
     },
@@ -8064,7 +8074,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "pav \u00b7 fechamento financeiro",
       "id": "preview_pav_a_financeiro_fechamento"
     },
@@ -8077,7 +8087,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "pav \u00b7 cadastro de pavs",
       "id": "preview_pav_a_pavs_cadastro"
     },
@@ -8090,7 +8100,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "base cpn \u00b7 campinas",
       "id": "preview_pav_base_cpn"
     },
@@ -8103,7 +8113,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "base sjk \u00b7 sao jose dos campos",
       "id": "preview_pav_base_sjk"
     },
@@ -8116,7 +8126,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "perfil master (pav)",
       "id": "preview_pav_role_master"
     },
@@ -8129,7 +8139,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "perfil financeiro (pav)",
       "id": "preview_pav_role_financeiro"
     },
@@ -8142,7 +8152,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "carlos moraes (pav \u00b7 cpn)",
       "id": "preview_pav_carlos_moraes"
     },
@@ -8155,7 +8165,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "andre lima (pav \u00b7 cpn)",
       "id": "preview_pav_andre_lima"
     },
@@ -8168,7 +8178,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "bruno dias (pav \u00b7 cpn)",
       "id": "preview_pav_bruno_dias"
     },
@@ -8181,7 +8191,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "ana prado (pav \u00b7 sjk)",
       "id": "preview_pav_ana_prado"
     },
@@ -8194,7 +8204,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "marina reis (pav \u00b7 sjk)",
       "id": "preview_pav_marina_reis"
     },
@@ -8207,7 +8217,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "tiago souza (pav \u00b7 sjk)",
       "id": "preview_pav_tiago_souza"
     },
@@ -8220,7 +8230,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 199,
+      "community": 5,
       "norm_label": "exportar ifood (fechamento pav)",
       "id": "preview_pav_a_financeiro_exportar_ifood"
     },
@@ -8623,7 +8633,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 198,
       "norm_label": "vendas (page)",
       "id": "vendas_html"
     },
@@ -8636,7 +8646,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 198,
       "norm_label": "registro de vendas (tabela + filtros)",
       "id": "vendas_tabela_vendas"
     },
@@ -8688,7 +8698,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 198,
       "norm_label": "css/layout.css",
       "id": "css_layout"
     },
@@ -8753,7 +8763,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 198,
       "norm_label": "css/vendas.css",
       "id": "css_vendas"
     },
@@ -10750,7 +10760,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 31,
       "norm_label": "abrirmodalhistorico()",
       "id": "escala_cco_abrirmodalhistorico"
     },
@@ -12149,7 +12159,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 26,
       "norm_label": "shell padrao do hub (app-shell + sidebar + topbar + main)",
       "id": "app_shell_layout"
     },
@@ -12188,7 +12198,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "container de toasts compartilhado",
       "id": "toast_container_pattern"
     },
@@ -12214,7 +12224,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "cache-bust por ?v= nos assets (github pages)",
       "id": "cache_bust_versionamento"
     },
@@ -12305,7 +12315,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 30,
       "norm_label": "manifesto pwa + icones + theme-color (#19213f)",
       "id": "pwa_manifest_icones"
     },
@@ -12331,7 +12341,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "pagina acesso restrito",
       "id": "acesso_negado_page"
     },
@@ -12461,7 +12471,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "css/inicio.css (inicio)",
       "id": "css_inicio"
     },
@@ -12487,7 +12497,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "css/progresso-alunos.css (progresso de alunos)",
       "id": "css_progresso_alunos"
     },
@@ -12591,7 +12601,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "card \"voce nao possui acesso a este modulo\"",
       "id": "acesso_negado_card"
     },
@@ -12643,7 +12653,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "css embutido da pagina (nao usa arquivo de modulo)",
       "id": "acesso_negado_css_inline"
     },
@@ -13176,7 +13186,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "hero com saudacao, nome e perfil do usuario",
       "id": "inicio_hero_saudacao"
     },
@@ -13215,7 +13225,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 30,
       "norm_label": "data atual na topbar (#home-date)",
       "id": "inicio_data_atual"
     },
@@ -13306,7 +13316,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "abas por aluno / por curso",
       "id": "progresso_tabs"
     },
@@ -13332,7 +13342,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "kpis de progresso (total, nao iniciado, em andamento, concluido)",
       "id": "progresso_kpis"
     },
@@ -13345,7 +13355,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "tabela de alunos do curso com filtro de status",
       "id": "progresso_tabela_alunos"
     },
@@ -13358,7 +13368,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "paginacao anterior/proxima da lista de alunos",
       "id": "progresso_paginacao"
     },
@@ -13371,7 +13381,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "detalhe do aluno com cursos matriculados",
       "id": "progresso_detalhe_aluno"
     },
@@ -13384,7 +13394,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 45,
       "norm_label": "busca por nome ou e-mail na aba por aluno",
       "id": "progresso_busca_aluno"
     },
@@ -16054,6 +16064,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
+      "source_location": "L319",
+      "weight": 1.0,
+      "source": "claude_claude_md_regras_do_projeto_safe_hub",
+      "target": "claude_bases_na_home_pinta_na_hora_confere_depois_desde_2026_07_27",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
       "source_location": "L73",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
@@ -16064,7 +16084,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L328",
+      "source_location": "L342",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -16074,7 +16094,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L319",
+      "source_location": "L333",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
