@@ -382,7 +382,13 @@ function indiceCabecalho_(sheet) {
 function garantirColunaUsuariosSuperadmin_() {
   var sheet = getSheet(SHEETS.USUARIOS);
   var idx = indiceCabecalho_(sheet);
-  ['SUPERADMIN', 'CPF', 'ATUALIZADO_EM', 'ATUALIZADO_POR'].forEach(function(nome) {
+  // AVATAR guarda a foto como data URI (JPEG base64), não um link.
+  // A célula do Sheets aceita 50.000 caracteres e o frontend reduz para
+  // 128x128 antes de enviar, o que dá ~8 KB em base64: sobra folga de 6x.
+  // Link do Drive foi descartado de propósito: exigiria a foto de cada
+  // funcionário pública por URL, e o `drive.google.com/uc?id=` quebra em
+  // hotlink. Ver `salvarMeuAvatar`.
+  ['SUPERADMIN', 'CPF', 'ATUALIZADO_EM', 'ATUALIZADO_POR', 'AVATAR'].forEach(function(nome) {
     if (idx[nome]) return;
     var col = sheet.getLastColumn() + 1;
     sheet.getRange(1, col).setValue(nome);

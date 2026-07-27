@@ -183,6 +183,12 @@ function doPost(e) {
         if (!ok) return jsonError('Senha atual incorreta');
         return jsonSuccess({ mensagem: 'Senha alterada com sucesso' });
 
+      // Foto do próprio usuário. Sem permissão no catálogo de propósito:
+      // todo mundo pode trocar a própria, e ninguém pode trocar a de outro,
+      // porque `salvarMeuAvatar` só enxerga a linha da sessão que chamou.
+      case 'salvar-avatar':
+        return jsonSuccess(salvarMeuAvatar(token, dados.avatar));
+
       // ── Vendas ─────────────────────────────────────────────
       case 'criar-venda': {
         var uCriarV = exigirSessao(token);

@@ -34,7 +34,8 @@ function login(email, senha) {
           pac:    row[2],
           email:  row[3],
           perfil: row[5],
-          superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master'
+          superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
+          avatar: idx.AVATAR ? String(row[idx.AVATAR - 1] || '') : ''
         };
         anexarPermissoesEfetivasSessao_(usuario);
         usuario.token = criarTokenSessao(usuario);
@@ -814,6 +815,76 @@ function alterarMinhaSenha(token, senhaAtual, novaSenha) {
     throw new Error('A senha de usuários CCO deve ser alterada pelo administrador no diretório central.');
   }
   return alterarSenha(usuario.email, senhaAtual, novaSenha);
+}
+
+// ══════════════════════════════════════════════════════════════
+// Avatar do usuário
+// --------------------------------------------------------------
+// A foto é gravada como data URI na coluna AVATAR da própria linha
+// do usuário. Nunca vai para o Drive: link do Drive precisaria ser
+// público, e aí a foto de cada funcionário fica buscável por URL.
+// O recorte e a redução acontecem no navegador (ver `_prepararAvatar`
+// no auth.js); aqui só validamos e gravamos.
+// ══════════════════════════════════════════════════════════════
+
+// Teto de guarda, não o tamanho esperado. O frontend manda ~8 KB;
+// a célula do Sheets estoura em 50.000 caracteres e recusar depois
+// do estouro daria erro do Sheets em vez de mensagem entendível.
+var AVATAR_MAX_CARACTERES = 40000;
+var AVATAR_TIPOS_ACEITOS = ['data:image/jpeg;base64,', 'data:image/png;base64,', 'data:image/webp;base64,'];
+
+function avatarValido_(valor) {
+  var s = String(valor || '');
+  if (!s) return false;
+  if (s.length > AVATAR_MAX_CARACTERES) return false;
+  for (var i = 0; i < AVATAR_TIPOS_ACEITOS.length; i++) {
+    if (s.indexOf(AVATAR_TIPOS_ACEITOS[i]) === 0) return true;
+  }
+  return false;
+}
+
+/**
+ * Grava (ou remove, com avatar vazio) a foto do usuário da própria sessão.
+ * Só mexe na linha de quem chamou: não recebe id nem e-mail de alvo, então
+ * não existe caminho para trocar a foto de outra pessoa.
+ */
+function salvarMeuAvatar(token, avatar) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+
+  // Usuário de origem CCO vive no diretório da Escala CCO, não nesta
+  // planilha: não há linha para gravar. Degrada para as iniciais.
+  if (normalizarPerfil(usuario.perfil).indexOf('cco_') === 0) {
+    throw new Error('A foto de usuários CCO é gerenciada no sistema da Escala CCO.');
+  }
+
+  var remover = !avatar;
+  if (!remover && !avatarValido_(avatar)) {
+    throw new Error('Imagem inválida ou grande demais. Envie um JPEG, PNG ou WebP.');
+  }
+
+  var sheet = getSheet(SHEETS.USUARIOS);
+  garantirColunaUsuariosSuperadmin_();
+  var idx = indiceCabecalho_(sheet);
+  if (!idx.AVATAR) throw new Error('Coluna AVATAR ausente na planilha de usuários.');
+
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    var mesmoId = String(row[0]) === String(usuario.id);
+    var mesmoEmail = String(row[3]).trim().toLowerCase() === String(usuario.email).trim().toLowerCase();
+    if (!mesmoId && !mesmoEmail) continue;
+
+    var celula = sheet.getRange(i + 1, idx.AVATAR);
+    // Formato texto ANTES do valor: sem isso o Sheets tenta interpretar a
+    // string gigante e a leitura volta diferente do que foi gravado. Mesma
+    // armadilha do campo `alvo` no LOG da Escala CCO e da DATA_NASCIMENTO.
+    celula.setNumberFormat('@');
+    celula.setValue(remover ? '' : String(avatar));
+    return { avatar: remover ? '' : String(avatar) };
+  }
+
+  throw new Error('Usuário não encontrado.');
 }
 
 function autorizarPermissoesHub() {
