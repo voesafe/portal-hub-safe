@@ -1,5 +1,9 @@
-
 # Ferramentas locais de preview (Claude)
 .claude/
 
 .DS_Store
+
+# Ferramentas de desenvolvimento: o codigo entra no git, o resto nao.
+tools/node_modules/
+tools/shots/
+tools/package-lock.json

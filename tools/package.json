@@ -1,0 +1,12 @@
+{
+  "name": "safe-hub-tools",
+  "private": true,
+  "type": "module",
+  "description": "Ferramentas de desenvolvimento do SAFE Hub. Nao faz parte do site publicado.",
+  "scripts": {
+    "shot": "node screenshot.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.62.0"
+  }
+}
