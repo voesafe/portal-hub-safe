@@ -34,12 +34,6 @@ const HorasVoadasInva = {
     return el.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   },
 
-  dataLocalIso() {
-    const agora = new Date();
-    const local = new Date(agora.getTime() - agora.getTimezoneOffset() * 60000);
-    return local.toISOString().slice(0, 10);
-  },
-
   setCarregando(ativo, texto = 'Carregando horas voadas...') {
     const overlay = document.getElementById('horas-inva-loading');
     const label = document.getElementById('horas-inva-loading-text');
@@ -584,13 +578,24 @@ const HorasVoadasInva = {
   async sincronizar() {
     const botao = document.getElementById('btn-sincronizar');
     botao.disabled = true;
-    this.setCarregando(true, 'Sincronizando voos com o CAVOK...');
+    this.setCarregando(true, 'Conferindo os últimos dias no CAVOK...');
     try {
-      const resultado = await this.requisitar('sync_cavok', { date: this.dataLocalIso() });
+      // Sem parametro de data: o backend reconcilia a janela inteira, que e
+      // o que pega voo lancado atrasado e corrige lancamento errado.
+      const resultado = await this.requisitar('sync_cavok');
       if (resultado.status !== 'success') {
         throw new Error(resultado.message || 'Não foi possível sincronizar o CAVOK.');
       }
-      toast(resultado.message || 'Sincronização concluída.', 'success', 5000);
+      toast(resultado.message || 'Sincronização concluída.', 'success', 6000);
+      // Dia que o CAVOK nao respondeu fica sem conferir de proposito, e nada
+      // e removido nele. Avisar e melhor que deixar parecer tudo em dia.
+      if (resultado.data?.falhas?.length) {
+        toast(
+          `Sem resposta do CAVOK para ${resultado.data.falhas.join('; ')}. Esses dias não foram conferidos.`,
+          'warning',
+          8000
+        );
+      }
       await this.carregarDados();
     } catch (erro) {
       console.error('[Sincronização CAVOK]', erro);
