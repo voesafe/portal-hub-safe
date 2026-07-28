@@ -127,6 +127,52 @@
   padding: 1px 7px; border-radius: 100px; font-variant-numeric: tabular-nums;
 }
 
+/* Barra que junta as abas e a busca. As abas ficam com a borda inferior, e a
+   busca acompanha na mesma linha; abaixo de 720px a busca cai para a linha de
+   baixo e ocupa a largura toda, senão o campo espreme as abas. */
+.notam-tabsbar {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.notam-tabsbar .notam-tabs { flex: 1 1 auto; min-width: 0; overflow-x: auto; }
+
+.notam-busca { display: flex; align-items: center; gap: 6px; padding-bottom: 6px; }
+.notam-busca input {
+  width: 190px; padding: 7px 11px; border-radius: 8px;
+  border: 1.5px solid var(--n-line); background: var(--n-surface);
+  color: var(--n-ink); font-family: var(--font-body); font-size: .84rem;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.notam-busca input::placeholder { letter-spacing: normal; text-transform: none; color: var(--n-ink-mute); }
+.notam-busca input:focus { outline: none; border-color: var(--blue); }
+.notam-busca .btn { padding: 7px 14px; font-size: .82rem; }
+
+/* Aba da consulta avulsa: tracejada, para não se confundir com as bases. */
+.notam-tab-avulsa { border: 1.5px dashed var(--n-line); border-bottom: none; border-radius: 8px 8px 0 0; }
+.notam-tab-x {
+  margin-left: 2px; padding: 0 4px; border-radius: 4px; cursor: pointer;
+  color: var(--n-ink-mute); font-size: 1rem; line-height: 1;
+}
+.notam-tab-x:hover { background: var(--n-surface-2); color: var(--n-ink); }
+
+.notam-station.avulsa { border-style: dashed; }
+.notam-avulsa-nota {
+  padding: 9px 13px; font-size: .78rem; color: var(--n-ink-soft);
+  background: var(--n-surface-2); border-left: 3px solid var(--blue);
+}
+
+/* Rótulo só para leitor de tela. Não existe no tema global; fica aqui para não
+   obrigar a bumpar o layout.css nos 21 HTML por causa de uma classe. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (max-width: 720px) {
+  .notam-busca { width: 100%; padding-bottom: 0; padding-top: 8px; }
+  .notam-busca input { flex: 1 1 auto; width: auto; }
+}
+
 /* ── Colunas de aeroporto ──────────────────────────────────── */
 .notam-airports { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
 .notam-airports.solo { grid-template-columns: 1fr; }

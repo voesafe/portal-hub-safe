@@ -137,6 +137,18 @@ function doGet(e) {
         exigirSessao(token);
         return jsonSuccess(listarNotams());
 
+      // Botão "Atualizar": força a ida ao DECEA e regrava o cache. Escreve,
+      // mas só o cache de leitura das bases, não dado de usuário: por isso
+      // fica no doGet junto das outras leituras de NOTAM.
+      case 'notams-atualizar':
+        exigirSessao(token);
+        return jsonSuccess(atualizarECarregarNotams());
+
+      // Consulta avulsa de outra localidade. NÃO grava no cache.
+      case 'notams-consulta':
+        exigirSessao(token);
+        return jsonSuccess(consultarNotamsPorIcao(e.parameter.icao));
+
       // ── Aniversários de alunos ──
       case 'aniversarios': {
         var usuarioAniv = exigirAniversarios(token);

@@ -6,8 +6,12 @@
 
 const Notams = {
   dados: { atualizadoEm: '', aeroportos: [], resumo: {}, notams: [] },
+  // Consulta avulsa de outra localidade. Vive FORA de `dados` de propósito:
+  // os tiles, os filtros e a aba "Todos" continuam significando as bases SAFE,
+  // e o resultado de terceiro não distorce nenhum número da tela.
+  consulta: null,       // { icao, nome, notams: [] } | null
   filtro: 'todos',      // todos | hoje | impacto | futuro
-  aeroporto: 'todos',   // todos | SBSJ | SDAM
+  aeroporto: 'todos',   // todos | SBSJ | SDAM | <icao consultado>
   view: 'decoded',      // decoded | raw
 
   async init() {
@@ -32,16 +36,110 @@ const Notams = {
     this.render();
   },
 
+  /**
+   * Botão "Atualizar": vai ao DECEA de verdade e regrava o cache.
+   * Antes ele só relia a planilha, então nunca trazia NOTAM mais novo que a
+   * última sincronização automática — parecia atualizar sem atualizar.
+   */
+  async atualizarDoDecea() {
+    const btn = document.getElementById('notam-refresh');
+    if (btn) btn.disabled = true;
+    this.setLoading(true);
+    const res = await API.atualizarNotams();
+    this.setLoading(false);
+    if (btn) btn.disabled = false;
+
+    if (!res || !res.ok) {
+      toast((res && res.error) || 'Não foi possível falar com o DECEA.', 'error');
+      return;
+    }
+    this.dados = res.data || this.dados;
+    this.render();
+
+    // O backend devolve o cache anterior quando a AISWEB falha, para a tela não
+    // ficar vazia. Nesse caso é obrigatório dizer que o dado é velho.
+    if (this.dados.sincronizado === false) {
+      toast('DECEA indisponível. Mostrando a última sincronização: ' +
+            (this.dados.erroSincronizacao || ''), 'error');
+    } else {
+      toast('NOTAMs sincronizados com o DECEA.', 'success');
+    }
+  },
+
+  /** Consulta avulsa de outra localidade (não mexe nas bases nem no cache). */
+  async consultarLocalidade(icaoBruto) {
+    const icao = String(icaoBruto || '').trim().toUpperCase();
+    if (!/^[A-Z]{4}$/.test(icao)) {
+      toast('Informe o código ICAO com 4 letras, como SBGR.', 'error');
+      return;
+    }
+    if (icao === 'SBSJ' || icao === 'SDAM') {
+      this.selecionarAba(icao);
+      toast(icao + ' já é base SAFE, está nas abas fixas.', 'info');
+      return;
+    }
+
+    const btn = document.getElementById('notam-busca-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Consultando…'; }
+    this.setLoading(true);
+    const res = await API.consultarNotams(icao);
+    this.setLoading(false);
+    if (btn) { btn.disabled = false; btn.textContent = 'Consultar'; }
+
+    if (!res || !res.ok) {
+      toast((res && res.error) || 'Não foi possível consultar ' + icao + '.', 'error');
+      return;
+    }
+
+    this.consulta = res.data || null;
+    this.render();
+    this.selecionarAba(icao);
+
+    if (!this.consulta || !(this.consulta.notams || []).length) {
+      // A API devolve total=0 tanto para código inexistente quanto para
+      // aeródromo sem NOTAM. Não dá para separar, então a frase não afirma.
+      toast('Nenhum NOTAM ativo para ' + icao + '. O código pode também não existir.', 'info');
+    }
+  },
+
+  fecharConsulta() {
+    this.consulta = null;
+    if (this.aeroporto !== 'todos' && this.aeroporto !== 'SBSJ' && this.aeroporto !== 'SDAM') {
+      this.aeroporto = 'todos';
+    }
+    this.render();
+    this.selecionarAba(this.aeroporto);
+  },
+
   // ── Render principal ─────────────────────────────────────
   render() {
     this.renderUpdated();
     this.renderNota();
     this.renderTiles();
+    this.renderAbaConsulta();
     this.renderAeroportos();
     this.renderContagens();
     this.renderFoot();
     this.aplicarFiltro();
     this.aplicarView();
+  },
+
+  /** Cria, atualiza ou remove a aba da consulta avulsa. */
+  renderAbaConsulta() {
+    const tabs = document.getElementById('notam-tabs');
+    if (!tabs) return;
+    tabs.querySelector('.notam-tab-avulsa')?.remove();
+    if (!this.consulta) return;
+
+    const icao = this.consulta.icao;
+    const n = (this.consulta.notams || []).length;
+    const btn = document.createElement('button');
+    btn.className = 'notam-tab notam-tab-avulsa';
+    btn.setAttribute('role', 'tab');
+    btn.dataset.ap = icao;
+    btn.innerHTML = `${this._esc(icao)} <span class="tcnt">${n}</span>` +
+      `<span class="notam-tab-x" data-fechar-consulta role="button" aria-label="Fechar consulta ${this._esc(icao)}">×</span>`;
+    tabs.appendChild(btn);
   },
 
   renderUpdated() {
@@ -89,16 +187,20 @@ const Notams = {
   renderAeroportos() {
     const wrap = document.getElementById('notam-airports');
     if (!wrap) return;
-    const aeroportos = (this.dados.aeroportos && this.dados.aeroportos.length)
-      ? this.dados.aeroportos
-      : this._aeroportosDosNotams();
-
-    wrap.innerHTML = aeroportos.map(ap => {
-      const lista = (this.dados.notams || []).filter(n => n.icao === ap.icao);
+    wrap.innerHTML = this._estacoes().map(ap => {
+      const lista = ap.avulsa
+        ? (this.consulta.notams || [])
+        : (this.dados.notams || []).filter(n => n.icao === ap.icao);
+      const vazio = ap.avulsa
+        ? 'Nenhum NOTAM ativo para este código. Ele também pode não existir: a API do DECEA responde igual nos dois casos.'
+        : 'Sem NOTAMs para esta base.';
       const cards = lista.length
         ? lista.map(n => this._card(n)).join('')
-        : '<div class="notam-empty">Sem NOTAMs para esta base.</div>';
-      return `<div class="notam-station" data-station="${this._esc(ap.icao)}">
+        : `<div class="notam-empty">${vazio}</div>`;
+      const aviso = ap.avulsa
+        ? '<div class="notam-avulsa-nota">Consulta avulsa, feita agora no DECEA. Não entra no monitoramento das bases SAFE nem no cache.</div>'
+        : '';
+      return `<div class="notam-station${ap.avulsa ? ' avulsa' : ''}" data-station="${this._esc(ap.icao)}" data-avulsa="${!!ap.avulsa}">
         <div class="notam-station-head">
           <span class="notam-icao">${this._esc(ap.icao)}</span>
           <div>
@@ -107,9 +209,26 @@ const Notams = {
           </div>
           <span class="count" data-count="${this._esc(ap.icao)}">${lista.length} NOTAM${lista.length === 1 ? '' : 's'}</span>
         </div>
+        ${aviso}
         <div class="notam-stack" id="notam-stack-${this._esc(ap.icao)}">${cards}</div>
       </div>`;
     }).join('');
+  },
+
+  /** Bases SAFE + (se houver) a localidade consultada, marcada como avulsa. */
+  _estacoes() {
+    const bases = (this.dados.aeroportos && this.dados.aeroportos.length)
+      ? this.dados.aeroportos
+      : this._aeroportosDosNotams();
+    if (!this.consulta) return bases;
+    const c = this.consulta;
+    const primeiro = (c.notams || [])[0] || {};
+    return bases.concat([{
+      icao: c.icao,
+      nome: c.nome && c.nome !== c.icao ? c.nome : (primeiro.aero || c.icao),
+      sub: primeiro.cidade || 'consulta avulsa',
+      avulsa: true
+    }]);
   },
 
   _card(n) {
@@ -177,14 +296,16 @@ const Notams = {
         this.aplicarFiltro();
       });
     });
-    // abas de aeroporto
-    document.querySelectorAll('.notam-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.notam-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        this.aeroporto = tab.dataset.ap;
-        this.aplicarFiltro();
-      });
+    // Abas de aeroporto: por DELEGAÇÃO, porque a aba da consulta avulsa é
+    // criada depois deste bind e não existiria para receber o listener.
+    document.getElementById('notam-tabs')?.addEventListener('click', (e) => {
+      if (e.target.closest('[data-fechar-consulta]')) {
+        this.fecharConsulta();
+        return;   // o X fecha a aba, não seleciona
+      }
+      const tab = e.target.closest('.notam-tab');
+      if (!tab) return;
+      this.selecionarAba(tab.dataset.ap);
     });
     // toggle global cru/decodificado
     document.querySelectorAll('.notam-seg').forEach(seg => {
@@ -204,8 +325,29 @@ const Notams = {
       const raw = card.classList.toggle('show-raw');
       btn.textContent = raw ? '✦ Ver decodificado' : '⟨/⟩ Ver NOTAM cru';
     });
-    // refresh
-    document.getElementById('notam-refresh')?.addEventListener('click', () => this.carregar(true));
+    // Atualizar: consulta o DECEA de verdade e regrava o cache.
+    document.getElementById('notam-refresh')?.addEventListener('click', () => this.atualizarDoDecea());
+
+    // Busca de outra localidade.
+    document.getElementById('notam-busca')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('notam-busca-input');
+      this.consultarLocalidade(input?.value);
+    });
+    // Só letras, sempre em caixa alta: o campo aceita 4 caracteres e o usuário
+    // não deveria descobrir o formato pela mensagem de erro.
+    document.getElementById('notam-busca-input')?.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase();
+    });
+  },
+
+  /** Troca a aba ativa e reaplica os filtros. */
+  selecionarAba(ap) {
+    this.aeroporto = ap || 'todos';
+    document.querySelectorAll('.notam-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.ap === this.aeroporto);
+    });
+    this.aplicarFiltro();
   },
 
   aplicarFiltro() {
@@ -215,7 +357,11 @@ const Notams = {
 
     document.querySelectorAll('.notam-station').forEach(st => {
       const isThis = st.getAttribute('data-station') === this.aeroporto;
-      st.classList.toggle('hidden-ap', solo && !isThis);
+      const avulsa = st.getAttribute('data-avulsa') === 'true';
+      // Em "Todos os aeroportos" a estação avulsa fica fora: essa aba significa
+      // "as bases SAFE", e é o que os tiles e os filtros contam. Misturar
+      // localidade de terceiro ali faria o número da tela mentir.
+      st.classList.toggle('hidden-ap', solo ? !isThis : avulsa);
     });
 
     document.querySelectorAll('.notam').forEach(el => {
@@ -228,7 +374,7 @@ const Notams = {
     });
 
     // atualiza contagem por estação (visíveis)
-    (this.dados.aeroportos || this._aeroportosDosNotams()).forEach(ap => {
+    this._estacoes().forEach(ap => {
       const vis = document.querySelectorAll('#notam-stack-' + CSS.escape(ap.icao) + ' .notam:not(.hidden)').length;
       const badge = document.querySelector('[data-count="' + CSS.escape(ap.icao) + '"]');
       if (badge) badge.textContent = vis + ' NOTAM' + (vis === 1 ? '' : 's');

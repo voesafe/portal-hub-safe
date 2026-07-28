@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260727-contraste-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/notams.css?v=20260727-contraste-v1">
+  <link rel="stylesheet" href="css/pages/notams.css?v=20260728-notams-busca-v1">
 </head>
 <body>
 
@@ -87,7 +87,7 @@
           <span class="topbar-status-dot" aria-hidden="true"></span>
           <span id="notam-updated-text">—</span>
         </span>
-        <button class="btn btn-ghost" id="notam-refresh" title="Recarregar do cache">
+        <button class="btn btn-ghost" id="notam-refresh" title="Consultar o DECEA agora e atualizar as bases">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
           Atualizar
         </button>
@@ -116,11 +116,22 @@
         </div>
       </section>
 
-      <!-- Abas por aeroporto -->
-      <div class="notam-tabs" id="notam-tabs" role="tablist">
-        <button class="notam-tab active" data-ap="todos" role="tab">Todos os aeroportos</button>
-        <button class="notam-tab" data-ap="SBSJ" role="tab">SBSJ <span class="tcnt" data-tcnt="SBSJ">0</span></button>
-        <button class="notam-tab" data-ap="SDAM" role="tab">SDAM <span class="tcnt" data-tcnt="SDAM">0</span></button>
+      <!-- Abas por aeroporto + busca de outra localidade.
+           As abas fixas são as bases SAFE; a consulta avulsa cria uma aba
+           extra (com X para fechar) sem tocar nas duas. -->
+      <div class="notam-tabsbar">
+        <div class="notam-tabs" id="notam-tabs" role="tablist">
+          <button class="notam-tab active" data-ap="todos" role="tab">Todos os aeroportos</button>
+          <button class="notam-tab" data-ap="SBSJ" role="tab">SBSJ <span class="tcnt" data-tcnt="SBSJ">0</span></button>
+          <button class="notam-tab" data-ap="SDAM" role="tab">SDAM <span class="tcnt" data-tcnt="SDAM">0</span></button>
+        </div>
+        <form class="notam-busca" id="notam-busca" role="search" novalidate>
+          <label class="sr-only" for="notam-busca-input">Consultar outra localidade pelo código ICAO</label>
+          <input id="notam-busca-input" type="search" placeholder="Outra localidade (ex: SBGR)"
+                 maxlength="4" autocomplete="off" spellcheck="false" aria-describedby="notam-busca-ajuda">
+          <button type="submit" class="btn btn-ghost" id="notam-busca-btn">Consultar</button>
+          <span class="sr-only" id="notam-busca-ajuda">Quatro letras do código ICAO. A consulta vai direto ao DECEA e não altera as bases SAFE.</span>
+        </form>
       </div>
 
       <!-- Aeroportos (render via JS) -->
@@ -135,8 +146,8 @@
 <div id="toast-container" class="toast-container"></div>
 
 <script src="js/core/config.js?v=20260728-origens-ordem-alfabetica-v1"></script>
-<script src="js/core/api.js?v=20260728-avatar-recorte-v1"></script>
+<script src="js/core/api.js?v=20260728-notams-busca-v1"></script>
 <script src="js/core/auth.js?v=20260728-notams-v1"></script>
-<script src="js/pages/notams.js?v=20260727-tema-global-v1"></script>
+<script src="js/pages/notams.js?v=20260728-notams-busca-v1"></script>
 </body>
 </html>

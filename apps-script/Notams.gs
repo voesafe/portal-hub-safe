@@ -107,8 +107,70 @@ function listarNotams() {
   };
 }
 
+/**
+ * Consulta avulsa de OUTRA localidade (action=notams-consulta).
+ * Bate na AISWEB na hora e devolve o resultado SEM gravar no cache: a aba
+ * NOTAMS é das bases SAFE e não pode ser contaminada por consulta de terceiro.
+ *
+ * ⚠️ ICAO inexistente e aeródromo sem NOTAM são INDISTINGUÍVEIS: a API devolve
+ * `total="0"` nos dois casos (medido com XXXX e SBZZ). Por isso a mensagem da
+ * tela precisa admitir as duas hipóteses em vez de afirmar uma.
+ */
+function consultarNotamsPorIcao(icao) {
+  var ic = String(icao || '').trim().toUpperCase();
+  if (!/^[A-Z]{4}$/.test(ic)) {
+    throw new Error('Código ICAO inválido: use 4 letras, como SBGR.');
+  }
+
+  var itens = notamParseXml_(notamFetchAisweb_(ic)).filter(function(n) {
+    return n.icao === ic;   // rede de segurança, igual à do gatilho
+  });
+
+  var ordemSev = { critico: 0, atencao: 1, info: 2 };
+  itens.sort(function(a, b) {
+    if (a.active !== b.active) return a.active ? -1 : 1;
+    return (ordemSev[a.sev] || 3) - (ordemSev[b.sev] || 3);
+  });
+
+  return {
+    icao: ic,
+    // O nome do aeródromo vem dentro dos próprios itens (<aero>/<cidade>).
+    // Sem NOTAM não há de onde tirar, e aí fica só o código.
+    nome: (itens[0] || {}).aero || ic,
+    consultadoEm: new Date().toISOString(),
+    resumo: {
+      ativosHoje: itens.filter(function(n) { return n.active; }).length,
+      impactoPista: itens.filter(function(n) { return n.active && n.sev === 'critico'; }).length,
+      auxiliosLuzes: itens.filter(function(n) { return n.active && n.sev === 'atencao'; }).length,
+      futuros: itens.filter(function(n) { return n.future; }).length,
+      total: itens.length
+    },
+    notams: itens
+  };
+}
+
+/**
+ * Força a sincronização com o DECEA e devolve o cache já atualizado
+ * (action=notams-atualizar). É o que o botão "Atualizar" do Hub chama.
+ * Se a AISWEB falhar, devolve o cache anterior com o aviso, em vez de deixar
+ * a tela sem dado nenhum: NOTAM velho e sinalizado é melhor que tela vazia.
+ */
+function atualizarECarregarNotams() {
+  try {
+    atualizarNotamsAisweb();
+    var okData = listarNotams();
+    okData.sincronizado = true;
+    return okData;
+  } catch (err) {
+    var antigo = listarNotams();
+    antigo.sincronizado = false;
+    antigo.erroSincronizacao = String(err && err.message ? err.message : err);
+    return antigo;
+  }
+}
+
 // ============================================================
-//  ATUALIZAÇÃO (gatilho diário) — chama a API AISWEB
+//  ATUALIZAÇÃO (gatilho de hora em hora) — chama a API AISWEB
 // ============================================================
 /**
  * Ponto de entrada do gatilho: busca na AISWEB, parseia, classifica e
@@ -211,7 +273,11 @@ function notamParseXml_(xmlText) {
       to:      notamFormatarData_(dtFim, fim),
       scope:   notamEscopo_(notamPick_(campos, ['scope','escopo'])),
       raw:     notamMontarCru_(cod, tipo, qcode, icao, ini, fim, horario, texto),
-      decoded: notamDecodificar_(texto, horario)
+      decoded: notamDecodificar_(texto, horario),
+      // Só usados pela consulta avulsa, p/ nomear um aeródromo que não é base
+      // SAFE. Não vão para o cache (notamGravarCache_ grava colunas fixas).
+      aero:    notamPick_(campos, ['aero','aerodromo','nome']),
+      cidade:  notamPick_(campos, ['cidade','city'])
     };
   }).filter(function(n) { return n.cod || n.raw; });
 }
@@ -491,14 +557,30 @@ function notamGravarCache_(itens) {
 // ============================================================
 //  GATILHO
 // ============================================================
-/** Instala (ou reinstala) o gatilho diário às ~06:00. */
+/**
+ * Instala (ou reinstala) o gatilho DE HORA EM HORA.
+ * Era diário às 06:00, o que deixava a tela até 24h atrasada: NOTAM é publicado
+ * a qualquer momento e quem olha a tela está decidindo operação. O custo é
+ * irrisório: 2 chamadas por hora (uma por base) contra o limite de 20 mil
+ * requisições diárias do UrlFetchApp.
+ * Rodar de novo é seguro: apaga o gatilho anterior antes de criar o novo.
+ */
 function notamsInstalarTrigger() {
   ScriptApp.getProjectTriggers().forEach(function(t) {
     if (t.getHandlerFunction() === 'atualizarNotamsAisweb') ScriptApp.deleteTrigger(t);
   });
   ScriptApp.newTrigger('atualizarNotamsAisweb')
-    .timeBased().everyDays(1).atHour(6).create();
-  return 'Gatilho diário instalado (06:00).';
+    .timeBased().everyHours(1).create();
+  return 'Gatilho de hora em hora instalado.';
+}
+
+/** Desliga a sincronização automática (o cache existente continua servindo). */
+function notamsRemoverTrigger() {
+  var n = 0;
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === 'atualizarNotamsAisweb') { ScriptApp.deleteTrigger(t); n++; }
+  });
+  return 'Gatilhos removidos: ' + n;
 }
 
 // ============================================================

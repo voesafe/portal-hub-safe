@@ -154,6 +154,10 @@ const API = {
 
   // ── NOTAMs (leitura do cache; global p/ todos os logados) ──
   async getNotams() { return this.get('notams', {}, true); },
+  // Força a ida ao DECEA. Sem cache de propósito: o ponto do botão é justamente
+  // não reaproveitar nada do que já está guardado.
+  async atualizarNotams() { return this.get('notams-atualizar', {}, false); },
+  async consultarNotams(icao) { return this.get('notams-consulta', { icao }, false); },
 
   // ── Cadastro de Alunos / Trello ────────────────────────────
   async getCadastroAlunos() { return this.get('cadastro-alunos', {}, false); },
