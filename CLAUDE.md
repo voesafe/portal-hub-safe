@@ -109,6 +109,7 @@ A página nasceu `publica: true`, o que a deixava visível a todo logado **mas f
 - **A sessão já morre na virada do dia** (`sessaoInvalidaPorPolitica_` compara `diaLogin` com a data local), então sem o bump todo mundo pegaria a permissão no dia seguinte de qualquer forma. O bump só evita o buraco de algumas horas.
 - **O backend recalcula as permissões a cada requisição** (`validarTokenSessao` também chama `anexarPermissoesEfetivasSessao_`), mas **o menu do frontend lê a cópia do `localStorage`** gravada no login. É por isso que o relogin é necessário mesmo com o servidor já sabendo da permissão nova.
 - **Verificação:** round-trip da matriz nos 8 cargos (permissões do backend → `inferirMatriz` → `matrizParaPermissoes`), sem sobra nem falta, mais 4 cenários de gate (com permissão, sem, superadmin, origem CCO) e o acesso direto caindo em `acesso-negado.html`. ⚠️ Ao escrever teste que dá `eval` em trecho do `admin.js`, converta `const` para `var`: `const` em `eval` fica no escopo do próprio `eval` e não vaza, mesma armadilha do `Auth` no navegador.
+- **Publicado em 2026-07-28:** fase 1 no @41, fase 2 no **@42** com o relogin geral. Rollback do backend: `clasp redeploy AKfycbxpOGXgEJ5… -V 41`.
 - `scratchpad/gen_rbac.js`, citado antes como gerador canônico da matriz, **não existe mais**. A fonte de verdade hoje são `ACCESS_DEFAULT_GROUPS` (backend) e `RBAC_MODULOS` (frontend), mantidos em espelho e conferidos pelo round-trip acima.
 
 ## Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20)
@@ -225,6 +226,16 @@ Auditoria de bugs **visuais** de celular em todas as páginas do Hub. O desktop 
 4. **Miudezas:** `.modal-footer` ganhou `flex-wrap` ([safe-theme.css](css/core/safe-theme.css)); o `.toast-container` passou a respeitar as duas margens em ≤480px, como a Escala CCO já fazia no CSS dela; e o `.progresso-filter-actions` vira largura total quando os filtros empilham, valendo para as duas abas.
 
 **Versões de asset:** `layout`, `safe-theme`, `dashboard`, `safe-minions` e `progresso-alunos` estão em `?v=20260726-mobile-v2`; `concorrencia` em `mobile-v1`. O `safe-theme.css` e o `dashboard.css` **não tinham `?v=` nenhum** até aqui. Reparado de passagem: o `js/config.js` aparece com **quatro `?v=` diferentes** entre as páginas sendo o mesmo arquivo, ou seja, o cache-bust é por página e não por asset. Não foi mexido, mas é a origem do risco de servir arquivo velho.
+
+### Zoom automático em campo no celular, corrigido em 2026-07-28
+
+⚠️ **O Safari do iPhone AMPLIA a página inteira ao focar um campo com `font-size` menor que 16px.** O tema global só definia `font-family` para campo, nunca tamanho, então cada página escolheu o seu: medido, **78 campos abaixo de 16px em 11 telas**, o **login incluído (15,2px)**. Ou seja, todo formulário do Hub dava um solavanco no celular, e a pessoa percebe isso como "a página selecionou o campo sozinha".
+
+- A regra vive no [safe-theme.css](css/core/safe-theme.css) sob **`@media (pointer: coarse)`**, que restringe a dispositivo de toque: o desktop não muda um pixel (conferido campo a campo depois da mudança, tamanhos idênticos aos de antes).
+- **O `!important` é necessário**, não preguiça: as regras de página são mais específicas (`.notam-busca input` vale 0,1,1 contra 0,0,1 de `input`) e venceriam.
+- ⚠️ **Nunca resolva isso com `maximum-scale=1` ou `user-scalable=no`.** Some com o solavanco impedindo **qualquer** zoom, inclusive o que a pessoa dá de propósito para enxergar. Foi exatamente o que a auditoria de 2026-07-26 removeu da Escala CCO e da PAV.
+- Checkbox, radio e range ficam de fora da regra: não recebem texto digitado e o tamanho ali afeta o desenho do controle.
+- **Ao criar campo novo, não precisa fazer nada:** a regra é global e pega por elemento. Só não reintroduza `font-size` menor com especificidade maior **e** `!important`.
 
 ## Header e navegação unificados na auditoria de 2026-07-26
 
