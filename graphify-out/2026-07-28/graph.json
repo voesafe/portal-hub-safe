@@ -3540,7 +3540,7 @@
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L455",
+      "source_location": "L462",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 42,
@@ -3550,7 +3550,7 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L467",
+      "source_location": "L474",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 42,
@@ -6407,7 +6407,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "controle de acesso page (access-control.html)",
       "id": "access_control_page"
     },
@@ -6537,7 +6537,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "rbac_effective_permissions"
     },
@@ -10167,7 +10167,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 11,
       "norm_label": "protecao de pagina por permissao efetiva (auth.proteger*)",
       "id": "protecao_de_pagina_rbac"
     },
@@ -10219,7 +10219,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 11,
       "norm_label": "auth.proteger()",
       "id": "js_auth_proteger"
     },
@@ -10232,7 +10232,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 11,
       "norm_label": "auth.preencherui()",
       "id": "js_auth_preencherui"
     },
@@ -10271,7 +10271,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "manifesto pwa + icones + theme-color (#19213f)",
       "id": "pwa_manifest_icones"
     },
@@ -10284,7 +10284,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "css/access-control.css (controle de acesso)",
       "id": "css_access_control"
     },
@@ -10505,7 +10505,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "painel de grupos de acesso com busca",
       "id": "access_control_painel_grupos"
     },
@@ -10518,7 +10518,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "painel do catalogo de permissoes",
       "id": "access_control_catalogo_permissoes"
     },
@@ -10531,7 +10531,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "modal criar/editar grupo (nome, id, descricao, ativo, permissoes)",
       "id": "access_control_modal_grupo"
     },
@@ -10544,7 +10544,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "fecharmodal(id) chamada por onclick inline no html",
       "id": "fechar_modal_inline"
     },
@@ -10570,7 +10570,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 11,
       "norm_label": "script inline de protecao e preenchimento da tela de acesso negado",
       "id": "acesso_negado_inline_guard"
     },
@@ -10583,7 +10583,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 11,
       "norm_label": "parametro de query ?recurso= com o nome do modulo bloqueado",
       "id": "acesso_negado_param_recurso"
     },
@@ -10596,7 +10596,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 11,
       "norm_label": "botao voltar (history.back com fallback para inicio.html)",
       "id": "acesso_negado_botao_voltar"
     },
@@ -10700,7 +10700,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 11,
       "norm_label": "botao \"+ nova base\" comeca hidden e e liberado por permissao",
       "id": "bases_btn_nova_oculto"
     },
@@ -11727,7 +11727,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 22,
       "norm_label": "overlay de carregamento inicial (#escala-cco-loading)",
       "id": "escala_cco_loading_overlay"
     },
@@ -11753,7 +11753,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 22,
       "norm_label": "#appscreen (shell do app)",
       "id": "escala_cco_app_screen"
     },
@@ -11766,7 +11766,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 22,
       "norm_label": "view calendario (#calendargrid)",
       "id": "escala_cco_calendar_view"
     },
@@ -11805,7 +11805,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 22,
+      "community": 7,
       "norm_label": "view usuarios legada (#usersview)",
       "id": "escala_cco_users_view"
     },
@@ -11818,7 +11818,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 22,
       "norm_label": "painel admin do valor do turno (#adminpanel)",
       "id": "escala_cco_admin_panel"
     },
@@ -11831,7 +11831,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 22,
       "norm_label": "resumo financeiro (#financials)",
       "id": "escala_cco_financials_section"
     },
@@ -12078,7 +12078,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "acao getlog",
       "id": "escala_cco_action_getlog"
     },
@@ -12117,7 +12117,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "param actor (autor real gravado no log)",
       "id": "escala_cco_actor_param"
     },
@@ -12299,7 +12299,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 37,
       "norm_label": "users (mapa de usuarios carregado do sheets)",
       "id": "escala_cco_users_map"
     },
@@ -12312,7 +12312,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 37,
       "norm_label": "schedule_users (visiveis na escala)",
       "id": "escala_cco_schedule_users"
     },
@@ -12351,7 +12351,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 27,
       "norm_label": "shift_labels (t1, t2, not)",
       "id": "escala_cco_shift_labels"
     },
@@ -12364,7 +12364,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "shiftvalue (valor do turno)",
       "id": "escala_cco_shiftvalue"
     },
@@ -12494,7 +12494,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 27,
       "norm_label": "shortname(fullname)",
       "id": "escala_cco_shortname"
     },
@@ -12546,7 +12546,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "formatcpf(v)",
       "id": "escala_cco_formatcpf"
     },
@@ -12559,7 +12559,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "formatphone(v)",
       "id": "escala_cco_formatphone"
     },
@@ -12650,7 +12650,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 40,
+      "community": 27,
       "norm_label": "rendercalendar()",
       "id": "escala_cco_rendercalendar"
     },
@@ -12741,7 +12741,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 22,
       "norm_label": "saveshiftvalue()",
       "id": "escala_cco_saveshiftvalue"
     },
@@ -12793,7 +12793,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "renderfinancials()",
       "id": "escala_cco_renderfinancials"
     },
@@ -13196,7 +13196,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 22,
+      "community": 7,
       "norm_label": "toggleusersview() (modulo legado)",
       "id": "escala_cco_toggleusersview"
     },
@@ -13222,7 +13222,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "criarcarduser(uname, isativo)",
       "id": "escala_cco_criarcarduser"
     },
@@ -13352,7 +13352,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 22,
+      "community": 7,
       "norm_label": "duplicacao: dois modulos de funcionarios coexistindo",
       "id": "escala_cco_duplicacao_modulo_funcionarios"
     },
@@ -18382,7 +18382,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L467",
+      "source_location": "L474",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -18392,7 +18392,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L455",
+      "source_location": "L462",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
@@ -30238,5 +30238,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "13db1085bfbb2c0e01d922a9d526b04e8e830f70"
+  "built_at_commit": "af8065d2e862a93798b2579c76bf066cf8f65b21"
 }
