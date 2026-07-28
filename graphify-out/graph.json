@@ -3517,20 +3517,30 @@
       "norm_label": "horas voadas inva mes: cadastro de instrutor, desde 2026-07-28"
     },
     {
-      "label": "Gatilhos di\u00e1rios 23h e 05h, desde 2026-07-28",
+      "label": "Reconcilia\u00e7\u00e3o da janela, desde 2026-07-28 (backend @6)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
       "source_location": "L427",
       "_origin": "ast",
-      "id": "claude_gatilhos_di\u00e1rios_23h_e_05h_desde_2026_07_28",
+      "id": "claude_reconcilia\u00e7\u00e3o_da_janela_desde_2026_07_28_backend_6",
       "community": 42,
-      "norm_label": "gatilhos diarios 23h e 05h, desde 2026-07-28"
+      "norm_label": "reconciliacao da janela, desde 2026-07-28 (backend @6)"
+    },
+    {
+      "label": "Gatilhos di\u00e1rios, desde 2026-07-28",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L446",
+      "_origin": "ast",
+      "id": "claude_gatilhos_di\u00e1rios_desde_2026_07_28",
+      "community": 42,
+      "norm_label": "gatilhos diarios, desde 2026-07-28"
     },
     {
       "label": "Tr\u00eas bugs corrigidos em 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L439",
+      "source_location": "L458",
       "_origin": "ast",
       "id": "claude_tr\u00eas_bugs_corrigidos_em_2026_07_28",
       "community": 42,
@@ -3540,7 +3550,7 @@
       "label": "Bases SJK/CPQ, flag de 100h e libera\u00e7\u00e3o por OPR, desde 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L445",
+      "source_location": "L464",
       "_origin": "ast",
       "id": "claude_bases_sjk_cpq_flag_de_100h_e_libera\u00e7\u00e3o_por_opr_desde_2026_07_28",
       "community": 42,
@@ -3550,7 +3560,7 @@
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L474",
+      "source_location": "L493",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 42,
@@ -3560,7 +3570,7 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L486",
+      "source_location": "L505",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 42,
@@ -3778,7 +3788,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 49,
       "norm_label": "concorrencia (page)",
       "id": "concorrencia"
     },
@@ -3947,7 +3957,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 49,
       "norm_label": "escola concorrente",
       "id": "concorrencia_concorrente"
     },
@@ -3960,7 +3970,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 49,
       "norm_label": "preco safe comparativo",
       "id": "concorrencia_preco_safe"
     },
@@ -8445,7 +8455,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 46,
       "norm_label": "admin \u2014 gestao de usuarios (page)",
       "id": "admin_html"
     },
@@ -8458,7 +8468,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 46,
       "norm_label": "diretorio de acessos (tabela + tabs + filtros)",
       "id": "admin_diretorio_acessos"
     },
@@ -8497,7 +8507,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 46,
       "norm_label": "card de alterar minha senha",
       "id": "admin_alterar_senha"
     },
@@ -8562,7 +8572,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 49,
       "norm_label": "comparativo de precos por curso + filtro",
       "id": "concorrencia_comparativo"
     },
@@ -8575,7 +8585,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 49,
       "norm_label": "modal de concorrente (nova/editar)",
       "id": "concorrencia_modal_concorrente"
     },
@@ -8588,7 +8598,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 49,
       "norm_label": "modal de preco safe",
       "id": "concorrencia_modal_preco_safe"
     },
@@ -8744,7 +8754,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 46,
       "norm_label": "css/admin.css",
       "id": "css_admin"
     },
@@ -8770,7 +8780,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 49,
       "norm_label": "css/concorrencia.css",
       "id": "css_concorrencia"
     },
@@ -10151,7 +10161,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 17,
       "norm_label": "overlay de carregamento com logo (dashboard-loading-overlay)",
       "id": "dashboard_loading_overlay_pattern"
     },
@@ -10164,7 +10174,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "container de toasts compartilhado",
       "id": "toast_container_pattern"
     },
@@ -10320,7 +10330,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 17,
       "norm_label": "pagina aniversarios",
       "id": "aniversarios_page"
     },
@@ -10333,7 +10343,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 17,
       "norm_label": "css/aniversarios.css (aniversarios)",
       "id": "css_aniversarios"
     },
@@ -10359,7 +10369,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "pagina concorrencia",
       "id": "concorrencia_page"
     },
@@ -10437,7 +10447,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 11,
       "norm_label": "css/inicio.css (inicio)",
       "id": "css_inicio"
     },
@@ -10632,7 +10642,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 17,
       "norm_label": "pilula de estado do envio automatico no header (.aniv-pill)",
       "id": "aniv_pill_status_envio"
     },
@@ -10645,7 +10655,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 17,
       "norm_label": "faixa de kpis de aniversarios (render via js em #aniv-kpis)",
       "id": "aniv_kpis"
     },
@@ -10658,7 +10668,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 17,
       "norm_label": "bloco \"hoje\" (aniversariantes do dia)",
       "id": "aniv_bloco_hoje"
     },
@@ -10671,7 +10681,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 17,
       "norm_label": "bloco \"proximos 7 dias\"",
       "id": "aniv_bloco_proximos"
     },
@@ -10684,7 +10694,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 17,
       "norm_label": "tabela de aniversariantes do mes com seletor de mes",
       "id": "aniv_tabela_mes"
     },
@@ -10814,7 +10824,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 49,
       "norm_label": "barra de filtro por curso",
       "id": "concorrencia_filtro_curso"
     },
@@ -10827,7 +10837,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 17,
       "norm_label": "loading overlay proprio (#loading-overlay), fora do padrao dashboard-loading",
       "id": "concorrencia_loading_overlay_proprio"
     },
@@ -12088,7 +12098,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "acao getlog",
       "id": "escala_cco_action_getlog"
     },
@@ -12127,7 +12137,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "param actor (autor real gravado no log)",
       "id": "escala_cco_actor_param"
     },
@@ -18392,7 +18402,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L486",
+      "source_location": "L505",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -18402,7 +18412,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L474",
+      "source_location": "L493",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
@@ -18742,7 +18752,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L445",
+      "source_location": "L464",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_bases_sjk_cpq_flag_de_100h_e_libera\u00e7\u00e3o_por_opr_desde_2026_07_28",
@@ -18752,17 +18762,27 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L427",
+      "source_location": "L446",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
-      "target": "claude_gatilhos_di\u00e1rios_23h_e_05h_desde_2026_07_28",
+      "target": "claude_gatilhos_di\u00e1rios_desde_2026_07_28",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L439",
+      "source_location": "L427",
+      "weight": 1.0,
+      "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
+      "target": "claude_reconcilia\u00e7\u00e3o_da_janela_desde_2026_07_28_backend_6",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L458",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_tr\u00eas_bugs_corrigidos_em_2026_07_28",
@@ -30258,5 +30278,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "7bc7256539a3b23357e16dbb2e9b685f7e855021"
+  "built_at_commit": "7f7bcd806b9ce26208467663a877e062784a309f"
 }
