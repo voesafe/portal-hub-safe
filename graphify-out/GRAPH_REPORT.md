@@ -1,16 +1,16 @@
 # Graph Report - portal-hub-safe  (2026-07-28)
 
 ## Corpus Check
-- 77 files · ~516,322 words
+- 77 files · ~516,538 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1264 nodes · 1407 edges · 365 communities (74 shown, 291 thin omitted)
+- 1264 nodes · 1407 edges · 366 communities (75 shown, 291 thin omitted)
 - Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `de0ea6b4`
+- Built from commit: `1c3100f5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,6 +37,7 @@
 - [[_COMMUNITY_Menu da Sidebar e NOTAMs|Menu da Sidebar e NOTAMs]]
 - [[_COMMUNITY_Login e Home do Hub|Login e Home do Hub]]
 - [[_COMMUNITY_Módulo Aniversários (backend)|Módulo Aniversários (backend)]]
+- [[_COMMUNITY_toggleUsersView() (módulo legado)|toggleUsersView() (módulo legado)]]
 - [[_COMMUNITY_cssfechamento-horas.css|css/fechamento-horas.css]]
 - [[_COMMUNITY_abrirModalNovoFunc|abrirModalNovoFunc]]
 - [[_COMMUNITY_screenshot.mjs|screenshot.mjs]]
@@ -421,7 +422,7 @@
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_refinado_debug_receita_global_calculo, preview_refinado_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_refinado_escala_pav_view_calendario, preview_refinado_escala_pav_view_financeiro, preview_refinado_escala_pav_view_cadastro [INFERRED 0.80]
 
-## Communities (365 total, 291 thin omitted)
+## Communities (366 total, 291 thin omitted)
 
 ### Community 0 - "Escala PAV de Base"
 Cohesion: 0.07
@@ -448,8 +449,8 @@ Cohesion: 0.06
 Nodes (34): KPI Receita Global (Vendas + Faturamento), Performance por Consultor (PAC) Chart, Dashboard / Visão Geral Page, Diagnóstico SAFE Hub Page, Detecção de Inconsistência MES/ANO vs DATA, Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale), Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page (+26 more)
 
 ### Community 7 - "Ações do Backend da Escala CCO"
-Cohesion: 0.12
-Nodes (25): Ação getLog, Ação getUsers, Ação login, Ação saveUser, Ação setConfig, Ação setShift, Ação toggleUserActive, Param actor (autor real gravado no LOG) (+17 more)
+Cohesion: 0.13
+Nodes (24): Ação getLog, Ação getUsers, Ação login, Ação saveUser, Ação setConfig, Ação setShift, Ação toggleUserActive, Param actor (autor real gravado no LOG) (+16 more)
 
 ### Community 8 - "CLI de Administração"
 Cohesion: 0.22
@@ -468,8 +469,8 @@ Cohesion: 0.16
 Nodes (21): abrirModalHistorico(), Permissão canViewLog, Drawer lateral da Escala CCO, drawerAction(action), View Funcionários (#funcView), Gate defensivo no cliente + validação no servidor, iniciarApp(u), isAdmin() (+13 more)
 
 ### Community 14 - "Calendário e Dashboard da CCO"
-Cohesion: 0.12
-Nodes (20): abrirModalExport(), Ação getMonth, applyScheduleFixes(monthKey, data), applyScheduleOverrides(data), View Dashboard (#dashView), dashCache (cache por mês do dashboard), Modal de exportação iFood (#modalExportIfood), fmtR$(v, short) (+12 more)
+Cohesion: 0.14
+Nodes (17): Ação getMonth, applyScheduleFixes(monthKey, data), applyScheduleOverrides(data), View Dashboard (#dashView), dashCache (cache por mês do dashboard), fmtR$(v, short), getScheduleOverrides(), initDash() (+9 more)
 
 ### Community 15 - "README e Setup do Projeto"
 Cohesion: 0.11
@@ -495,6 +496,10 @@ Nodes (6): Sidebar estática do admin com data-admin-only/data-finance-only, Aut
 Cohesion: 0.12
 Nodes (16): Bases SAFE Page, Login Page (SAFE Hub), Redireciona se já logado (localStorage/sessionStorage), Bases SAFE (Início), Início (Home Portal) Page, Módulos do SAFE Hub (por Perfil), Login Page (SAFE Hub), Redireciona se já logado (localStorage/sessionStorage) (+8 more)
 
+### Community 22 - "toggleUsersView() (módulo legado)"
+Cohesion: 0.67
+Nodes (3): Duplicação: dois módulos de funcionários coexistindo, toggleUsersView() (módulo legado), View Usuários legada (#usersView)
+
 ### Community 23 - "css/fechamento-horas.css"
 Cohesion: 0.20
 Nodes (14): css/fechamento-horas.css (Fechamento de Horas), Fechamento de Horas / Cotistas page (fechamento-horas.html), Botão "Atualizar pela API CAVOK", Gráficos: horas por mês, SJK x CPQ, alunos novos, distribuição de horas, Histórico de alterações do mês, KPIs do ano e do mês (render via JS), Métricas de alunos preenchidas manualmente, Modal de revisão antes de salvar (grava cópia da versão atual) (+6 more)
@@ -512,8 +517,8 @@ Cohesion: 0.20
 Nodes (15): Gestão de Usuários page (admin.html), Comparativo de preços por curso + filtro, Barra de filtro por curso, Controle de Gastos page (controle-gastos.html), Gating legado por atributo (data-admin-only / data-finance-only / data-write-only / data-pac-only), Faturamento page (faturamento.html), Filtros da aba Por Curso (curso, nome, e-mail), Coluna PAC removida do DOM para não-admin (+7 more)
 
 ### Community 27 - "Action getLog"
-Cohesion: 0.13
-Nodes (19): Painel admin do valor do turno (#adminPanel), #appScreen (shell do app), View Calendário (#calendarGrid), criarCardUser(uname, isAtivo), Espera das gravações pendentes antes de ler (await gasWriteChain), Resumo financeiro (#financials), formatCPF(v), formatPhone(v) (+11 more)
+Cohesion: 0.24
+Nodes (10): Duplo turno T1+T2 (dia todo), Espera das gravações pendentes antes de ler (await gasWriteChain), gasWrite(action, payload), Fila de gravação serializada (gasWriteChain), Atualização otimista com rollback do turno, removeBothShifts(dk), saveScheduleOverride(dk, dayData), Overrides locais da escala no localStorage (+2 more)
 
 ### Community 28 - "js/core/auth.js"
 Cohesion: 0.23
@@ -533,15 +538,15 @@ Nodes (11): Pagina Cadastro de Aluno (cadastro-alunos.html), Barra de seleção 
 
 ### Community 37 - "computeFinForMonth(idx)"
 Cohesion: 0.18
-Nodes (13): atualizarPreviewExport(), computeFinForMonth(idx), Helpers de data (dateKey, daysInMonth, dayOfWeek), Duplo turno T1+T2 (dia todo), exportIrParaConfirmacao(), financeiroExclude (exclusão do resumo financeiro), fmtMoedaCco(v), removeBothShifts(dk) (+5 more)
+Nodes (14): abrirModalExport(), atualizarPreviewExport(), computeFinForMonth(idx), criarCardUser(uname, isAtivo), Helpers de data (dateKey, daysInMonth, dayOfWeek), Modal de exportação iFood (#modalExportIfood), exportIrParaConfirmacao(), financeiroExclude (exclusão do resumo financeiro) (+6 more)
 
 ### Community 38 - "Ação getLog"
 Cohesion: 0.25
 Nodes (8): carregarHistorico(), currentUser (identidade da sessão), Diff antes → depois no histórico, Formatadores do histórico (histTurnoLabel, histNomes, histFmtData), Modal de Histórico (auditoria), histEntries (cache das entradas do LOG), Sentinel safe-hub-admin (param by), renderHistorico()
 
 ### Community 40 - "exportConfirmarExportacao"
-Cohesion: 0.22
-Nodes (11): exportConfirmarExportacao(), exportPDF(), gerarXlsxIfood(usersToShow, totals, monthIdx), html2canvas 1.4.1 (CDN cdnjs), jsPDF 2.5.1 (CDN cdnjs), loadScript(src), PDF forçado a uma página A4 paisagem, Planilha Modelo iFood (CNPJ fixo + colunas obrigatórias) (+3 more)
+Cohesion: 0.12
+Nodes (20): #appScreen (shell do app), View Calendário (#calendarGrid), exportConfirmarExportacao(), exportPDF(), Resumo financeiro (#financials), gerarXlsxIfood(usersToShow, totals, monthIdx), html2canvas 1.4.1 (CDN cdnjs), jsPDF 2.5.1 (CDN cdnjs) (+12 more)
 
 ### Community 41 - "package.json"
 Cohesion: 0.18

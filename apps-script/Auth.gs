@@ -263,19 +263,36 @@ function validarAcaoPerfilExclusivo_(token, action) {
     return;
   }
 
-  // `salvar-avatar` entra nas duas listas: mexe só na própria linha e o menu
-  // do usuário aparece para todo mundo, então sem isso um perfil exclusivo
-  // escolhia a foto, enquadrava e levava "acesso exclusivo" ao salvar.
+  // ⚠️ Esta lista é FECHADA, e por isso já barrou duas entregas por esquecimento:
+  // `salvar-avatar` (2026-07-28) e `notams` (2026-07-28). O padrão da falha é
+  // sempre o mesmo e é traiçoeiro: a permissão está no cargo, então o item
+  // APARECE no menu da pessoa, ela clica e leva "acesso exclusivo". Menu diz
+  // que pode, servidor diz que não.
+  //
+  // As ações abaixo são de todo mundo por natureza: ou mexem só na própria
+  // linha do usuário, ou são leitura global que não altera nada. Deixá-las
+  // fora da lista de cada perfil evita repetição e, principalmente, evita que
+  // o próximo módulo global esbarre nisto de novo.
+  // ⚠️ Ao criar rota de LEITURA GLOBAL nova, acrescente-a aqui.
+  var acoesUniversaisHub = [
+    'alterar-senha',      // trocar a própria senha
+    'salvar-avatar',      // trocar a própria foto
+    'notams',             // ler o cache de NOTAMs (página global, só leitura)
+    'notams-consulta'     // consultar outra localidade (não grava nada)
+  ];
+  // `notams-atualizar` fica DE FORA de propósito: escreve na planilha e já tem
+  // guarda própria por permissão.
   var acoesPorPerfilExclusivo = {
-    controle_gastos_visualizacao: ['controle-gastos', 'alterar-senha', 'salvar-avatar'],
-    escala_minions: ['alterar-senha', 'salvar-avatar']
+    controle_gastos_visualizacao: ['controle-gastos'],
+    escala_minions: []
   };
   var perfil = normalizarPerfil(sessao.perfil);
   if (valorBooleano(sessao.superadmin)) return;
   var permitidas = acoesPorPerfilExclusivo[perfil];
   if (!permitidas) return;
 
-  if (permitidas.indexOf(String(action || '')) === -1) {
+  var acao = String(action || '');
+  if (permitidas.indexOf(acao) === -1 && acoesUniversaisHub.indexOf(acao) === -1) {
     throw new Error('Este acesso é exclusivo e não permite esta ação no Hub.');
   }
 }
