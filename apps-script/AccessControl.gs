@@ -5,6 +5,10 @@
 
 var ACCESS_PERMISSIONS = [
   ['inicio.visualizar', 'Início', 'Visualizar Início'],
+  // NOTAMs nasce em TODOS os cargos padrão: na prática é global, como era
+  // quando a página estava marcada `publica`. A diferença é que agora existe
+  // no catálogo, então aparece no Controle de Acesso e dá para NEGAR a alguém.
+  ['notams.visualizar', 'NOTAMs', 'Visualizar NOTAMs das bases'],
   ['dashboard_vendas.visualizar_proprio', 'Dashboard de Vendas', 'Visualizar indicadores próprios'],
   ['dashboard_vendas.visualizar_todos', 'Dashboard de Vendas', 'Visualizar indicadores gerais'],
   ['dashboard_vendas.visualizar_receita_global', 'Dashboard de Vendas', 'Visualizar receita global'],
@@ -102,6 +106,7 @@ var ACCESS_DEFAULT_GROUPS = [
     legacyPerfis: ['pac'],
     permissoes: [
       'inicio.visualizar',
+      'notams.visualizar',
       'auth.alterar_propria_senha',
       'dashboard_vendas.visualizar_proprio',
       'vendas.visualizar_proprias',
@@ -124,6 +129,7 @@ var ACCESS_DEFAULT_GROUPS = [
     legacyPerfis: ['admin'],
     permissoes: [
       'inicio.visualizar',
+      'notams.visualizar',
       'auth.alterar_propria_senha',
       'dashboard_vendas.visualizar_proprio',
       'dashboard_vendas.visualizar_todos',
@@ -161,6 +167,7 @@ var ACCESS_DEFAULT_GROUPS = [
     legacyPerfis: ['financeiro'],
     permissoes: [
       'inicio.visualizar',
+      'notams.visualizar',
       'auth.alterar_propria_senha',
       'faturamento.visualizar',
       'faturamento.visualizar_resumo',
@@ -192,6 +199,7 @@ var ACCESS_DEFAULT_GROUPS = [
     legacyPerfis: [],
     permissoes: [
       'inicio.visualizar',
+      'notams.visualizar',
       'auth.alterar_propria_senha',
       'escala_cco.visualizar_calendario',
       'escala_cco.editar_propria_escala',
@@ -207,6 +215,7 @@ var ACCESS_DEFAULT_GROUPS = [
     legacyPerfis: [],
     permissoes: [
       'inicio.visualizar',
+      'notams.visualizar',
       'auth.alterar_propria_senha',
       'escala_cco.visualizar_calendario',
       'escala_cco.editar_propria_escala',
@@ -230,6 +239,7 @@ var ACCESS_DEFAULT_GROUPS = [
     legacyPerfis: ['escala_minions'],
     permissoes: [
       'inicio.visualizar',
+      'notams.visualizar',
       'auth.alterar_propria_senha',
       'escala_cco.visualizar_calendario',
       'escala_cco.editar_propria_escala',
@@ -263,6 +273,7 @@ var ACCESS_DEFAULT_GROUPS = [
     legacyPerfis: ['admin_readonly', 'admin_visualizacao'],
     permissoes: [
       'inicio.visualizar',
+      'notams.visualizar',
       'auth.alterar_propria_senha',
       'dashboard_vendas.visualizar_proprio',
       'dashboard_vendas.visualizar_todos',
@@ -294,7 +305,7 @@ var ACCESS_DEFAULT_GROUPS = [
     nome: 'Controle de Gastos - Leitura (legado)',
     descricao: 'Acesso exclusivo e somente leitura ao Controle de Gastos.',
     legacyPerfis: ['controle_gastos_visualizacao'],
-    permissoes: ['inicio.visualizar', 'controle_gastos.visualizar', 'auth.alterar_propria_senha']
+    permissoes: ['inicio.visualizar', 'notams.visualizar', 'controle_gastos.visualizar', 'auth.alterar_propria_senha']
   }
 ];
 

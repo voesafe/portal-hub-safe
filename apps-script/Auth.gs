@@ -63,6 +63,10 @@ function permissoesEfetivasCco_(perfil) {
   var p = normalizarPerfil(perfil);
   var base = [
     'inicio.visualizar',
+    // NOTAMs é global. Usuário de origem CCO não passa pelos cargos do Hub,
+    // então precisa ganhar a permissão aqui, senão a página some justamente
+    // para quem mais usa NOTAM.
+    'notams.visualizar',
     'escala_cco.visualizar_calendario',
     'safe_minions.visualizar',
     'bases.visualizar',
