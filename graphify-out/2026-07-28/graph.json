@@ -3490,7 +3490,7 @@
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L371",
+      "source_location": "L374",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 42,
@@ -3500,7 +3500,7 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L383",
+      "source_location": "L386",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 42,
@@ -11690,7 +11690,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "tela de login propria (#loginscreen)",
       "id": "escala_cco_login_screen"
     },
@@ -11833,7 +11833,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "modal de exportacao ifood (#modalexportifood)",
       "id": "escala_cco_export_modal"
     },
@@ -11898,7 +11898,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "gaswrite(action, payload)",
       "id": "escala_cco_gaswrite"
     },
@@ -11911,7 +11911,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "fila de gravacao serializada (gaswritechain)",
       "id": "escala_cco_gaswritechain"
     },
@@ -11989,7 +11989,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 7,
       "norm_label": "acao setconfig",
       "id": "escala_cco_action_setconfig"
     },
@@ -12028,7 +12028,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 7,
       "norm_label": "acao getlog",
       "id": "escala_cco_action_getlog"
     },
@@ -12067,7 +12067,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 7,
       "norm_label": "param actor (autor real gravado no log)",
       "id": "escala_cco_actor_param"
     },
@@ -12093,7 +12093,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "sso pelo hub (sessao do auth)",
       "id": "escala_cco_sso_hub"
     },
@@ -12119,7 +12119,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "sessionstorage cco_session",
       "id": "escala_cco_cco_session"
     },
@@ -12223,7 +12223,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "dologin(e)",
       "id": "escala_cco_dologin"
     },
@@ -12340,7 +12340,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "overrides locais da escala no localstorage",
       "id": "escala_cco_schedule_overrides"
     },
@@ -12366,7 +12366,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "savescheduleoverride(dk, daydata)",
       "id": "escala_cco_savescheduleoverride"
     },
@@ -12405,7 +12405,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 49,
       "norm_label": "helpers de data (datekey, daysinmonth, dayofweek)",
       "id": "escala_cco_date_helpers"
     },
@@ -12574,7 +12574,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "espera das gravacoes pendentes antes de ler (await gaswritechain)",
       "id": "escala_cco_espera_gravacoes"
     },
@@ -12626,7 +12626,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "toggleshift(dk, shift, targetuser)",
       "id": "escala_cco_toggleshift"
     },
@@ -12639,7 +12639,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "atualizacao otimista com rollback do turno",
       "id": "escala_cco_optimistic_rollback"
     },
@@ -12652,7 +12652,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "capacidade maxima de 1 pessoa por turno",
       "id": "escala_cco_shift_capacity"
     },
@@ -12730,7 +12730,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 49,
       "norm_label": "computefinformonth(idx)",
       "id": "escala_cco_computefinformonth"
     },
@@ -12756,7 +12756,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 49,
       "norm_label": "financeiroexclude (exclusao do resumo financeiro)",
       "id": "escala_cco_financeiro_exclude"
     },
@@ -12769,7 +12769,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "secao ifood beneficios (logo base64 embutido)",
       "id": "escala_cco_ifood_section"
     },
@@ -12782,7 +12782,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 49,
       "norm_label": "fmtmoedacco(v)",
       "id": "escala_cco_fmtmoedacco"
     },
@@ -12808,7 +12808,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "abrirmodalexport()",
       "id": "escala_cco_abrirmodalexport"
     },
@@ -12821,7 +12821,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 49,
       "norm_label": "atualizarpreviewexport()",
       "id": "escala_cco_atualizarpreviewexport"
     },
@@ -12834,7 +12834,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 49,
       "norm_label": "exportirparaconfirmacao()",
       "id": "escala_cco_exportirparaconfirmacao"
     },
@@ -18332,7 +18332,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L383",
+      "source_location": "L386",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -18342,7 +18342,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L371",
+      "source_location": "L374",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
