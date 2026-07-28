@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260727-tema-global-v1">
+  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260728-bases-flag-v1">
 </head>
 <body>
 <div class="app-shell">
@@ -102,6 +102,11 @@
             <strong class="kpi-value" id="kpi-eventuais">—</strong>
             <span class="kpi-sub">Instrutores eventuais</span>
           </article>
+          <article class="kpi-card">
+            <span class="kpi-label">Liberados</span>
+            <strong class="kpi-value" id="kpi-liberados">—</strong>
+            <span class="kpi-sub">100h atingidas ou liberado por OPR</span>
+          </article>
         </div>
 
         <div class="horas-inva-grid">
@@ -120,24 +125,42 @@
           <article class="card">
             <div class="card-header horas-inva-table-header">
               <div>
-                <h2 class="card-title">Lista de instrutores</h2>
+                <h2 class="card-title">Instrutores por base</h2>
                 <p class="horas-inva-card-subtitle" id="ultima-atualizacao">Aguardando atualização.</p>
               </div>
               <input class="form-control horas-inva-search" id="busca-instrutor" type="search" placeholder="Buscar instrutor">
             </div>
-            <div class="table-wrapper">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Tipo</th>
-                    <th>Horas</th>
-                  </tr>
-                </thead>
-                <tbody id="instrutores-tbody">
-                  <tr><td colspan="3" class="horas-inva-empty">Carregando dados...</td></tr>
-                </tbody>
-              </table>
+
+            <p class="hi-ajuda">
+              Arraste o instrutor pelo punho para trocar de base. No celular, um toque
+              no punho já move para a outra base.
+              <span class="hi-legenda"><span class="hi-flag" aria-hidden="true"></span> 100h voadas ou liberado pela operação</span>
+            </p>
+
+            <div class="hi-bases" id="hi-bases">
+              <section class="hi-base" data-drop-base="SJK" aria-label="Base SJK">
+                <header class="hi-base-header">
+                  <h3 class="hi-base-nome">SJK <span>São José dos Campos</span></h3>
+                  <p class="hi-base-sub">
+                    <span id="hi-contador-SJK">—</span> · <span id="hi-total-SJK">—</span>
+                  </p>
+                </header>
+                <ul class="hi-lista" id="hi-lista-SJK">
+                  <li class="hi-vazio">Carregando dados...</li>
+                </ul>
+              </section>
+
+              <section class="hi-base" data-drop-base="CPQ" aria-label="Base CPQ">
+                <header class="hi-base-header">
+                  <h3 class="hi-base-nome">CPQ <span>Campinas</span></h3>
+                  <p class="hi-base-sub">
+                    <span id="hi-contador-CPQ">—</span> · <span id="hi-total-CPQ">—</span>
+                  </p>
+                </header>
+                <ul class="hi-lista" id="hi-lista-CPQ">
+                  <li class="hi-vazio">Carregando dados...</li>
+                </ul>
+              </section>
             </div>
           </article>
         </div>
@@ -167,6 +190,13 @@
                 </select>
               </div>
               <div class="form-group">
+                <label class="form-label" for="instrutor-base">Base</label>
+                <select class="form-control" id="instrutor-base" required>
+                  <option value="SJK">SJK · São José dos Campos</option>
+                  <option value="CPQ">CPQ · Campinas</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label class="form-label" for="instrutor-saldo">Banco de horas inicial</label>
                 <input class="form-control" type="number" id="instrutor-saldo" min="0" step="0.1" placeholder="Ex.: 150,5">
               </div>
@@ -178,6 +208,32 @@
           </form>
         </article>
       </section>
+
+      <div class="modal-overlay" id="modal-liberacao">
+        <div class="modal hi-modal" role="dialog" aria-modal="true" aria-labelledby="liberacao-titulo">
+          <div class="modal-header">
+            <h2 class="card-title" id="liberacao-titulo">Liberado por OPR</h2>
+            <button class="modal-close" type="button" id="liberacao-fechar" aria-label="Fechar">&times;</button>
+          </div>
+          <!-- novalidate: o required nativo mostra a bolha cinza do navegador
+               antes do nosso validador, e a pessoa leva dois erros seguidos -->
+          <form id="form-liberacao" novalidate>
+            <div class="modal-body">
+              <p class="hi-modal-instrutor" id="liberacao-instrutor">—</p>
+              <p class="hi-modal-descricao" id="liberacao-descricao"></p>
+              <div class="form-group">
+                <label class="form-label" for="liberacao-senha">Senha da operação</label>
+                <input class="form-control" type="password" id="liberacao-senha"
+                  autocomplete="off" placeholder="Digite a senha">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost" type="button" id="liberacao-cancelar">Cancelar</button>
+              <button class="btn btn-primary" type="submit" id="liberacao-confirmar">Liberar</button>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <div class="dashboard-loading-overlay active" id="horas-inva-loading">
         <div class="dashboard-loading-card">
@@ -194,6 +250,6 @@
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260728-notams-busca-v1"></script>
 <script src="js/core/auth.js?v=20260728-notams-sync-v1"></script>
-<script src="js/pages/horas-voadas-inva.js?v=20260728-fix-cadastro-instrutor-v1"></script>
+<script src="js/pages/horas-voadas-inva.js?v=20260728-bases-flag-v1"></script>
 </body>
 </html>
