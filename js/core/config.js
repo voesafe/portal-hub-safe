@@ -31,7 +31,7 @@ const CONFIG = {
   ORIGENS: [
     'Instagram', 'Google', 'Site', 'Facebook',
     'Indicação', 'Aluno Interno', 'YouTube',
-    'WhatsApp', 'Outros'
+    'WhatsApp', 'Plataforma Teórico', 'Outros'
   ],
 
   CURSOS: [
