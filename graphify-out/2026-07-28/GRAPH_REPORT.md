@@ -1,18 +1,13 @@
-# Graph Report - portal-hub-safe  (2026-07-28)
+# Graph Report - .  (2026-07-28)
 
 ## Corpus Check
-- 77 files · ~509,534 words
+- 45 files · ~509,530 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1257 nodes · 1654 edges · 206 communities (82 shown, 124 thin omitted)
-- Extraction: 87% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 205 edges (avg confidence: 0.85)
-- Token cost: 0 input · 0 output
-
-## Graph Freshness
-- Built from commit: `fce79b10`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
+- 1227 nodes · 1621 edges · 207 communities (83 shown, 124 thin omitted)
+- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 205 edges (avg confidence: 0.85)
+- Token cost: 899,212 input · 0 output
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Escala PAV de Base|Escala PAV de Base]]
@@ -52,6 +47,7 @@
 - [[_COMMUNITY_api.js|api.js]]
 - [[_COMMUNITY_api.js|api.js]]
 - [[_COMMUNITY_Pagina Cadastro de Aluno|Pagina Cadastro de Aluno]]
+- [[_COMMUNITY_Compatibilidade do template|Compatibilidade do template]]
 - [[_COMMUNITY_Ação getLog|Ação getLog]]
 - [[_COMMUNITY_Painel admin do valor|Painel admin do valor]]
 - [[_COMMUNITY_exportConfirmarExportacao|exportConfirmarExportacao]]
@@ -213,16 +209,16 @@
 - [[_COMMUNITY_Setup do backend Apps|Setup do backend Apps]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `CLAUDE.md — Regras do Projeto SAFE Hub` - 32 edges
-2. `css/layout.css` - 30 edges
-3. `Fechamento de Horas / Cotistas page (fechamento-horas.html)` - 22 edges
-4. `Vendas page (vendas.html)` - 22 edges
-5. `css/safe-theme.css` - 18 edges
-6. `Pagina Cadastro de Aluno (cadastro-alunos.html)` - 18 edges
-7. `Página Visão Geral (Dashboard)` - 18 edges
-8. `loadMonth()` - 18 edges
-9. `Progresso de Alunos page (progresso-alunos.html)` - 17 edges
-10. `Pagina NOTAMs (notams.html)` - 17 edges
+1. `css/layout.css` - 30 edges
+2. `Fechamento de Horas / Cotistas page (fechamento-horas.html)` - 22 edges
+3. `Vendas page (vendas.html)` - 22 edges
+4. `css/safe-theme.css` - 18 edges
+5. `Pagina Cadastro de Aluno (cadastro-alunos.html)` - 18 edges
+6. `Página Visão Geral (Dashboard)` - 18 edges
+7. `loadMonth()` - 18 edges
+8. `Progresso de Alunos page (progresso-alunos.html)` - 17 edges
+9. `Pagina NOTAMs (notams.html)` - 17 edges
+10. `Página Horas Voadas INVA Mês` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Loading overlay próprio (#loading-overlay), fora do padrão dashboard-loading` --semantically_similar_to--> `Overlay de carregamento com logo (dashboard-loading-overlay)`  [INFERRED] [semantically similar]
@@ -249,6 +245,7 @@
 - **Fluxo stale-while-revalidate do cache local PAV** — escala_pav_lercachepav, escala_pav_gravarcachepav, escala_pav_entrarnoapp, escala_pav_carregarfinanceiro, escala_pav_atualizarpreviewexport, escala_pav_stale_while_revalidate [EXTRACTED 1.00]
 - **Gate de permissões da Escala PAV (RBAC + perfil legado)** — escala_pav_configuraracessospav, escala_pav_aplicaracessospav, escala_pav_acessos, escala_pav_setactiveview, escala_pav_bootstrap, escala_pav_auth_integracao_hub [EXTRACTED 1.00]
 - **Fluxo de edição pendente e salvamento da escala** — escala_pav_escalaeditada, escala_pav_moverpav, escala_pav_modaldiaconfirm, escala_pav_escalarsemana, escala_pav_replicarmes, escala_pav_salvarescala, escala_pav_beforeunload_guard [EXTRACTED 1.00]
+- **Cadeia RBAC do frontend: catálogo, cargo e matriz de acessos** — claude_rbac, claude_auth_paginas, claude_cargos_matriz_rbac, admin_select_cargo, admin_matriz_acesso, admin_select_perfil_legado [INFERRED 0.85]
 - **Padrão de faixa de KPIs repetido nos módulos** — dashboard_kpis, aniv_kpis, fh_kpis, horas_inva_kpis, progresso_kpis, access_control_kpis [INFERRED 0.85]
 - **Ingestão de dados do CAVOK por três telas distintas** — cadastro_upload_cavok, fh_modal_upload, fh_btn_cavok_api, horas_inva_btn_sincronizar, xlsx_local_safe_minions, xlsx_cdn [INFERRED 0.85]
 - **Pages using JS-injected sidebar navigation (unified Hub UI)** — access_control_page, bases_page, inicio_page, vendas_page, progresso_alunos_page, fechamento_horas_page [INFERRED 0.85]
@@ -266,7 +263,7 @@
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_refinado_debug_receita_global_calculo, preview_refinado_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_refinado_escala_pav_view_calendario, preview_refinado_escala_pav_view_financeiro, preview_refinado_escala_pav_view_cadastro [INFERRED 0.80]
 
-## Communities (206 total, 124 thin omitted)
+## Communities (207 total, 124 thin omitted)
 
 ### Community 0 - "Escala PAV de Base"
 Cohesion: 0.07
@@ -277,8 +274,8 @@ Cohesion: 0.06
 Nodes (42): Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel, Diretório de Acessos Table, Gestão de Usuários (Admin) Page, Identidade Única por E-mail (concept), Modal Novo/Editar Usuário, Senha Padrão = CPF (rationale) (+34 more)
 
 ### Community 2 - "Cadastro de Aluno e Gastos"
-Cohesion: 0.06
-Nodes (31): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab (+23 more)
+Cohesion: 0.05
+Nodes (39): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab (+31 more)
 
 ### Community 3 - "Diagnóstico de Faturamento"
 Cohesion: 0.08
@@ -293,24 +290,24 @@ Cohesion: 0.06
 Nodes (34): KPI Receita Global (Vendas + Faturamento), Performance por Consultor (PAC) Chart, Dashboard / Visão Geral Page, Diagnóstico SAFE Hub Page, Detecção de Inconsistência MES/ANO vs DATA, Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale), Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page (+26 more)
 
 ### Community 6 - "Unificação de Header e Topbar"
-Cohesion: 0.09
-Nodes (28): js/core/api.js, apps-script/Auth.gs, js/core/auth.js, Auth não existe em window (const de escopo léxico), js/core/config.js, Comentário com crase dentro de template literal, escala-pav.html, Topbar própria da Escala PAV (+20 more)
+Cohesion: 0.10
+Nodes (28): aplicarMarcaHub() (injeta a marca na topbar), js/core/auth.js, Auth não existe em window (const de escopo léxico), Remoção deixou a Escala CCO em branco (divs não fechados), Flags one-shot do Chrome descartadas, Contrato de header (obrigatório em página nova), Comentário com crase dentro de template literal, Escala CCO: botões nav-* viraram .btn .btn-ghost (+20 more)
 
 ### Community 7 - "Ações do Backend da Escala CCO"
 Cohesion: 0.12
-Nodes (25): Ação getLog, Ação getUsers, Ação login, Ação saveUser, Ação setConfig, Ação setShift, Ação toggleUserActive, Param actor (autor real gravado no LOG) (+17 more)
+Nodes (23): Ação getUsers, Ação login, Ação saveUser, Ação setConfig, Ação setShift, Ação toggleUserActive, alternarAtivoFunc(username, reativar), alternarAtivoUser(uname, novoAtivo) (+15 more)
 
 ### Community 8 - "CLI de Administração"
 Cohesion: 0.22
 Nodes (23): ajuda(), apiGet(), apiPost(), c, cmdAdicionar(), cmdListar(), cmdRemover(), cmdResetar() (+15 more)
 
 ### Community 9 - "Controle de Acesso no Apps Script"
-Cohesion: 0.06
-Nodes (40): apps-script/AccessControl.gs, js/pages/access-control.js, ACCESS_DEFAULT_GROUPS (grupos padrão), ACCESS_PERMISSIONS (catálogo de permissões), Action getLog (leitura filtrada do histórico), js/pages/admin.js, Armadilha: alvo vira Date no Sheets, by (auth) ≠ actor (autor do LOG) (+32 more)
+Cohesion: 0.10
+Nodes (23): apps-script/AccessControl.gs, js/pages/access-control.js, ACCESS_PERMISSIONS (catálogo de permissões), apps-script/Auth.gs, Apps Script bloqueado por padrão na captura (--online), calcularPermissoesEfetivasUsuario_, Coluna AVATAR (data URI) na planilha USUARIOS, escala_cco.editar_propria_escala (+15 more)
 
 ### Community 10 - "SAFE MINIONS e Mínimos ANAC"
-Cohesion: 0.06
-Nodes (31): Atualizar pela API CAVOK, Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Sincronizar CAVOK (Instrutores/Horas), Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos (+23 more)
+Cohesion: 0.09
+Nodes (23): Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos, Tipo PPA — Piloto Privado de Avião, Upload de Extrato SACI (.xlt/.xltx/.xlsx/.xls) (+15 more)
 
 ### Community 11 - "Página de Controle de Acesso"
 Cohesion: 0.13
@@ -321,8 +318,8 @@ Cohesion: 0.16
 Nodes (21): abrirModalHistorico(), Permissão canViewLog, Drawer lateral da Escala CCO, drawerAction(action), View Funcionários (#funcView), Gate defensivo no cliente + validação no servidor, iniciarApp(u), isAdmin() (+13 more)
 
 ### Community 13 - "Cache de Bases e UI Otimista"
-Cohesion: 0.16
-Nodes (14): Bases na home: pinta na hora, confere depois, js/pages/bases.js, basesPadrao (só no primeiro acesso do navegador), carregarBases (cache local + revalidação em bg), js/pages/concorrencia.js, js/pages/controle-gastos.js, CRIAR: servidor gera o ID, recarrega em segundo plano, css/pages/inicio.css (+6 more)
+Cohesion: 0.12
+Nodes (20): ACCESS_DEFAULT_GROUPS (grupos padrão), js/pages/admin.js, Bases na home: pinta na hora, confere depois, js/pages/bases.js, basesPadrao (só no primeiro acesso do navegador), Cargos oficiais do Hub, carregarBases (cache local + revalidação em bg), js/pages/controle-gastos.js (+12 more)
 
 ### Community 14 - "Calendário e Dashboard da CCO"
 Cohesion: 0.14
@@ -341,24 +338,24 @@ Cohesion: 0.17
 Nodes (17): Bloco "Hoje" (aniversariantes do dia), Bloco "Próximos 7 dias", Faixa de KPIs de aniversários (render via JS em #aniv-kpis), Pílula de estado do envio automático no header (.aniv-pill), Tabela de aniversariantes do mês com seletor de mês, Página Aniversários, Loading overlay próprio (#loading-overlay), fora do padrão dashboard-loading, css/aniversarios.css (Aniversários) (+9 more)
 
 ### Community 18 - "Cadastro de Aluno: armadilhas"
-Cohesion: 0.11
-Nodes (22): aniversarios.html, js/pages/aniversarios.js, Armadilha do table-layout: fixed e nth-child, css/pages/cadastro-alunos.css, CADASTRO_ALUNOS_EXTRA_HEADERS (colunas auto-criadas), apps-script/CadastroAlunos.gs, js/pages/cadastro-alunos.js, Página Cadastro de Aluno (fila S141/Trello) (+14 more)
+Cohesion: 0.15
+Nodes (17): Armadilha do table-layout: fixed e nth-child, Cache-bust por ?v= nos assets, css/pages/cadastro-alunos.css, CADASTRO_ALUNOS_EXTRA_HEADERS (colunas auto-criadas), apps-script/CadastroAlunos.gs, js/pages/cadastro-alunos.js, Página Cadastro de Aluno (fila S141/Trello), Carga única de nascimentos (atualizarNascimentosCadastroAlunos) (+9 more)
 
 ### Community 19 - "Menu da Sidebar e NOTAMs"
-Cohesion: 0.19
-Nodes (13): Sidebar estática do admin com data-admin-only/data-finance-only, Auth.PAGINAS (fonte única de acesso no frontend), js/pages/inicio.js, montarMenuSidebar, Feature flag Auth.NOTAMS_ATIVO, Ordem alfabética do menu da sidebar, podeVer é fail-open (não deletar entrada de PAGINAS), protegerPagina (+5 more)
+Cohesion: 0.15
+Nodes (16): Sidebar estática do admin com data-admin-only/data-finance-only, API AISWEB/DECEA (XML, apiKey/apiPass), Auth.PAGINAS (fonte única de acesso no frontend), Backend do Hub em produção @37, js/pages/inicio.js, Módulo NOTAMs (bases SAFE), montarMenuSidebar, Feature flag Auth.NOTAMS_ATIVO (+8 more)
 
 ### Community 20 - "Login e Home do Hub"
 Cohesion: 0.12
 Nodes (16): Bases SAFE Page, Login Page (SAFE Hub), Redireciona se já logado (localStorage/sessionStorage), Bases SAFE (Início), Início (Home Portal) Page, Módulos do SAFE Hub (por Perfil), Login Page (SAFE Hub), Redireciona se já logado (localStorage/sessionStorage) (+8 more)
 
 ### Community 21 - "Módulo Aniversários (backend)"
-Cohesion: 0.22
-Nodes (9): apps-script/Aniversarios.gs, aniversariosInstalarTrigger() (gatilho diário ~9h), Armadilha hidden vs display (.cadastro-bulk-bar), Falha de envio só existe se for persistida, 3 KPIs e pílula de estado do envio automático, listarAniversarios (só alunos ativos), aniversariosMotivoInelegivel_ (critério único), Regras do envio (nunca retroativo, 29/02, LockService) (+1 more)
+Cohesion: 0.14
+Nodes (15): apps-script/Aniversarios.gs, aniversarios.html, js/pages/aniversarios.js, aniversariosInstalarTrigger() (gatilho diário ~9h), Armadilha hidden vs display (.cadastro-bulk-bar), Falha de envio só existe se for persistida, Hamburger da sidebar é responsabilidade do JS de cada página, 3 KPIs e pílula de estado do envio automático (+7 more)
 
 ### Community 22 - "Duplo turno T1+T2"
-Cohesion: 0.19
-Nodes (13): Duplo turno T1+T2 (dia todo), Espera das gravações pendentes antes de ler (await gasWriteChain), gasWrite(action, payload), Fila de gravação serializada (gasWriteChain), Atualização otimista com rollback do turno, removeBothShifts(dk), renderCalendar(), saveScheduleOverride(dk, dayData) (+5 more)
+Cohesion: 0.16
+Nodes (15): Duplo turno T1+T2 (dia todo), Espera das gravações pendentes antes de ler (await gasWriteChain), gasWrite(action, payload), Fila de gravação serializada (gasWriteChain), Atualização otimista com rollback do turno, removeBothShifts(dk), renderCalendar(), saveScheduleOverride(dk, dayData) (+7 more)
 
 ### Community 23 - "css/fechamento-horas.css"
 Cohesion: 0.20
@@ -377,8 +374,8 @@ Cohesion: 0.26
 Nodes (12): Gestão de Usuários page (admin.html), Controle de Gastos page (controle-gastos.html), Faturamento page (faturamento.html), Filtros da aba Por Curso (curso, nome, e-mail), Coluna PAC removida do DOM para não-admin, Curso picker multiselect, Botão de exportar vendas em CSV, Painel de filtros (busca, PAC, cidade, estado, faixa etária) com contador (+4 more)
 
 ### Community 27 - "Action getLog"
-Cohesion: 0.22
-Nodes (9): Camada semântica de cor (é aqui que o tema acontece), Estrutura de pastas, tema global e menu do usuário, desde 2026-07-27, Foto de perfil (avatar), desde 2026-07-27, Guarda anti-flash (obrigatória em página nova), Marca em dois arquivos, Menu do usuário (avatar na topbar), O que foi arrancado, Pastas: `core/` e `pages/` (+1 more)
+Cohesion: 0.15
+Nodes (13): Action getLog (leitura filtrada do histórico), Armadilha: alvo vira Date no Sheets, Botão Histórico (drawer + topbar), by (auth) ≠ actor (autor do LOG), Permissão canViewLog (coluna O do usuarios), Nascimento é TEXTO dd/mm/aaaa de ponta a ponta, ehAuditor_ / ehAdmin_ (guards do servidor), getLogSheet_ próprio (não o getSheet genérico) (+5 more)
 
 ### Community 28 - "js/core/auth.js"
 Cohesion: 0.23
@@ -389,8 +386,8 @@ Cohesion: 0.29
 Nodes (12): Grid de bases (unidades), Bases SAFE (page), Aviso de que os dados aparecem na página inicial, Modal de base (nova/editar unidade), Bases SAFE page (bases.html), css/bases.css, css/layout.css, css/safe-theme.css (+4 more)
 
 ### Community 30 - "js/core/api.js"
-Cohesion: 0.11
-Nodes (24): Apps Script bloqueado por padrão na captura (--online), Blocos de estado --tint-* / --ink-*, Botão Histórico (drawer + topbar), Cache-bust por ?v= nos assets, Camada semântica de cor (tokens de papel), Permissão canViewLog (coluna O do usuarios), Remoção deixou a Escala CCO em branco (divs não fechados), Flags one-shot do Chrome descartadas (+16 more)
+Cohesion: 0.17
+Nodes (12): js/core/api.js, Blocos de estado --tint-* / --ink-*, Camada semântica de cor (tokens de papel), js/core/config.js, Especificidade do .topbar-brand-link nos seletores da marca, Estrutura de pastas core/ e pages/, Guarda anti-flash de tema no <head>, Os .html continuam na raiz e não podem sair (+4 more)
 
 ### Community 31 - "js/core/config.js"
 Cohesion: 0.20
@@ -400,9 +397,13 @@ Nodes (12): js/core/config.js, Seletores :root[data-theme=dark] da Escala CCO, H
 Cohesion: 0.27
 Nodes (11): Pagina Cadastro de Aluno (cadastro-alunos.html), Barra de seleção em massa (sincronizar selecionados), Coluna de checkbox (nth-child(1)) exclusiva da aba Prontos Trello, Card de resumo da última importação, Controles de ordenação e busca da fila, Tabela da fila operacional (9 colunas, table-layout fixed), Abas de filtro com contadores (ativos, pendentes, trello, concluídos, atenção, inativos), Importação do XLS do CAVOK (input file + label como botão) (+3 more)
 
-### Community 38 - "Ação getLog"
+### Community 37 - "Compatibilidade do template"
 Cohesion: 0.20
-Nodes (10): carregarHistorico(), currentUser (identidade da sessão), Diff antes → depois no histórico, Formatadores do histórico (histTurnoLabel, histNomes, histFmtData), Modal de Histórico (auditoria), histEntries (cache das entradas do LOG), Sentinel safe-hub-admin (param by), renderHistorico() (+2 more)
+Nodes (11): Compatibilidade do template (wrapper MSO, bgcolor), Data de nascimento vinha no XLS do CAVOK e era descartada, Modo escuro do Gmail invertia o navy ([data-ogsc]/[data-ogsb]), HeroAsset.gs (hero e marca em base64), aniversariosNomeSuspeito_ (guarda de nome inválido), normalizarAlunoImportado_, aniversariosPrimeiroNome_ (normaliza a caixa), Bug latente do replace('{NOME}') com $& no nome (+3 more)
+
+### Community 38 - "Ação getLog"
+Cohesion: 0.22
+Nodes (10): Ação getLog, Param actor (autor real gravado no LOG), carregarHistorico(), currentUser (identidade da sessão), Diff antes → depois no histórico, Formatadores do histórico (histTurnoLabel, histNomes, histFmtData), Modal de Histórico (auditoria), histEntries (cache das entradas do LOG) (+2 more)
 
 ### Community 39 - "Painel admin do valor"
 Cohesion: 0.22
@@ -417,12 +418,12 @@ Cohesion: 0.18
 Nodes (10): dependencies, playwright-core, description, name, private, scripts, preview, shot (+2 more)
 
 ### Community 42 - "Campos operacionais do CCO"
-Cohesion: 0.10
-Nodes (23): Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09, Auditoria de alterações (Escala CCO) — desde 2026-07-22, Auditoria de alterações da Escala CCO, Bases na home: pinta na hora, confere depois, desde 2026-07-27, Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20), Captura de tela das páginas (tools/), desde 2026-07-27, Cargos e tela de criação de usuário (desde 2026-07-09), clasp push atualiza só o @HEAD; produção exige clasp deploy (+15 more)
+Cohesion: 0.29
+Nodes (10): Campos operacionais do CCO (iniciais, cor, escala), Auditoria de alterações da Escala CCO, clasp push atualiza só o @HEAD; produção exige clasp deploy, Confiabilidade do grafo antes de confiar, CLAUDE.md — Regras do Projeto SAFE Hub, Módulo Aniversários de alunos, Regra de escrita: nunca usar travessão, Remetente e avatar do MailApp (+2 more)
 
 ### Community 43 - "Aba NOTAMS como cache"
-Cohesion: 0.14
-Nodes (13): Aba NOTAMS como cache server-side, API AISWEB/DECEA (XML, apiKey/apiPass), Backend do Hub em produção @37, apps-script/Code.gs (roteador doGet/doPost), Descadastro (opt-out) sem login por token HMAC, DNS de voesafe.com (SPF/DKIM/DMARC/MX), Entrega (deliverability) do e-mail de aniversário, List-Unsubscribe avaliado e descartado (+5 more)
+Cohesion: 0.20
+Nodes (9): Aba NOTAMS como cache server-side, apps-script/Code.gs (roteador doGet/doPost), Descadastro (opt-out) sem login por token HMAC, DNS de voesafe.com (SPF/DKIM/DMARC/MX), Entrega (deliverability) do e-mail de aniversário, List-Unsubscribe avaliado e descartado, notamClassificar_ (severidade crítico/atenção/info), notamParseXml_ (parser defensivo) (+1 more)
 
 ### Community 44 - "Concorrência"
 Cohesion: 0.31
@@ -433,16 +434,16 @@ Cohesion: 0.27
 Nodes (10): css/notams.css (NOTAMs), Abas por aeroporto SBSJ/SDAM e filtros de status, Indicador da última atualização do cache, Chips de filtro (todos, ativos hoje, com impacto, futuros) com contadores, Aviso enquanto a API do DECEA não está conectada, Pagina NOTAMs (notams.html), Abas por aeroporto (Todos, SBSJ, SDAM), Toggle modo claro/escuro escopado (notam-theme-btn) (+2 more)
 
 ### Community 46 - "access-control.html"
-Cohesion: 0.20
-Nodes (10): access-control.html (gerenciar cargos), Card de alterar minha senha, Campos operacionais do CCO (iniciais, cor, escala), Diretório de acessos (tabela + tabs + filtros), Admin — Gestão de Usuários (page), Matriz de acessos por módulo (#u-matriz-acesso), Matriz RBAC de acesso por módulo (cargo + Ver/Editar), Modal de Usuário (criar/editar) (+2 more)
+Cohesion: 0.22
+Nodes (9): access-control.html (gerenciar cargos), Card de alterar minha senha, Diretório de acessos (tabela + tabs + filtros), Admin — Gestão de Usuários (page), Matriz de acessos por módulo (#u-matriz-acesso), Matriz RBAC de acesso por módulo (cargo + Ver/Editar), Modal de Usuário (criar/editar), Select de Cargo (#u-cargo) (+1 more)
 
 ### Community 47 - "appsscript.json"
 Cohesion: 0.22
 Nodes (8): dependencies, exceptionLogging, oauthScopes, runtimeVersion, timeZone, webapp, access, executeAs
 
 ### Community 48 - "Auditoria de layout mobile"
-Cohesion: 0.13
-Nodes (16): aplicarMarcaHub() (injeta a marca na topbar), Auditoria de layout mobile 2026-07-26, Concorrência: cabeçalho e linhas são grids separados, Contrato de header (obrigatório em página nova), Dashboard: tabela Cursos mais vendidos sem .table-wrapper, Escala CCO, Escala PAV, `<head>` padronizado (+8 more)
+Cohesion: 0.22
+Nodes (9): Auditoria de layout mobile 2026-07-26, Concorrência: cabeçalho e linhas são grids separados, js/pages/concorrencia.js, Dashboard: tabela Cursos mais vendidos sem .table-wrapper, <head> padronizado (theme-color, favicon, fontes), Menu de ações drop-up (.cadastro-action-popover), posicionarMenuAcao, css/core/safe-theme.css (+1 more)
 
 ### Community 49 - "abrirModalExport"
 Cohesion: 0.25
@@ -565,7 +566,7 @@ Nodes (3): Concorrência Page, Modal Nova/Editar Concorrente, Modal Preço SAFE
   escala-cco.html · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **391 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `oauthScopes`, `runtimeVersion` (+386 more)
+- **367 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `oauthScopes`, `runtimeVersion` (+362 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **124 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -578,11 +579,11 @@ _Questions this graph is uniquely positioned to answer:_
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **What is the exact relationship between `Fila de gravação serializada (gasWriteChain)` and `Capacidade máxima de 1 pessoa por turno`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **Why does `Auth.PAGINAS (fonte única de acesso no frontend)` connect `Menu da Sidebar e NOTAMs` to `Unificação de Header e Topbar`, `Controle de Acesso no Apps Script`, `css/notams.css`, `Action getLog`, `js/core/api.js`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Why does `Pagina NOTAMs (notams.html)` connect `css/notams.css` to `Menu da Sidebar e NOTAMs`, `Página de Controle de Acesso`, `Concorrência`, `Grid de bases`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
-- **Why does `Auth.PAGINAS (fonte única de acesso no frontend)` connect `Menu da Sidebar e NOTAMs` to `Controle de Acesso no Apps Script`, `css/notams.css`, `Unificação de Header e Topbar`, `js/core/api.js`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
-- **Why does `CLAUDE.md — Regras do Projeto SAFE Hub` connect `Campos operacionais do CCO` to `Unificação de Header e Topbar`, `Controle de Acesso no Apps Script`, `Aba NOTAMS como cache`, `Cache de Bases e UI Otimista`, `Auditoria de layout mobile`, `Cadastro de Aluno: armadilhas`, `Action getLog`, `js/core/api.js`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
+- **Why does `CLAUDE.md — Regras do Projeto SAFE Hub` connect `Campos operacionais do CCO` to `Unificação de Header e Topbar`, `Controle de Acesso no Apps Script`, `Cache de Bases e UI Otimista`, `Auditoria de layout mobile`, `Cadastro de Aluno: armadilhas`, `Menu da Sidebar e NOTAMs`, `js/core/api.js`?**
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `css/layout.css` (e.g. with `css/access-control.css (Controle de Acesso)` and `css/aniversarios.css (Aniversários)`) actually correct?**
   _`css/layout.css` has 12 INFERRED edges - model-reasoned connections that need verification._
