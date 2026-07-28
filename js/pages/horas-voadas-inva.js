@@ -11,6 +11,16 @@ const HorasVoadasInva = {
   nomesBases: { SJK: 'São José dos Campos', CPQ: 'Campinas' },
   arraste: null,
   liberacao: null,
+  // Uma ordem por base, escolhida no menuzinho do cabecalho de cada card.
+  ordens: { SJK: 'alfabetica', CPQ: 'alfabetica' },
+  // O Hub recarrega a pagina inteira a cada item da sidebar, entao sem
+  // persistir a escolha se perderia a cada visita.
+  CHAVE_ORDENS: 'horas-inva-ordens',
+  ROTULOS_ORDEM: {
+    alfabetica: 'Ordem alfabética',
+    'horas-asc': 'Horas, da menor',
+    'horas-desc': 'Horas, da maior'
+  },
   // Arrastar termina em pointerup, mas o navegador ainda dispara o click do
   // punho logo depois. Sem esta trava, um arraste bem-sucedido moveria de
   // novo pelo click e o instrutor voltaria para a base de origem.
@@ -111,6 +121,87 @@ const HorasVoadasInva = {
     return motivos.join(' · ');
   },
 
+  // ── Ordenação de cada base ──────────────────────────────────
+
+  carregarOrdens() {
+    try {
+      const salvo = JSON.parse(localStorage.getItem(this.CHAVE_ORDENS) || '{}');
+      this.bases.forEach(base => {
+        // So aceita ordem conhecida: um valor estranho no localStorage nao
+        // pode deixar a lista sem criterio nenhum.
+        if (this.ROTULOS_ORDEM[salvo[base]]) this.ordens[base] = salvo[base];
+      });
+    } catch (ignore) {
+      // localStorage indisponivel ou JSON quebrado: fica no padrao alfabetico.
+    }
+  },
+
+  salvarOrdens() {
+    try {
+      localStorage.setItem(this.CHAVE_ORDENS, JSON.stringify(this.ordens));
+    } catch (ignore) {}
+  },
+
+  compararNome(a, b) {
+    // localeCompare com pt-BR para acento nao jogar o nome para o fim,
+    // mesma escolha da ordenacao do menu da sidebar.
+    return String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR');
+  },
+
+  ordenarInstrutores(lista, ordem) {
+    const copia = [...lista];
+    // Empate desempata por nome nas duas ordens de horas, senao a lista
+    // muda de posicao sozinha entre um render e outro.
+    if (ordem === 'horas-asc') {
+      return copia.sort((a, b) => this.horasDe(a) - this.horasDe(b) || this.compararNome(a, b));
+    }
+    if (ordem === 'horas-desc') {
+      return copia.sort((a, b) => this.horasDe(b) - this.horasDe(a) || this.compararNome(a, b));
+    }
+    return copia.sort((a, b) => this.compararNome(a, b));
+  },
+
+  pintarMenusOrdem() {
+    this.bases.forEach(base => {
+      const ordem = this.ordens[base];
+      const botao = document.querySelector(`.hi-ordenar-btn[data-ordenar="${base}"]`);
+      if (botao) botao.title = `Ordenar: ${this.ROTULOS_ORDEM[ordem]}`;
+      document.querySelectorAll(`.hi-ordenar-menu[data-menu="${base}"] button`)
+        .forEach(item => {
+          const ativa = item.dataset.ordem === ordem;
+          item.classList.toggle('is-ativa', ativa);
+          item.setAttribute('aria-checked', String(ativa));
+        });
+    });
+  },
+
+  abrirMenuOrdem(base) {
+    document.querySelectorAll('.hi-ordenar-menu').forEach(menu => {
+      const abrir = menu.dataset.menu === base && menu.hidden;
+      menu.hidden = !abrir;
+      const botao = document.querySelector(`.hi-ordenar-btn[data-ordenar="${menu.dataset.menu}"]`);
+      botao?.setAttribute('aria-expanded', String(abrir));
+      botao?.classList.toggle('is-aberto', abrir);
+    });
+  },
+
+  fecharMenusOrdem() {
+    document.querySelectorAll('.hi-ordenar-menu').forEach(menu => { menu.hidden = true; });
+    document.querySelectorAll('.hi-ordenar-btn').forEach(botao => {
+      botao.setAttribute('aria-expanded', 'false');
+      botao.classList.remove('is-aberto');
+    });
+  },
+
+  escolherOrdem(base, ordem) {
+    if (!this.ROTULOS_ORDEM[ordem] || !this.bases.includes(base)) return;
+    this.ordens[base] = ordem;
+    this.salvarOrdens();
+    this.fecharMenusOrdem();
+    this.pintarMenusOrdem();
+    this.renderizarBases();
+  },
+
   // ── Render ──────────────────────────────────────────────────
 
   atualizarKpis() {
@@ -172,7 +263,10 @@ const HorasVoadasInva = {
       const lista = document.getElementById(`hi-lista-${base}`);
       if (!lista) return;
 
-      const daBase = this.instrutores.filter(i => this.baseDoInstrutor(i) === base);
+      const daBase = this.ordenarInstrutores(
+        this.instrutores.filter(i => this.baseDoInstrutor(i) === base),
+        this.ordens[base]
+      );
       const visiveis = daBase.filter(i =>
         String(i.nome || '').toLocaleLowerCase('pt-BR').includes(termo)
       );
@@ -594,6 +688,14 @@ const HorasVoadasInva = {
       if (punho) this.iniciarArraste(evento, punho);
     });
     bases.addEventListener('click', evento => {
+      const gatilhoOrdem = evento.target.closest('.hi-ordenar-btn');
+      if (gatilhoOrdem) { this.abrirMenuOrdem(gatilhoOrdem.dataset.ordenar); return; }
+      const itemOrdem = evento.target.closest('.hi-ordenar-menu button');
+      if (itemOrdem) {
+        this.escolherOrdem(itemOrdem.closest('.hi-ordenar-menu').dataset.menu, itemOrdem.dataset.ordem);
+        return;
+      }
+
       const punho = evento.target.closest('.hi-punho');
       if (punho) {
         // Tambem cobre teclado: Enter e Espaco num <button> viram click, e
@@ -631,9 +733,19 @@ const HorasVoadasInva = {
     document.getElementById('modal-liberacao').addEventListener('click', evento => {
       if (evento.target.id === 'modal-liberacao') this.fecharLiberacao();
     });
+    // Clique fora fecha o menu de ordenacao. O clique no proprio menu ja foi
+    // tratado acima e chega aqui pelo borbulhamento, por isso a excecao.
+    document.addEventListener('click', evento => {
+      if (!evento.target.closest('.hi-ordenar')) this.fecharMenusOrdem();
+    });
+
     document.addEventListener('keydown', evento => {
       if (evento.key !== 'Escape') return;
       if (this.arraste) { this.cancelarArraste(); return; }
+      if (document.querySelector('.hi-ordenar-menu:not([hidden])')) {
+        this.fecharMenusOrdem();
+        return;
+      }
       if (this.liberacao) this.fecharLiberacao();
     });
   },
@@ -641,6 +753,8 @@ const HorasVoadasInva = {
   async iniciar() {
     if (!Auth.protegerHorasVoadasInva()) return;
     Auth.preencherUI();
+    this.carregarOrdens();
+    this.pintarMenusOrdem();
     this.vincularEventos();
     await this.carregarDados();
   }

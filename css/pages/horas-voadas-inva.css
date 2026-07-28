@@ -5,7 +5,7 @@
 .horas-inva-tabs {
   display: inline-flex;
   gap: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   padding: 4px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -48,22 +48,38 @@
 .horas-inva-kpis {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* O .kpi-card do tema tem 24px de padding e 8px de gap, medidos em 154px de
+   altura para tres linhas de texto. Aqui sao cinco cards lado a lado e a
+   faixa inteira vira um vao: 118px dizem o mesmo. */
+.horas-inva-kpis .kpi-card {
+  padding: 16px 18px;
+  gap: 3px;
 }
 
 .horas-inva-grid {
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
-.horas-inva-chart-card {
-  min-height: 430px;
+/* O padrao do tema e 24px. Aqui sao dois cards altos empilhados, e a soma
+   das bordas internas custava mais que o respiro que ela compra. */
+.horas-inva-grid > .card {
+  padding: 18px 20px;
 }
 
+.horas-inva-grid .card-header {
+  margin-bottom: 14px;
+}
+
+/* Sem min-height: ele obrigava 430px mesmo quando o conteudo pedia menos,
+   e o grafico ja tem altura propria. */
 .horas-inva-chart {
   position: relative;
-  height: 335px;
+  height: 232px;
 }
 
 .horas-inva-card-subtitle,
@@ -153,9 +169,9 @@
 .hi-ajuda {
   display: flex;
   align-items: center;
-  gap: 8px 16px;
+  gap: 6px 14px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   color: var(--text-muted);
   font-size: .75rem;
 }
@@ -169,14 +185,13 @@
 .hi-bases {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
 }
 
 .hi-base {
   display: flex;
   flex-direction: column;
-  min-height: 180px;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface-2);
@@ -192,9 +207,98 @@
 }
 
 .hi-base-header {
-  margin-bottom: 12px;
-  padding-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
+}
+
+/* ── Ordenação de cada base ────────────────────────────────── */
+
+.hi-ordenar {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.hi-ordenar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.hi-ordenar-btn:hover,
+.hi-ordenar-btn.is-aberto {
+  color: var(--text);
+  background: var(--surface-3);
+}
+
+/* O menu e absoluto dentro do card da base. Ele desce para dentro da area
+   da lista, entao nao e cortado: o .card do Hub nao tem overflow hidden,
+   so o .kpi-card tem. */
+.hi-ordenar-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 40;
+  min-width: 172px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+/* display:flex ganharia do atributo hidden, mesma armadilha da
+   .cadastro-bulk-bar e da .topbar-status. */
+.hi-ordenar-menu[hidden] {
+  display: none;
+}
+
+.hi-ordenar-menu button {
+  display: block;
+  width: 100%;
+  padding: 7px 9px;
+  border-radius: 4px;
+  color: var(--text-2);
+  font-size: .74rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.hi-ordenar-menu button:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.hi-ordenar-menu button.is-ativa {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.hi-ordenar-menu button.is-ativa::before {
+  content: '✓';
+  margin-right: 6px;
+  color: var(--success);
+  font-weight: 800;
+}
+
+/* Reserva o espaco do ✓ nas opcoes inativas, senao o rotulo dança
+   horizontalmente cada vez que a ordem muda. */
+.hi-ordenar-menu button:not(.is-ativa)::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  margin-right: 6px;
 }
 
 .hi-base-nome {
@@ -294,10 +398,14 @@
 .hi-punho-icone::before { top: -4px; }
 .hi-punho-icone::after  { top: 4px; }
 
+/* Nome e badge na MESMA linha. Em coluna, o badge sozinho na segunda
+   linha levava cada item de 46px para 71px, e sao varios por base.
+   O wrap devolve a quebra quando o nome e longo demais. */
 .hi-item-info {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
   flex: 1;
   min-width: 0;
 }
