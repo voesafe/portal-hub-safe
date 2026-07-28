@@ -28,10 +28,11 @@ const CONFIG = {
     'RJ','RN','RS','RO','RR','SC','SP','SE','TO'
   ],
 
+  // em ordem alfabetica, com 'Outros' sempre por ultimo
   ORIGENS: [
-    'Instagram', 'Google', 'Site', 'Facebook',
-    'Indicação', 'Aluno Interno', 'YouTube',
-    'WhatsApp', 'Plataforma Teórico', 'Outros'
+    'Aluno Interno', 'Facebook', 'Google',
+    'Indicação', 'Instagram', 'Plataforma Teórico',
+    'Site', 'WhatsApp', 'YouTube', 'Outros'
   ],
 
   CURSOS: [
