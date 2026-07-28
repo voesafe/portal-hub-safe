@@ -19,7 +19,21 @@ const Notams = {
     Auth.preencherUI();
     this.initControles();
     this.initSidebar();
+    this.garantirCampoSemFoco();
     await this.carregar();
+  },
+
+  /**
+   * A página é de LEITURA: abrir com o teclado do celular na tela é errado.
+   * Medido em 2026-07-28 que nada aqui dá foco no campo (o activeElement ao
+   * carregar é o BODY, e não há uma única chamada a .focus()), mas o navegador
+   * pode devolver o foco sozinho ao restaurar a página do histórico, e o
+   * Chromium emulado não é o Safari do iPhone. Uma passada só, no carregamento:
+   * quem tocar no campo depois não é afetado.
+   */
+  garantirCampoSemFoco() {
+    const campo = document.getElementById('notam-busca-input');
+    if (campo && document.activeElement === campo) campo.blur();
   },
 
   // ── Carregamento ─────────────────────────────────────────

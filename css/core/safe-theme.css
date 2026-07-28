@@ -199,6 +199,28 @@ img { display: block; max-width: 100%; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
 input, select, textarea { font-family: inherit; }
 
+/* ⚠️ Zoom automático em celular: o Safari do iPhone AMPLIA a página inteira ao
+   focar um campo cujo font-size seja MENOR que 16px. O tema nunca definiu
+   tamanho para campo, então cada página escolheu o seu, e medido em 2026-07-28
+   havia 78 campos abaixo de 16px em 11 telas, o login incluído (15,2px): na
+   prática, todo formulário do Hub dava esse solavanco no iPhone.
+
+   `pointer: coarse` restringe a regra a dispositivo de toque, então o desktop
+   fica intocado e nenhuma tela muda no computador. O `!important` é necessário
+   e proposital: as regras de página são mais específicas (`.notam-busca input`
+   vale 0,1,1 contra 0,0,1 daqui) e venceriam. Não é um ajuste estético, é o
+   que impede a tela de saltar quando a pessoa vai digitar.
+
+   A saída ERRADA para isto seria `maximum-scale=1` ou `user-scalable=no` no
+   viewport: resolve o solavanco impedindo QUALQUER zoom, inclusive o que a
+   pessoa dá de propósito para enxergar. Foi justamente o que a auditoria de
+   2026-07-26 removeu da Escala CCO e da PAV. Não reintroduza. */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea { font-size: 16px !important; }
+}
+
 /* ── Tipografia ────────────────────────────────────────────── */
 h1, h2, h3, h4, h5 {
   font-family: var(--font-title);

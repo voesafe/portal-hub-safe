@@ -668,7 +668,7 @@
       "label": "Admin",
       "file_type": "code",
       "source_file": "js/pages/admin.js",
-      "source_location": "L66",
+      "source_location": "L68",
       "_origin": "ast",
       "id": "js_pages_admin_admin",
       "community": 63,
@@ -11863,7 +11863,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "modal de exportacao ifood (#modalexportifood)",
       "id": "escala_cco_export_modal"
     },
@@ -11928,7 +11928,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "gaswrite(action, payload)",
       "id": "escala_cco_gaswrite"
     },
@@ -11941,7 +11941,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "fila de gravacao serializada (gaswritechain)",
       "id": "escala_cco_gaswritechain"
     },
@@ -12279,7 +12279,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 37,
       "norm_label": "users (mapa de usuarios carregado do sheets)",
       "id": "escala_cco_users_map"
     },
@@ -12292,7 +12292,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 37,
       "norm_label": "schedule_users (visiveis na escala)",
       "id": "escala_cco_schedule_users"
     },
@@ -12331,7 +12331,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 37,
       "norm_label": "shift_labels (t1, t2, not)",
       "id": "escala_cco_shift_labels"
     },
@@ -12370,7 +12370,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "overrides locais da escala no localstorage",
       "id": "escala_cco_schedule_overrides"
     },
@@ -12396,7 +12396,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "savescheduleoverride(dk, daydata)",
       "id": "escala_cco_savescheduleoverride"
     },
@@ -12474,7 +12474,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 37,
       "norm_label": "shortname(fullname)",
       "id": "escala_cco_shortname"
     },
@@ -12604,7 +12604,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "espera das gravacoes pendentes antes de ler (await gaswritechain)",
       "id": "escala_cco_espera_gravacoes"
     },
@@ -12630,7 +12630,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 37,
       "norm_label": "rendercalendar()",
       "id": "escala_cco_rendercalendar"
     },
@@ -12656,7 +12656,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "toggleshift(dk, shift, targetuser)",
       "id": "escala_cco_toggleshift"
     },
@@ -12669,7 +12669,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "atualizacao otimista com rollback do turno",
       "id": "escala_cco_optimistic_rollback"
     },
@@ -12682,7 +12682,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 27,
       "norm_label": "capacidade maxima de 1 pessoa por turno",
       "id": "escala_cco_shift_capacity"
     },
@@ -12695,7 +12695,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 37,
       "norm_label": "duplo turno t1+t2 (dia todo)",
       "id": "escala_cco_double_shift"
     },
@@ -12708,7 +12708,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 37,
       "norm_label": "removebothshifts(dk)",
       "id": "escala_cco_removebothshifts"
     },
@@ -12799,7 +12799,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "secao ifood beneficios (logo base64 embutido)",
       "id": "escala_cco_ifood_section"
     },
@@ -12838,7 +12838,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "abrirmodalexport()",
       "id": "escala_cco_abrirmodalexport"
     },
@@ -15990,7 +15990,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/pages/admin.js",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0,
       "source": "js_pages_admin",
       "target": "js_pages_admin_admin",
@@ -30198,5 +30198,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "dcda52f2f8656fe84521c74284181f38709fdec6"
+  "built_at_commit": "234b4bd66d84dc714358fedd7fce1aab7f04ae5b"
 }

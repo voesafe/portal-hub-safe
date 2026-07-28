@@ -1,16 +1,16 @@
 # Graph Report - portal-hub-safe  (2026-07-28)
 
 ## Corpus Check
-- 77 files · ~515,253 words
+- 77 files · ~515,420 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1263 nodes · 1406 edges · 367 communities (76 shown, 291 thin omitted)
+- 1263 nodes · 1406 edges · 366 communities (75 shown, 291 thin omitted)
 - Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dcda52f2`
+- Built from commit: `234b4bd6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -54,7 +54,6 @@
 - [[_COMMUNITY_Pagina Cadastro de Aluno|Pagina Cadastro de Aluno]]
 - [[_COMMUNITY_computeFinForMonth(idx)|computeFinForMonth(idx)]]
 - [[_COMMUNITY_Ação getLog|Ação getLog]]
-- [[_COMMUNITY_Painel admin do valor|Painel admin do valor]]
 - [[_COMMUNITY_exportConfirmarExportacao|exportConfirmarExportacao]]
 - [[_COMMUNITY_package.json|package.json]]
 - [[_COMMUNITY_Campos operacionais do CCO|Campos operacionais do CCO]]
@@ -423,7 +422,7 @@
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_refinado_debug_receita_global_calculo, preview_refinado_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_refinado_escala_pav_view_calendario, preview_refinado_escala_pav_view_financeiro, preview_refinado_escala_pav_view_cadastro [INFERRED 0.80]
 
-## Communities (367 total, 291 thin omitted)
+## Communities (366 total, 291 thin omitted)
 
 ### Community 0 - "Escala PAV de Base"
 Cohesion: 0.07
@@ -470,8 +469,8 @@ Cohesion: 0.16
 Nodes (21): abrirModalHistorico(), Permissão canViewLog, Drawer lateral da Escala CCO, drawerAction(action), View Funcionários (#funcView), Gate defensivo no cliente + validação no servidor, iniciarApp(u), isAdmin() (+13 more)
 
 ### Community 14 - "Calendário e Dashboard da CCO"
-Cohesion: 0.14
-Nodes (17): Ação getMonth, applyScheduleFixes(monthKey, data), applyScheduleOverrides(data), View Dashboard (#dashView), dashCache (cache por mês do dashboard), fmtR$(v, short), getScheduleOverrides(), initDash() (+9 more)
+Cohesion: 0.12
+Nodes (20): abrirModalExport(), Ação getMonth, applyScheduleFixes(monthKey, data), applyScheduleOverrides(data), View Dashboard (#dashView), dashCache (cache por mês do dashboard), Modal de exportação iFood (#modalExportIfood), fmtR$(v, short) (+12 more)
 
 ### Community 15 - "README e Setup do Projeto"
 Cohesion: 0.11
@@ -518,8 +517,8 @@ Cohesion: 0.20
 Nodes (15): Gestão de Usuários page (admin.html), Comparativo de preços por curso + filtro, Barra de filtro por curso, Controle de Gastos page (controle-gastos.html), Gating legado por atributo (data-admin-only / data-finance-only / data-write-only / data-pac-only), Faturamento page (faturamento.html), Filtros da aba Por Curso (curso, nome, e-mail), Coluna PAC removida do DOM para não-admin (+7 more)
 
 ### Community 27 - "Action getLog"
-Cohesion: 0.22
-Nodes (11): Painel admin do valor do turno (#adminPanel), #appScreen (shell do app), View Calendário (#calendarGrid), criarCardUser(uname, isAtivo), Resumo financeiro (#financials), formatCPF(v), formatPhone(v), Overlay de carregamento inicial (#escala-cco-loading) (+3 more)
+Cohesion: 0.13
+Nodes (19): Painel admin do valor do turno (#adminPanel), #appScreen (shell do app), View Calendário (#calendarGrid), criarCardUser(uname, isAtivo), Espera das gravações pendentes antes de ler (await gasWriteChain), Resumo financeiro (#financials), formatCPF(v), formatPhone(v) (+11 more)
 
 ### Community 28 - "js/core/auth.js"
 Cohesion: 0.23
@@ -538,16 +537,12 @@ Cohesion: 0.27
 Nodes (11): Pagina Cadastro de Aluno (cadastro-alunos.html), Barra de seleção em massa (sincronizar selecionados), Coluna de checkbox (nth-child(1)) exclusiva da aba Prontos Trello, Card de resumo da última importação, Controles de ordenação e busca da fila, Tabela da fila operacional (9 colunas, table-layout fixed), Abas de filtro com contadores (ativos, pendentes, trello, concluídos, atenção, inativos), Importação do XLS do CAVOK (input file + label como botão) (+3 more)
 
 ### Community 37 - "computeFinForMonth(idx)"
-Cohesion: 0.25
-Nodes (9): abrirModalExport(), atualizarPreviewExport(), computeFinForMonth(idx), Helpers de data (dateKey, daysInMonth, dayOfWeek), Modal de exportação iFood (#modalExportIfood), exportIrParaConfirmacao(), financeiroExclude (exclusão do resumo financeiro), fmtMoedaCco(v) (+1 more)
+Cohesion: 0.18
+Nodes (13): atualizarPreviewExport(), computeFinForMonth(idx), Helpers de data (dateKey, daysInMonth, dayOfWeek), Duplo turno T1+T2 (dia todo), exportIrParaConfirmacao(), financeiroExclude (exclusão do resumo financeiro), fmtMoedaCco(v), removeBothShifts(dk) (+5 more)
 
 ### Community 38 - "Ação getLog"
-Cohesion: 0.20
-Nodes (10): carregarHistorico(), currentUser (identidade da sessão), Diff antes → depois no histórico, Formatadores do histórico (histTurnoLabel, histNomes, histFmtData), Modal de Histórico (auditoria), histEntries (cache das entradas do LOG), Sentinel safe-hub-admin (param by), renderHistorico() (+2 more)
-
-### Community 39 - "Painel admin do valor"
-Cohesion: 0.19
-Nodes (13): Duplo turno T1+T2 (dia todo), Espera das gravações pendentes antes de ler (await gasWriteChain), gasWrite(action, payload), Fila de gravação serializada (gasWriteChain), Atualização otimista com rollback do turno, removeBothShifts(dk), renderCalendar(), saveScheduleOverride(dk, dayData) (+5 more)
+Cohesion: 0.25
+Nodes (8): carregarHistorico(), currentUser (identidade da sessão), Diff antes → depois no histórico, Formatadores do histórico (histTurnoLabel, histNomes, histFmtData), Modal de Histórico (auditoria), histEntries (cache das entradas do LOG), Sentinel safe-hub-admin (param by), renderHistorico()
 
 ### Community 40 - "exportConfirmarExportacao"
 Cohesion: 0.22
