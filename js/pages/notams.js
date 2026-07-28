@@ -20,7 +20,26 @@ const Notams = {
     this.initControles();
     this.initSidebar();
     this.garantirCampoSemFoco();
+    this.aplicarPermissaoSincronizar();
     await this.carregar();
+  },
+
+  /**
+   * O botão "Atualizar" some para quem não pode sincronizar. A página é global
+   * e cada clique é uma ida ao DECEA mais uma regravação da planilha: com toda
+   * a escola olhando a tela, o botão vira convite a clicar à toa.
+   *
+   * `podeEditar` faz bypass de superadmin e master, então eles continuam vendo
+   * sem precisar de nada. Quem mais precisar recebe `notams.sincronizar` pelo
+   * Controle de Acesso, no nível Editar do módulo NOTAMs.
+   *
+   * Isto é só a camada visual: quem manda de verdade é o guarda
+   * `exigirSincronizacaoNotams` no backend, porque esconder botão não impede
+   * ninguém de chamar a rota na mão.
+   */
+  aplicarPermissaoSincronizar() {
+    if (Auth.podeEditar('notams.html')) return;
+    document.getElementById('notam-refresh')?.remove();
   },
 
   /**

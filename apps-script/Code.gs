@@ -141,7 +141,7 @@ function doGet(e) {
       // mas só o cache de leitura das bases, não dado de usuário: por isso
       // fica no doGet junto das outras leituras de NOTAM.
       case 'notams-atualizar':
-        exigirSessao(token);
+        exigirSincronizacaoNotams(token);
         return jsonSuccess(atualizarECarregarNotams());
 
       // Consulta avulsa de outra localidade. NÃO grava no cache.

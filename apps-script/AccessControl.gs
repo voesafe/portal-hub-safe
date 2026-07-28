@@ -9,6 +9,10 @@ var ACCESS_PERMISSIONS = [
   // quando a página estava marcada `publica`. A diferença é que agora existe
   // no catálogo, então aparece no Controle de Acesso e dá para NEGAR a alguém.
   ['notams.visualizar', 'NOTAMs', 'Visualizar NOTAMs das bases'],
+  // Botão "Atualizar" da página. De propósito em NENHUM cargo padrão: a página
+  // é global e cada clique bate no DECEA e regrava a planilha. Superadmin e
+  // master passam por bypass; para os demais, conceder caso a caso.
+  ['notams.sincronizar', 'NOTAMs', 'Forçar sincronização com o DECEA'],
   ['dashboard_vendas.visualizar_proprio', 'Dashboard de Vendas', 'Visualizar indicadores próprios'],
   ['dashboard_vendas.visualizar_todos', 'Dashboard de Vendas', 'Visualizar indicadores gerais'],
   ['dashboard_vendas.visualizar_receita_global', 'Dashboard de Vendas', 'Visualizar receita global'],

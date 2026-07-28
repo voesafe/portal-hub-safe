@@ -108,6 +108,24 @@ function listarNotams() {
 }
 
 /**
+ * Guarda da sincronização forçada. Ver o NOTAM é global; MANDAR buscar no DECEA
+ * não é: a página é aberta a toda a escola e cada clique é uma ida à API mais
+ * uma regravação da planilha. Superadmin e master passam por bypass; qualquer
+ * outra pessoa precisa de `notams.sincronizar`, que não está em cargo nenhum e
+ * se concede caso a caso pelo Controle de Acesso.
+ *
+ * A leitura (`notams`) e a consulta avulsa (`notams-consulta`) seguem livres:
+ * consulta avulsa não grava nada e não disputa a planilha com o gatilho.
+ */
+function exigirSincronizacaoNotams(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (usuarioEhSuperadmin(usuario)) return usuario;
+  if (usuarioTemPermissao(usuario, 'notams.sincronizar')) return usuario;
+  throw new Error('Sem permissão para sincronizar os NOTAMs com o DECEA.');
+}
+
+/**
  * Consulta avulsa de OUTRA localidade (action=notams-consulta).
  * Bate na AISWEB na hora e devolve o resultado SEM gravar no cache: a aba
  * NOTAMS é das bases SAFE e não pode ser contaminada por consulta de terceiro.

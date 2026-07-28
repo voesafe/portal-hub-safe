@@ -143,7 +143,7 @@ const Auth = {
     // de `publica`. Motivo: com `publica: true` o podeVer curto-circuita e o
     // interruptor no Controle de Acesso ficaria decorativo, sem conseguir NEGAR
     // a página a ninguém. Ver ACCESS_DEFAULT_GROUPS no AccessControl.gs.
-    'notams.html':            { ver: ['notams.visualizar'] },
+    'notams.html':            { ver: ['notams.visualizar'], editar: ['notams.sincronizar'] },
     'dashboard.html':         { ver: ['dashboard_vendas.visualizar_proprio', 'dashboard_vendas.visualizar_todos'] },
     'vendas.html':            { ver: ['vendas.visualizar_proprias', 'vendas.visualizar_todas'],
                                 editar: ['vendas.criar_propria', 'vendas.criar_para_qualquer_pac', 'vendas.editar_propria', 'vendas.editar_todas', 'vendas.excluir_propria', 'vendas.excluir_todas'] },
