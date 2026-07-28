@@ -529,6 +529,27 @@ function notamsGetSheet_() {
 }
 
 function notamGravarCache_(itens) {
+  // ⚠️ DOIS escritores disputam esta mesma faixa da planilha desde que o botão
+  // "Atualizar" passou a sincronizar de verdade: o gatilho de hora em hora e o
+  // clique de quem estiver na tela. E gravar aqui é apagar TUDO e regravar
+  // (clearContent + setValues). Sem a trava, um clique caindo no segundo exato
+  // da rodada automática deixa a tela mostrando a lista pela metade.
+  // Espera em vez de falhar: a escrita leva 1 a 2 segundos, então quem chega
+  // depois quase sempre entra. Falhou, o chamador decide (o botão devolve o
+  // cache anterior avisando, e o gatilho simplesmente tenta na hora seguinte).
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) {
+    throw new Error('Outra sincronização de NOTAMs está em andamento. Tente de novo em instantes.');
+  }
+  try {
+    return notamGravarCacheSemTrava_(itens);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/** Corpo da gravação. Só chame por notamGravarCache_, que segura a trava. */
+function notamGravarCacheSemTrava_(itens) {
   var sheet = notamsGetSheet_();
   var ts = new Date().toISOString();
 

@@ -168,9 +168,33 @@
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
+/* No desktop não existe lupa: o campo já cabe na barra e não há teclado que
+   possa abrir sozinho. */
+.notam-busca-lupa { display: none; }
+
 @media (max-width: 720px) {
   .notam-busca { width: 100%; padding-bottom: 0; padding-top: 8px; }
   .notam-busca input { flex: 1 1 auto; width: auto; }
+
+  /* ⚠️ Fechada, o campo sai por `display: none`, e elemento nesse estado não
+     pode receber foco de jeito nenhum. É esta linha que resolve a página abrir
+     com o teclado no ar no iPhone; tirar o foco por JS depois do carregamento
+     não resolvia, porque o Safari devolvia o foco em seguida. */
+  .notam-busca:not(.aberta) input,
+  .notam-busca:not(.aberta) .btn { display: none; }
+  /* Fechada, só a lupa: encostada à direita, alinhada com a borda das abas.
+     Ocupar a linha inteira deixaria um ícone solto no canto esquerdo. */
+  .notam-busca:not(.aberta) { width: auto; margin-left: auto; }
+
+  .notam-busca-lupa {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; flex: 0 0 auto;
+    border-radius: 10px; border: 1.5px solid var(--n-line);
+    background: var(--n-surface); color: var(--n-ink-soft);
+  }
+  .notam-busca-lupa:active { background: var(--n-surface-2); }
+  /* Aberta, a lupa dá lugar ao campo: os dois juntos não cabem em 390px. */
+  .notam-busca.aberta .notam-busca-lupa { display: none; }
 }
 
 /* ── Colunas de aeroporto ──────────────────────────────────── */

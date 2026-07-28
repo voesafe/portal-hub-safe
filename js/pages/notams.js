@@ -25,11 +25,13 @@ const Notams = {
 
   /**
    * A página é de LEITURA: abrir com o teclado do celular na tela é errado.
-   * Medido em 2026-07-28 que nada aqui dá foco no campo (o activeElement ao
-   * carregar é o BODY, e não há uma única chamada a .focus()), mas o navegador
-   * pode devolver o foco sozinho ao restaurar a página do histórico, e o
-   * Chromium emulado não é o Safari do iPhone. Uma passada só, no carregamento:
-   * quem tocar no campo depois não é afetado.
+   *
+   * ⚠️ Isto sozinho NÃO resolveu no iPhone. Nada no código dá foco no campo (o
+   * activeElement ao carregar é o BODY e não há uma única chamada a .focus()),
+   * mas na prática o Safari focava mesmo assim, depois desta linha rodar. Quem
+   * resolve é o CSS: com a lupa, o campo fica em `display: none` no celular, e
+   * elemento nesse estado não pode receber foco de forma alguma.
+   * Fica como rede para o desktop e para restauração de página pelo histórico.
    */
   garantirCampoSemFoco() {
     const campo = document.getElementById('notam-busca-input');
@@ -341,6 +343,17 @@ const Notams = {
     });
     // Atualizar: consulta o DECEA de verdade e regrava o cache.
     document.getElementById('notam-refresh')?.addEventListener('click', () => this.atualizarDoDecea());
+
+    // Lupa do celular: revela o campo e só então dá o foco. Aqui o teclado
+    // DEVE abrir, porque foi a pessoa que pediu. É o oposto de abrir a página
+    // já com ele na tela, que era o defeito.
+    document.getElementById('notam-busca-lupa')?.addEventListener('click', () => {
+      const form = document.getElementById('notam-busca');
+      const campo = document.getElementById('notam-busca-input');
+      form?.classList.add('aberta');
+      document.getElementById('notam-busca-lupa')?.setAttribute('aria-expanded', 'true');
+      campo?.focus();
+    });
 
     // Busca de outra localidade.
     document.getElementById('notam-busca')?.addEventListener('submit', (e) => {
