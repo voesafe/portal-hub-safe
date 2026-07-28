@@ -4,7 +4,7 @@
 // Login por e-mail (coluna D = row[3])
 // ============================================================
 
-var SAFE_AUTH_VERSION = '2026.07.24-aniversarios-v1';
+var SAFE_AUTH_VERSION = '2026.07.28-notams-rbac-v1';
 var SAFE_SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 var SAFE_SESSION_EPOCH_KEY = 'SAFE_SESSION_EPOCH_MS';
 var SAFE_SESSION_TIMEZONE = 'America/Sao_Paulo';
