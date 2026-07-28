@@ -148,6 +148,10 @@ const API = {
   // e o resultado vai direto para a sessão em localStorage.
   async salvarAvatar(avatar) { return this.post('salvar-avatar', { avatar: avatar || '' }); },
 
+  // Foto de outro usuário, pelo cadastro central. Só superadmin passa pela
+  // guarda do backend (`exigirGestaoUsuarios`).
+  async salvarAvatarUsuario(id, avatar) { return this.post('salvar-avatar-usuario', { id, avatar: avatar || '' }); },
+
   // ── NOTAMs (leitura do cache; global p/ todos os logados) ──
   async getNotams() { return this.get('notams', {}, true); },
 

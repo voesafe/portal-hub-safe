@@ -1277,3 +1277,94 @@ html, body {
 @media (max-width: 480px) {
   .dados-foto { flex-direction: column; align-items: flex-start; }
 }
+
+/* ── Editor de enquadramento da foto ───────────────────────────
+   O quadro é quadrado e o recorte final também; o círculo é só a
+   máscara que mostra o que vai aparecer no avatar. Ver
+   `_abrirEditorAvatar` no auth.js. */
+.avatar-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 14px;
+}
+.avatar-editor-palco {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+.avatar-editor-canvas {
+  display: block;
+  cursor: grab;
+  /* Sem isso o navegador do celular rola a página em vez de arrastar
+     a foto, e o gesto do editor não chega ao pointermove. */
+  touch-action: none;
+}
+.avatar-editor-canvas.arrastando { cursor: grabbing; }
+/* A sombra gigante escurece tudo o que está FORA do círculo. Fica presa
+   ao palco por causa do `overflow: hidden` acima. */
+.avatar-editor-mascara {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 9999px rgba(7, 17, 38, .55);
+  border: 2px solid rgba(255, 255, 255, .85);
+  pointer-events: none;
+}
+.avatar-editor-dica {
+  margin: 12px 0 0;
+  font-size: .76rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--text-muted);
+}
+.avatar-editor-zoom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 240px;
+  margin-top: 10px;
+  color: var(--text-muted);
+}
+.avatar-editor-zoom svg { flex: 0 0 auto; width: 16px; height: 16px; }
+/* Trilho e botão desenhados à mão: com o estilo nativo, o trilho vazio sai
+   preto no claro e cáqui no escuro, porque o `accent-color` só pinta o
+   preenchimento e o navegador escolhe o resto. */
+.avatar-editor-zoom input[type="range"] {
+  flex: 1;
+  cursor: pointer;
+  height: 18px;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.avatar-editor-zoom input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.avatar-editor-zoom input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.avatar-editor-zoom input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;   /* centraliza o botão nos 4px do trilho */
+  border: none;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.avatar-editor-zoom input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.avatar-editor-zoom input[type="range"]:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }

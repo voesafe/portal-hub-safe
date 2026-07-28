@@ -163,6 +163,61 @@
   background: var(--teal-dark);
 }
 
+/* Com foto o elemento vira moldura: o fundo da origem e o padding saem de
+   cena para a imagem preencher. Mesmo contrato do `.user-menu-avatar` do
+   layout.css, e a classe é posta pelo `avatarUsuarioHtml` no admin.js. */
+.usuario-avatar.tem-foto {
+  background: var(--surface-2);
+  padding: 0;
+  overflow: hidden;
+}
+.usuario-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+.usuario-avatar.is-lg {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  border-radius: 16px;
+  font-size: 1.1rem;
+}
+
+/* ── Foto no formulário de usuário ─────────────────────────── */
+.usuario-foto {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.usuario-foto-acoes { min-width: 0; }
+.usuario-foto-titulo {
+  font-family: var(--font-title);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 7px;
+}
+.usuario-foto-botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+/* `.btn` e o próprio bloco são flex, que ganhariam do atributo `hidden`
+   sozinho. Mesma armadilha da `.topbar-status` e da `.cadastro-bulk-bar`. */
+.usuario-foto-botoes[hidden] { display: none; }
+.usuario-foto-botoes .btn[hidden] { display: none; }
+.usuario-foto-dica {
+  margin-top: 8px;
+  font-size: .74rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+@media (max-width: 480px) {
+  .usuario-foto { flex-direction: column; align-items: flex-start; }
+}
+
 .usuario-email-pendente {
   color: #b56c08 !important;
   font-weight: 700 !important;

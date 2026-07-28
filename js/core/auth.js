@@ -826,16 +826,17 @@ const Auth = {
   AVATAR_PX: 128,
   AVATAR_QUALIDADE: 0.8,
   AVATAR_MAX_ARQUIVO: 8 * 1024 * 1024,
+  AVATAR_ZOOM_MAX: 4,
 
   avatarDaSessao() {
     const url = this.getSessao()?.avatar;
     return typeof url === 'string' && url.startsWith('data:image/') ? url : '';
   },
 
-  // Lê o arquivo escolhido, recorta no centro em 1:1 e reduz para 128px.
-  // Tudo no navegador: o que sobe são os ~8 KB finais, não os 4 MB que a
-  // câmera do celular produz. Devolve o data URI, ou lança com o motivo.
-  _prepararAvatar(arquivo) {
+  // Valida o arquivo e devolve a imagem já decodificada, pronta para o
+  // editor. Separado do recorte porque o editor precisa da mesma imagem em
+  // várias pinturas seguidas, e reler o arquivo a cada quadro travaria.
+  _carregarImagemAvatar(arquivo) {
     return new Promise((resolve, reject) => {
       if (!arquivo) return reject(new Error('Nenhuma imagem escolhida.'));
       if (!/^image\//.test(arquivo.type)) return reject(new Error('Escolha um arquivo de imagem.'));
@@ -847,35 +848,166 @@ const Auth = {
         const img = new Image();
         img.onerror = () => reject(new Error('Não consegui abrir essa imagem.'));
         img.onload = () => {
-          try {
-            const lado = this.AVATAR_PX;
-            const canvas = document.createElement('canvas');
-            canvas.width = canvas.height = lado;
-            const ctx = canvas.getContext('2d');
-
-            // Recorte central quadrado: a foto costuma ser retrato ou
-            // paisagem, e esticar para o quadrado deforma o rosto.
-            const corte = Math.min(img.width, img.height);
-            const sx = (img.width - corte) / 2;
-            const sy = (img.height - corte) / 2;
-
-            // Fundo branco antes de desenhar: PNG com transparência viraria
-            // preto no JPEG, que não tem canal alfa.
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, lado, lado);
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, sx, sy, corte, corte, 0, 0, lado, lado);
-
-            const uri = canvas.toDataURL('image/jpeg', this.AVATAR_QUALIDADE);
-            if (uri.length > 40000) return reject(new Error('Imagem complexa demais. Tente outra foto.'));
-            resolve(uri);
-          } catch (e) {
-            reject(new Error('Não consegui processar essa imagem.'));
-          }
+          if (!img.width || !img.height) return reject(new Error('Não consegui abrir essa imagem.'));
+          resolve(img);
         };
         img.src = leitor.result;
       };
       leitor.readAsDataURL(arquivo);
+    });
+  },
+
+  // O estado do recorte é { zoom, cx, cy }, com cx/cy em fração do lado do
+  // quadro (0,5 = centro). Guardar em fração, e não em pixels, é o que faz a
+  // prévia de 240px e o arquivo final de 128px enquadrarem exatamente igual.
+  _estadoAvatarInicial() {
+    return { zoom: 1, cx: 0.5, cy: 0.5 };
+  },
+
+  // Limita o passeio para a imagem nunca descolar da borda do quadro: com
+  // zoom 1 ela cobre o quadro justo no menor lado, e aí só sobra folga no
+  // maior. Sem isso apareceria faixa branca na foto.
+  _limitarEstadoAvatar(img, estado) {
+    const menor = Math.min(img.width, img.height);
+    const meiaL = (img.width  * estado.zoom) / (2 * menor);
+    const meiaA = (img.height * estado.zoom) / (2 * menor);
+    const preso = (v, meia) => (meia <= 0.5 ? 0.5 : Math.min(Math.max(v, 1 - meia), meia));
+    estado.cx = preso(estado.cx, meiaL);
+    estado.cy = preso(estado.cy, meiaA);
+    return estado;
+  },
+
+  // Pinta o recorte num canvas quadrado. A mesma função desenha a prévia e o
+  // arquivo que sobe, então o que a pessoa enquadra é o que ela recebe.
+  _pintarRecorteAvatar(canvas, img, estado, lado, densidade) {
+    const dpr = densidade || 1;
+    canvas.width = canvas.height = Math.round(lado * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    // Fundo branco antes de desenhar: PNG com transparência viraria preto no
+    // JPEG, que não tem canal alfa.
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, lado, lado);
+    ctx.imageSmoothingQuality = 'high';
+
+    const escala = (lado / Math.min(img.width, img.height)) * estado.zoom;
+    const larg = img.width * escala;
+    const alt  = img.height * escala;
+    ctx.drawImage(img, estado.cx * lado - larg / 2, estado.cy * lado - alt / 2, larg, alt);
+    return canvas;
+  },
+
+  _gerarUriAvatar(img, estado) {
+    const canvas = this._pintarRecorteAvatar(document.createElement('canvas'), img, estado, this.AVATAR_PX, 1);
+    return canvas.toDataURL('image/jpeg', this.AVATAR_QUALIDADE);
+  },
+
+  // Lê o arquivo escolhido e abre o editor de enquadramento. Devolve o data
+  // URI de 128px, ou `null` se a pessoa desistir. Tudo acontece no navegador:
+  // o que sobe são os ~8 KB finais, não os 4 MB que a câmera do celular
+  // produz. O recorte central automático de antes servia para a maioria das
+  // fotos e cortava errado sempre que a pessoa não estava no meio do quadro.
+  async _prepararAvatar(arquivo) {
+    const img = await this._carregarImagemAvatar(arquivo);
+    const uri = await this._abrirEditorAvatar(img);
+    if (uri && uri.length > 40000) throw new Error('Imagem complexa demais. Tente outra foto.');
+    return uri;
+  },
+
+  _abrirEditorAvatar(img) {
+    return new Promise(resolve => {
+      const estado = this._limitarEstadoAvatar(img, this._estadoAvatarInicial());
+      // O quadro encolhe junto com a tela: 240px não cabe num celular de
+      // 390px depois do respiro lateral do modal.
+      const lado = Math.max(180, Math.min(240, window.innerWidth - 96));
+
+      let resolvido = false;
+      const concluir = valor => {
+        if (resolvido) return;
+        resolvido = true;
+        resolve(valor);
+      };
+
+      const { overlay, fechar } = this._abrirModal('modal-ajustar-foto', `
+        <div class="modal" style="max-width:360px">
+          <div class="modal-header">
+            <h3 style="font-size:1rem">Ajustar foto</h3>
+            <button class="modal-close" data-fechar aria-label="Fechar">${this.iconSvg('fechar')}</button>
+          </div>
+          <div class="modal-body avatar-editor">
+            <div class="avatar-editor-palco" style="width:${lado}px;height:${lado}px">
+              <canvas class="avatar-editor-canvas" id="ae-canvas" style="width:${lado}px;height:${lado}px"></canvas>
+              <div class="avatar-editor-mascara" aria-hidden="true"></div>
+            </div>
+            <p class="avatar-editor-dica">Arraste a foto para posicionar e use a barra para aproximar.</p>
+            <div class="avatar-editor-zoom">
+              ${this.iconSvg('perfil')}
+              <input type="range" id="ae-zoom" min="1" max="${this.AVATAR_ZOOM_MAX}" step="0.01" value="1" aria-label="Aproximar a foto">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-ghost btn-sm" type="button" data-fechar>Cancelar</button>
+            <button class="btn btn-primary btn-sm" type="button" id="ae-salvar">Usar esta foto</button>
+          </div>
+        </div>
+      `, () => concluir(null));
+
+      const canvas = overlay.querySelector('#ae-canvas');
+      const zoom   = overlay.querySelector('#ae-zoom');
+      const dpr    = Math.min(window.devicePixelRatio || 1, 3);
+      const pintar = () => this._pintarRecorteAvatar(canvas, img, estado, lado, dpr);
+      pintar();
+
+      // Arrastar com Pointer Events cobre mouse, dedo e caneta de uma vez, e
+      // o setPointerCapture segura o movimento mesmo quando o cursor sai do
+      // quadro no meio do gesto.
+      let arrastando = null;
+      canvas.addEventListener('pointerdown', e => {
+        arrastando = { x: e.clientX, y: e.clientY };
+        canvas.setPointerCapture(e.pointerId);
+        canvas.classList.add('arrastando');
+      });
+      canvas.addEventListener('pointermove', e => {
+        if (!arrastando) return;
+        estado.cx += (e.clientX - arrastando.x) / lado;
+        estado.cy += (e.clientY - arrastando.y) / lado;
+        arrastando = { x: e.clientX, y: e.clientY };
+        this._limitarEstadoAvatar(img, estado);
+        pintar();
+      });
+      const soltar = e => {
+        if (!arrastando) return;
+        arrastando = null;
+        canvas.classList.remove('arrastando');
+        if (e.pointerId != null && canvas.hasPointerCapture?.(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+      };
+      canvas.addEventListener('pointerup', soltar);
+      canvas.addEventListener('pointercancel', soltar);
+
+      // O zoom é ancorado no centro do quadro: o ponto que está no meio
+      // continua no meio, que é o que a pessoa está olhando enquanto ajusta.
+      const aplicarZoom = novo => {
+        const alvo = Math.min(Math.max(novo, 1), this.AVATAR_ZOOM_MAX);
+        const razao = alvo / estado.zoom;
+        estado.zoom = alvo;
+        estado.cx = 0.5 + (estado.cx - 0.5) * razao;
+        estado.cy = 0.5 + (estado.cy - 0.5) * razao;
+        this._limitarEstadoAvatar(img, estado);
+        zoom.value = String(alvo);
+        pintar();
+      };
+
+      zoom.addEventListener('input', () => aplicarZoom(Number(zoom.value)));
+      canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        aplicarZoom(estado.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08));
+      }, { passive: false });
+
+      overlay.querySelector('#ae-salvar').addEventListener('click', () => {
+        concluir(this._gerarUriAvatar(img, estado));
+        fechar();
+      });
     });
   },
 
@@ -918,7 +1050,9 @@ const Auth = {
   // Abre um `.modal-overlay` e devolve { overlay, fechar }. Os modais do
   // menu do usuário precisam existir nas 21 páginas, então nascem por JS
   // em vez de virar markup repetido em cada HTML.
-  _abrirModal(id, html) {
+  // `aoFechar` roda em qualquer saída (botão, clique fora, Escape) e existe
+  // para o editor de foto avisar que a pessoa desistiu do recorte.
+  _abrirModal(id, html, aoFechar) {
     document.getElementById(id)?.remove();
 
     const overlay = document.createElement('div');
@@ -932,8 +1066,16 @@ const Auth = {
       overlay.classList.remove('open');
       document.removeEventListener('keydown', aoTeclar);
       setTimeout(() => overlay.remove(), 250);
+      if (typeof aoFechar === 'function') aoFechar();
     };
-    const aoTeclar = e => { if (e.key === 'Escape') fechar(); };
+    // Só o modal de cima responde ao Escape. O editor de foto abre por cima
+    // do "Meus dados", e sem esse teste uma tecla fecharia os dois de uma vez.
+    const aoTeclar = e => {
+      if (e.key !== 'Escape') return;
+      const abertos = document.querySelectorAll('.modal-overlay.open');
+      if (abertos.length && abertos[abertos.length - 1] !== overlay) return;
+      fechar();
+    };
 
     document.addEventListener('keydown', aoTeclar);
     overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });
@@ -1057,7 +1199,7 @@ const Auth = {
                      <button class="btn btn-ghost btn-sm" type="button" id="md-remover" ${this.avatarDaSessao() ? '' : 'hidden'}>Remover</button>
                    </div>
                    <input type="file" id="md-arquivo" accept="image/*" hidden>
-                   <p class="dados-foto-dica">Recortada no centro e reduzida para 128px aqui mesmo, antes de subir.</p>`}
+                   <p class="dados-foto-dica">Você escolhe o enquadramento. A foto é reduzida para 128px aqui mesmo, antes de subir.</p>`}
             </div>
           </div>
           <p class="modal-erro" id="md-erro" hidden></p>
@@ -1122,6 +1264,7 @@ const Auth = {
       erro.hidden = true;
       try {
         const uri = await this._prepararAvatar(f);
+        if (!uri) return;   // fechou o editor sem confirmar o enquadramento
         await gravar(uri, btEnviar, 'Enviando...');
       } catch (e) {
         mostrarErro(e.message || 'Não consegui usar essa imagem.');

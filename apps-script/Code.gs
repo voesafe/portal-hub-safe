@@ -189,6 +189,13 @@ function doPost(e) {
       case 'salvar-avatar':
         return jsonSuccess(salvarMeuAvatar(token, dados.avatar));
 
+      // Foto de OUTRO usuário. Aqui existe alvo, então precisa de guarda:
+      // `exigirGestaoUsuarios` é superadmin puro, o mesmo do resto do
+      // cadastro central.
+      case 'salvar-avatar-usuario':
+        exigirGestaoUsuarios(token);
+        return jsonSuccess(salvarAvatarUsuarioCentralizado(dados.id, dados.avatar));
+
       // ── Vendas ─────────────────────────────────────────────
       case 'criar-venda': {
         var uCriarV = exigirSessao(token);

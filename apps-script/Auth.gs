@@ -259,9 +259,12 @@ function validarAcaoPerfilExclusivo_(token, action) {
     return;
   }
 
+  // `salvar-avatar` entra nas duas listas: mexe só na própria linha e o menu
+  // do usuário aparece para todo mundo, então sem isso um perfil exclusivo
+  // escolhia a foto, enquadrava e levava "acesso exclusivo" ao salvar.
   var acoesPorPerfilExclusivo = {
-    controle_gastos_visualizacao: ['controle-gastos', 'alterar-senha'],
-    escala_minions: ['alterar-senha']
+    controle_gastos_visualizacao: ['controle-gastos', 'alterar-senha', 'salvar-avatar'],
+    escala_minions: ['alterar-senha', 'salvar-avatar']
   };
   var perfil = normalizarPerfil(sessao.perfil);
   if (valorBooleano(sessao.superadmin)) return;
@@ -364,6 +367,10 @@ function listarUsuarios() {
       ativo:    row[6],
       criadoEm: row[7],
       cpf:      idx.CPF ? String(row[idx.CPF - 1] || '') : '',
+      // A foto vai junto da lista para o superadmin enxergar quem já tem e
+      // quem não tem sem abrir usuário por usuário. São ~8 KB por pessoa com
+      // foto, que é o preço de uma única leitura em vez de N chamadas.
+      avatar:   idx.AVATAR ? String(row[idx.AVATAR - 1] || '') : '',
       superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
       grupos: acessos.gruposPorUsuario[userId] || [],
       permissoesAvulsas: acessos.permissoesPorUsuario[userId] || [],
@@ -844,9 +851,46 @@ function avatarValido_(valor) {
 }
 
 /**
+ * Grava (ou apaga, com avatar vazio) a foto na linha do usuário que casar
+ * com `id` ou `email`. Núcleo compartilhado pelos dois caminhos: a pessoa
+ * trocando a própria foto e o superadmin trocando a de outra. Quem decide
+ * QUEM pode mexer em QUEM é o chamador, nunca esta função.
+ */
+function gravarAvatarUsuario_(id, email, avatar) {
+  var remover = !avatar;
+  if (!remover && !avatarValido_(avatar)) {
+    throw new Error('Imagem inválida ou grande demais. Envie um JPEG, PNG ou WebP.');
+  }
+
+  var sheet = getSheet(SHEETS.USUARIOS);
+  garantirColunaUsuariosSuperadmin_();
+  var idx = indiceCabecalho_(sheet);
+  if (!idx.AVATAR) throw new Error('Coluna AVATAR ausente na planilha de usuários.');
+
+  var emailAlvo = String(email || '').trim().toLowerCase();
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    var mesmoId = id && String(row[0]) === String(id);
+    var mesmoEmail = emailAlvo && String(row[3]).trim().toLowerCase() === emailAlvo;
+    if (!mesmoId && !mesmoEmail) continue;
+
+    var celula = sheet.getRange(i + 1, idx.AVATAR);
+    // Formato texto ANTES do valor: sem isso o Sheets tenta interpretar a
+    // string gigante e a leitura volta diferente do que foi gravado. Mesma
+    // armadilha do campo `alvo` no LOG da Escala CCO e da DATA_NASCIMENTO.
+    celula.setNumberFormat('@');
+    celula.setValue(remover ? '' : String(avatar));
+    return { id: String(row[0]), avatar: remover ? '' : String(avatar) };
+  }
+
+  throw new Error('Usuário não encontrado.');
+}
+
+/**
  * Grava (ou remove, com avatar vazio) a foto do usuário da própria sessão.
  * Só mexe na linha de quem chamou: não recebe id nem e-mail de alvo, então
- * não existe caminho para trocar a foto de outra pessoa.
+ * não existe caminho para trocar a foto de outra pessoa por aqui.
  */
 function salvarMeuAvatar(token, avatar) {
   var usuario = validarTokenSessao(token);
@@ -858,33 +902,27 @@ function salvarMeuAvatar(token, avatar) {
     throw new Error('A foto de usuários CCO é gerenciada no sistema da Escala CCO.');
   }
 
-  var remover = !avatar;
-  if (!remover && !avatarValido_(avatar)) {
-    throw new Error('Imagem inválida ou grande demais. Envie um JPEG, PNG ou WebP.');
+  var gravado = gravarAvatarUsuario_(usuario.id, usuario.email, avatar);
+  return { avatar: gravado.avatar };
+}
+
+/**
+ * Troca a foto de OUTRO usuário. Exclusiva de superadmin: quem chama é a
+ * rota `salvar-avatar-usuario`, atrás do `exigirGestaoUsuarios`. Existe
+ * porque a maioria da equipe não vai subir a própria foto, e o cadastro
+ * central é onde o administrador já resolve o resto do perfil.
+ */
+function salvarAvatarUsuarioCentralizado(id, avatar) {
+  if (!id) throw new Error('ID obrigatório');
+
+  // Usuário do CCO não tem linha nesta planilha; a foto dele é assunto do
+  // sistema da Escala CCO. O id vem prefixado, então dá para barrar antes
+  // de varrer a planilha à toa.
+  if (String(id).indexOf('cco:') === 0) {
+    throw new Error('A foto de usuários da Escala CCO é gerenciada no sistema dela.');
   }
 
-  var sheet = getSheet(SHEETS.USUARIOS);
-  garantirColunaUsuariosSuperadmin_();
-  var idx = indiceCabecalho_(sheet);
-  if (!idx.AVATAR) throw new Error('Coluna AVATAR ausente na planilha de usuários.');
-
-  var data = sheet.getDataRange().getValues();
-  for (var i = 1; i < data.length; i++) {
-    var row = data[i];
-    var mesmoId = String(row[0]) === String(usuario.id);
-    var mesmoEmail = String(row[3]).trim().toLowerCase() === String(usuario.email).trim().toLowerCase();
-    if (!mesmoId && !mesmoEmail) continue;
-
-    var celula = sheet.getRange(i + 1, idx.AVATAR);
-    // Formato texto ANTES do valor: sem isso o Sheets tenta interpretar a
-    // string gigante e a leitura volta diferente do que foi gravado. Mesma
-    // armadilha do campo `alvo` no LOG da Escala CCO e da DATA_NASCIMENTO.
-    celula.setNumberFormat('@');
-    celula.setValue(remover ? '' : String(avatar));
-    return { avatar: remover ? '' : String(avatar) };
-  }
-
-  throw new Error('Usuário não encontrado.');
+  return gravarAvatarUsuario_(id, '', avatar);
 }
 
 function autorizarPermissoesHub() {

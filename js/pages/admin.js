@@ -78,6 +78,7 @@ const Admin = {
     Auth.preencherUI();
     this.initSidebar();
     this.initForm();
+    this.initFotoUsuario();
     this.initFiltros();
     this.limparFiltrosIniciais();
     this.initTabs();
@@ -302,7 +303,7 @@ const Admin = {
         <tr>
           <td class="col-nome" data-label="Usuário">
             <div class="usuario-identidade">
-              <span class="usuario-avatar origem-${origem}">${this.iniciais(usuario.nome)}</span>
+              ${this.avatarUsuarioHtml(usuario, origem)}
               <span>
                 <strong>${this.escape(usuario.nome || usuario.pac)}</strong>
                 <small class="${completo ? '' : 'usuario-email-pendente'}">${this.escape(usuario.email || 'E-mail de acesso não informado')}</small>
@@ -333,6 +334,27 @@ const Admin = {
 
   iniciais(nome) {
     return String(nome || '?').trim().split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+  },
+
+  // Só data URI de imagem vira <img>. A coluna AVATAR guarda a imagem
+  // embutida, nunca um link, então qualquer outra coisa ali é lixo e não
+  // deve virar requisição para fora. O formato é conferido por inteiro
+  // porque este valor entra como atributo `src` numa string de HTML: o
+  // alfabeto base64 não tem aspas, e o que não casa não é desenhado.
+  fotoUsuario(usuario) {
+    const foto = String(usuario?.avatar || '');
+    return /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(foto) ? foto : '';
+  },
+
+  // Mesmo elemento com e sem foto, como no `pintarAvatares` do auth.js: sem
+  // ela mostra as iniciais; com ela recebe um <img> e a classe `tem-foto`.
+  avatarUsuarioHtml(usuario, origem, classeExtra = '') {
+    const foto = this.fotoUsuario(usuario);
+    const classes = `usuario-avatar origem-${origem}${foto ? ' tem-foto' : ''}${classeExtra ? ' ' + classeExtra : ''}`;
+    const conteudo = foto
+      ? `<img src="${this.escape(foto)}" alt="" aria-hidden="true">`
+      : this.iniciais(usuario.nome);
+    return `<span class="${classes}">${conteudo}</span>`;
   },
 
   escape(valor) {
@@ -649,7 +671,96 @@ const Admin = {
     document.getElementById('u-pac').disabled = !!usuario;
     this.atualizarCamposOrigem();
     this.renderMatrizAcesso();
+    this.renderFotoFormulario(usuario);
     abrirModal('modal-usuario');
+  },
+
+  // Estado do bloco de foto do formulário. Só usuário do Hub já criado pode
+  // receber foto: o CCO guarda a dele no sistema próprio, e um cadastro novo
+  // ainda não tem linha na planilha para gravar.
+  renderFotoFormulario(usuario) {
+    const origem = this.normalizarOrigem(usuario?.origem);
+    const editavel = !!usuario && origem === 'hub';
+    const foto = editavel ? this.fotoUsuario(usuario) : '';
+
+    const avatar = document.getElementById('u-avatar');
+    avatar.className = `usuario-avatar is-lg origem-${origem}${foto ? ' tem-foto' : ''}`;
+    avatar.innerHTML = '';
+    if (foto) {
+      const img = document.createElement('img');
+      img.src = foto;
+      img.alt = '';
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent = this.iniciais(usuario?.nome);
+    }
+
+    document.getElementById('u-foto-botoes').hidden = !editavel;
+    document.getElementById('u-foto-remover').hidden = !foto;
+    document.getElementById('u-foto-dica').textContent = editavel
+      ? 'Você escolhe o enquadramento. A foto é salva na hora, sem depender do botão Salvar.'
+      : (origem === 'cco'
+          ? 'A foto de usuários da Escala CCO é gerenciada no sistema dela.'
+          : 'A foto pode ser enviada depois de criar o acesso.');
+  },
+
+  initFotoUsuario() {
+    const arquivo  = document.getElementById('u-foto-arquivo');
+    const btEnviar = document.getElementById('u-foto-enviar');
+    const btRemover = document.getElementById('u-foto-remover');
+    if (!arquivo || !btEnviar || !btRemover) return;
+
+    // Sem otimista: quem valida a imagem e persiste é o servidor, e fingir
+    // mostraria a foto nova numa gravação recusada. Mesma escolha do
+    // "Meus dados" no auth.js.
+    const gravar = async (uri, botao, rotulo) => {
+      const usuario = this.usuarios.find(item => String(item.id) === String(this.editandoId));
+      if (!usuario) return;
+
+      const textoOriginal = botao.textContent;
+      botao.disabled = btEnviar.disabled = true;
+      botao.textContent = rotulo;
+
+      const res = await API.salvarAvatarUsuario(usuario.id, uri);
+
+      botao.disabled = btEnviar.disabled = false;
+      botao.textContent = textoOriginal;
+
+      if (!res?.ok) {
+        toast(res?.error || 'Não foi possível salvar a foto.', 'error');
+        return;
+      }
+
+      usuario.avatar = uri;
+      this.gravarCacheUsuarios({ usuarios: this.usuarios });
+      this.renderFotoFormulario(usuario);
+      this.renderTabela();
+
+      // Se o superadmin trocou a própria foto, a sessão em localStorage é o
+      // que todas as páginas leem: sem atualizar aqui, o avatar da topbar só
+      // mudaria no próximo login.
+      if (String(usuario.id) === String(Auth.getSessao()?.id || '')) {
+        Auth.salvarSessao({ ...Auth.getSessao(), avatar: uri });
+        Auth.pintarAvatares();
+      }
+      toast(uri ? 'Foto atualizada.' : 'Foto removida.', 'success');
+    };
+
+    btEnviar.addEventListener('click', () => arquivo.click());
+    btRemover.addEventListener('click', () => gravar('', btRemover, 'Removendo...'));
+
+    arquivo.addEventListener('change', async () => {
+      const f = arquivo.files?.[0];
+      arquivo.value = '';   // permite reescolher o mesmo arquivo depois de um erro
+      if (!f) return;
+      try {
+        const uri = await Auth._prepararAvatar(f);
+        if (!uri) return;   // fechou o editor sem confirmar o enquadramento
+        await gravar(uri, btEnviar, 'Enviando...');
+      } catch (e) {
+        toast(e.message || 'Não consegui usar essa imagem.', 'error');
+      }
+    });
   },
 
   editar(id) {
