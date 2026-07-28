@@ -310,6 +310,7 @@ Cada pessoa envia a própria foto em **Meus dados**. Ninguém troca a foto de ni
 
 - ⚠️ Ao remover o botão da PAV sobrou um `document.getElementById('btnTheme').addEventListener(...)` sem proteção, que teria derrubado **todo o script inline** da página. Ao tirar elemento de página com JS inline, procure o acesso sem `?.`.
 - No **notams.css** e no **safe-minions.css** a página inteira seguiu o tema só repontando o bloco de apelidos locais (`--n-surface`, `--texto`) para a camada semântica. Quando existir esse bloco, mexa nele, não nos 200 usos.
+- ⚠️ **A remoção deixou a Escala CCO em branco (corrigido em 2026-07-28).** Ao tirar o interruptor de tema e o "Sair da conta" do rodapé do drawer, saíram junto os dois `</div>` que fechavam o `.drawer-footer` e o `.drawer`. O `<div class="drawer-footer">` ficou aberto e o parser aninhou **todo o `<main class="cco-main">`** dentro dele: o calendário, o Dashboard e Funcionários foram parar num painel de 300px fora da tela, e a página abria só com a topbar sobre uma área vazia. **Nenhum erro de JS**, porque HTML mal fechado não lança nada, e nada nas telas irmãs quebrou, então a revisão visual das outras páginas não pegava. Hoje o rodapé sumiu de vez (o `.drawer` fecha logo após o `.drawer-body`) e o CSS de `.drawer-footer`/`.drawer-logout` saiu com ele. **Ao apagar um bloco inteiro de página com HTML inline, confira o aninhamento no navegador, não só o diff:** a leitura mais rápida é `document.querySelector('.cco-main').parentElement.id`, que tem que ser `appScreen`.
 
 ### Verificação
 

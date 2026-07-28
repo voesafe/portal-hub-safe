@@ -574,15 +574,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .drawer-item-desc{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
 .drawer-item.active-view .drawer-item-desc{color:rgba(91,174,226,.7)}
 
-.drawer-footer{padding:12px;border-top:1px solid rgba(255,255,255,.08)}
-.drawer-logout{
-  display:flex;align-items:center;gap:10px;
-  width:100%;padding:12px 14px;border-radius:10px;
-  background:rgba(220,53,69,.1);border:1px solid rgba(220,53,69,.2);
-  color:#ff8a8a;font-family:var(--font);font-size:14px;font-weight:600;
-  cursor:pointer;transition:background .15s
-}
-.drawer-logout:hover{background:rgba(220,53,69,.22)}
+/* O rodapé do drawer sumiu junto com o interruptor de tema e o "Sair da
+   conta": o tema virou global e o logout foi para o menu do usuário do Hub.
+   O CSS de `.drawer-footer` e `.drawer-logout` saiu com ele. */
 
 /* ── MOBILE & RESPONSIVE ─────────────────────────────────── */
 @media(max-width:768px){
@@ -855,7 +849,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
     </div>
 
-    <div class="drawer-footer">
+  </div>
 
   <main class="cco-main">
     <div id="adminPanel" style="display:none" class="admin-panel">
