@@ -205,11 +205,19 @@ const HorasVoadasInva = {
 
   async cadastrar(evento) {
     evento.preventDefault();
+    // currentTarget vira null assim que o despacho do evento termina, e aqui
+    // existe await antes do reset. Guardar a referencia agora.
+    const formulario = evento.currentTarget || document.getElementById('form-instrutor');
     const botao = document.getElementById('btn-salvar-instrutor');
+    // O .value do input e string. Mandar "5.8" faz o Sheets interpretar como
+    // data (5 de agosto). Converter para numero antes de sair daqui.
+    const saldoBruto = Number.parseFloat(
+      String(document.getElementById('instrutor-saldo').value).replace(',', '.')
+    );
     const dados = {
       nome: document.getElementById('instrutor-nome').value.trim(),
       tipo: document.getElementById('instrutor-tipo').value,
-      saldoInicial: document.getElementById('instrutor-saldo').value || 0
+      saldoInicial: Number.isFinite(saldoBruto) ? saldoBruto : 0
     };
     if (!dados.nome || !dados.tipo) {
       toast('Preencha o nome e o tipo do instrutor.', 'warning');
@@ -222,7 +230,7 @@ const HorasVoadasInva = {
       if (resultado.status !== 'success') {
         throw new Error(resultado.message || 'Não foi possível cadastrar o instrutor.');
       }
-      evento.currentTarget.reset();
+      formulario?.reset();
       toast('Instrutor cadastrado com sucesso.', 'success');
       this.mudarView('dashboard');
       await this.carregarDados();
