@@ -7,11 +7,12 @@ const Auth = {
   SESSION_MAX_MS: 12 * 60 * 60 * 1000,
   SESSION_TIMEZONE: 'America/Sao_Paulo',
 
-  // Feature flag do módulo NOTAMs. Mantém OFF até: (1) backend promovido a @28
-  // (rota `notams`) e (2) chave AISWEB/DECEA configurada. Com OFF, a entrada
-  // `notams.html` é removida de PAGINAS (fonte única) → some do menu e o acesso
-  // direto é bloqueado por protegerPagina. Ligar = trocar para true.
-  NOTAMS_ATIVO: false,
+  // Feature flag do módulo NOTAMs. LIGADO em 2026-07-28: backend em produção no
+  // @39, chave AISWEB/DECEA gravada nas Propriedades do script e gatilho diário
+  // instalado. Com OFF, a entrada `notams.html` é trocada por uma permissão que
+  // ninguém tem (ver o fim do arquivo) → some do menu e o acesso direto é
+  // bloqueado por protegerPagina. Desligar = trocar para false.
+  NOTAMS_ATIVO: true,
 
   salvarSessao(usuario) {
     localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(this.normalizarSessao(usuario)));

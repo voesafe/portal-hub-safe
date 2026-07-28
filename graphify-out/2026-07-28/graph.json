@@ -3480,7 +3480,7 @@
       "label": "Tr\u00eas bugs corrigidos em 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L363",
+      "source_location": "L366",
       "_origin": "ast",
       "id": "claude_tr\u00eas_bugs_corrigidos_em_2026_07_28",
       "community": 42,
@@ -3490,7 +3490,7 @@
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L374",
+      "source_location": "L377",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 42,
@@ -3500,7 +3500,7 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L386",
+      "source_location": "L389",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 42,
@@ -11768,7 +11768,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 7,
       "norm_label": "painel admin do valor do turno (#adminpanel)",
       "id": "escala_cco_admin_panel"
     },
@@ -11833,7 +11833,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 49,
       "norm_label": "modal de exportacao ifood (#modalexportifood)",
       "id": "escala_cco_export_modal"
     },
@@ -12249,7 +12249,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 38,
       "norm_label": "users (mapa de usuarios carregado do sheets)",
       "id": "escala_cco_users_map"
     },
@@ -12262,7 +12262,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 38,
       "norm_label": "schedule_users (visiveis na escala)",
       "id": "escala_cco_schedule_users"
     },
@@ -12301,7 +12301,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "shift_labels (t1, t2, not)",
       "id": "escala_cco_shift_labels"
     },
@@ -12314,7 +12314,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 49,
       "norm_label": "shiftvalue (valor do turno)",
       "id": "escala_cco_shiftvalue"
     },
@@ -12444,7 +12444,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "shortname(fullname)",
       "id": "escala_cco_shortname"
     },
@@ -12496,7 +12496,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 49,
       "norm_label": "formatcpf(v)",
       "id": "escala_cco_formatcpf"
     },
@@ -12509,7 +12509,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 49,
       "norm_label": "formatphone(v)",
       "id": "escala_cco_formatphone"
     },
@@ -12600,7 +12600,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "rendercalendar()",
       "id": "escala_cco_rendercalendar"
     },
@@ -12665,7 +12665,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "duplo turno t1+t2 (dia todo)",
       "id": "escala_cco_double_shift"
     },
@@ -12678,7 +12678,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 39,
       "norm_label": "removebothshifts(dk)",
       "id": "escala_cco_removebothshifts"
     },
@@ -12691,7 +12691,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 7,
       "norm_label": "saveshiftvalue()",
       "id": "escala_cco_saveshiftvalue"
     },
@@ -12743,7 +12743,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 49,
       "norm_label": "renderfinancials()",
       "id": "escala_cco_renderfinancials"
     },
@@ -12769,7 +12769,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 49,
       "norm_label": "secao ifood beneficios (logo base64 embutido)",
       "id": "escala_cco_ifood_section"
     },
@@ -12808,7 +12808,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 49,
       "norm_label": "abrirmodalexport()",
       "id": "escala_cco_abrirmodalexport"
     },
@@ -13172,7 +13172,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 49,
       "norm_label": "criarcarduser(uname, isativo)",
       "id": "escala_cco_criarcarduser"
     },
@@ -18332,7 +18332,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L386",
+      "source_location": "L389",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -18342,7 +18342,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L374",
+      "source_location": "L377",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
@@ -18642,7 +18642,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L363",
+      "source_location": "L366",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_tr\u00eas_bugs_corrigidos_em_2026_07_28",
@@ -30138,5 +30138,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "ebf20a7e492eb5ace9c29757323b0e3376735a45"
+  "built_at_commit": "46eb95d4427582f57103bc5f1005dbcf6c0fa7ad"
 }

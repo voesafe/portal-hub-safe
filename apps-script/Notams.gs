@@ -6,7 +6,7 @@
 // sem CORS), classifica impacto e grava um CACHE na planilha.
 // O frontend lê SEMPRE do cache (abre instantâneo) via action=notams.
 //
-// FONTE: https://aisweb.decea.mil.br/api/?apiKey=..&apiPass=..&area=notam&icaoCode=SBSJ&icaoCode=SDAM
+// FONTE: https://aisweb.decea.mil.br/api/?apiKey=..&apiPass=..&area=notam&icaoCode=SBSJ
 // Retorno: XML. Requer chave solicitada ao DECEA.
 //
 // SETUP (uma vez, quando a chave chegar):
@@ -17,7 +17,17 @@
 //   3. Rodar notamsDebugRaw()  → loga o XML real p/ conferir o schema
 //
 // TESTE SEM CHAVE:
-//   notamsSelfTest()  → parseia um XML de exemplo e grava no cache.
+//   notamsSelfTest()  → parseia uma amostra REAL do XML e grava no cache.
+//
+// ⚠️ UM icaoCode POR REQUISIÇÃO. Medido em 2026-07-28 contra a API real:
+// `icaoCode=SBSJ` filtra certo (7 NOTAMs), mas QUALQUER forma de pedir os dois
+// (`icaoCode` repetido, vírgula, espaço, pipe) faz o filtro cair SILENCIOSAMENTE
+// e a API devolve o Brasil inteiro: 2207 NOTAMs, 4,9 MB. Sem HTTP de erro e sem
+// aviso. Por isso: uma chamada por base + rede de segurança por `loc` no parse.
+//
+// Schema confirmado nos 2207 itens: <cod> é o Q-CODE (Q+4 letras, 100% dos
+// casos) e o identificador do NOTAM é <n> (ex.: F3879/26, 100% dos casos).
+// Não existe tag <q>.
 // ============================================================
 
 // ── Configuração ────────────────────────────────────────────
@@ -27,6 +37,11 @@ var NOTAMS_API_BASE   = 'https://aisweb.decea.mil.br/api/';
 var NOTAMS_PROP_KEY   = 'AISWEB_API_KEY';
 var NOTAMS_PROP_PASS  = 'AISWEB_API_PASS';
 var NOTAMS_PROP_TS    = 'NOTAMS_ATUALIZADO_EM';
+
+// Teto de resposta por base. Uma base sozinha dá ~15 KB; o Brasil inteiro dá
+// 4,9 MB. Passar disso significa que o filtro icaoCode caiu: aborta ANTES do
+// XmlService.parse, que engasgaria com megabytes, e preserva o cache anterior.
+var NOTAMS_MAX_BYTES  = 600000;
 
 var NOTAMS_HEADERS = [
   'ICAO','COD','QCODE','CATEGORIA','SEVERIDADE','ATIVO','FUTURO',
@@ -100,16 +115,30 @@ function listarNotams() {
  * grava o cache. Se faltar chave, lança erro claro (não quebra silencioso).
  */
 function atualizarNotamsAisweb() {
-  var xml = notamFetchAisweb_(NOTAMS_ICAOS);
-  var itens = notamParseXml_(xml);
+  var itens = [];
+  var vistos = {};
+
+  NOTAMS_ICAOS.forEach(function(icao) {
+    notamParseXml_(notamFetchAisweb_(icao)).forEach(function(n) {
+      // Rede de segurança: se um dia o filtro da API falhar de novo, jamais
+      // gravamos NOTAM de base alheia no cache das bases SAFE.
+      if (NOTAMS_ICAOS.indexOf(n.icao) < 0) return;
+      var chave = n.icao + '|' + n.cod;
+      if (vistos[chave]) return;   // a mesma base pode voltar nas duas respostas
+      vistos[chave] = true;
+      itens.push(n);
+    });
+  });
+
   notamGravarCache_(itens);
   return itens.length;
 }
 
 /**
- * Monta a URL e chama a API. icaoCode aceita múltiplos (um por base).
+ * Monta a URL e chama a API para UMA base. Ver o aviso no topo do arquivo:
+ * pedir duas de uma vez derruba o filtro e traz o país inteiro.
  */
-function notamFetchAisweb_(icaos) {
+function notamFetchAisweb_(icao) {
   var props = PropertiesService.getScriptProperties();
   var key  = props.getProperty(NOTAMS_PROP_KEY);
   var pass = props.getProperty(NOTAMS_PROP_PASS);
@@ -121,16 +150,19 @@ function notamFetchAisweb_(icaos) {
   var url = NOTAMS_API_BASE +
     '?apiKey=' + encodeURIComponent(key) +
     '&apiPass=' + encodeURIComponent(pass) +
-    '&area=notam';
-  (icaos || NOTAMS_ICAOS).forEach(function(ic) {
-    url += '&icaoCode=' + encodeURIComponent(ic);
-  });
+    '&area=notam' +
+    '&icaoCode=' + encodeURIComponent(icao);
 
   var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true, method: 'get' });
   var code = resp.getResponseCode();
   var body = resp.getContentText();
   if (code < 200 || code >= 300) {
-    throw new Error('AISWEB retornou HTTP ' + code + ': ' + body.slice(0, 300));
+    throw new Error('AISWEB retornou HTTP ' + code + ' para ' + icao + ': ' +
+      body.slice(0, 300));
+  }
+  if (body.length > NOTAMS_MAX_BYTES) {
+    throw new Error('AISWEB devolveu ' + body.length + ' bytes para ' + icao +
+      ': o filtro icaoCode foi ignorado. Cache anterior preservado.');
   }
   return body;
 }
@@ -152,12 +184,16 @@ function notamParseXml_(xmlText) {
   notamColetarItens_(root, itens);
 
   return itens.map(function(campos) {
-    var icao  = notamPick_(campos, ['loc','ad','icao','icaocode','aerodromo']);
-    var cod   = notamPick_(campos, ['cod','id','numero','number','notam']);
-    var qcode = notamPick_(campos, ['q','qcode','codq']);
+    var icao  = notamPick_(campos, ['loc','icaoairport_id','ad','icao','icaocode','aerodromo']);
+    // O identificador é <n> ('F3879/26'). NÃO usar <cod>: lá mora o Q-code.
+    var cod   = notamPick_(campos, ['n','notam','numero','number','id']);
+    var qcode = notamQcode_(campos);
     var ini   = notamPick_(campos, ['b','dt_i','inicio','validfrom','from','ib']);
     var fim   = notamPick_(campos, ['c','dt_f','fim','validto','to','ic']);
     var texto = notamPick_(campos, ['e','txt','texto','text','descricao','ie']);
+    // Campo D) do NOTAM: a janela em que ele vale de fato ('DAILY 1200-2100').
+    var horario = notamPick_(campos, ['d','dt_d','horario','schedule']);
+    var tipo    = notamPick_(campos, ['tp','tipo','type']);
 
     var dtIni = notamParseData_(ini);
     var dtFim = notamParseData_(fim);
@@ -173,11 +209,40 @@ function notamParseXml_(xmlText) {
       future:  classe.future,
       from:    notamFormatarData_(dtIni, ini),
       to:      notamFormatarData_(dtFim, fim),
-      scope:   'Aeródromo',
-      raw:     notamMontarCru_(cod, icao, ini, fim, texto),
-      decoded: notamDecodificar_(texto)
+      scope:   notamEscopo_(notamPick_(campos, ['scope','escopo'])),
+      raw:     notamMontarCru_(cod, tipo, qcode, icao, ini, fim, horario, texto),
+      decoded: notamDecodificar_(texto, horario)
     };
   }).filter(function(n) { return n.cod || n.raw; });
+}
+
+/**
+ * Extrai o Q-code validando a FORMA (Q + 4 letras), não só o nome da tag.
+ * No AISWEB ele vem em <cod>, que o nome sugere ser o identificador. A checagem
+ * por formato torna a escolha correta nas duas hipóteses de schema: bateu com
+ * Q+4 letras, é Q-code; não bateu, é outra coisa e não polui a classificação.
+ * Medido: 2207 de 2207 <cod> casam com /^Q[A-Z]{4}$/.
+ */
+function notamQcode_(campos) {
+  var cands = ['cod','q','qcode','codq'];
+  for (var i = 0; i < cands.length; i++) {
+    var v = String(campos[cands[i]] || '').trim().toUpperCase();
+    if (/^Q[A-Z]{4}$/.test(v)) return v;
+  }
+  return '';
+}
+
+/** Traduz o campo <scope> do AISWEB. Valores reais: A, W, AE, E. */
+function notamEscopo_(s) {
+  var mapa = {
+    A:  'Aeródromo',
+    E:  'Em rota',
+    W:  'Aviso de navegação',
+    AE: 'Aeródromo e rota',
+    AW: 'Aeródromo e aviso',
+    K:  'Checklist'
+  };
+  return mapa[String(s || '').trim().toUpperCase()] || 'Aeródromo';
 }
 
 /** Percorre a árvore XML juntando "itens de NOTAM" achatados. */
@@ -223,23 +288,21 @@ function notamPick_(mapa, nomes) {
 function notamClassificar_(qcode, texto, dtIni, dtFim) {
   var t = String(texto || '').toUpperCase();
   var q = String(qcode || '').toUpperCase().replace(/^Q/, ''); // remove o Q inicial
-  var assunto = q.slice(0, 2);   // ex: MR, MX, LP, NV, OB, FA
-  var cat = 'Geral', sev = 'info';
+  var assunto = q.slice(0, 2);   // ex: MR, MX, LP, NM, OB, FA
 
-  if (assunto === 'MR' || /\bRWY\b|\bPISTA\b/.test(t)) {
-    cat = 'Pista (RWY)';
-    sev = /CLSD|CLOSED|FECH|U\/S|UNSERVICEABLE|LIMIT|RESTR/.test(t) ? 'critico' : 'atencao';
-  } else if (assunto === 'MX' || /\bTWY\b|TAXIWAY|T[ÁA]XI/.test(t)) {
-    cat = 'Táxi (TWY)'; sev = 'atencao';
-  } else if (assunto.charAt(0) === 'L' || /\bPAPI\b|\bVASIS\b|\bBALIZ|\bLGT|LIGHT|LUZ/.test(t)) {
-    cat = 'Auxílios luminosos'; sev = 'atencao';
-  } else if (assunto.charAt(0) === 'I' || assunto.charAt(0) === 'N' ||
-             /\bVOR\b|\bNDB\b|\bDME\b|\bILS\b|\bGP\b|\bLOC\b/.test(t)) {
-    cat = 'Aux. navegação'; sev = 'atencao';
-  } else if (assunto === 'OB' || assunto === 'OL' || /CRANE|GUINDASTE|OBST/.test(t)) {
-    cat = 'Obstáculo'; sev = 'info';
-  } else if (assunto === 'FA' || /\bAD\b|AERODROMO|AER[ÓO]DROMO|OPR HR|HORARIO|HOR[ÁA]RIO/.test(t)) {
-    cat = 'Aeródromo'; sev = 'info';
+  // O Q-code é o dado oficial e MANDA. A varredura por palavra-chave só entra
+  // quando ele falta. Ordem invertida foi um bug real: 'ILS GP RWY 16 U/S'
+  // contém RWY e virava 'Pista (RWY) / crítico' numa falha de ILS, ou seja,
+  // alarme de pista fechada onde a pista está aberta.
+  var r = assunto ? notamCatPorQcode_(assunto, t) : notamCatPorTexto_(t);
+  var cat = r.cat, sev = r.sev;
+
+  // Regra própria da SAFE: proibição ou suspensão de voo de instrução e de
+  // cheque para em pé a operação de uma escola. Não é informativo.
+  if (/TREINAMENTO|INSTRU[ÇC]|CHECK ANAC|CHEQUE ANAC/.test(t) &&
+      /\bPRB\b|PROIB|\bCLSD\b|SUSP|\bNEG\b/.test(t)) {
+    cat = 'Voo de instrução';
+    sev = 'critico';
   }
 
   var agora = new Date();
@@ -253,6 +316,57 @@ function notamClassificar_(qcode, texto, dtIni, dtFim) {
   }
 
   return { cat: cat, sev: sev, active: active, future: future };
+}
+
+/**
+ * Categoria + severidade a partir do assunto do Q-code (2 letras após o Q).
+ * Assuntos vistos na base real: WU RT WP XX FA OB WL WE MR RR WM PI WG MX NM.
+ * A primeira letra é a família ICAO: M área de manobras, L luzes, I/N/G
+ * auxílios, P procedimentos, R restrição de espaço aéreo, W avisos,
+ * F instalações e serviços, O outras informações, C/S comunicações e ATS.
+ */
+function notamCatPorQcode_(assunto, t) {
+  var fam = assunto.charAt(0);
+  var fechado = /\bCLSD\b|CLOSED|\bFECH|U\/S|UNSERVICEABLE|LIMIT|RESTR|\bPRB\b|PROIB/.test(t);
+
+  if (assunto === 'MR') return { cat: 'Pista (RWY)', sev: fechado ? 'critico' : 'atencao' };
+  if (assunto === 'MX') return { cat: 'Táxi (TWY)', sev: 'atencao' };
+  if (fam === 'M')      return { cat: 'Área de manobras', sev: 'atencao' };
+  if (fam === 'L')      return { cat: 'Auxílios luminosos', sev: 'atencao' };
+  if (fam === 'I' || fam === 'N' || fam === 'G') return { cat: 'Aux. navegação', sev: 'atencao' };
+  if (fam === 'P')      return { cat: 'Procedimentos', sev: 'atencao' };
+  if (fam === 'R')      return { cat: 'Restrição de espaço aéreo', sev: 'atencao' };
+  if (fam === 'W')      return { cat: 'Aviso de navegação', sev: 'info' };
+  if (assunto === 'OB' || assunto === 'OL') return { cat: 'Obstáculo', sev: 'info' };
+  if (fam === 'O')      return { cat: 'Informação aeronáutica', sev: 'info' };
+  // FA é o aeródromo em si: fechado ou proibido é impacto máximo.
+  if (assunto === 'FA') return { cat: 'Aeródromo', sev: fechado ? 'critico' : 'info' };
+  if (fam === 'F')      return { cat: 'Serviços do aeródromo', sev: 'info' };
+  if (fam === 'C' || fam === 'S') return { cat: 'Comunicações e ATS', sev: 'atencao' };
+  if (fam === 'A')      return { cat: 'Espaço aéreo', sev: 'info' };
+  return { cat: 'Geral', sev: 'info' };
+}
+
+/** Fallback por palavra-chave. Só roda quando o NOTAM vem SEM Q-code. */
+function notamCatPorTexto_(t) {
+  if (/\bILS\b|\bVOR\b|\bNDB\b|\bDME\b|\bGP\b|\bLOC\b/.test(t)) {
+    return { cat: 'Aux. navegação', sev: 'atencao' };
+  }
+  if (/\bRWY\b|\bPISTA\b/.test(t)) {
+    return {
+      cat: 'Pista (RWY)',
+      sev: /CLSD|CLOSED|FECH|U\/S|UNSERVICEABLE|LIMIT|RESTR/.test(t) ? 'critico' : 'atencao'
+    };
+  }
+  if (/\bTWY\b|TAXIWAY|T[ÁA]XI/.test(t)) return { cat: 'Táxi (TWY)', sev: 'atencao' };
+  if (/\bPAPI\b|\bVASIS\b|\bBALIZ|\bLGT|LIGHT|LUZ/.test(t)) {
+    return { cat: 'Auxílios luminosos', sev: 'atencao' };
+  }
+  if (/CRANE|GUINDASTE|OBST/.test(t)) return { cat: 'Obstáculo', sev: 'info' };
+  if (/\bAD\b|AERODROMO|AER[ÓO]DROMO|OPR HR|HORARIO|HOR[ÁA]RIO/.test(t)) {
+    return { cat: 'Aeródromo', sev: 'info' };
+  }
+  return { cat: 'Geral', sev: 'info' };
 }
 
 // ============================================================
@@ -270,14 +384,19 @@ var NOTAMS_GLOSSARIO = {
  * Decodificação leve: expande abreviações comuns. NÃO substitui o texto
  * cru (que fica sempre preservado). Versão completa na Fase 3.
  */
-function notamDecodificar_(texto) {
+function notamDecodificar_(texto, horario) {
   if (!texto) return '';
   var out = String(texto);
   Object.keys(NOTAMS_GLOSSARIO).forEach(function(abbr) {
     out = out.replace(new RegExp('\\b' + abbr.replace('/', '\\/') + '\\b', 'g'),
       NOTAMS_GLOSSARIO[abbr]);
   });
-  return out.charAt(0).toUpperCase() + out.slice(1);
+  out = out.charAt(0).toUpperCase() + out.slice(1);
+  // O campo D) restringe a validade dentro do período B)–C). Sem ele, um NOTAM
+  // que só vale das 12h às 21h aparece como se valesse o dia inteiro. Vai
+  // inline porque .notam-decoded não preserva quebra de linha (só .notam-raw).
+  if (horario) out += '  ·  Válido em: ' + String(horario).trim();
+  return out;
 }
 
 // ============================================================
@@ -315,11 +434,16 @@ function notamFormatarData_(d, bruto) {
     ' · ' + p2(d.getUTCHours()) + ':' + p2(d.getUTCMinutes()) + ' UTC';
 }
 
-/** Reconstrói o "NOTAM cru" p/ exibição quando a API não dá o bloco inteiro. */
-function notamMontarCru_(cod, icao, ini, fim, texto) {
+/**
+ * Reconstrói o "NOTAM cru" no formato ICAO. A API entrega os campos separados,
+ * não o bloco inteiro, então remontamos: cabeçalho, Q), A)B)C)D) e E).
+ */
+function notamMontarCru_(cod, tipo, qcode, icao, ini, fim, horario, texto) {
   var linhas = [];
-  if (cod) linhas.push(cod + ' NOTAMN');
+  if (cod) linhas.push(cod + ' ' + (tipo || 'NOTAMN'));
+  if (qcode) linhas.push('Q) ' + qcode);
   linhas.push('A) ' + (icao || '') + (ini ? '  B) ' + ini : '') + (fim ? '  C) ' + fim : ''));
+  if (horario) linhas.push('D) ' + horario);
   if (texto) linhas.push('E) ' + texto);
   return linhas.join('\n');
 }
@@ -380,31 +504,41 @@ function notamsInstalarTrigger() {
 // ============================================================
 //  DIAGNÓSTICO
 // ============================================================
-/** Loga o XML cru da API (rodar 1x quando a chave chegar p/ conferir tags). */
-function notamsDebugRaw() {
-  var xml = notamFetchAisweb_(NOTAMS_ICAOS);
+/** Loga o XML cru da API p/ uma base (padrão SBSJ), p/ conferir o schema. */
+function notamsDebugRaw(icao) {
+  var xml = notamFetchAisweb_(icao || NOTAMS_ICAOS[0]);
   Logger.log(xml.slice(0, 5000));
   return xml.slice(0, 500);
 }
 
 /**
- * Testa o pipeline SEM chave: parseia um XML de exemplo, classifica e grava
- * no cache. Rode e depois chame listarNotams() p/ ver o resultado.
- * NB: as tags deste exemplo são uma HIPÓTESE do schema AISWEB — o parser é
- * defensivo, mas o mapeamento final se confirma com notamsDebugRaw().
+ * Testa o pipeline SEM chave e SEM rede: parseia uma amostra REAL do XML da
+ * AISWEB (capturada em 2026-07-28 de SBSJ e SDAM), classifica e grava no cache.
+ * As tags abaixo são o schema verdadeiro, não uma hipótese: <cod> é o Q-code e
+ * <n> é o identificador. Rode e confira listarNotams().
+ *
+ * Esperado: 3 itens; F3879/26 sai como 'Aux. navegação' (e NÃO como pista
+ * crítica, que era o bug), e F3883/26 sai como 'Voo de instrução' / crítico.
  */
 function notamsSelfTest() {
   var exemplo =
-    '<aisweb><notam total="3">' +
-      '<item><loc>SBSJ</loc><cod>A2145/26</cod><q>QMRLC</q>' +
-        '<b>2607170900</b><c>2607171700</c>' +
-        '<e>RWY 15/33 CLSD DUE WIP</e></item>' +
-      '<item><loc>SBSJ</loc><cod>A2160/26</cod><q>QLPAS</q>' +
-        '<b>2607120000</b><c>2607312359</c>' +
-        '<e>PAPI RWY 15 U/S DUE MAINT</e></item>' +
-      '<item><loc>SDAM</loc><cod>B0455/26</cod><q>QMRLC</q>' +
-        '<b>2607220600</b><c>2607221200</c>' +
-        '<e>RWY 17/35 CLSD DUE MAINT</e></item>' +
+    '<aisweb><notam total="3" updatedat="2026-07-28 19:17:00">' +
+      '<item id="12417531"><id>12417531</id><icaoairport_id>SBSJ</icaoairport_id>' +
+        '<cod>QIGAS</cod><status>ACTIVE</status><cat>CNS</cat><tp>NOTAMN</tp>' +
+        '<n>F3879/26</n><number>3879</number><loc>SBSJ</loc>' +
+        '<b>2610261200</b><c>2610302100</c><d>DAILY 1200-2100</d>' +
+        '<e>ILS GP RWY 16 U/S</e><scope>A</scope></item>' +
+      '<item id="12417532"><id>12417532</id><icaoairport_id>SBSJ</icaoairport_id>' +
+        '<cod>QFAXX</cod><status>ACTIVE</status><cat>AGA</cat><tp>NOTAMR</tp>' +
+        '<n>F3883/26</n><number>3883</number><loc>SBSJ</loc>' +
+        '<b>2608221100</b><c>2610302100</c>' +
+        '<d>AUG 22 1100-1800 OCT 05-09 12-16 19-23 26-30 1200-2100</d>' +
+        '<e>AD PRB VOOS DE TREINAMENTO E CHECK ANAC</e><scope>A</scope></item>' +
+      '<item id="12417533"><id>12417533</id><icaoairport_id>SDAM</icaoairport_id>' +
+        '<cod>QLYAS</cod><status>ACTIVE</status><cat>AGA</cat><tp>NOTAMN</tp>' +
+        '<n>F3429/26</n><number>3429</number><loc>SDAM</loc>' +
+        '<b>2606241412</b><c>2609181400</c><d/>' +
+        '<e>LGT LATERAL TWY (TODAS) U/S</e><scope>A</scope></item>' +
     '</notam></aisweb>';
   var itens = notamParseXml_(exemplo);
   notamGravarCache_(itens);
