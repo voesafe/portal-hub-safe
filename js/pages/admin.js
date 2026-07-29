@@ -925,6 +925,17 @@ const Admin = {
       : await API.criarUsuario(dados);
     btnLoading(btn, false);
 
+    // Resposta perdida no redirecionamento do Apps Script: o servidor pode ter
+    // gravado. Fechar e recarregar sem cache é o único jeito honesto de mostrar
+    // o que de fato existe. Insistir no modal levaria a pessoa a clicar em
+    // Salvar de novo em cima de um cadastro que já foi feito.
+    if (res.indeterminado) {
+      toast(res.error, 'warning', 8000);
+      fecharModal('modal-usuario');
+      this.carregar({ usarCache: false });
+      return;
+    }
+
     if (!res.ok) {
       toast(res.error || 'Erro ao salvar.', 'error');
       return;

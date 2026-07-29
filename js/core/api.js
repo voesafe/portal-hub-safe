@@ -36,6 +36,18 @@ const API = {
     return /sess[aã]o expirada/i.test(msg);
   },
 
+  // "Ação desconhecida:" SEM nome depois só pode ter saído do `doGet` com a
+  // query vazia, porque o `post` sempre manda a ação dentro do corpo. Quando
+  // essa resposta chega de um POST, o redirecionamento do Apps Script (o /exec
+  // devolve 302 para o googleusercontent) perdeu o corpo pelo caminho e o que
+  // voltou foi a resposta de um GET sem parâmetro nenhum. O `doPost` já pode ter
+  // rodado inteiro, então isto não é falha: é resultado desconhecido.
+  // Ação desconhecida COM nome é outra coisa (backend publicado sem a rota) e
+  // continua passando direto, para não mascarar deploy desatualizado.
+  respostaPerdida(data) {
+    return data?.ok === false && /^A[çc][ãa]o desconhecida:\s*$/.test(String(data?.error || ''));
+  },
+
   tratarSessaoExpirada(data) {
     if (!this.sessaoExpirada(data) || typeof Auth === 'undefined') return;
     setTimeout(() => Auth.expirarSessaoServidor(), 800);
@@ -99,6 +111,14 @@ const API = {
         return {
           ok: false,
           error: `O servidor respondeu em formato inválido (HTTP ${res.status}).`
+        };
+      }
+      if (this.respostaPerdida(parsed)) {
+        console.error('[API POST resposta perdida no redirecionamento]', { action, resposta: parsed });
+        return {
+          ok: false,
+          indeterminado: true,
+          error: 'A resposta do servidor se perdeu no caminho. A gravação pode ter sido concluída: confira a lista antes de tentar de novo.'
         };
       }
       this.tratarSessaoExpirada(parsed);

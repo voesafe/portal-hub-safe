@@ -184,6 +184,17 @@ Horário de funcionamento ao lado do nome de cada base, no cabeçalho da estaç�
   3. `rotaerInstalarTrigger()`, o gatilho diário.
   Até o passo 2, o campo chega vazio e a tela não desenha a tarja: o recurso fica invisível, não quebrado.
 
+## Resposta de POST perdida no redirecionamento do Apps Script, desde 2026-07-29
+
+Cadastro de usuário novo em [admin.html](admin.html): a tela ficou muito tempo carregando e terminou com a tarja vermelha **"Ação desconhecida:"**, mas **o usuário foi criado**. Não era rota faltando no backend.
+
+- ⚠️ **"Ação desconhecida:" SEM nome depois dos dois pontos não é resposta do `doPost`.** O `API.post` sempre manda a ação dentro do corpo, então ação vazia só pode ter saído do **`doGet` com a query vazia**. Conferido contra a produção: `curl` no `/exec` sem parâmetro nenhum devolve exatamente `{"ok":false,"error":"Ação desconhecida: "}`. Ou seja, o corpo do POST se perdeu no redirecionamento (o `/exec` responde 302 para o `script.googleusercontent.com`) e o que voltou foi a resposta de um GET pelado. **O `doPost` já rodou inteiro antes disso**, e é por isso que o cadastro existe.
+- **É resultado desconhecido, não falha.** `API.respostaPerdida` ([api.js](js/core/api.js)) reconhece só a forma **vazia** e o `post` devolve `{ ok: false, indeterminado: true }` com mensagem própria. Ação desconhecida **com nome** (`Ação desconhecida: access-control`) continua passando direto: aquilo é backend publicado sem a rota, diagnóstico oposto, e mascarar isso esconderia deploy desatualizado.
+- **`admin.salvar` trata `res.indeterminado` fechando o modal e recarregando sem cache** (`carregar({ usarCache: false })`), com toast de aviso. Deixar o modal aberto com erro vermelho empurra a pessoa a clicar em Salvar de novo em cima de um cadastro que já foi feito. O único jeito honesto de responder "deu certo?" aqui é mostrar a lista de verdade.
+- ⚠️ **Não dá para prevenir do lado do cliente:** o redirecionamento é da infraestrutura do Google. Repetir o POST automaticamente seria pior, porque a primeira execução pode ter gravado. **Ao criar fluxo de escrita novo, trate `res.indeterminado` como "recarregue e confira", nunca como erro nem como sucesso.** Quem não tratar recebe a mensagem genérica do `api.js`, que já é honesta, e só perde o recarregamento automático.
+- **Verificação:** script de Playwright descartável com o Apps Script interceptado, 17 checagens em 3 cenários (resposta perdida, backend sem a rota, erro de negócio de verdade), conferindo POST único, estado do modal, tipo do toast, recarregamento da lista e o usuário aparecendo nela. Zero erro de JS.
+- **Assets em `?v=20260729-post-perdido-v1`** (o `api.js` é de `core/`, então subiu nos 20 HTML; o `admin.js` só no [admin.html](admin.html)). **Nada de backend**, então não há deploy a fazer.
+
 ## Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20)
 
 Página da fila S141/Trello ([cadastro-alunos.html](cadastro-alunos.html) + [js/cadastro-alunos.js](js/pages/cadastro-alunos.js) + [css/cadastro-alunos.css](css/pages/cadastro-alunos.css)). Só leitura + mutações simples via ações por linha; **sem otimista** (cada ação recalcula e devolve a lista inteira `res.data.alunos` do servidor → round-trip único, na regra do padrão optimistic acima).
