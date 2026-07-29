@@ -113,7 +113,7 @@ function listarNotams() {
         total: notams.filter(function(n) { return n.icao === ic; }).length,
         horario: h.resumo || '',
         horarioH24: !!h.h24,
-        horarioTexto: h.texto || '',
+        horarioTexto: h.texto || '',   // original do ROTAER, em UTC
         horarioAlterado: !!h.alterado
       };
     }),

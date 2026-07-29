@@ -66,6 +66,30 @@ var ROTAER_RE_FAIXA = /\b(\d{4})\s*-\s*(\d{4})\b/;
 /** Regime de operação: H24, H14, HJ (diurno), HN (noturno). */
 var ROTAER_RE_REGIME = /\bH(?:24|\d{1,2}|J|N)\b/i;
 
+/**
+ * ⚠️⚠️ O HORÁRIO DO ROTAER ESTÁ EM UTC, NUNCA EM HORA LOCAL.
+ * É a convenção da AIP/ICAO, e o campo <utc> do próprio XML existe para
+ * converter. Medido nas duas bases em 2026-07-29:
+ *   SBSJ  AD HR SER DLY 0830-0230  ->  05:30 às 23:30 local
+ *   SDAM  AD HR SER H14 DLY 0900-2300  ->  06:00 às 20:00 local
+ * Mostrar o número cru faria a pessoa ler "2300" como 23h e planejar voo
+ * três horas depois do aeródromo ter fechado. A confirmação cruzada está no
+ * próprio dado: a nota de instrução do SDAM diz DLY 1100-2300, que em UTC dá
+ * 08:00-20:00 local e fecha junto com o aeródromo.
+ *
+ * A tarja mostra o horário LOCAL, porque quem usa o Hub opera em hora de
+ * Brasília; o original em UTC fica no `title`, para conferir contra o ROTAER.
+ */
+function rotaerHoraLocal_(hhmm, offsetHoras) {
+  var h = parseInt(String(hhmm).slice(0, 2), 10);
+  var m = parseInt(String(hhmm).slice(2, 4), 10);
+  if (isNaN(h) || isNaN(m)) return '';
+  var total = (h * 60 + m) + Math.round(offsetHoras * 60);
+  total = ((total % 1440) + 1440) % 1440;   // vira o dia nos dois sentidos
+  var hh = Math.floor(total / 60), mm = total % 60;
+  return (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm;
+}
+
 // ============================================================
 //  BUSCA + PARSE
 // ============================================================
@@ -210,20 +234,27 @@ function rotaerResumirHorario_(h) {
   if (h.h24) return 'H24';
 
   var t = String(h.texto || '');
+  var offset = parseFloat(h.utc);
+  var temOffset = !isNaN(offset);
 
-  // A faixa de horas é o que a pessoa precisa ler de relance ("0900-2300").
-  // Vem antes do regime porque "H14" sozinho não diz QUANDO o aeródromo abre.
+  // A faixa de horas é o que a pessoa precisa ler de relance.
   var faixa = t.match(ROTAER_RE_FAIXA);
   if (faixa) {
-    var regime = t.match(ROTAER_RE_REGIME);
     // ⚠️ O "O/R" (on request) muda a natureza do que está escrito: fora da
     // faixa o aeródromo não está fechado, está sob solicitação. Omitir isso na
     // tarja faria a pessoa achar que não há o que negociar.
     var sufixo = /\bO\/R\b/i.test(t) ? ' · demais O/R' : '';
-    return (regime ? regime[0].toUpperCase() + ' · ' : '') +
-           faixa[1] + '-' + faixa[2] + sufixo;
+    if (temOffset) {
+      var ini = rotaerHoraLocal_(faixa[1], offset);
+      var fim = rotaerHoraLocal_(faixa[2], offset);
+      if (ini && fim) return ini + '-' + fim + sufixo;
+    }
+    // Sem o <utc> não dá para converter, e mostrar número cru sem dizer que é
+    // UTC seria a armadilha de novo. Aqui o rótulo é obrigatório.
+    return faixa[1] + '-' + faixa[2] + ' UTC' + sufixo;
   }
 
+  // Sem faixa, o regime é o que sobra ("HJ", "H14"). Não precisa de conversão.
   var reg = t.match(ROTAER_RE_REGIME);
   if (reg) return reg[0].toUpperCase();
 
@@ -263,7 +294,9 @@ function atualizarHorariosRotaer() {
       atual[icao] = {
         resumo: rotaerResumirHorario_(h),
         h24: h.h24,
-        texto: h.texto,
+        texto: h.texto,     // original, em UTC, para o title da tela
+        utc: h.utc,
+        origem: h.origem,
         compl: h.compl,
         em: new Date().toISOString()
       };
@@ -317,6 +350,7 @@ function rotaerHorariosParaTela_(notams) {
       resumo: c ? String(c.resumo || '') : '',
       h24: c ? !!c.h24 : false,
       texto: c ? String(c.texto || '') : '',
+      utc: c ? String(c.utc || '') : '',
       atualizadoEm: c ? String(c.em || '') : '',
       alterado: alterado
     };

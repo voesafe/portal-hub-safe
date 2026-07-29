@@ -283,9 +283,13 @@ const Notams = {
       return ` <span class="notam-hr is-alterado" title="${this._esc(t)}">⚠ ${this._esc(h || 'horário alterado')}</span>`;
     }
     if (!h) return '';
+    // ⚠️ O número na tarja é HORA LOCAL, convertido; o ROTAER publica em UTC.
+    // O texto original vai inteiro no title, tanto para conferir contra o
+    // ROTAER quanto porque é lá que está a condição (o "O/R" e o telefone).
     const titulo = ap.horarioH24
       ? 'Aeródromo aberto 24 horas, conforme o ROTAER.'
-      : `Horário de funcionamento conforme o ROTAER: ${ap.horarioTexto || h}`;
+      : 'Horário local, convertido do ROTAER (publicado em UTC).' +
+        (ap.horarioTexto ? '\n\nROTAER: ' + ap.horarioTexto : '');
     return ` <span class="notam-hr" title="${this._esc(titulo)}">${this._esc(h)}</span>`;
   },
 
