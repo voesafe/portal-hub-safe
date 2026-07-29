@@ -307,6 +307,48 @@ function rotaerDebugRaw(icao) {
 }
 
 /**
+ * SONDAGEM DAS DUAS BASES, de um clique só.
+ *
+ * Existe porque o botão Run do editor não passa argumento: rodar
+ * `rotaerDebugRaw` direto sondaria só a primeira base, e a segunda exigiria
+ * editar o código à mão. Aqui as duas saem no mesmo Log, na ordem.
+ *
+ * Só LÊ. Não grava no cache, não instala gatilho, não toca na planilha.
+ * Uma requisição por base, nunca as duas juntas: pedir duas de uma vez foi o
+ * que derrubou o filtro no NOTAM e trouxe o Brasil inteiro.
+ */
+function rotaerDiagnostico() {
+  var relatorio = {};
+  NOTAMS_ICAOS.forEach(function(icao) {
+    Logger.log('\n\n############ ' + icao + ' ############');
+    try {
+      var xml = rotaerFetchAisweb_(icao);
+      Logger.log('--- XML CRU (' + xml.length + ' bytes) ---');
+      // 8000 por base cabe no Log e já mostra a região do <workinghour>.
+      Logger.log(xml.slice(0, 8000));
+      var h = rotaerParseHorario_(xml);
+      var resumo = rotaerResumirHorario_(h);
+      Logger.log('--- O QUE O PARSER ENTENDEU ---');
+      Logger.log(JSON.stringify(h, null, 2));
+      Logger.log('--- O QUE APARECERIA NA TELA: "' + resumo + '"');
+      if (!h.lido) {
+        Logger.log('>>> ATENÇÃO: tag de horário NÃO encontrada. A tela não vai ' +
+                   'mostrar nada para esta base. Procure no XML acima como o ' +
+                   'campo se chama de verdade.');
+      }
+      relatorio[icao] = { lido: h.lido, h24: h.h24, texto: h.texto,
+                          compl: h.compl, resumo: resumo, bytes: xml.length };
+    } catch (err) {
+      Logger.log('>>> ERRO em ' + icao + ': ' + (err && err.message ? err.message : err));
+      relatorio[icao] = { erro: String(err && err.message ? err.message : err) };
+    }
+  });
+  Logger.log('\n\n############ RESUMO ############');
+  Logger.log(JSON.stringify(relatorio, null, 2));
+  return relatorio;
+}
+
+/**
  * Testa o parser SEM chave e SEM rede, nos três casos que importam.
  * O primeiro XML é o exemplo REAL da documentação oficial (Congonhas), que é
  * justamente o caso da tag vazia valendo 24 horas.
