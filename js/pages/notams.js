@@ -249,7 +249,7 @@ const Notams = {
         <div class="notam-station-head">
           <span class="notam-icao">${this._esc(ap.icao)}</span>
           <div class="ident">
-            <div class="name">${this._esc(ap.nome || ap.icao)}</div>
+            <div class="name">${this._esc(ap.nome || ap.icao)}${this._horario(ap)}</div>
             <div class="meta">${this._esc(ap.sub || '')}</div>
           </div>
           <span class="count" data-count="${this._esc(ap.icao)}">${lista.length} NOTAM${lista.length === 1 ? '' : 's'}</span>
@@ -258,6 +258,35 @@ const Notams = {
         <div class="notam-stack" id="notam-stack-${this._esc(ap.icao)}">${cards}${vazioFiltro}</div>
       </div>`;
     }).join('');
+  },
+
+  /**
+   * Horário de funcionamento, ao lado do nome da base.
+   *
+   * ⚠️ Três estados, e a diferença entre eles é o ponto do recurso:
+   *  - horário conhecido e nenhum NOTAM mexendo nele: mostra o horário;
+   *  - NOTAM ativo alterando o horário: mostra em âmbar e manda ler o NOTAM,
+   *    porque o horário publicado NÃO vale hoje e afirmá-lo seria pior do que
+   *    não mostrar nada;
+   *  - horário desconhecido: não desenha nada. Inventar "H24" por omissão
+   *    mandaria alguém para um aeródromo fechado.
+   *
+   * A consulta avulsa fica de fora: o ROTAER só é buscado para as bases SAFE.
+   */
+  _horario(ap) {
+    if (!ap || ap.avulsa) return '';
+    const h = String(ap.horario || '').trim();
+    if (ap.horarioAlterado) {
+      const t = h
+        ? `Horário publicado: ${h}. Existe NOTAM ativo alterando o funcionamento desta base, confira os NOTAMs abaixo.`
+        : 'Existe NOTAM ativo alterando o funcionamento desta base, confira os NOTAMs abaixo.';
+      return ` <span class="notam-hr is-alterado" title="${this._esc(t)}">⚠ ${this._esc(h || 'horário alterado')}</span>`;
+    }
+    if (!h) return '';
+    const titulo = ap.horarioH24
+      ? 'Aeródromo aberto 24 horas, conforme o ROTAER.'
+      : `Horário de funcionamento conforme o ROTAER: ${ap.horarioTexto || h}`;
+    return ` <span class="notam-hr" title="${this._esc(titulo)}">${this._esc(h)}</span>`;
   },
 
   /** Bases SAFE + (se houver) a localidade consultada, marcada como avulsa. */

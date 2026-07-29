@@ -86,14 +86,35 @@ function listarNotams() {
   }
 
   var props = PropertiesService.getScriptProperties();
+  // Horário de funcionamento (ROTAER) + aviso de NOTAM ativo que o altere.
+  // Vem junto no mesmo payload de propósito: é atributo do aeródromo, não um
+  // recurso à parte. Rota nova exigiria mexer no `validarAcaoPerfilExclusivo_`,
+  // cuja lista fechada já barrou entrega duas vezes neste módulo.
+  //
+  // ⚠️ O try/catch NÃO é decoração. O horário é um adorno; a lista de NOTAM é
+  // decisão de operação. Sem ele, um Rotaer.gs ausente na publicação, uma
+  // propriedade corrompida ou um erro de parse derrubariam a PÁGINA INTEIRA
+  // por causa da tarja ao lado do nome. Falhando, a tela só não mostra o
+  // horário, que é exatamente como ela se comporta antes da primeira coleta.
+  var horarios = {};
+  try {
+    horarios = rotaerHorariosParaTela_(notams) || {};
+  } catch (errHorario) {
+    horarios = {};
+  }
   return {
     atualizadoEm: props.getProperty(NOTAMS_PROP_TS) || '',
     aeroportos:   NOTAMS_ICAOS.map(function(ic) {
+      var h = horarios[ic] || {};
       return {
         icao: ic,
         nome: (NOTAMS_AD_INFO[ic] || {}).nome || ic,
         sub:  (NOTAMS_AD_INFO[ic] || {}).sub  || '',
-        total: notams.filter(function(n) { return n.icao === ic; }).length
+        total: notams.filter(function(n) { return n.icao === ic; }).length,
+        horario: h.resumo || '',
+        horarioH24: !!h.h24,
+        horarioTexto: h.texto || '',
+        horarioAlterado: !!h.alterado
       };
     }),
     resumo: {
