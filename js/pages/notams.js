@@ -288,7 +288,9 @@ const Notams = {
     // ROTAER quanto porque é lá que está a condição (o "O/R" e o telefone).
     const titulo = ap.horarioH24
       ? 'Aeródromo aberto 24 horas, conforme o ROTAER.'
-      : 'Horário local, convertido do ROTAER (publicado em UTC).' +
+      : (/\bLT\b/.test(h)
+          ? 'LT = hora local (Brasília). Convertido do ROTAER, que publica em UTC.'
+          : 'UTC = hora Zulu, como o ROTAER publica. Não foi possível converter para local.') +
         (ap.horarioTexto ? '\n\nROTAER: ' + ap.horarioTexto : '');
     return ` <span class="notam-hr" title="${this._esc(titulo)}">${this._esc(h)}</span>`;
   },

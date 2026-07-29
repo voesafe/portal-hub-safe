@@ -244,13 +244,17 @@ function rotaerResumirHorario_(h) {
     // faixa o aeródromo não está fechado, está sob solicitação. Omitir isso na
     // tarja faria a pessoa achar que não há o que negociar.
     var sufixo = /\bO\/R\b/i.test(t) ? ' · demais O/R' : '';
+    // ⚠️ O sufixo de fuso é OBRIGATÓRIO nos dois ramos, não é enfeite.
+    // Em aviação o padrão de leitura é UTC, então um horário sem rótulo é
+    // ambíguo por natureza: "05:30-23:30" sozinho pode ser lido como Zulu e
+    // dar três horas de diferença. O `title` explica, mas title não existe no
+    // celular, que é justamente onde a pessoa consulta antes de voar.
     if (temOffset) {
       var ini = rotaerHoraLocal_(faixa[1], offset);
       var fim = rotaerHoraLocal_(faixa[2], offset);
-      if (ini && fim) return ini + '-' + fim + sufixo;
+      if (ini && fim) return ini + '-' + fim + ' LT' + sufixo;
     }
-    // Sem o <utc> não dá para converter, e mostrar número cru sem dizer que é
-    // UTC seria a armadilha de novo. Aqui o rótulo é obrigatório.
+    // Sem o <utc> não dá para converter; aí o número segue em UTC, rotulado.
     return faixa[1] + '-' + faixa[2] + ' UTC' + sufixo;
   }
 
@@ -346,8 +350,20 @@ function rotaerHorariosParaTela_(notams) {
       return n && n.icao === icao && n.active &&
              ROTAER_RE_NOTAM_HORARIO.test(String(n.raw || n.decoded || '').toUpperCase());
     });
+    // ⚠️ O resumo é RECALCULADO a partir do texto guardado, não lido pronto do
+    // cache. O cache é de DADO (o texto do ROTAER e o fuso), não de
+    // apresentação: assim mexer no formato da tarja não obriga a recoletar no
+    // DECEA nem deixa a tela com meia base no formato novo e meia no antigo.
+    // O `c.resumo` sobrou como reserva para cache gravado por versão anterior.
+    var resumo = c ? String(c.resumo || '') : '';
+    if (c && c.texto) {
+      resumo = rotaerResumirHorario_({
+        lido: true, h24: !!c.h24, texto: String(c.texto), utc: c.utc
+      }) || resumo;
+    }
+
     saida[icao] = {
-      resumo: c ? String(c.resumo || '') : '',
+      resumo: resumo,
       h24: c ? !!c.h24 : false,
       texto: c ? String(c.texto || '') : '',
       utc: c ? String(c.utc || '') : '',
