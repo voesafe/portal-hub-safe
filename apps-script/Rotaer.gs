@@ -12,16 +12,25 @@
 // e, quando existe NOTAM ATIVO que mexe no horário de operação, marca
 // `alterado: true` para a tela avisar em vez de afirmar.
 //
-// ⚠️ ARMADILHA PRINCIPAL: `<workinghour>` VAZIO significa 24 HORAS, não
-// "sem informação". É o que a documentação diz e é o que o exemplo real de
-// Congonhas mostra (`<workinghour compl=""/>`). Tratar vazio como ausência
-// inverteria o sentido do campo no caso mais comum dos aeroportos grandes.
+// ⚠️⚠️ A DOCUMENTAÇÃO DA AISWEB ESTÁ ERRADA SOBRE O CAMPO PRINCIPAL.
+// Ela diz: "<workinghour> sem dados = o aeródromo opera 24 horas sem parar".
+// Medido contra o dado real em 2026-07-29: as DUAS bases SAFE devolvem
+// `<workinghour compl=""/>` vazio, e SDAM **não é H24**. O horário verdadeiro
+// estava numa nota, escondido no fim do XML:
+//     <rmkText cod="2.3">AD HR SER H14 - DLY 0900-2300.
+//                        Demais HR OPR O/R: 2300-0900.</rmkText>
+// Acreditar na documentação teria posto "H24" na tela de um aeródromo que
+// fecha às 23:00, que é o pior defeito possível para este módulo.
 //
-// ⚠️ O schema abaixo veio da DOCUMENTAÇÃO, não do dado real. A documentação
-// da AISWEB já se provou errada antes (no NOTAM ela levou a três bugs) e a
-// própria coleção oficial repete o XML do `rotaer` nos exemplos de `sol` e
-// `met`, o que é erro de colagem evidente. Rode `rotaerDebugRaw('SBSJ')` com
-// a chave em mãos e confira as listas de candidatos antes de confiar.
+// Por isso a ordem de leitura é: (1) texto dentro de <workinghour>, se houver;
+// (2) as notas <rmkText>, que é onde o dado realmente vive; (3) só então, se
+// nada disso existir, H24.
+//
+// ⚠️ E as notas exigem casamento por CÓDIGO OFICIAL, nunca por português
+// livre. O mesmo SDAM traz "Centro de Controle Operacional Rede Voa - CCO TEL
+// (11) 4040-7280 horário de funcionamento 24 horas 7 dias na semana", que é o
+// horário do CALL CENTER da concessionária. Um casamento por "horário de
+// funcionamento" leria isso e diria H24 de novo, pela porta dos fundos.
 // ============================================================
 
 // ── Configuração ────────────────────────────────────────────
@@ -39,6 +48,23 @@ var ROTAER_MAX_BYTES = 400000;
  */
 var ROTAER_RE_NOTAM_HORARIO =
   /\bHR\s+OPR\b|\bOPR\s+HR\b|\bAD\s+OPR\b|HOR[ÁA]RIO\s+DE\s+(FUNCIONAMENTO|OPERA[ÇC][ÃAO]{1,2})/;
+
+/**
+ * Nota do ROTAER que fala do horário DO AERÓDROMO.
+ *
+ * ⚠️ Só códigos oficiais (`AD HR`, `HR OPR`, `AD OPR`), nunca português livre.
+ * SDAM tem uma nota dizendo "horário de funcionamento 24 horas 7 dias na
+ * semana" que é do CALL CENTER da concessionária, não do aeródromo: casar por
+ * texto livre traria de volta o "H24" errado que este módulo existe para
+ * evitar.
+ */
+var ROTAER_RE_NOTA_HORARIO = /\bAD\s+HR\b|\bHR\s+OPR\b|\bAD\s+OPR\b/i;
+
+/** Faixa de horário no formato do ROTAER: 0900-2300. */
+var ROTAER_RE_FAIXA = /\b(\d{4})\s*-\s*(\d{4})\b/;
+
+/** Regime de operação: H24, H14, HJ (diurno), HN (noturno). */
+var ROTAER_RE_REGIME = /\bH(?:24|\d{1,2}|J|N)\b/i;
 
 // ============================================================
 //  BUSCA + PARSE
@@ -95,34 +121,60 @@ function rotaerParseHorario_(xmlText) {
   var utc    = rotaerTextoDe_(raiz, ['utc']);
   var status = rotaerTextoDe_(raiz, ['status']);
 
-  if (!el) {
-    return { lido: false, h24: false, texto: '', nome: nome, cidade: cidade,
-             utc: utc, status: status, compl: '' };
+  // A nota é lida SEMPRE, porque na prática é ela que carrega o horário: nas
+  // duas bases SAFE a tag veio vazia e só a nota sabia que SDAM é H14.
+  var nota = rotaerHorarioNasNotas_(raiz);
+
+  var base = { nome: nome, cidade: cidade, utc: utc, status: status,
+               nota: nota, compl: '' };
+
+  if (!el && !nota) {
+    return Object.assign({ lido: false, h24: false, texto: '', origem: 'nenhuma' }, base);
   }
 
   // getValue() traz o texto de todos os descendentes, então funciona tanto para
   // <workinghour>HR OPR 1100-2200</workinghour> quanto para uma variante em que
   // o horário venha dentro de um filho.
-  var texto = String(el.getValue() || '').replace(/\s+/g, ' ').trim();
-  var compl = '';
-  try {
-    var a = el.getAttribute('compl');
-    if (a) compl = String(a.getValue() || '').trim();
-  } catch (e) { /* atributo ausente não é erro */ }
+  var texto = el ? String(el.getValue() || '').replace(/\s+/g, ' ').trim() : '';
+  if (el) {
+    try {
+      var a = el.getAttribute('compl');
+      if (a) base.compl = String(a.getValue() || '').trim();
+    } catch (e) { /* atributo ausente não é erro */ }
+  }
 
-  return {
-    lido: true,
-    h24: texto === '',        // ⚠️ vazio É a informação: 24 horas
-    texto: texto,
-    nome: nome,
-    cidade: cidade,
-    utc: utc,
-    status: status,
-    // `compl` aponta para uma nota complementar numerada do ROTAER, que vive
-    // fora desta tag. Sem o XML real não dá para saber onde: fica capturado
-    // para o diagnóstico e para quem for refinar isto depois.
-    compl: compl
-  };
+  // ⚠️ ORDEM IMPORTA, e é o oposto do que a documentação sugere.
+  // 1) A tag, quando tem texto, é o dado mais direto.
+  if (texto) {
+    return Object.assign({ lido: true, h24: false, texto: texto, origem: 'tag' }, base);
+  }
+  // 2) A nota. É aqui que o horário mora de verdade nas bases SAFE.
+  if (nota) {
+    return Object.assign({ lido: true, h24: /\bH24\b/i.test(nota), texto: nota,
+                           origem: 'nota' }, base);
+  }
+  // 3) Só agora, sem tag e sem nota, vale a regra da documentação.
+  return Object.assign({ lido: true, h24: true, texto: '', origem: 'vazio' }, base);
+}
+
+/**
+ * Procura, entre as notas do ROTAER, aquela que fala do horário do aeródromo.
+ * Devolve o texto inteiro da nota (a tela mostra um resumo e guarda isto no
+ * title, porque a nota costuma trazer a condição, como o "O/R" do SDAM).
+ */
+function rotaerHorarioNasNotas_(raiz) {
+  var achado = '';
+  (function desce(no) {
+    no.getChildren().forEach(function(c) {
+      if (achado) return;
+      if (c.getName().toLowerCase() === 'rmktext') {
+        var t = String(c.getValue() || '').replace(/\s+/g, ' ').trim();
+        if (t && ROTAER_RE_NOTA_HORARIO.test(t)) { achado = t; return; }
+      }
+      desce(c);
+    });
+  })(raiz);
+  return achado;
 }
 
 /** Primeiro elemento da árvore cujo nome case (sem diferenciar maiúsculas). */
@@ -156,10 +208,28 @@ function rotaerTextoDe_(raiz, nomes) {
 function rotaerResumirHorario_(h) {
   if (!h || !h.lido) return '';
   if (h.h24) return 'H24';
-  // O ROTAER costuma vir com prefixo ('HR OPR: ...'), que na tela é ruído:
-  // o rótulo da interface já diz que aquilo é horário.
-  var t = h.texto.replace(/^\s*(HR\s*OPR|HOR[ÁA]RIO\s*(DE\s*)?(OPERA[ÇC][ÃA]O|FUNCIONAMENTO))\s*[:\-]?\s*/i, '');
-  return t || h.texto;
+
+  var t = String(h.texto || '');
+
+  // A faixa de horas é o que a pessoa precisa ler de relance ("0900-2300").
+  // Vem antes do regime porque "H14" sozinho não diz QUANDO o aeródromo abre.
+  var faixa = t.match(ROTAER_RE_FAIXA);
+  if (faixa) {
+    var regime = t.match(ROTAER_RE_REGIME);
+    // ⚠️ O "O/R" (on request) muda a natureza do que está escrito: fora da
+    // faixa o aeródromo não está fechado, está sob solicitação. Omitir isso na
+    // tarja faria a pessoa achar que não há o que negociar.
+    var sufixo = /\bO\/R\b/i.test(t) ? ' · demais O/R' : '';
+    return (regime ? regime[0].toUpperCase() + ' · ' : '') +
+           faixa[1] + '-' + faixa[2] + sufixo;
+  }
+
+  var reg = t.match(ROTAER_RE_REGIME);
+  if (reg) return reg[0].toUpperCase();
+
+  // Sem formato reconhecido, mostra o texto sem o prefixo burocrático.
+  var limpo = t.replace(/^\s*(AD\s+HR\s+SER|HR\s*OPR|AD\s+HR|HOR[ÁA]RIO\s*(DE\s*)?(OPERA[ÇC][ÃA]O|FUNCIONAMENTO))\s*[:\-]?\s*/i, '');
+  return (limpo || t).slice(0, 40);
 }
 
 // ============================================================
@@ -323,9 +393,28 @@ function rotaerDiagnostico() {
     Logger.log('\n\n############ ' + icao + ' ############');
     try {
       var xml = rotaerFetchAisweb_(icao);
-      Logger.log('--- XML CRU (' + xml.length + ' bytes) ---');
-      // 8000 por base cabe no Log e já mostra a região do <workinghour>.
-      Logger.log(xml.slice(0, 8000));
+      Logger.log('bytes: ' + xml.length);
+
+      // ⚠️ Logar o XML inteiro NÃO serve: SBSJ tem 18 KB e o corte em 8000
+      // escondeu justamente as notas, que é onde o horário mora de verdade.
+      // Aqui saem TODAS as notas, que é o pedaço pequeno e decisivo.
+      Logger.log('--- TODAS AS NOTAS (rmkText) ---');
+      var notas = xml.match(/<rmkText[^>]*>[\s\S]*?<\/rmkText>/g) || [];
+      if (!notas.length) Logger.log('(nenhuma nota neste aeródromo)');
+      notas.forEach(function(n, i) {
+        var limpo = n.replace(/<\/?rmkText[^>]*>/g, '')
+                     .replace(/<!\[CDATA\[|\]\]>/g, '')
+                     .replace(/\s+/g, ' ').trim();
+        var cod = (n.match(/cod="([^"]*)"/) || [])[1] || '?';
+        var marca = ROTAER_RE_NOTA_HORARIO.test(limpo) ? '  <<< HORÁRIO DO AD' : '';
+        Logger.log('[' + (i + 1) + '] cod=' + cod + marca + '\n    ' + limpo);
+      });
+
+      Logger.log('--- TRECHO DO XML EM VOLTA DO <workinghour> ---');
+      var pos = xml.indexOf('workinghour');
+      Logger.log(pos < 0 ? '(tag workinghour não existe)'
+                         : xml.slice(Math.max(0, pos - 300), pos + 300));
+
       var h = rotaerParseHorario_(xml);
       var resumo = rotaerResumirHorario_(h);
       Logger.log('--- O QUE O PARSER ENTENDEU ---');
@@ -336,8 +425,14 @@ function rotaerDiagnostico() {
                    'mostrar nada para esta base. Procure no XML acima como o ' +
                    'campo se chama de verdade.');
       }
-      relatorio[icao] = { lido: h.lido, h24: h.h24, texto: h.texto,
-                          compl: h.compl, resumo: resumo, bytes: xml.length };
+      if (h.origem === 'vazio') {
+        Logger.log('>>> Sem texto na tag e sem nota de horário: caiu na regra ' +
+                   'da documentação (H24). Confira nas notas acima se alguma ' +
+                   'fala do horário sem usar AD HR / HR OPR / AD OPR.');
+      }
+      relatorio[icao] = { lido: h.lido, h24: h.h24, origem: h.origem,
+                          texto: h.texto, compl: h.compl, resumo: resumo,
+                          bytes: xml.length, notas: (xml.match(/<rmkText/g) || []).length };
     } catch (err) {
       Logger.log('>>> ERRO em ' + icao + ': ' + (err && err.message ? err.message : err));
       relatorio[icao] = { erro: String(err && err.message ? err.message : err) };
