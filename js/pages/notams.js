@@ -168,13 +168,18 @@ const Notams = {
 
     const icao = this.consulta.icao;
     const n = (this.consulta.notams || []).length;
-    const btn = document.createElement('button');
-    btn.className = 'notam-tab notam-tab-avulsa';
-    btn.setAttribute('role', 'tab');
-    btn.dataset.ap = icao;
-    btn.innerHTML = `${this._esc(icao)} <span class="tcnt">${n}</span>` +
-      `<span class="notam-tab-x" data-fechar-consulta role="button" aria-label="Fechar consulta ${this._esc(icao)}">×</span>`;
-    tabs.appendChild(btn);
+    // Invólucro com dois botões IRMÃOS. Antes o X era um `<span role="button">`
+    // dentro do botão da aba: controle aninhado em controle é HTML inválido e,
+    // pior, deixava fechar a consulta fora do alcance do teclado.
+    const aba = document.createElement('span');
+    aba.className = 'notam-tab notam-tab-avulsa';
+    aba.dataset.ap = icao;
+    aba.innerHTML =
+      `<button type="button" class="notam-tab-sel" role="tab">` +
+        `${this._esc(icao)} <span class="tcnt">${n}</span></button>` +
+      `<button type="button" class="notam-tab-x" data-fechar-consulta ` +
+        `aria-label="Fechar consulta ${this._esc(icao)}">×</button>`;
+    tabs.appendChild(aba);
   },
 
   renderUpdated() {
@@ -235,17 +240,22 @@ const Notams = {
       const aviso = ap.avulsa
         ? '<div class="notam-avulsa-nota">Consulta avulsa, feita agora no DECEA. Não entra no monitoramento das bases SAFE nem no cache.</div>'
         : '';
+      // O vazio de filtro nasce junto e fica escondido: quem o revela é a classe
+      // `sem-visivel`, posta pelo aplicarFiltro quando nenhum card sobra.
+      const vazioFiltro = lista.length
+        ? '<div class="notam-empty notam-empty-filtro">Nenhum NOTAM desta base no filtro escolhido.</div>'
+        : '';
       return `<div class="notam-station${ap.avulsa ? ' avulsa' : ''}" data-station="${this._esc(ap.icao)}" data-avulsa="${!!ap.avulsa}">
         <div class="notam-station-head">
           <span class="notam-icao">${this._esc(ap.icao)}</span>
-          <div>
+          <div class="ident">
             <div class="name">${this._esc(ap.nome || ap.icao)}</div>
             <div class="meta">${this._esc(ap.sub || '')}</div>
           </div>
           <span class="count" data-count="${this._esc(ap.icao)}">${lista.length} NOTAM${lista.length === 1 ? '' : 's'}</span>
         </div>
         ${aviso}
-        <div class="notam-stack" id="notam-stack-${this._esc(ap.icao)}">${cards}</div>
+        <div class="notam-stack" id="notam-stack-${this._esc(ap.icao)}">${cards}${vazioFiltro}</div>
       </div>`;
     }).join('');
   },
@@ -278,7 +288,7 @@ const Notams = {
 
     return `<article class="notam sev-${sev}" data-active="${!!n.active}" data-future="${!!n.future}" data-impact="${impacto}">
       <div class="notam-head">
-        <div>
+        <div class="ident">
           <div class="notam-id">${this._esc(n.id || '—')}</div>
           <div class="notam-cat">${this._esc(n.cat || 'Geral')}${n.qcode ? ' · ' + this._esc(n.qcode) : ''}</div>
         </div>
@@ -421,9 +431,13 @@ const Notams = {
 
     // atualiza contagem por estação (visíveis)
     this._estacoes().forEach(ap => {
-      const vis = document.querySelectorAll('#notam-stack-' + CSS.escape(ap.icao) + ' .notam:not(.hidden)').length;
+      const stack = document.getElementById('notam-stack-' + ap.icao);
+      const vis = stack ? stack.querySelectorAll('.notam:not(.hidden)').length : 0;
       const badge = document.querySelector('[data-count="' + CSS.escape(ap.icao) + '"]');
       if (badge) badge.textContent = vis + ' NOTAM' + (vis === 1 ? '' : 's');
+      // Base que tem NOTAM mas nenhum casou com o filtro: sem esta linha a
+      // estação ficava uma caixa branca só com o cabeçalho, sem dizer por quê.
+      if (stack) stack.classList.toggle('sem-visivel', vis === 0 && stack.querySelector('.notam') !== null);
     });
   },
 

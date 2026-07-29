@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/notams.css?v=20260728-lupa-v1">
+  <link rel="stylesheet" href="css/pages/notams.css?v=20260729-notams-ux-v1">
 </head>
 <body>
 
@@ -121,7 +121,9 @@
            extra (com X para fechar) sem tocar nas duas. -->
       <div class="notam-tabsbar">
         <div class="notam-tabs" id="notam-tabs" role="tablist">
-          <button class="notam-tab active" data-ap="todos" role="tab">Todos os aeroportos</button>
+          <!-- Dois rótulos: no celular o longo empurrava SDAM para fora da
+               faixa visível da barra rolável, o que lê como texto cortado. -->
+          <button class="notam-tab active" data-ap="todos" role="tab"><span class="rot-longo">Todos os aeroportos</span><span class="rot-curto">Todos</span></button>
           <button class="notam-tab" data-ap="SBSJ" role="tab">SBSJ <span class="tcnt" data-tcnt="SBSJ">0</span></button>
           <button class="notam-tab" data-ap="SDAM" role="tab">SDAM <span class="tcnt" data-tcnt="SDAM">0</span></button>
         </div>
@@ -144,7 +146,9 @@
       <!-- Aeroportos (render via JS) -->
       <section class="notam-airports" id="notam-airports"><!-- render via JS --></section>
 
-      <div class="notam-foot" id="notam-foot"></div>
+      <!-- Classe própria: `notam-foot` é o rodapé do card de NOTAM, e as duas
+           regras colidiam (a da página zerava o recuo lateral do card). -->
+      <div class="notam-page-foot" id="notam-foot"></div>
 
     </div>
   </main>
@@ -155,6 +159,6 @@
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260728-notams-busca-v1"></script>
 <script src="js/core/auth.js?v=20260728-notams-sync-v1"></script>
-<script src="js/pages/notams.js?v=20260728-notams-sync-v1"></script>
+<script src="js/pages/notams.js?v=20260729-notams-ux-v1"></script>
 </body>
 </html>

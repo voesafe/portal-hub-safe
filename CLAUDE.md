@@ -121,6 +121,33 @@ A página nasceu `publica: true`, o que a deixava visível a todo logado **mas f
 - **Publicado em 2026-07-28:** fase 1 no @41, fase 2 no **@42** com o relogin geral. Rollback do backend: `clasp redeploy AKfycbxpOGXgEJ5… -V 41`.
 - `scratchpad/gen_rbac.js`, citado antes como gerador canônico da matriz, **não existe mais**. A fonte de verdade hoje são `ACCESS_DEFAULT_GROUPS` (backend) e `RBAC_MODULOS` (frontend), mantidos em espelho e conferidos pelo round-trip acima.
 
+### Revisão de UX e espaçamento, 2026-07-29 (só frontend)
+
+Mesma faxina feita nas Horas INVA, mais três defeitos que a medição no navegador revelou. **Nada de backend, nada de arquivo compartilhado:** só [notams.html](notams.html), [js/pages/notams.js](js/pages/notams.js) e [css/pages/notams.css](css/pages/notams.css), em `?v=20260729-notams-ux-v1`.
+
+**Medido antes e depois, com o Apps Script interceptado por um payload de 8 NOTAMs:** a página caiu de **1605px para 1273px** de altura no desktop (rolagem de 705px para 373px, quase a metade) e de **3024px para 2357px** no celular. O card de NOTAM foi de 201px para 159px, e ele se repete oito vezes.
+
+**Os três defeitos, todos invisíveis na leitura do código e óbvios na medição:**
+
+1. ⚠️ **Dois componentes diferentes usavam a classe `.notam-foot`:** o rodapé de cada card e o rodapé da página. A regra da página vinha depois no arquivo, então vencia, e o card perdia o recuo lateral: o botão "Ver NOTAM cru" ficava a **1px** da borda, por cima da barra colorida de severidade, e o escopo encostava na borda direita, parecendo cortado. Estava assim em todos os oito cards, em produção. O rodapé da página virou **`.notam-page-foot`** (o `id` continua `notam-foot`, que é o que o JS usa). **Não devolva o nome antigo.**
+2. ⚠️ **`.notam-note[hidden]` não escondia nada.** Quinta ocorrência da armadilha do `display` vencendo o atributo `hidden` neste projeto (as anteriores: `.cadastro-bulk-bar`, `.topbar-status`, `.hi-ordenar-menu`). O aviso é `display: flex` e o caso comum da tela é ele escondido, então reservava **22px + o gap** de faixa vazia no topo em toda carga com dado.
+3. ⚠️ **O indicador da aba ativa estava sendo cortado.** `.notam-tabs` tem `overflow-x: auto` para as abas rolarem, e isso **força `overflow-y: auto` junto**: o `::after` em `bottom: -1.5px` transbordava o content box e virava 2px de rolagem vertical fantasma. Resolvido com `padding-bottom: 2px` na barra e `bottom: 0` no indicador, que o traz para dentro do padding box.
+
+**Acessibilidade:** o X da aba avulsa era um `<span role="button">` **dentro** do `<button>` da aba. Controle aninhado em controle é HTML inválido e deixava fechar a consulta **fora do alcance do teclado**. Virou um invólucro `<span class="notam-tab notam-tab-avulsa" data-ap="…">` com **dois botões irmãos** (`.notam-tab-sel` e `.notam-tab-x`). O JS não mudou de lógica: ele já achava a aba por `closest('.notam-tab')` e lia `dataset.ap`, que agora moram no invólucro.
+- ⚠️ **`.notam-tab.notam-tab-avulsa` usa dupla classe de propósito.** O recuo do invólucro é zero porque quem o carrega é o botão de dentro; com uma classe só, a regra `.notam-tab { padding }` do celular empataria em especificidade e venceria pela ordem, dobrando o recuo.
+
+**Vazio por filtro:** filtro que não casava com nada numa base deixava a estação como uma caixa branca só com o cabeçalho, sem dizer se era o filtro ou se a base não tem NOTAM. A mensagem nasce escondida dentro do stack e quem a revela é a classe `sem-visivel`, posta pelo `aplicarFiltro` quando a contagem visível é zero **e** existe card na estação.
+
+**Espaçamento:** recuo lateral do card num par de variáveis (`--n-card-l: 16px` / `--n-card-r: 13px`, assimétrico porque a barra de severidade come os 4 primeiros pixels e é isso que faz o respiro *parecer* igual); início e término numa linha só em vez de rótulo sobre valor (48px → 27px); tiles, cabeçalho de estação e `notam-stack` apertados.
+
+**Celular (≤600px):**
+- A lupa da busca caía numa faixa só dela. ⚠️ **O flex decide a quebra pelo tamanho natural do item, antes de tentar encolhê-lo**, então `min-width: 0` nas abas não bastava. `.notam-tabsbar:has(.notam-busca:not(.aberta)) { flex-wrap: nowrap }` devolve a lupa para a linha das abas; `:has` sem suporte cai no comportamento anterior, que é só menos compacto.
+- Os quatro filtros mais o par decodificado/cru gastavam três faixas, porque o `space-between` empurrava o par para uma linha só dele. **`.notam-filters { display: contents }`** dissolve o bloco e deixa os chips fluírem junto com o par: duas faixas (120px → 71px). O `.notam-filters` é um div sem papel de acessibilidade, então dissolvê-lo não tira nada da árvore.
+- A primeira aba tem **dois rótulos** (`.rot-longo` / `.rot-curto`): "Todos os aeroportos" empurrava SDAM para fora da faixa visível da barra rolável, o que lê como texto cortado.
+- A cidade some do cabeçalho da estação: o nome da base já identifica a coluna, e as três linhas empilhadas custavam 116px.
+
+**Verificação:** 23 checagens funcionais nas **quatro** combinações (desktop e 390px × claro e escuro), 92 no total, todas passando com zero erro de JS. Cobrem os três defeitos acima por geometria medida, os dois toggles cru/decodificado, o vazio por filtro (incluindo a base que **não** deve mostrá-lo), a aba avulsa criada/ativa/fechada pelo X e pelo Enter, as bases escondidas e os tiles não contaminados pela consulta. ⚠️ **Teste de comportamento não pega erro de especificidade:** o bug da dupla classe passou nos 23 e só apareceu na releitura do CSS. Ao mexer aqui, leia a ordem das regras além de rodar o teste.
+
 ## Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20)
 
 Página da fila S141/Trello ([cadastro-alunos.html](cadastro-alunos.html) + [js/cadastro-alunos.js](js/pages/cadastro-alunos.js) + [css/cadastro-alunos.css](css/pages/cadastro-alunos.css)). Só leitura + mutações simples via ações por linha; **sem otimista** (cada ação recalcula e devolve a lista inteira `res.data.alunos` do servidor → round-trip único, na regra do padrão optimistic acima).

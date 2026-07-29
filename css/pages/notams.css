@@ -24,9 +24,15 @@
   --n-raw-bg:     #0e1530;
   --n-raw-ink:    #a8c7e6;
 
+  /* Recuo lateral do conteúdo do card, num lugar só. A esquerda é maior que a
+     direita de propósito: a barra de severidade come os 4 primeiros pixels,
+     então 16 à esquerda e 13 à direita é o que faz o respiro PARECER igual. */
+  --n-card-l: 16px;
+  --n-card-r: 13px;
+
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 :root[data-theme="dark"] .notams-page {
@@ -44,19 +50,25 @@
   padding: 10px 14px;
   display: flex; align-items: center; gap: 8px;
 }
+/* ⚠️ Sem esta linha o aviso NÃO some quando o JS marca `hidden`: o atributo
+   vale um `display: none` de especificidade mínima e qualquer `display` na
+   regra base ganha dele. O caso comum da tela é justamente o aviso escondido,
+   então ele estava reservando uma faixa vazia no topo em toda carga com dado.
+   Mesma armadilha da .cadastro-bulk-bar e da .topbar-status. */
+.notam-note[hidden] { display: none; }
 
 /* ── Tiles de resumo ───────────────────────────────────────── */
 .notam-tiles {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 .notam-tile {
   background: var(--n-surface);
   border: 1px solid var(--n-line-soft);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
-  padding: 16px 18px;
+  padding: 13px 15px;
   position: relative;
   overflow: hidden;
 }
@@ -72,15 +84,15 @@
   letter-spacing: .07em; color: var(--n-ink-mute);
 }
 .notam-tile .val {
-  font-family: var(--font-title); font-weight: 800; font-size: 1.9rem;
-  line-height: 1; margin-top: 8px; color: var(--n-ink);
+  font-family: var(--font-title); font-weight: 800; font-size: 1.55rem;
+  line-height: 1; margin-top: 5px; color: var(--n-ink);
   font-variant-numeric: tabular-nums;
 }
-.notam-tile .cap { font-size: .74rem; color: var(--n-ink-mute); margin-top: 5px; }
+.notam-tile .cap { font-size: .72rem; color: var(--n-ink-mute); margin-top: 3px; line-height: 1.35; }
 
 /* ── Controles ─────────────────────────────────────────────── */
 .notam-controls {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 10px;
   flex-wrap: wrap; justify-content: space-between;
 }
 .notam-filters { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -107,20 +119,30 @@
 .notam-seg.active { background: var(--n-surface); color: var(--n-ink); box-shadow: var(--shadow-card); }
 
 /* ── Abas de aeroporto ─────────────────────────────────────── */
-.notam-tabs { display: flex; gap: 4px; border-bottom: 1.5px solid var(--n-line); }
+/* ⚠️ O `padding-bottom` aqui não é respiro, é o que impede o indicador da aba
+   ativa de ser cortado. A barra rola na horizontal (`overflow-x: auto`), e isso
+   força `overflow-y: auto` junto: o `::after` posicionado abaixo do content box
+   transbordava, virava 2px de rolagem vertical fantasma e chegava a sumir. */
+.notam-tabs {
+  display: flex; gap: 4px; padding-bottom: 2px;
+  border-bottom: 1.5px solid var(--n-line);
+}
 .notam-tab {
-  background: transparent; border: none; padding: 10px 16px;
+  background: transparent; border: none; padding: 9px 15px;
   font-family: var(--font-title); font-size: .86rem; font-weight: 700;
   color: var(--n-ink-mute); cursor: pointer; position: relative;
   transition: color .15s; display: inline-flex; align-items: center; gap: 7px;
+  white-space: nowrap;
 }
 .notam-tab:hover { color: var(--n-ink-soft); }
 .notam-tab.active { color: var(--n-ink); }
 .notam-tab.active::after {
-  content: ''; position: absolute; left: 12px; right: 12px; bottom: -1.5px;
+  content: ''; position: absolute; left: 12px; right: 12px; bottom: 0;
   height: 2.5px; border-radius: 3px 3px 0 0;
   background: linear-gradient(90deg, var(--blue), var(--teal));
 }
+/* Rótulo curto da primeira aba, só no celular (ver o par no notams.html). */
+.notam-tab .rot-curto { display: none; }
 .notam-tab .tcnt {
   font-family: var(--font-body); font-size: .68rem; font-weight: 700;
   color: var(--n-ink-mute); background: var(--n-surface-2);
@@ -128,13 +150,23 @@
 }
 
 /* Barra que junta as abas e a busca. As abas ficam com a borda inferior, e a
-   busca acompanha na mesma linha; abaixo de 720px a busca cai para a linha de
-   baixo e ocupa a largura toda, senão o campo espreme as abas. */
+   busca acompanha na mesma linha. Abaixo de 720px a busca vira só a lupa, que
+   continua nessa linha; ao abrir, o campo cai para a linha de baixo e ocupa a
+   largura toda, senão ele espremeria as abas. */
 .notam-tabsbar {
   display: flex; align-items: flex-end; justify-content: space-between;
   gap: 12px; flex-wrap: wrap;
 }
 .notam-tabsbar .notam-tabs { flex: 1 1 auto; min-width: 0; overflow-x: auto; }
+
+/* Fechada, a busca é só a lupa de 40px, e ela estava caindo para uma faixa
+   própria: o algoritmo do flex decide a quebra pelo tamanho natural das abas,
+   antes de tentar encolhê-las, mesmo com `min-width: 0` liberando o encolher.
+   Proibir a quebra devolve a lupa para a linha das abas, que aí rolam na
+   horizontal, como já era o previsto para elas. Aberta, o campo precisa da
+   linha inteira e a quebra volta a ser o certo.
+   `:has` sem suporte cai no comportamento anterior, que é só menos compacto. */
+.notam-tabsbar:has(.notam-busca:not(.aberta)) { flex-wrap: nowrap; }
 
 .notam-busca { display: flex; align-items: center; gap: 6px; padding-bottom: 6px; }
 .notam-busca input {
@@ -147,13 +179,31 @@
 .notam-busca input:focus { outline: none; border-color: var(--blue); }
 .notam-busca .btn { padding: 7px 14px; font-size: .82rem; }
 
-/* Aba da consulta avulsa: tracejada, para não se confundir com as bases. */
-.notam-tab-avulsa { border: 1.5px dashed var(--n-line); border-bottom: none; border-radius: 8px 8px 0 0; }
+/* Aba da consulta avulsa: tracejada, para não se confundir com as bases.
+   Ela é um invólucro com DOIS botões irmãos (selecionar e fechar), não um
+   botão com um X dentro: controle aninhado em controle é HTML inválido e
+   deixava o X fora do alcance do teclado. O invólucro carrega o `data-ap`,
+   que é por onde o JS identifica a aba. */
+/* ⚠️ Dupla classe de propósito: o recuo aqui é ZERO porque quem o carrega é o
+   botão de dentro. Com uma classe só, a regra `.notam-tab { padding }` do
+   celular, que vem depois no arquivo, empataria em especificidade, venceria
+   pela ordem e devolveria o recuo ao invólucro, dobrando o do botão. */
+.notam-tab.notam-tab-avulsa {
+  padding: 0 5px 0 0;
+  border: 1.5px dashed var(--n-line); border-bottom: none; border-radius: 8px 8px 0 0;
+}
+.notam-tab-sel {
+  padding: 9px 5px 9px 13px; background: none; border: none; cursor: pointer;
+  font: inherit; color: inherit; display: inline-flex; align-items: center; gap: 7px;
+}
 .notam-tab-x {
-  margin-left: 2px; padding: 0 4px; border-radius: 4px; cursor: pointer;
+  margin-left: 2px; padding: 2px 5px; border: none; background: none;
+  border-radius: 4px; cursor: pointer;
   color: var(--n-ink-mute); font-size: 1rem; line-height: 1;
 }
 .notam-tab-x:hover { background: var(--n-surface-2); color: var(--n-ink); }
+.notam-tab-x:focus-visible,
+.notam-tab-sel:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
 
 .notam-station.avulsa { border-style: dashed; }
 .notam-avulsa-nota {
@@ -198,7 +248,7 @@
 }
 
 /* ── Colunas de aeroporto ──────────────────────────────────── */
-.notam-airports { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.notam-airports { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
 .notam-airports.solo { grid-template-columns: 1fr; }
 .notam-station {
   background: var(--n-surface);
@@ -209,21 +259,25 @@
 }
 .notam-station.hidden-ap { display: none; }
 .notam-station-head {
-  display: flex; align-items: center; gap: 13px;
-  padding: 16px 18px; border-bottom: 1px solid var(--n-line-soft);
+  display: flex; align-items: center; gap: 11px;
+  padding: 11px 14px; border-bottom: 1px solid var(--n-line-soft);
 }
 .notam-icao {
-  font-family: var(--font-title); font-weight: 900; font-size: 1.15rem;
-  letter-spacing: .03em; color: var(--n-ink);
-  background: var(--n-surface-2); padding: 6px 12px; border-radius: 9px;
+  font-family: var(--font-title); font-weight: 900; font-size: 1.05rem;
+  letter-spacing: .03em; color: var(--n-ink); flex: 0 0 auto;
+  background: var(--n-surface-2); padding: 5px 10px; border-radius: 9px;
 }
-.notam-station-head .name { font-size: .9rem; font-weight: 700; color: var(--n-ink); }
-.notam-station-head .meta { font-size: .72rem; color: var(--n-ink-mute); }
+/* `min-width: 0` porque item de flex se recusa a encolher abaixo do próprio
+   conteúdo: sem isso o nome longo da base empurra a contagem para fora. */
+.notam-station-head .ident { min-width: 0; flex: 1 1 auto; }
+.notam-station-head .name { font-size: .88rem; font-weight: 700; color: var(--n-ink); line-height: 1.25; }
+.notam-station-head .meta { font-size: .71rem; color: var(--n-ink-mute); line-height: 1.3; }
 .notam-station-head .count {
-  margin-left: auto; font-size: .74rem; color: var(--n-ink-soft);
-  background: var(--n-surface-2); padding: 5px 11px; border-radius: 100px; font-weight: 600;
+  margin-left: auto; flex: 0 0 auto; white-space: nowrap;
+  font-size: .72rem; color: var(--n-ink-soft);
+  background: var(--n-surface-2); padding: 4px 10px; border-radius: 100px; font-weight: 600;
 }
-.notam-stack { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.notam-stack { padding: 11px; display: flex; flex-direction: column; gap: 9px; }
 
 /* ── Card de NOTAM ─────────────────────────────────────────── */
 .notam {
@@ -240,14 +294,18 @@
 .notam.sev-info::before    { background: var(--blue); }
 .notam.hidden { display: none !important; }
 
-.notam-head { display: flex; align-items: flex-start; gap: 10px; padding: 13px 15px 11px 18px; }
+.notam-head {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px var(--n-card-r) 6px var(--n-card-l);
+}
+.notam-head .ident { min-width: 0; }
 .notam-id { font-family: var(--font-title); font-weight: 800; font-size: .95rem; color: var(--n-ink); letter-spacing: .02em; }
-.notam-cat { font-size: .72rem; color: var(--n-ink-mute); margin-top: 2px; font-variant-numeric: tabular-nums; }
-.notam-badges { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.notam-cat { font-size: .72rem; color: var(--n-ink-mute); margin-top: 1px; font-variant-numeric: tabular-nums; line-height: 1.3; }
+.notam-badges { margin-left: auto; display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
 
 .notam-badge {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 9px; border-radius: 100px; font-size: .68rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 100px; font-size: .67rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
 }
 .notam-badge.b-live   { background: rgba(46,204,113,.14); color: #1e9e57; }
@@ -259,16 +317,24 @@
 :root[data-theme="dark"] .notam-badge.b-crit   { color: #f08a7e; }
 :root[data-theme="dark"] .notam-badge.b-warn   { color: #f3bd6b; }
 
-.notam-valid { display: flex; gap: 18px; padding: 0 15px 12px 18px; flex-wrap: wrap; }
-.notam-valid .v { font-size: .74rem; color: var(--n-ink-soft); font-variant-numeric: tabular-nums; }
+/* Início e término numa linha só: são dois carimbos de data curtos, e o par
+   rótulo-em-cima-do-valor gastava duas linhas de altura para dizer isso. */
+.notam-valid {
+  display: flex; gap: 6px 16px; flex-wrap: wrap; align-items: baseline;
+  padding: 0 var(--n-card-r) 8px var(--n-card-l);
+}
+.notam-valid .v {
+  font-size: .74rem; color: var(--n-ink-soft); font-variant-numeric: tabular-nums;
+  display: inline-flex; align-items: baseline; gap: 5px;
+}
 .notam-valid .v b {
-  display: block; font-size: .64rem; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--n-ink-mute); font-weight: 700; margin-bottom: 1px;
+  font-size: .63rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--n-ink-mute); font-weight: 700;
 }
 .notam-valid .v.upcoming span { color: var(--ink-blue); font-weight: 700; }
 
-.notam-body { margin: 0 15px 14px 18px; border-radius: 8px; overflow: hidden; }
-.notam-decoded { background: var(--n-surface-2); padding: 11px 13px; font-size: .85rem; color: var(--n-ink); border-left: 3px solid var(--teal); }
+.notam-body { margin: 0 var(--n-card-r) 9px var(--n-card-l); border-radius: 8px; overflow: hidden; }
+.notam-decoded { background: var(--n-surface-2); padding: 9px 12px; font-size: .85rem; color: var(--n-ink); border-left: 3px solid var(--teal); line-height: 1.45; }
 .notam-raw {
   background: var(--n-raw-bg); color: var(--n-raw-ink); padding: 11px 13px;
   font-family: ui-monospace,'SF Mono',Menlo,Consolas,monospace; font-size: .76rem;
@@ -277,7 +343,15 @@
 .notam.show-raw .notam-decoded { display: none; }
 .notam.show-raw .notam-raw { display: block; }
 
-.notam-foot { display: flex; align-items: center; gap: 12px; padding: 0 15px 13px 18px; }
+/* ⚠️ O rodapé do CARD e o rodapé da PÁGINA usavam a mesma classe `.notam-foot`,
+   e a regra da página (declarada depois) vencia: o recuo lateral do card ia a
+   zero, o botão "Ver NOTAM cru" ficava por cima da barra de severidade e o
+   escopo encostava na borda direita. São dois componentes, agora com dois
+   nomes. Não devolva o nome antigo ao rodapé da página. */
+.notam-foot {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 var(--n-card-r) 9px var(--n-card-l);
+}
 .notam-mini-toggle {
   font-size: .73rem; font-weight: 600; color: var(--ink-blue);
   background: none; border: none; cursor: pointer;
@@ -287,12 +361,40 @@
 :root[data-theme="dark"] .notam-mini-toggle { color: var(--blue-light); }
 .notam-scope { margin-left: auto; font-size: .7rem; color: var(--n-ink-mute); }
 
-.notam-foot { text-align: center; font-size: .74rem; color: var(--n-ink-mute); padding: 4px 0 2px; }
+.notam-page-foot { text-align: center; font-size: .74rem; color: var(--n-ink-mute); padding: 2px 0 0; }
 
-/* Empty state por estação */
-.notam-empty { padding: 28px 16px; text-align: center; color: var(--n-ink-mute); font-size: .85rem; }
+/* Vazio da estação. O segundo caso é filtro que não casou com nada aqui: sem
+   ele a estação virava uma caixa branca só com o cabeçalho, e não dava para
+   saber se era o filtro ou se a base não tem NOTAM nenhum. */
+.notam-empty { padding: 18px 14px; text-align: center; color: var(--n-ink-mute); font-size: .85rem; }
+.notam-empty-filtro { display: none; }
+.notam-stack.sem-visivel .notam-empty-filtro { display: block; }
 
 @media (max-width: 900px) {
   .notam-tiles { grid-template-columns: repeat(2, 1fr); }
   .notam-airports { grid-template-columns: 1fr; }
+}
+
+/* No celular o cabeçalho da estação empilhava em três linhas (nome, cidade e a
+   pílula de contagem cada uma na sua). O nome da base já identifica a coluna:
+   a cidade some e a contagem volta para a linha do ICAO. */
+@media (max-width: 600px) {
+  .notam-tile { padding: 11px 13px; }
+  .notam-tile .val { font-size: 1.4rem; }
+  .notam-station-head { padding: 10px 12px; gap: 9px; }
+  .notam-station-head .meta { display: none; }
+  .notam-stack { padding: 9px; }
+  /* Os quatro filtros mais o par decodificado/cru gastavam três faixas: o
+     `space-between` empurrava o par para uma linha só dele por mais vazia que
+     a anterior estivesse. Com `display: contents` os chips deixam de ser um
+     bloco e fluem junto com o par, que sobe para o vão do último chip.
+     O `.notam-filters` é um div sem papel de acessibilidade, então dissolvê-lo
+     não tira nada da árvore. */
+  .notam-tab .rot-longo { display: none; }
+  .notam-tab .rot-curto { display: inline; }
+  .notam-tab { padding: 9px 12px; }
+  .notam-controls { gap: 8px; justify-content: flex-start; }
+  .notam-filters { display: contents; }
+  .notam-chip { padding: 6px 11px; font-size: .73rem; }
+  .notam-seg { padding: 6px 12px; font-size: .73rem; }
 }

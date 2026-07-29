@@ -895,13 +895,13 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1785327145.2176776,
-    "ast_hash": "6f4af62d0c0fde9d99d2eae56307a983",
+    "mtime": 1785279427.2576706,
+    "ast_hash": "8bb5314a89ae8cdee82152498f9b043d",
     "semantic_hash": ""
   },
   "notams.html": {
-    "mtime": 1785326805.6514938,
-    "ast_hash": "e49e1aafaf94640f74b6d7b2cac8e551",
+    "mtime": 1785274252.3427837,
+    "ast_hash": "bcdc1c64aa411f1803101f845f89e532",
     "semantic_hash": ""
   },
   "aniversarios.html": {
@@ -990,8 +990,8 @@
     "semantic_hash": "8e6529c9b959707f2aaf143d794864ae"
   },
   "js/pages/notams.js": {
-    "mtime": 1785326638.146383,
-    "ast_hash": "9214cadb7adfa8f29723568875b93d08",
+    "mtime": 1785274128.31622,
+    "ast_hash": "6bdcca5165eca94a861dc4aff05ad3f1",
     "semantic_hash": ""
   },
   "js/pages/progresso-alunos.js": {
