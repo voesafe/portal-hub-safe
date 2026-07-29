@@ -11,6 +11,30 @@ const HorasVoadasInva = {
   nomesBases: { SJK: 'São José dos Campos', CPQ: 'Campinas' },
   arraste: null,
   liberacao: null,
+  // Catalogo de etiquetas, vindo junto do get_data para nao custar uma
+  // segunda ida de ~10s ao Apps Script so para abrir a tela.
+  etiquetas: [],
+  // Estado do popover no molde do Trello. Um so na pagina inteira: ele vive
+  // FORA da lista, senao o innerHTML de cada render o destruiria aberto.
+  pop: { instrutor: null, painel: 'lista', editando: null, cor: 'verde', busca: '' },
+  // Etiquetas marcadas no formulario de cadastro, antes de o instrutor existir.
+  etiquetasNovoInstrutor: [],
+  // Paleta fechada. A chave viaja para o backend, o tom vem do CSS, que
+  // afina cada cor no claro e no escuro. Cor livre sairia ilegivel num deles.
+  CORES: [
+    { chave: 'verde', nome: 'Verde' },
+    { chave: 'limao', nome: 'Limão' },
+    { chave: 'amarelo', nome: 'Amarelo' },
+    { chave: 'laranja', nome: 'Laranja' },
+    { chave: 'vermelho', nome: 'Vermelho' },
+    { chave: 'rosa', nome: 'Rosa' },
+    { chave: 'roxo', nome: 'Roxo' },
+    { chave: 'azul', nome: 'Azul' },
+    { chave: 'ceu', nome: 'Céu' },
+    { chave: 'cinza', nome: 'Cinza' }
+  ],
+  COR_PADRAO: 'cinza',
+  NOME_MAX: 60,
   // Uma ordem por base, escolhida no menuzinho do cabecalho de cada card.
   ordens: { SJK: 'alfabetica', CPQ: 'alfabetica' },
   // O Hub recarrega a pagina inteira a cada item da sidebar, entao sem
@@ -115,6 +139,415 @@ const HorasVoadasInva = {
     return motivos.join(' · ');
   },
 
+  // ── Etiquetas ───────────────────────────────────────────────
+
+  corValida(cor) {
+    return this.CORES.some(c => c.chave === cor) ? cor : this.COR_PADRAO;
+  },
+
+  etiquetaPorId(id) {
+    return this.etiquetas.find(e => e.id === id) || null;
+  },
+
+  /** Ids do instrutor, sem orfao e na ordem do catalogo. */
+  etiquetasDo(instrutor) {
+    const ids = Array.isArray(instrutor?.etiquetas) ? instrutor.etiquetas : [];
+    return this.etiquetas.filter(e => ids.includes(e.id)).map(e => e.id);
+  },
+
+  temEtiqueta(instrutor, id) {
+    return this.etiquetasDo(instrutor).includes(id);
+  },
+
+  /** Conta por NOME, nao por id: a etiqueta pode ter sido excluida e recriada. */
+  contarPorNome(nome) {
+    const alvo = this.etiquetas.find(
+      e => String(e.nome).trim().toUpperCase() === nome.toUpperCase()
+    );
+    if (!alvo) return null;
+    return this.instrutores.filter(i => this.temEtiqueta(i, alvo.id)).length;
+  },
+
+  chipEtiqueta(etiqueta, extra = '') {
+    return `<span class="hi-chip cor-${this.escape(this.corValida(etiqueta.cor))}${extra}"
+      title="${this.escape(etiqueta.nome)}">${this.escape(etiqueta.nome)}</span>`;
+  },
+
+  chipsDoInstrutor(instrutor) {
+    return this.etiquetasDo(instrutor)
+      .map(id => this.chipEtiqueta(this.etiquetaPorId(id)))
+      .join('');
+  },
+
+  // ── Popover de etiquetas (molde Trello) ─────────────────────
+
+  popAberto() {
+    return !!this.pop.instrutor;
+  },
+
+  /** O gatilho renasce a cada render: sempre reachar pelo nome do instrutor. */
+  gatilhoDoPop() {
+    if (!this.pop.instrutor) return null;
+    return document.querySelector(
+      `.hi-etiquetas-abrir[data-etiquetas="${CSS.escape(this.pop.instrutor)}"]`
+    );
+  },
+
+  abrirPop(nome) {
+    // Clicar de novo no mesmo gatilho fecha, que e o que o Trello faz.
+    if (this.pop.instrutor === nome) { this.fecharPop(); return; }
+    this.pop.instrutor = nome;
+    this.pop.painel = 'lista';
+    this.pop.editando = null;
+    this.pop.busca = '';
+    this.renderizarPop();
+    this.posicionarPop();
+    document.getElementById('hi-pop').hidden = false;
+    document.querySelector('.hi-pop-busca')?.focus();
+    this.marcarGatilhoAtivo();
+  },
+
+  fecharPop() {
+    this.pop.instrutor = null;
+    this.pop.editando = null;
+    document.getElementById('hi-pop').hidden = true;
+    this.marcarGatilhoAtivo();
+  },
+
+  marcarGatilhoAtivo() {
+    document.querySelectorAll('.hi-etiquetas-abrir').forEach(botao => {
+      const ativo = botao.dataset.etiquetas === this.pop.instrutor;
+      botao.classList.toggle('is-aberto', ativo);
+      botao.setAttribute('aria-expanded', String(ativo));
+    });
+  },
+
+  /**
+   * Ancorado no gatilho, com virada para cima quando nao ha espaco embaixo e
+   * grude nas bordas da janela. Fixed, entao mede em coordenada de viewport.
+   */
+  posicionarPop() {
+    const pop = document.getElementById('hi-pop');
+    const gatilho = this.gatilhoDoPop();
+    if (!gatilho) return;
+
+    const alvo = gatilho.getBoundingClientRect();
+    const margem = 8;
+    const vao = 6;
+    const alturaMinima = 160;
+
+    // Precisa estar visivel para medir: escondido daria altura zero e o
+    // popover nunca viraria para cima. O teto anterior tambem sai antes da
+    // medida, senao a altura natural ficaria presa no teto da vez passada.
+    const estavaOculto = pop.hidden;
+    if (estavaOculto) { pop.style.visibility = 'hidden'; pop.hidden = false; }
+    pop.style.maxHeight = '';
+    const caixa = pop.getBoundingClientRect();
+    const natural = caixa.height;
+
+    const abaixo = window.innerHeight - alvo.bottom - vao - margem;
+    const acima = alvo.top - vao - margem;
+    // Vira para cima so quando nao cabe embaixo E ha mais espaco em cima.
+    const paraCima = natural > abaixo && acima > abaixo;
+    const disponivel = Math.max(alturaMinima, paraCima ? acima : abaixo);
+    // ⚠️ Nao cabendo em nenhum dos dois lados, o popover ENCOLHE e rola por
+    // dentro. Sem este teto ele vazava para fora da tela no celular, onde a
+    // faixa util e curta, e as ultimas etiquetas ficavam inalcancaveis.
+    if (natural > disponivel) pop.style.maxHeight = `${disponivel}px`;
+    const altura = Math.min(natural, disponivel);
+    if (estavaOculto) { pop.hidden = true; pop.style.visibility = ''; }
+
+    const topo = paraCima ? alvo.top - vao - altura : alvo.bottom + vao;
+    let esquerda = alvo.left;
+    if (esquerda + caixa.width > window.innerWidth - margem) {
+      esquerda = window.innerWidth - caixa.width - margem;
+    }
+    pop.style.top =
+      `${Math.max(margem, Math.min(topo, window.innerHeight - altura - margem))}px`;
+    pop.style.left = `${Math.max(margem, esquerda)}px`;
+  },
+
+  paletaHtml(selecionada) {
+    return this.CORES.map(cor => `
+      <button class="hi-pop-cor cor-${cor.chave}${cor.chave === selecionada ? ' is-ativa' : ''}"
+        type="button" data-cor="${cor.chave}" title="${cor.nome}" aria-label="Cor ${cor.nome}"
+        aria-pressed="${cor.chave === selecionada}"></button>
+    `).join('');
+  },
+
+  renderizarPop() {
+    const pop = document.getElementById('hi-pop');
+    const instrutor = this.instrutores.find(i => i.nome === this.pop.instrutor);
+    const editando = this.pop.editando
+      ? this.etiquetaPorId(this.pop.editando)
+      : null;
+
+    if (this.pop.painel === 'editar') {
+      pop.innerHTML = `
+        <div class="hi-pop-head">
+          <button class="hi-pop-icone" type="button" data-pop="voltar" aria-label="Voltar">&#8592;</button>
+          <span class="hi-pop-titulo">${editando ? 'Editar etiqueta' : 'Criar etiqueta'}</span>
+          <button class="hi-pop-icone" type="button" data-pop="fechar" aria-label="Fechar">&times;</button>
+        </div>
+        <form class="hi-pop-body" data-pop-form="etiqueta">
+          <div class="hi-pop-previa">
+            <span class="hi-chip cor-${this.corValida(this.pop.cor)}" data-pop-previa>
+              ${this.escape(editando ? editando.nome : 'Nova etiqueta')}
+            </span>
+          </div>
+          <label class="hi-pop-rotulo" for="hi-pop-nome">Nome</label>
+          <input class="form-control hi-pop-nome" id="hi-pop-nome" type="text"
+            maxlength="${this.NOME_MAX}" autocomplete="off"
+            value="${this.escape(editando ? editando.nome : '')}"
+            placeholder="Ex.: LIBERADO IFR AVIÃO">
+          <span class="hi-pop-rotulo">Cor</span>
+          <div class="hi-pop-paleta">${this.paletaHtml(this.corValida(this.pop.cor))}</div>
+          <div class="hi-pop-acoes">
+            ${editando
+              ? `<button class="btn btn-ghost hi-pop-excluir" type="button" data-pop="excluir">Excluir</button>`
+              : ''}
+            <button class="btn btn-primary" type="submit" data-pop="salvar">
+              ${editando ? 'Salvar' : 'Criar'}
+            </button>
+          </div>
+        </form>
+      `;
+      pop.querySelector('.hi-pop-nome')?.focus();
+      return;
+    }
+
+    const termo = this.pop.busca.trim().toLocaleLowerCase('pt-BR');
+    const visiveis = this.etiquetas.filter(
+      e => String(e.nome).toLocaleLowerCase('pt-BR').includes(termo)
+    );
+
+    let lista = '';
+    if (!this.etiquetas.length) {
+      lista = `<li class="hi-pop-vazio">Nenhuma etiqueta ainda. Crie a primeira abaixo.</li>`;
+    } else if (!visiveis.length) {
+      lista = `<li class="hi-pop-vazio">Nenhuma etiqueta com esse nome.</li>`;
+    } else {
+      lista = visiveis.map(etiqueta => {
+        const marcada = instrutor && this.temEtiqueta(instrutor, etiqueta.id);
+        return `
+          <li class="hi-pop-item">
+            <button class="hi-pop-marcar cor-${this.corValida(etiqueta.cor)}${marcada ? ' is-marcada' : ''}"
+              type="button" role="checkbox" aria-checked="${!!marcada}"
+              data-pop="alternar" data-id="${this.escape(etiqueta.id)}">
+              <span class="hi-pop-marcar-nome">${this.escape(etiqueta.nome)}</span>
+              <span class="hi-pop-check" aria-hidden="true"></span>
+            </button>
+            <button class="hi-pop-lapis" type="button" data-pop="editar"
+              data-id="${this.escape(etiqueta.id)}"
+              aria-label="Editar a etiqueta ${this.escape(etiqueta.nome)}">
+              <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+                <path d="M11.5 2.5l2 2L6 12l-2.6.6L4 10l7.5-7.5z" fill="none"
+                  stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </li>
+        `;
+      }).join('');
+    }
+
+    pop.innerHTML = `
+      <div class="hi-pop-head">
+        <span class="hi-pop-titulo">Etiquetas</span>
+        <button class="hi-pop-icone" type="button" data-pop="fechar" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="hi-pop-body">
+        <p class="hi-pop-alvo">${this.escape(this.pop.instrutor || '')}</p>
+        ${this.etiquetas.length > 5
+          ? `<input class="form-control hi-pop-busca" type="search" autocomplete="off"
+              placeholder="Buscar etiqueta" value="${this.escape(this.pop.busca)}"
+              aria-label="Buscar etiqueta">`
+          : ''}
+        <ul class="hi-pop-lista">${lista}</ul>
+        <button class="hi-pop-criar" type="button" data-pop="criar">
+          <span aria-hidden="true">+</span> Criar nova etiqueta
+        </button>
+      </div>
+    `;
+  },
+
+  abrirPainelEtiqueta(id) {
+    const etiqueta = id ? this.etiquetaPorId(id) : null;
+    this.pop.painel = 'editar';
+    this.pop.editando = etiqueta ? etiqueta.id : null;
+    this.pop.cor = etiqueta ? this.corValida(etiqueta.cor) : 'verde';
+    this.renderizarPop();
+    this.posicionarPop();
+  },
+
+  voltarParaLista() {
+    this.pop.painel = 'lista';
+    this.pop.editando = null;
+    this.renderizarPop();
+    this.posicionarPop();
+  },
+
+  escolherCorPop(cor) {
+    this.pop.cor = this.corValida(cor);
+    const previa = document.querySelector('[data-pop-previa]');
+    if (previa) {
+      previa.className = `hi-chip cor-${this.pop.cor}`;
+    }
+    document.querySelectorAll('.hi-pop-cor').forEach(botao => {
+      const ativa = botao.dataset.cor === this.pop.cor;
+      botao.classList.toggle('is-ativa', ativa);
+      botao.setAttribute('aria-pressed', String(ativa));
+    });
+  },
+
+  /**
+   * Marcar e desmarcar e otimista: mutacao simples de item que ja esta no
+   * estado local e o servidor nao recalcula nada. Com ~10s de latencia,
+   * esperar deixaria o chip aparecendo muito depois do clique.
+   */
+  async alternarEtiqueta(id) {
+    const instrutor = this.instrutores.find(i => i.nome === this.pop.instrutor);
+    const etiqueta = this.etiquetaPorId(id);
+    if (!instrutor || !etiqueta) return;
+
+    const anterior = this.etiquetasDo(instrutor);
+    const novos = anterior.includes(id)
+      ? anterior.filter(item => item !== id)
+      : [...anterior, id];
+
+    instrutor.etiquetas = novos;
+    this.renderizarTudo();
+    this.renderizarPop();
+    this.posicionarPop();
+
+    try {
+      const resultado = await this.enviar('set_instructor_labels', {
+        nome: instrutor.nome,
+        etiquetas: novos
+      });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar as etiquetas.');
+      }
+      // O Tipo e espelho do backend: aceitar o que ele devolveu evita a tela
+      // discordar da planilha.
+      if (resultado.data && 'tipo' in resultado.data) instrutor.tipo = resultado.data.tipo;
+    } catch (erro) {
+      console.error('[Etiquetas do instrutor]', erro);
+      instrutor.etiquetas = anterior;
+      this.renderizarTudo();
+      if (this.popAberto()) { this.renderizarPop(); this.posicionarPop(); }
+      toast(erro.message || 'Erro ao salvar as etiquetas.', 'error', 5000);
+    }
+  },
+
+  /**
+   * Criar e editar sao round-trip unico: o id de etiqueta nova nasce no
+   * servidor, e a tela redesenha do catalogo que ele devolve. Fingir aqui
+   * geraria um chip com id inventado.
+   */
+  async salvarEtiqueta(evento) {
+    evento?.preventDefault();
+    const campo = document.getElementById('hi-pop-nome');
+    const nome = String(campo?.value || '').trim();
+    if (!nome) {
+      toast('Dê um nome para a etiqueta.', 'warning');
+      campo?.focus();
+      return;
+    }
+
+    const botao = document.querySelector('[data-pop="salvar"]');
+    if (botao) botao.disabled = true;
+    try {
+      const resultado = await this.enviar('save_label', {
+        id: this.pop.editando || '',
+        nome,
+        cor: this.pop.cor
+      });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar a etiqueta.');
+      }
+      this.etiquetas = resultado.data?.etiquetas || this.etiquetas;
+      toast(this.pop.editando ? 'Etiqueta atualizada.' : 'Etiqueta criada.', 'success');
+      this.voltarParaLista();
+      this.renderizarTudo();
+    } catch (erro) {
+      console.error('[Salvar etiqueta]', erro);
+      toast(erro.message || 'Erro ao salvar a etiqueta.', 'error', 5000);
+    } finally {
+      const atual = document.querySelector('[data-pop="salvar"]');
+      if (atual) atual.disabled = false;
+    }
+  },
+
+  async excluirEtiqueta() {
+    const etiqueta = this.etiquetaPorId(this.pop.editando);
+    if (!etiqueta) return;
+
+    const usada = this.instrutores.filter(i => this.temEtiqueta(i, etiqueta.id)).length;
+    const aviso = usada
+      ? `\n\nEla está em ${usada} ${usada === 1 ? 'instrutor' : 'instrutores'} e será removida de todos.`
+      : '';
+    if (!confirm(`Excluir a etiqueta "${etiqueta.nome}"?${aviso}`)) return;
+
+    const botao = document.querySelector('[data-pop="excluir"]');
+    if (botao) botao.disabled = true;
+    try {
+      const resultado = await this.enviar('delete_label', { id: etiqueta.id });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível excluir a etiqueta.');
+      }
+      this.etiquetas = resultado.data?.etiquetas || [];
+      // O backend ja limpou a planilha; limpar o estado local evita o chip
+      // fantasma sobreviver ate o proximo carregamento.
+      this.instrutores.forEach(instrutor => {
+        if (Array.isArray(instrutor.etiquetas)) {
+          instrutor.etiquetas = instrutor.etiquetas.filter(id => id !== etiqueta.id);
+        }
+      });
+      this.etiquetasNovoInstrutor = this.etiquetasNovoInstrutor.filter(id => id !== etiqueta.id);
+      toast('Etiqueta excluída.', 'success');
+      this.voltarParaLista();
+      this.renderizarTudo();
+    } catch (erro) {
+      console.error('[Excluir etiqueta]', erro);
+      toast(erro.message || 'Erro ao excluir a etiqueta.', 'error', 5000);
+    } finally {
+      const atual = document.querySelector('[data-pop="excluir"]');
+      if (atual) atual.disabled = false;
+    }
+  },
+
+  // ── Etiquetas no formulário de cadastro ─────────────────────
+
+  renderizarEtiquetasCadastro() {
+    const area = document.getElementById('cadastro-etiquetas');
+    if (!area) return;
+    if (!this.etiquetas.length) {
+      area.innerHTML = `<p class="hi-cadastro-vazio">
+        Nenhuma etiqueta cadastrada ainda. Você pode criar etiquetas pelo botão de
+        etiquetas de qualquer instrutor, na aba Dashboard.
+      </p>`;
+      return;
+    }
+    area.innerHTML = this.etiquetas.map(etiqueta => {
+      const marcada = this.etiquetasNovoInstrutor.includes(etiqueta.id);
+      return `
+        <button class="hi-chip cor-${this.corValida(etiqueta.cor)} hi-chip-toggle${marcada ? ' is-marcada' : ''}"
+          type="button" role="checkbox" aria-checked="${marcada}"
+          data-cadastro-etiqueta="${this.escape(etiqueta.id)}">
+          ${this.escape(etiqueta.nome)}
+        </button>
+      `;
+    }).join('');
+  },
+
+  alternarEtiquetaCadastro(id) {
+    if (!this.etiquetaPorId(id)) return;
+    this.etiquetasNovoInstrutor = this.etiquetasNovoInstrutor.includes(id)
+      ? this.etiquetasNovoInstrutor.filter(item => item !== id)
+      : [...this.etiquetasNovoInstrutor, id];
+    this.renderizarEtiquetasCadastro();
+  },
+
   // ── Ordenação de cada base ──────────────────────────────────
 
   carregarOrdens() {
@@ -203,23 +636,25 @@ const HorasVoadasInva = {
       (soma, instrutor) => soma + this.horasDe(instrutor),
       0
     );
-    const clt = this.instrutores.filter(
-      instrutor => String(instrutor.tipo || '').trim().toLowerCase() === 'clt'
-    ).length;
     const liberados = this.instrutores.filter(i => this.temFlagVerde(i)).length;
+    // O vinculo virou etiqueta, entao os dois KPIs contam quem TEM a etiqueta.
+    // Nao da mais para deduzir um do outro por subtracao: com etiqueta, o
+    // instrutor pode nao ter nenhuma das duas, e "total menos CLT" mentiria.
+    const clt = this.contarPorNome('CLT');
+    const eventual = this.contarPorNome('Eventual');
 
     document.getElementById('kpi-instrutores').textContent = this.instrutores.length;
     document.getElementById('kpi-horas').textContent = `${this.formatarHoras(totalHoras)}h`;
-    document.getElementById('kpi-clt').textContent = clt;
-    document.getElementById('kpi-eventuais').textContent = this.instrutores.length - clt;
+    // Sem a etiqueta no catalogo o numero nao existe, e mostrar 0 afirmaria
+    // que ninguem e CLT.
+    document.getElementById('kpi-clt').textContent = clt === null ? '—' : clt;
+    document.getElementById('kpi-eventuais').textContent = eventual === null ? '—' : eventual;
     document.getElementById('kpi-liberados').textContent = liberados;
   },
 
   linhaInstrutor(instrutor, base) {
     const outra = this.bases.find(b => b !== base) || base;
     const horas = this.horasDe(instrutor);
-    const tipo = String(instrutor.tipo || 'Não informado');
-    const classeTipo = tipo.trim().toLowerCase() === 'clt' ? 'clt' : 'eventual';
     const liberado = instrutor.liberadoOpr === true;
     const flag = this.temFlagVerde(instrutor);
     const nome = this.escape(instrutor.nome);
@@ -238,7 +673,12 @@ const HorasVoadasInva = {
             ${flag ? `<span class="hi-flag" role="img" title="${motivo}" aria-label="Liberado: ${motivo}"></span>` : ''}
           </span>
           <span class="hi-item-meta">
-            <span class="horas-inva-badge ${classeTipo}">${this.escape(tipo)}</span>
+            ${this.chipsDoInstrutor(instrutor)}
+            <button class="hi-etiquetas-abrir" type="button" data-etiquetas="${nome}"
+              aria-haspopup="dialog" aria-expanded="false"
+              title="Etiquetas de ${nome}" aria-label="Etiquetas de ${nome}">
+              <span aria-hidden="true">+</span>
+            </button>
             ${liberado ? `<span class="hi-selo-opr">OPR${instrutor.liberadoEm ? ` · ${this.escape(instrutor.liberadoEm)}` : ''}</span>` : ''}
           </span>
         </div>
@@ -261,9 +701,17 @@ const HorasVoadasInva = {
         this.instrutores.filter(i => this.baseDoInstrutor(i) === base),
         this.ordens[base]
       );
-      const visiveis = daBase.filter(i =>
-        String(i.nome || '').toLocaleLowerCase('pt-BR').includes(termo)
-      );
+      // A busca tambem casa etiqueta: com nomes como LIBERADO IFR AVIAO, a
+      // pergunta real da operacao e "quem tem", e digitar o nome dela responde
+      // sem precisar de um filtro proprio na tela.
+      const visiveis = daBase.filter(i => {
+        if (!termo) return true;
+        if (String(i.nome || '').toLocaleLowerCase('pt-BR').includes(termo)) return true;
+        return this.etiquetasDo(i).some(id =>
+          String(this.etiquetaPorId(id)?.nome || '')
+            .toLocaleLowerCase('pt-BR').includes(termo)
+        );
+      });
       const horasBase = daBase.reduce((soma, i) => soma + this.horasDe(i), 0);
 
       const contador = document.getElementById(`hi-contador-${base}`);
@@ -351,6 +799,14 @@ const HorasVoadasInva = {
     this.atualizarKpis();
     this.renderizarBases();
     this.renderizarGrafico();
+    this.renderizarEtiquetasCadastro();
+    // As listas sao remontadas por innerHTML, entao o gatilho do popover
+    // aberto acabou de ser destruido e recriado: reancorar, senao o popover
+    // fica flutuando longe do instrutor que ele edita.
+    if (this.popAberto()) {
+      this.marcarGatilhoAtivo();
+      this.posicionarPop();
+    }
   },
 
   // ── Arrastar entre bases ────────────────────────────────────
@@ -557,7 +1013,13 @@ const HorasVoadasInva = {
       if (Number(resultado.meta?.metaHoras) > 0) {
         this.metaHoras = Number(resultado.meta.metaHoras);
       }
+      // Backend antigo (sem a aba de etiquetas publicada) nao manda o campo:
+      // cai em catalogo vazio, a tela some com os chips e nao quebra.
+      this.etiquetas = Array.isArray(resultado.meta?.etiquetas)
+        ? resultado.meta.etiquetas
+        : [];
       this.renderizarTudo();
+      if (this.popAberto()) this.renderizarPop();
       document.getElementById('ultima-atualizacao').textContent =
         `Atualizado em ${new Date().toLocaleString('pt-BR')}.`;
       if (mostrarToast) toast('Dados atualizados.', 'success');
@@ -619,12 +1081,12 @@ const HorasVoadasInva = {
     );
     const dados = {
       nome: document.getElementById('instrutor-nome').value.trim(),
-      tipo: document.getElementById('instrutor-tipo').value,
       base: document.getElementById('instrutor-base').value,
-      saldoInicial: Number.isFinite(saldoBruto) ? saldoBruto : 0
+      saldoInicial: Number.isFinite(saldoBruto) ? saldoBruto : 0,
+      etiquetas: [...this.etiquetasNovoInstrutor]
     };
-    if (!dados.nome || !dados.tipo || !dados.base) {
-      toast('Preencha o nome, o tipo e a base do instrutor.', 'warning');
+    if (!dados.nome || !dados.base) {
+      toast('Preencha o nome e a base do instrutor.', 'warning');
       return;
     }
 
@@ -635,6 +1097,9 @@ const HorasVoadasInva = {
         throw new Error(resultado.message || 'Não foi possível cadastrar o instrutor.');
       }
       formulario?.reset();
+      // reset() nao alcanca os chips, que sao botoes e nao campos de form.
+      this.etiquetasNovoInstrutor = [];
+      this.renderizarEtiquetasCadastro();
       toast('Instrutor cadastrado com sucesso.', 'success');
       this.mudarView('dashboard');
       await this.carregarDados();
@@ -713,10 +1178,84 @@ const HorasVoadasInva = {
         if (item) this.moverBase(item.dataset.nome, punho.dataset.mover);
         return;
       }
+      const etiquetas = evento.target.closest('.hi-etiquetas-abrir');
+      if (etiquetas) {
+        // Sem isto o mesmo clique borbulha ate o handler de "clique fora" no
+        // document e fecha o popover que acabou de abrir.
+        evento.stopPropagation();
+        this.abrirPop(etiquetas.dataset.etiquetas);
+        return;
+      }
+
       const liberar = evento.target.closest('.hi-liberar');
       if (!liberar) return;
       const item = liberar.closest('.hi-item');
       if (item) this.abrirLiberacao(item.dataset.nome, liberar.dataset.liberar === 'remover');
+    });
+
+    // ── Popover de etiquetas ──────────────────────────────────
+    // Ele e remontado por innerHTML a cada painel, entao tudo por delegacao.
+    const pop = document.getElementById('hi-pop');
+    pop.addEventListener('click', evento => {
+      const acao = evento.target.closest('[data-pop]');
+      if (!acao) return;
+      const tipo = acao.dataset.pop;
+      if (tipo === 'fechar') { this.fecharPop(); return; }
+      if (tipo === 'voltar') { this.voltarParaLista(); return; }
+      if (tipo === 'criar') { this.abrirPainelEtiqueta(null); return; }
+      if (tipo === 'editar') { this.abrirPainelEtiqueta(acao.dataset.id); return; }
+      if (tipo === 'alternar') { this.alternarEtiqueta(acao.dataset.id); return; }
+      if (tipo === 'excluir') { this.excluirEtiqueta(); return; }
+    });
+    pop.addEventListener('click', evento => {
+      const cor = evento.target.closest('.hi-pop-cor');
+      if (cor) this.escolherCorPop(cor.dataset.cor);
+    });
+    pop.addEventListener('submit', evento => {
+      if (evento.target.dataset.popForm === 'etiqueta') this.salvarEtiqueta(evento);
+    });
+    pop.addEventListener('input', evento => {
+      if (!evento.target.classList.contains('hi-pop-busca')) return;
+      this.pop.busca = evento.target.value;
+      const foco = document.activeElement === evento.target;
+      this.renderizarPop();
+      if (foco) {
+        const campo = document.querySelector('.hi-pop-busca');
+        campo?.focus();
+        // O cursor volta para o fim: sem isto, digitar a segunda letra a
+        // colocaria antes da primeira.
+        campo?.setSelectionRange(campo.value.length, campo.value.length);
+      }
+      this.posicionarPop();
+    });
+
+    document.addEventListener('click', evento => {
+      if (!this.popAberto()) return;
+      // ⚠️ Nao troque por evento.target.closest('#hi-pop'). Clicar numa
+      // etiqueta REMONTA o popover por innerHTML durante o proprio despacho,
+      // entao quando este handler roda o alvo ja esta SOLTO do documento e o
+      // closest sobe uma arvore sem o #hi-pop: devolve null, o clique de
+      // dentro passa por clique de fora e o popover fecha a cada marcacao.
+      // O composedPath e capturado no despacho e sobrevive a remocao.
+      const caminho = evento.composedPath();
+      const dentro = caminho.some(no =>
+        no.id === 'hi-pop' || no.classList?.contains('hi-etiquetas-abrir')
+      );
+      if (dentro) return;
+      this.fecharPop();
+    });
+    // Fixed nao acompanha a rolagem: sem reancorar, o popover ficaria parado
+    // enquanto o instrutor dele sobe na tela.
+    window.addEventListener('scroll', () => {
+      if (this.popAberto()) this.posicionarPop();
+    }, true);
+    window.addEventListener('resize', () => {
+      if (this.popAberto()) this.posicionarPop();
+    });
+
+    document.getElementById('cadastro-etiquetas').addEventListener('click', evento => {
+      const chip = evento.target.closest('[data-cadastro-etiqueta]');
+      if (chip) this.alternarEtiquetaCadastro(chip.dataset.cadastroEtiqueta);
     });
 
     document.addEventListener('pointermove', evento => this.moverArraste(evento));
@@ -747,6 +1286,15 @@ const HorasVoadasInva = {
     document.addEventListener('keydown', evento => {
       if (evento.key !== 'Escape') return;
       if (this.arraste) { this.cancelarArraste(); return; }
+      // O popover fecha antes do menu de ordenacao e do modal: e sempre o que
+      // esta por cima, e uma tecla nao pode fechar dois.
+      if (this.popAberto()) {
+        // Do painel de edicao, Escape volta para a lista em vez de descartar
+        // tudo: quem digitou um nome nao espera perde-lo por uma tecla.
+        if (this.pop.painel === 'editar') this.voltarParaLista();
+        else this.fecharPop();
+        return;
+      }
       if (document.querySelector('.hi-ordenar-menu:not([hidden])')) {
         this.fecharMenusOrdem();
         return;
@@ -760,6 +1308,7 @@ const HorasVoadasInva = {
     Auth.preencherUI();
     this.carregarOrdens();
     this.pintarMenusOrdem();
+    this.renderizarEtiquetasCadastro();
     this.vincularEventos();
     await this.carregarDados();
   }

@@ -3213,7 +3213,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "claude_arquitetura_de_controle_de_acesso_rbac_desde_2026_07_09",
-      "community": 42,
+      "community": 370,
       "norm_label": "arquitetura de controle de acesso (rbac) \u2014 desde 2026-07-09"
     },
     {
@@ -3223,7 +3223,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "claude_cargos_e_tela_de_cria\u00e7\u00e3o_de_usu\u00e1rio_desde_2026_07_09",
-      "community": 42,
+      "community": 370,
       "norm_label": "cargos e tela de criacao de usuario (desde 2026-07-09)"
     },
     {
@@ -3243,7 +3243,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "claude_m\u00f3dulo_notams_bases_safe_desde_2026_07_17",
-      "community": 42,
+      "community": 368,
       "norm_label": "modulo notams (bases safe) \u2014 desde 2026-07-17"
     },
     {
@@ -3253,7 +3253,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "claude_schema_real_do_aisweb_confirmado_em_2026_07_28",
-      "community": 42,
+      "community": 368,
       "norm_label": "schema real do aisweb, confirmado em 2026-07-28"
     },
     {
@@ -3263,7 +3263,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "claude_sincroniza\u00e7\u00e3o_e_busca_de_outra_localidade_desde_2026_07_28",
-      "community": 42,
+      "community": 368,
       "norm_label": "sincronizacao e busca de outra localidade, desde 2026-07-28"
     },
     {
@@ -3273,7 +3273,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "claude_notams_no_controle_de_acesso_entrega_em_duas_fases_desde_2026_07_28",
-      "community": 42,
+      "community": 368,
       "norm_label": "notams no controle de acesso: entrega em duas fases, desde 2026-07-28"
     },
     {
@@ -3283,7 +3283,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "claude_revis\u00e3o_de_ux_e_espa\u00e7amento_2026_07_29_s\u00f3_frontend",
-      "community": 42,
+      "community": 368,
       "norm_label": "revisao de ux e espacamento, 2026-07-29 (so frontend)"
     },
     {
@@ -3293,7 +3293,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "claude_hor\u00e1rio_de_funcionamento_das_bases_rotaer_desde_2026_07_29",
-      "community": 42,
+      "community": 368,
       "norm_label": "horario de funcionamento das bases (rotaer), desde 2026-07-29"
     },
     {
@@ -3353,7 +3353,7 @@
       "source_location": "L295",
       "_origin": "ast",
       "id": "claude_layout_mobile_invariantes_descobertas_na_auditoria_de_2026_07_26",
-      "community": 42,
+      "community": 369,
       "norm_label": "layout mobile: invariantes descobertas na auditoria de 2026-07-26"
     },
     {
@@ -3363,7 +3363,7 @@
       "source_location": "L304",
       "_origin": "ast",
       "id": "claude_segunda_leva_fechada_no_mesmo_dia",
-      "community": 42,
+      "community": 369,
       "norm_label": "segunda leva, fechada no mesmo dia"
     },
     {
@@ -3373,7 +3373,7 @@
       "source_location": "L313",
       "_origin": "ast",
       "id": "claude_zoom_autom\u00e1tico_em_campo_no_celular_corrigido_em_2026_07_28",
-      "community": 42,
+      "community": 369,
       "norm_label": "zoom automatico em campo no celular, corrigido em 2026-07-28"
     },
     {
@@ -3383,7 +3383,7 @@
       "source_location": "L323",
       "_origin": "ast",
       "id": "claude_header_e_navega\u00e7\u00e3o_unificados_na_auditoria_de_2026_07_26",
-      "community": 42,
+      "community": 367,
       "norm_label": "header e navegacao unificados na auditoria de 2026-07-26"
     },
     {
@@ -3393,7 +3393,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "claude_contrato_de_header_obrigat\u00f3rio_em_p\u00e1gina_nova",
-      "community": 42,
+      "community": 367,
       "norm_label": "contrato de header (obrigatorio em pagina nova)"
     },
     {
@@ -3403,7 +3403,7 @@
       "source_location": "L353",
       "_origin": "ast",
       "id": "claude_escala_cco",
-      "community": 42,
+      "community": 367,
       "norm_label": "escala cco"
     },
     {
@@ -3413,7 +3413,7 @@
       "source_location": "L357",
       "_origin": "ast",
       "id": "claude_escala_pav",
-      "community": 42,
+      "community": 367,
       "norm_label": "escala pav"
     },
     {
@@ -3423,7 +3423,7 @@
       "source_location": "L363",
       "_origin": "ast",
       "id": "claude_ordem_do_menu_da_sidebar_decidida_em_2026_07_26",
-      "community": 42,
+      "community": 367,
       "norm_label": "ordem do menu da sidebar, decidida em 2026-07-26"
     },
     {
@@ -3433,7 +3433,7 @@
       "source_location": "L374",
       "_origin": "ast",
       "id": "claude_head_padronizado",
-      "community": 42,
+      "community": 367,
       "norm_label": "`<head>` padronizado"
     },
     {
@@ -3443,7 +3443,7 @@
       "source_location": "L380",
       "_origin": "ast",
       "id": "claude_o_que_ficou_de_fora",
-      "community": 42,
+      "community": 367,
       "norm_label": "o que ficou de fora"
     },
     {
@@ -3453,7 +3453,7 @@
       "source_location": "L385",
       "_origin": "ast",
       "id": "claude_estrutura_de_pastas_tema_global_e_menu_do_usu\u00e1rio_desde_2026_07_27",
-      "community": 42,
+      "community": 27,
       "norm_label": "estrutura de pastas, tema global e menu do usuario, desde 2026-07-27"
     },
     {
@@ -3463,7 +3463,7 @@
       "source_location": "L389",
       "_origin": "ast",
       "id": "claude_pastas_core_e_pages",
-      "community": 42,
+      "community": 27,
       "norm_label": "pastas: `core/` e `pages/`"
     },
     {
@@ -3473,7 +3473,7 @@
       "source_location": "L397",
       "_origin": "ast",
       "id": "claude_camada_sem\u00e2ntica_de_cor_\u00e9_aqui_que_o_tema_acontece",
-      "community": 42,
+      "community": 27,
       "norm_label": "camada semantica de cor (e aqui que o tema acontece)"
     },
     {
@@ -3483,7 +3483,7 @@
       "source_location": "L407",
       "_origin": "ast",
       "id": "claude_guarda_anti_flash_obrigat\u00f3ria_em_p\u00e1gina_nova",
-      "community": 42,
+      "community": 27,
       "norm_label": "guarda anti-flash (obrigatoria em pagina nova)"
     },
     {
@@ -3493,7 +3493,7 @@
       "source_location": "L411",
       "_origin": "ast",
       "id": "claude_menu_do_usu\u00e1rio_avatar_na_topbar",
-      "community": 42,
+      "community": 27,
       "norm_label": "menu do usuario (avatar na topbar)"
     },
     {
@@ -3503,7 +3503,7 @@
       "source_location": "L422",
       "_origin": "ast",
       "id": "claude_foto_de_perfil_avatar_desde_2026_07_27",
-      "community": 42,
+      "community": 27,
       "norm_label": "foto de perfil (avatar), desde 2026-07-27"
     },
     {
@@ -3513,7 +3513,7 @@
       "source_location": "L436",
       "_origin": "ast",
       "id": "claude_editor_de_enquadramento_e_foto_pelo_superadmin_desde_2026_07_28",
-      "community": 42,
+      "community": 27,
       "norm_label": "editor de enquadramento e foto pelo superadmin, desde 2026-07-28"
     },
     {
@@ -3523,7 +3523,7 @@
       "source_location": "L457",
       "_origin": "ast",
       "id": "claude_marca_em_dois_arquivos",
-      "community": 42,
+      "community": 27,
       "norm_label": "marca em dois arquivos"
     },
     {
@@ -3533,7 +3533,7 @@
       "source_location": "L463",
       "_origin": "ast",
       "id": "claude_o_que_foi_arrancado",
-      "community": 42,
+      "community": 27,
       "norm_label": "o que foi arrancado"
     },
     {
@@ -3543,7 +3543,7 @@
       "source_location": "L471",
       "_origin": "ast",
       "id": "claude_verifica\u00e7\u00e3o",
-      "community": 42,
+      "community": 27,
       "norm_label": "verificacao"
     },
     {
@@ -3563,7 +3563,7 @@
       "source_location": "L491",
       "_origin": "ast",
       "id": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
-      "community": 42,
+      "community": 52,
       "norm_label": "horas voadas inva mes: cadastro de instrutor, desde 2026-07-28"
     },
     {
@@ -3573,7 +3573,7 @@
       "source_location": "L501",
       "_origin": "ast",
       "id": "claude_reconcilia\u00e7\u00e3o_da_janela_desde_2026_07_28_backend_6",
-      "community": 42,
+      "community": 52,
       "norm_label": "reconciliacao da janela, desde 2026-07-28 (backend @6)"
     },
     {
@@ -3583,7 +3583,7 @@
       "source_location": "L521",
       "_origin": "ast",
       "id": "claude_refazer_o_saldo_inicial_rebase_desde_2026_07_28_backend_8",
-      "community": 42,
+      "community": 52,
       "norm_label": "refazer o saldo inicial (rebase), desde 2026-07-28 (backend @8)"
     },
     {
@@ -3593,7 +3593,7 @@
       "source_location": "L532",
       "_origin": "ast",
       "id": "claude_gatilhos_di\u00e1rios_desde_2026_07_28",
-      "community": 42,
+      "community": 52,
       "norm_label": "gatilhos diarios, desde 2026-07-28"
     },
     {
@@ -3603,7 +3603,7 @@
       "source_location": "L544",
       "_origin": "ast",
       "id": "claude_tr\u00eas_bugs_corrigidos_em_2026_07_28",
-      "community": 42,
+      "community": 52,
       "norm_label": "tres bugs corrigidos em 2026-07-28"
     },
     {
@@ -3613,14 +3613,24 @@
       "source_location": "L550",
       "_origin": "ast",
       "id": "claude_bases_sjk_cpq_flag_de_100h_e_libera\u00e7\u00e3o_por_opr_desde_2026_07_28",
-      "community": 42,
+      "community": 52,
       "norm_label": "bases sjk/cpq, flag de 100h e liberacao por opr, desde 2026-07-28"
+    },
+    {
+      "label": "Etiquetas no molde do Trello, desde 2026-07-29",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L574",
+      "_origin": "ast",
+      "id": "claude_etiquetas_no_molde_do_trello_desde_2026_07_29",
+      "community": 52,
+      "norm_label": "etiquetas no molde do trello, desde 2026-07-29"
     },
     {
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L579",
+      "source_location": "L601",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 42,
@@ -3630,7 +3640,7 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L591",
+      "source_location": "L613",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 42,
@@ -5213,7 +5223,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "horas voadas inva mes page",
       "id": "preview_denso_horas_voadas_inva_horas_voadas_inva_page"
     },
@@ -5226,7 +5236,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_denso_horas_voadas_inva_sincronizar_cavok"
     },
@@ -5239,7 +5249,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "cadastrar instrutor form",
       "id": "preview_denso_horas_voadas_inva_cadastrar_instrutor"
     },
@@ -6188,7 +6198,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "horas voadas inva mes page",
       "id": "preview_refinado_horas_voadas_inva_horas_voadas_inva_page"
     },
@@ -6201,7 +6211,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_refinado_horas_voadas_inva_sincronizar_cavok"
     },
@@ -6214,7 +6224,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "cadastrar instrutor form",
       "id": "preview_refinado_horas_voadas_inva_cadastrar_instrutor"
     },
@@ -7566,7 +7576,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "atualizar pela api cavok",
       "id": "preview_clean_fechamento_horas_atualizar_api_cavok"
     },
@@ -7592,7 +7602,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_clean_horas_voadas_inva_sincronizar_cavok"
     },
@@ -11963,7 +11973,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 14,
       "norm_label": "modal de exportacao ifood (#modalexportifood)",
       "id": "escala_cco_export_modal"
     },
@@ -12028,7 +12038,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "gaswrite(action, payload)",
       "id": "escala_cco_gaswrite"
     },
@@ -12041,7 +12051,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "fila de gravacao serializada (gaswritechain)",
       "id": "escala_cco_gaswritechain"
     },
@@ -12470,7 +12480,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "overrides locais da escala no localstorage",
       "id": "escala_cco_schedule_overrides"
     },
@@ -12496,7 +12506,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "savescheduleoverride(dk, daydata)",
       "id": "escala_cco_savescheduleoverride"
     },
@@ -12535,7 +12545,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 37,
       "norm_label": "helpers de data (datekey, daysinmonth, dayofweek)",
       "id": "escala_cco_date_helpers"
     },
@@ -12704,7 +12714,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "espera das gravacoes pendentes antes de ler (await gaswritechain)",
       "id": "escala_cco_espera_gravacoes"
     },
@@ -12756,7 +12766,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "toggleshift(dk, shift, targetuser)",
       "id": "escala_cco_toggleshift"
     },
@@ -12769,7 +12779,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "atualizacao otimista com rollback do turno",
       "id": "escala_cco_optimistic_rollback"
     },
@@ -12782,7 +12792,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 22,
       "norm_label": "capacidade maxima de 1 pessoa por turno",
       "id": "escala_cco_shift_capacity"
     },
@@ -12860,7 +12870,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 37,
       "norm_label": "computefinformonth(idx)",
       "id": "escala_cco_computefinformonth"
     },
@@ -12886,7 +12896,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 37,
       "norm_label": "financeiroexclude (exclusao do resumo financeiro)",
       "id": "escala_cco_financeiro_exclude"
     },
@@ -12899,7 +12909,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 14,
       "norm_label": "secao ifood beneficios (logo base64 embutido)",
       "id": "escala_cco_ifood_section"
     },
@@ -12912,7 +12922,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 37,
       "norm_label": "fmtmoedacco(v)",
       "id": "escala_cco_fmtmoedacco"
     },
@@ -12938,7 +12948,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 14,
       "norm_label": "abrirmodalexport()",
       "id": "escala_cco_abrirmodalexport"
     },
@@ -12951,7 +12961,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 37,
       "norm_label": "atualizarpreviewexport()",
       "id": "escala_cco_atualizarpreviewexport"
     },
@@ -12964,7 +12974,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 37,
       "norm_label": "exportirparaconfirmacao()",
       "id": "escala_cco_exportirparaconfirmacao"
     },
@@ -18482,7 +18492,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L591",
+      "source_location": "L613",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -18492,7 +18502,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L579",
+      "source_location": "L601",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
@@ -18866,6 +18876,16 @@
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_bases_sjk_cpq_flag_de_100h_e_libera\u00e7\u00e3o_por_opr_desde_2026_07_28",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L574",
+      "weight": 1.0,
+      "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
+      "target": "claude_etiquetas_no_molde_do_trello_desde_2026_07_29",
       "confidence_score": 1.0
     },
     {
@@ -30398,5 +30418,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "177445f939b654e6c5c36c1b86a3f63db7a15e95"
+  "built_at_commit": "19db2c622ea79ddbad6a549349647830e20850ca"
 }

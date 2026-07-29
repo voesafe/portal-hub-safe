@@ -51,6 +51,7 @@
   "49": "Controle de Acesso page (access-control.html)",
   "50": "Admin Panel — Valor",
   "51": "Admin Panel — Valor",
+  "52": "Horas Voadas INVA Mês: cadastro de instrutor, desde 2026-07-28",
   "53": "css/horas-voadas-inva.css",
   "54": "vendas.js",
   "55": "vendas.js",
@@ -364,5 +365,9 @@
   "363": ".topbar-tabs (abas de sub-visão)",
   "364": "Transparência de comandos antes de executar",
   "365": "user-menu é irmão do .topbar-right, nunca filho",
-  "366": "js/pages/vendas.js"
+  "366": "js/pages/vendas.js",
+  "367": "Header e navegação unificados na auditoria de 2026-07-26",
+  "368": "Módulo NOTAMs (bases SAFE) — desde 2026-07-17",
+  "369": "Layout mobile: invariantes descobertas na auditoria de 2026-07-26",
+  "370": "Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09"
 }

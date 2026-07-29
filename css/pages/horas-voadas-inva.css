@@ -97,22 +97,88 @@
   width: min(260px, 100%);
 }
 
-.horas-inva-badge {
+/* ── Etiquetas: paleta ──────────────────────────────────────────
+   Cada cor e um par fundo/texto por modo, e o par e escolhido aqui, no
+   CSS, justamente porque o backend guarda so a CHAVE da cor. Cor livre
+   digitada por quem cria a etiqueta sairia ilegivel num dos dois modos, e
+   a pessoa nao veria isso na hora de escolher.
+   O fundo e rgba de proposito: assenta sobre a superficie de baixo em vez
+   de impor a sua, entao a mesma regra serve no claro e no escuro. */
+.hi-chip,
+.hi-pop-marcar,
+.hi-pop-cor {
+  --et-bg: rgba(120,132,150,.16);
+  --et-fg: #47526b;
+  --et-solida: #788496;
+}
+
+.cor-verde    { --et-bg: rgba(39,174,96,.16);  --et-fg: #1a7a44; --et-solida: #27ae60; }
+.cor-limao    { --et-bg: rgba(126,188,44,.18); --et-fg: #4f7414; --et-solida: #7ebc2c; }
+.cor-amarelo  { --et-bg: rgba(233,196,32,.20); --et-fg: #7d6408; --et-solida: #e9c420; }
+.cor-laranja  { --et-bg: rgba(243,156,18,.18); --et-fg: #8b5b08; --et-solida: #f39c12; }
+.cor-vermelho { --et-bg: rgba(214,69,65,.16);  --et-fg: #a32e2a; --et-solida: #d64541; }
+.cor-rosa     { --et-bg: rgba(212,84,150,.16); --et-fg: #a33470; --et-solida: #d45496; }
+.cor-roxo     { --et-bg: rgba(142,94,206,.16); --et-fg: #6a3fa8; --et-solida: #8e5ece; }
+.cor-azul     { --et-bg: rgba(52,120,198,.16); --et-fg: #245a99; --et-solida: #3478c6; }
+.cor-ceu      { --et-bg: rgba(91,174,226,.18); --et-fg: #176b91; --et-solida: #5baee2; }
+.cor-cinza    { --et-bg: rgba(120,132,150,.16); --et-fg: #47526b; --et-solida: #788496; }
+
+/* No escuro o fundo translucido continua servindo, mas o texto precisa
+   clarear: os tons acima foram escolhidos para contraste sobre branco e
+   ficariam ilegiveis sobre a superficie escura. */
+:root[data-theme="dark"] .cor-verde    { --et-fg: #6ee7a4; }
+:root[data-theme="dark"] .cor-limao    { --et-fg: #b7e06a; }
+:root[data-theme="dark"] .cor-amarelo  { --et-fg: #f0d75f; }
+:root[data-theme="dark"] .cor-laranja  { --et-fg: #f7bb62; }
+:root[data-theme="dark"] .cor-vermelho { --et-fg: #f28e8a; }
+:root[data-theme="dark"] .cor-rosa     { --et-fg: #f094c2; }
+:root[data-theme="dark"] .cor-roxo     { --et-fg: #c4a2f0; }
+:root[data-theme="dark"] .cor-azul     { --et-fg: #8ab6ea; }
+:root[data-theme="dark"] .cor-ceu      { --et-fg: #9ed3f2; }
+:root[data-theme="dark"] .cor-cinza    { --et-fg: #b0bacb; }
+
+.hi-chip {
   display: inline-flex;
-  padding: 4px 9px;
+  align-items: center;
+  max-width: 190px;
+  padding: 3px 9px;
   border-radius: 999px;
-  font-size: .7rem;
+  color: var(--et-fg);
+  background: var(--et-bg);
+  font-size: .66rem;
   font-weight: 700;
+  line-height: 1.5;
+  /* Nome longo (LIBERADO P-MENTOR VFR/IFR SIC) nao pode empurrar as horas
+     para fora do item: corta com reticencias e o nome inteiro fica no title. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.horas-inva-badge.clt {
-  color: #176b91;
-  background: rgba(91,174,226,.15);
+/* O "+" que abre o popover. Nasce discreto e so ganha contorno no hover,
+   senao competiria com os proprios chips em cada linha da lista. */
+.hi-etiquetas-abrir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: var(--transition);
 }
 
-.horas-inva-badge.eventual {
-  color: #8b5b08;
-  background: rgba(243,156,18,.14);
+.hi-etiquetas-abrir:hover,
+.hi-etiquetas-abrir.is-aberto {
+  border-style: solid;
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--brand-surface);
 }
 
 .horas-inva-hours {
@@ -491,6 +557,329 @@ body.hi-arrastando {
   user-select: none;
 }
 
+/* ── Popover de etiquetas (molde Trello) ────────────────────────
+   Fixed e posicionado por JS a partir do gatilho, com virada para cima
+   quando nao ha espaco embaixo. Ele vive fora das listas porque elas sao
+   remontadas por innerHTML a cada render. */
+/* Coluna com cabecalho fixo e corpo rolante: e o que faz o teto de altura
+   posto pelo JS encolher o popover em vez de vazar para fora da tela. */
+.hi-pop {
+  position: fixed;
+  z-index: 1300;
+  display: flex;
+  flex-direction: column;
+  width: 288px;
+  max-width: calc(100vw - 16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* display no elemento base ganha do atributo hidden. Sexta ocorrencia
+   dessa armadilha no projeto, depois de .cadastro-bulk-bar, .topbar-status,
+   .hi-ordenar-menu e .notam-note. */
+.hi-pop[hidden] {
+  display: none;
+}
+
+.hi-pop-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.hi-pop-titulo {
+  flex: 1;
+  color: var(--text);
+  font-size: .78rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.hi-pop-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  transition: var(--transition);
+}
+
+.hi-pop-icone:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+/* O titulo fica centrado com um so botao a direita: este vao devolve a
+   simetria sem precisar de um botao invisivel do outro lado. */
+.hi-pop-head > .hi-pop-titulo:first-child {
+  margin-left: 24px;
+}
+
+.hi-pop-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 10px;
+  /* Rolador UNICO do popover. Item flex se recusa a encolher abaixo do
+     conteudo sem o min-height: 0, e sem ele o teto de altura do JS nao
+     produziria rolagem nenhuma. */
+  overflow-y: auto;
+}
+
+.hi-pop-alvo {
+  color: var(--text-muted);
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hi-pop-busca,
+.hi-pop-nome {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: .78rem;
+}
+
+/* Sem rolador proprio de proposito: quem rola e o .hi-pop-body. Dois
+   roladores aninhados fariam a roda do mouse parar no de dentro e o botao
+   de criar nunca aparecer. */
+.hi-pop-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hi-pop-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* A barra colorida do Trello: a cor da etiqueta ocupa a linha inteira, que
+   e o que deixa varrer a lista pela cor sem ler o texto. */
+.hi-pop-marcar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--et-fg);
+  background: var(--et-bg);
+  font-size: .75rem;
+  font-weight: 700;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.hi-pop-marcar:hover {
+  box-shadow: inset 0 0 0 1.5px var(--et-solida);
+}
+
+.hi-pop-marcar-nome {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ⚠️ A caixa tem tamanho FIXO e quem desenha o tique e o ::after. Tentar
+   encolher a propria caixa no estado marcado nao funciona: `flex: 0 0 14px`
+   fixa a base no eixo principal e vence a `width`, entao o tique saia com
+   14px de largura por 10px de altura e lia como seta de menu suspenso, nao
+   como check. */
+.hi-pop-check {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  opacity: 0;
+}
+
+.hi-pop-marcar.is-marcada .hi-pop-check {
+  opacity: 1;
+}
+
+/* Borda em vez de SVG: herda a cor do texto da etiqueta e acompanha a
+   paleta de graca, nos dois modos. */
+.hi-pop-marcar.is-marcada .hi-pop-check::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.hi-pop-lapis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.hi-pop-lapis:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.hi-pop-criar {
+  padding: 8px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: .74rem;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.hi-pop-criar:hover {
+  border-style: solid;
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--brand-surface);
+}
+
+.hi-pop-vazio {
+  padding: 16px 8px;
+  color: var(--text-muted);
+  font-size: .72rem;
+  text-align: center;
+}
+
+.hi-pop-previa {
+  display: flex;
+  justify-content: center;
+  padding: 12px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.hi-pop-previa .hi-chip {
+  max-width: 100%;
+  padding: 5px 12px;
+  font-size: .74rem;
+}
+
+.hi-pop-rotulo {
+  color: var(--text-muted);
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.hi-pop-paleta {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.hi-pop-cor {
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--et-solida);
+  transition: var(--transition);
+}
+
+.hi-pop-cor:hover {
+  transform: scale(1.06);
+}
+
+/* Anel por fora, com o vao na cor da superficie: sobre um quadrado
+   colorido, borda simples encosta na cor e some. */
+.hi-pop-cor.is-ativa {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text);
+}
+
+.hi-pop-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.hi-pop-acoes .btn {
+  padding: 7px 12px;
+  font-size: .74rem;
+}
+
+.hi-pop-excluir {
+  margin-right: auto;
+  color: var(--danger);
+}
+
+/* ── Etiquetas no formulário de cadastro ───────────────────────── */
+
+.hi-cadastro-dica {
+  margin: -2px 0 8px;
+  color: var(--text-muted);
+  font-size: .72rem;
+  line-height: 1.5;
+}
+
+.hi-cadastro-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.hi-chip-toggle {
+  max-width: 100%;
+  padding: 6px 12px;
+  font-size: .7rem;
+  /* Vazado enquanto nao marcado: cheio nos dois estados nao daria para
+     saber o que ja foi escolhido. */
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--et-bg);
+  opacity: .72;
+  transition: var(--transition);
+}
+
+.hi-chip-toggle:hover {
+  opacity: 1;
+}
+
+.hi-chip-toggle.is-marcada {
+  background: var(--et-bg);
+  box-shadow: inset 0 0 0 1.5px var(--et-solida);
+  opacity: 1;
+}
+
+.hi-cadastro-vazio {
+  color: var(--text-muted);
+  font-size: .74rem;
+  line-height: 1.5;
+}
+
 .hi-modal {
   max-width: 440px;
 }
@@ -568,5 +957,15 @@ body.hi-arrastando {
   .hi-liberar {
     flex: 1 0 100%;
     justify-content: center;
+  }
+
+  /* Numa faixa de ~350px o chip precisa caber ao lado do nome sem empurrar
+     as horas: teto menor aqui, e o nome inteiro segue no title. */
+  .hi-chip {
+    max-width: 132px;
+  }
+
+  .hi-pop {
+    width: 268px;
   }
 }
