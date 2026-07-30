@@ -137,6 +137,86 @@
             </div>
           </article>
 
+          <!-- Diretriz de missões, entre o gráfico e a lista, por pedido do
+               Victor: quem olha um eventual quer a regra por perto. Recolhida
+               por padrão justamente por estar acima da lista, senão empurraria
+               para baixo a parte que a tela existe para mostrar. O texto é
+               reprodução literal do documento da operação: não reescrever. -->
+          <article class="card hi-diretriz-card">
+            <h2 class="card-title hi-chart-h2">
+              <button class="hi-chart-toggle" id="hi-diretriz-toggle" type="button"
+                aria-expanded="false" aria-controls="hi-diretriz-corpo"
+                title="Ver a diretriz de missões dos instrutores eventuais">
+                <span class="hi-chart-seta" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="12" height="12">
+                    <path d="M6 3.5L10.5 8L6 12.5" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                Diretriz de missões dos instrutores eventuais
+              </button>
+            </h2>
+            <p class="horas-inva-card-subtitle hi-chart-sub">
+              Missões por curso autorizadas para quem tem a etiqueta Eventual.
+            </p>
+
+            <div class="hi-diretriz" id="hi-diretriz-corpo" hidden>
+              <p class="hi-diretriz-titulo">
+                DIRETRIZ (MISSÕES POR CURSO AUTORIZADAS PARA INSTRUTORES EVENTUAIS)
+              </p>
+
+              <ul class="hi-diretriz-cursos">
+                <li class="hi-diretriz-curso">
+                  <h3 class="hi-diretriz-nome">Curso de Piloto Privado</h3>
+                  <ul class="hi-diretriz-fases">
+                    <li><span class="hi-diretriz-fase">Missões fase Pré-Solo:</span> PS01, PS02, PS03, PS07, PS08, PS13</li>
+                    <li><span class="hi-diretriz-fase">Missões fase Aperfeiçoamento:</span> AP01, AP02, AP03, AP05</li>
+                    <li><span class="hi-diretriz-fase">Missões fase Noturno:</span> NOT01</li>
+                    <li><span class="hi-diretriz-fase">Missões fase Navegação:</span> NAV01, NAV03, NAV04, NAV05</li>
+                  </ul>
+                </li>
+
+                <li class="hi-diretriz-curso">
+                  <h3 class="hi-diretriz-nome">Curso de Piloto Comercial</h3>
+                  <ul class="hi-diretriz-fases">
+                    <li><span class="hi-diretriz-fase">Missões fase Adaptação:</span> AD01</li>
+                    <li><span class="hi-diretriz-fase">Missões fase Aperfeiçoamento:</span> AP01</li>
+                    <li><span class="hi-diretriz-fase">Missões fase Navegação:</span> todas as NAVs (Exceto NAV X1/NAV X2)</li>
+                    <li><span class="hi-diretriz-fase">Missões fase Noturno:</span> NOT01</li>
+                  </ul>
+                </li>
+
+                <li class="hi-diretriz-curso is-nenhuma">
+                  <h3 class="hi-diretriz-nome">Curso de Instrutor de Voo</h3>
+                  <ul class="hi-diretriz-fases">
+                    <li>Nenhuma missão</li>
+                  </ul>
+                </li>
+
+                <li class="hi-diretriz-curso is-nenhuma">
+                  <h3 class="hi-diretriz-nome">Curso de Formação de Instrutor - CFI</h3>
+                  <ul class="hi-diretriz-fases">
+                    <li>Nenhuma missão</li>
+                  </ul>
+                </li>
+
+                <li class="hi-diretriz-curso">
+                  <h3 class="hi-diretriz-nome">Aperfeiçoamento Contínuo</h3>
+                  <ul class="hi-diretriz-fases">
+                    <li>Todas as missões (exceto missões de avaliação)</li>
+                  </ul>
+                </li>
+
+                <li class="hi-diretriz-curso">
+                  <h3 class="hi-diretriz-nome">Voo Administrativos</h3>
+                  <ul class="hi-diretriz-fases">
+                    <li>Voo de Incentivo</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </article>
+
           <article class="card">
             <div class="card-header horas-inva-table-header">
               <div>
@@ -225,85 +305,6 @@
                   <li class="hi-vazio">Carregando dados...</li>
                 </ul>
               </section>
-            </div>
-          </article>
-
-          <!-- Diretriz de missões. Recolhida por padrão e por último no grid:
-               é material de consulta, e acima da lista custaria altura na
-               parte que a tela existe para mostrar. O texto é reprodução
-               literal do documento da operação: não reescrever. -->
-          <article class="card hi-diretriz-card">
-            <h2 class="card-title hi-chart-h2">
-              <button class="hi-chart-toggle" id="hi-diretriz-toggle" type="button"
-                aria-expanded="false" aria-controls="hi-diretriz-corpo"
-                title="Ver a diretriz de missões dos instrutores eventuais">
-                <span class="hi-chart-seta" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" width="12" height="12">
-                    <path d="M6 3.5L10.5 8L6 12.5" fill="none" stroke="currentColor"
-                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
-                Diretriz de missões dos instrutores eventuais
-              </button>
-            </h2>
-            <p class="horas-inva-card-subtitle hi-chart-sub">
-              Missões por curso autorizadas para quem tem a etiqueta Eventual.
-            </p>
-
-            <div class="hi-diretriz" id="hi-diretriz-corpo" hidden>
-              <p class="hi-diretriz-titulo">
-                DIRETRIZ (MISSÕES POR CURSO AUTORIZADAS PARA INSTRUTORES EVENTUAIS)
-              </p>
-
-              <ul class="hi-diretriz-cursos">
-                <li class="hi-diretriz-curso">
-                  <h3 class="hi-diretriz-nome">Curso de Piloto Privado</h3>
-                  <ul class="hi-diretriz-fases">
-                    <li><span class="hi-diretriz-fase">Missões fase Pré-Solo:</span> PS01, PS02, PS03, PS07, PS08, PS13</li>
-                    <li><span class="hi-diretriz-fase">Missões fase Aperfeiçoamento:</span> AP01, AP02, AP03, AP05</li>
-                    <li><span class="hi-diretriz-fase">Missões fase Noturno:</span> NOT01</li>
-                    <li><span class="hi-diretriz-fase">Missões fase Navegação:</span> NAV01, NAV03, NAV04, NAV05</li>
-                  </ul>
-                </li>
-
-                <li class="hi-diretriz-curso">
-                  <h3 class="hi-diretriz-nome">Curso de Piloto Comercial</h3>
-                  <ul class="hi-diretriz-fases">
-                    <li><span class="hi-diretriz-fase">Missões fase Adaptação:</span> AD01</li>
-                    <li><span class="hi-diretriz-fase">Missões fase Aperfeiçoamento:</span> AP01</li>
-                    <li><span class="hi-diretriz-fase">Missões fase Navegação:</span> todas as NAVs (Exceto NAV X1/NAV X2)</li>
-                    <li><span class="hi-diretriz-fase">Missões fase Noturno:</span> NOT01</li>
-                  </ul>
-                </li>
-
-                <li class="hi-diretriz-curso is-nenhuma">
-                  <h3 class="hi-diretriz-nome">Curso de Instrutor de Voo</h3>
-                  <ul class="hi-diretriz-fases">
-                    <li>Nenhuma missão</li>
-                  </ul>
-                </li>
-
-                <li class="hi-diretriz-curso is-nenhuma">
-                  <h3 class="hi-diretriz-nome">Curso de Formação de Instrutor - CFI</h3>
-                  <ul class="hi-diretriz-fases">
-                    <li>Nenhuma missão</li>
-                  </ul>
-                </li>
-
-                <li class="hi-diretriz-curso">
-                  <h3 class="hi-diretriz-nome">Aperfeiçoamento Contínuo</h3>
-                  <ul class="hi-diretriz-fases">
-                    <li>Todas as missões (exceto missões de avaliação)</li>
-                  </ul>
-                </li>
-
-                <li class="hi-diretriz-curso">
-                  <h3 class="hi-diretriz-nome">Voo Administrativos</h3>
-                  <ul class="hi-diretriz-fases">
-                    <li>Voo de Incentivo</li>
-                  </ul>
-                </li>
-              </ul>
             </div>
           </article>
         </div>
