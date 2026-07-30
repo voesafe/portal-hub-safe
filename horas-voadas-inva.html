@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260729-etiquetas-v1">
+  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260730-comentarios-v1">
 </head>
 <body>
 <div class="app-shell">
@@ -134,7 +134,7 @@
             <p class="hi-ajuda">
               Arraste o instrutor pelo punho para trocar de base. No celular, um toque
               no punho já move para a outra base. O <strong>+</strong> ao lado do nome
-              abre as etiquetas.
+              abre as etiquetas, e o balão abre os comentários.
               <span class="hi-legenda"><span class="hi-flag" aria-hidden="true"></span> 100h voadas ou liberado pela operação</span>
             </p>
 
@@ -248,6 +248,12 @@
            destruído aberto no meio da edição. O JS posiciona (é fixed). -->
       <div class="hi-pop" id="hi-pop" role="dialog" aria-label="Etiquetas do instrutor" hidden></div>
 
+      <!-- Popover de comentários. Elemento próprio, e não um painel do de
+           etiquetas: são duas máquinas de estado diferentes, e misturá-las
+           faria uma reabrir a outra. Fica fora das listas pelo mesmo motivo. -->
+      <div class="hi-pop hi-pop-coment" id="hi-pop-coment" role="dialog"
+        aria-label="Comentários do instrutor" hidden></div>
+
       <div class="modal-overlay" id="modal-liberacao">
         <div class="modal hi-modal" role="dialog" aria-modal="true" aria-labelledby="liberacao-titulo">
           <div class="modal-header">
@@ -289,6 +295,6 @@
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260729-post-perdido-v1"></script>
 <script src="js/core/auth.js?v=20260728-notams-sync-v1"></script>
-<script src="js/pages/horas-voadas-inva.js?v=20260729-etiquetas-v1"></script>
+<script src="js/pages/horas-voadas-inva.js?v=20260730-comentarios-v1"></script>
 </body>
 </html>

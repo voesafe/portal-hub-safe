@@ -17,6 +17,13 @@ const HorasVoadasInva = {
   // Estado do popover no molde do Trello. Um so na pagina inteira: ele vive
   // FORA da lista, senao o innerHTML de cada render o destruiria aberto.
   pop: { instrutor: null, painel: 'lista', editando: null, cor: 'verde', busca: '' },
+  // Popover de comentarios. Estado SEPARADO do de etiquetas de proposito: sao
+  // duas maquinas de estado diferentes, e so uma fica aberta por vez.
+  // O rascunho e por instrutor para o texto digitado sobreviver a um render,
+  // e principalmente para voltar ao campo quando o envio falha: perder o que
+  // a pessoa escreveu por causa de uma oscilacao de rede e o pior desfecho.
+  popComent: { instrutor: null, salvando: false, rascunhos: {} },
+  TEXTO_MAX: 1000,
   // Etiquetas marcadas no formulario de cadastro, antes de o instrutor existir.
   etiquetasNovoInstrutor: [],
   // Paleta fechada. A chave viaja para o backend, o tom vem do CSS, que
@@ -227,9 +234,17 @@ const HorasVoadasInva = {
    * grude nas bordas da janela. Fixed, entao mede em coordenada de viewport.
    */
   posicionarPop() {
-    const pop = document.getElementById('hi-pop');
-    const gatilho = this.gatilhoDoPop();
-    if (!gatilho) return;
+    this.posicionarPopover(document.getElementById('hi-pop'), this.gatilhoDoPop());
+  },
+
+  /**
+   * Ancoragem compartilhada pelos dois popovers da tela. Recebe o elemento e o
+   * gatilho porque o de comentarios nasceu depois: duplicar esta conta seria
+   * duplicar as tres armadilhas dela (medir escondido, teto de altura, grude
+   * na borda), e a segunda copia envelheceria sozinha.
+   */
+  posicionarPopover(pop, gatilho) {
+    if (!pop || !gatilho) return;
 
     const alvo = gatilho.getBoundingClientRect();
     const margem = 8;
@@ -516,6 +531,278 @@ const HorasVoadasInva = {
     }
   },
 
+  // ── Comentários por instrutor ───────────────────────────────
+
+  comentariosDe(instrutor) {
+    return Array.isArray(instrutor?.comentarios) ? instrutor.comentarios : [];
+  },
+
+  /**
+   * ⚠️ O balao so existe quando o backend publicado sabe de comentarios.
+   *
+   * O frontend sobe pelo GitHub Pages e o Apps Script sobe por clasp, em
+   * momentos diferentes. Sem esta checagem, entre um deploy e o outro a tela
+   * ofereceria um botao que abre um popover onde escrever nao funciona, que e
+   * pior que nao ter o recurso. O backend novo devolve `comentarios` sempre,
+   * nem que seja lista vazia; o antigo nao devolve o campo. Assim o recurso
+   * aparece sozinho na primeira carga depois do deploy do backend.
+   */
+  suportaComentarios() {
+    return this.instrutores.some(i => Array.isArray(i.comentarios));
+  },
+
+  autorAtual() {
+    return Auth.getNome() || Auth.getEmail() || '';
+  },
+
+  /**
+   * "30/07/2026 08:12" vira "hoje, 08:12" e "ontem, 08:12". Numa lista curta e
+   * recente, a data por extenso ocupa a linha inteira para dizer menos: o que
+   * a operacao pergunta e se o recado e de hoje.
+   */
+  quandoDoComentario(data) {
+    const texto = String(data || '').trim();
+    const casa = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}:\d{2}))?$/);
+    if (!casa) return texto;
+    const [, dia, mes, ano, hora] = casa;
+    const quando = new Date(Number(ano), Number(mes) - 1, Number(dia));
+    const hoje = new Date();
+    const soData = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const dias = Math.round((soData(hoje) - soData(quando)) / 86400000);
+    if (dias === 0) return hora ? `hoje, ${hora}` : 'hoje';
+    if (dias === 1) return hora ? `ontem, ${hora}` : 'ontem';
+    return hora ? `${dia}/${mes} · ${hora}` : `${dia}/${mes}/${ano}`;
+  },
+
+  iniciaisDoAutor(autor) {
+    const partes = String(autor || '').replace(/\(.*\)/g, '').trim().split(/\s+/).filter(Boolean);
+    if (!partes.length) return '?';
+    const primeira = partes[0][0] || '';
+    const ultima = partes.length > 1 ? partes[partes.length - 1][0] : '';
+    return (primeira + ultima).toUpperCase();
+  },
+
+  popComentAberto() {
+    return !!this.popComent.instrutor;
+  },
+
+  /** O gatilho renasce a cada render: sempre reachar pelo nome do instrutor. */
+  gatilhoDoPopComent() {
+    if (!this.popComent.instrutor) return null;
+    return document.querySelector(
+      `.hi-coment[data-coment="${CSS.escape(this.popComent.instrutor)}"]`
+    );
+  },
+
+  posicionarPopComent() {
+    this.posicionarPopover(
+      document.getElementById('hi-pop-coment'),
+      this.gatilhoDoPopComent()
+    );
+  },
+
+  abrirPopComent(nome) {
+    if (this.popComent.instrutor === nome) { this.fecharPopComent(); return; }
+    // Os dois popovers usam o mesmo canto da tela: deixar os dois abertos
+    // faria um cobrir o outro.
+    this.fecharPop();
+    this.popComent.instrutor = nome;
+    this.popComent.salvando = false;
+    this.renderizarPopComent();
+    this.posicionarPopComent();
+    document.getElementById('hi-pop-coment').hidden = false;
+    this.marcarGatilhoComentAtivo();
+    document.getElementById('hi-coment-campo')?.focus();
+  },
+
+  fecharPopComent() {
+    if (!this.popComent.instrutor) return;
+    this.guardarRascunho();
+    this.popComent.instrutor = null;
+    this.popComent.salvando = false;
+    document.getElementById('hi-pop-coment').hidden = true;
+    this.marcarGatilhoComentAtivo();
+  },
+
+  /** O que estiver digitado sobrevive a fechar e reabrir. */
+  guardarRascunho() {
+    const nome = this.popComent.instrutor;
+    if (!nome) return;
+    const campo = document.getElementById('hi-coment-campo');
+    if (!campo) return;
+    const texto = campo.value;
+    if (texto.trim()) this.popComent.rascunhos[nome] = texto;
+    else delete this.popComent.rascunhos[nome];
+  },
+
+  marcarGatilhoComentAtivo() {
+    document.querySelectorAll('.hi-coment').forEach(botao => {
+      const ativo = botao.dataset.coment === this.popComent.instrutor;
+      botao.classList.toggle('is-aberto', ativo);
+      botao.setAttribute('aria-expanded', String(ativo));
+    });
+  },
+
+  comentarioHtml(comentario, podeExcluir) {
+    const pendente = comentario.pendente === true;
+    return `
+      <li class="hi-co-item${pendente ? ' is-pendente' : ''}">
+        <span class="hi-co-avatar" aria-hidden="true">${this.escape(this.iniciaisDoAutor(comentario.autor))}</span>
+        <div class="hi-co-corpo">
+          <p class="hi-co-meta">
+            <b>${this.escape(comentario.autor || 'Sem autor')}</b>
+            <span>${this.escape(pendente ? 'enviando...' : this.quandoDoComentario(comentario.data))}</span>
+          </p>
+          <p class="hi-co-texto">${this.escape(comentario.texto)}</p>
+        </div>
+        ${podeExcluir && !pendente && comentario.id ? `
+          <button class="hi-co-excluir" type="button" data-coment-acao="excluir"
+            data-id="${this.escape(comentario.id)}"
+            title="Apagar este comentário" aria-label="Apagar este comentário">
+            <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+              <path d="M3 4h10M6.5 4V2.8h3V4M5 4l.6 9h4.8L11 4" fill="none"
+                stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>` : ''}
+      </li>
+    `;
+  },
+
+  renderizarPopComent() {
+    const pop = document.getElementById('hi-pop-coment');
+    const nome = this.popComent.instrutor;
+    const instrutor = this.instrutores.find(i => i.nome === nome);
+    const comentarios = this.comentariosDe(instrutor);
+    const autor = this.autorAtual();
+    const rascunho = this.popComent.rascunhos[nome] || '';
+
+    const lista = comentarios.length
+      ? comentarios.map(comentario => this.comentarioHtml(
+          comentario,
+          // ⚠️ Isto e afordancia, nao permissao: quem manda e o guarda do
+          // backend. Aqui so evita oferecer um botao que vai ser recusado.
+          !!autor && String(comentario.autor || '').trim().toUpperCase() === autor.trim().toUpperCase()
+        )).join('')
+      : `<li class="hi-pop-vazio">Nenhum comentário ainda. O primeiro fica aqui.</li>`;
+
+    pop.innerHTML = `
+      <div class="hi-pop-head">
+        <span class="hi-pop-titulo">Comentários</span>
+        <button class="hi-pop-icone" type="button" data-coment-acao="fechar" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="hi-pop-body">
+        <p class="hi-pop-alvo">${this.escape(nome || '')}</p>
+        <ul class="hi-co-lista">${lista}</ul>
+        <form class="hi-co-form" data-coment-form>
+          <textarea class="form-control hi-co-campo" id="hi-coment-campo" rows="2"
+            maxlength="${this.TEXTO_MAX}"
+            placeholder="Escrever um comentário sobre ${this.escape(nome || '')}"
+            aria-label="Escrever um comentário">${this.escape(rascunho)}</textarea>
+          <div class="hi-co-acoes">
+            <button class="btn btn-primary" type="submit" data-coment-acao="enviar"
+              ${this.popComent.salvando ? 'disabled' : ''}>
+              ${this.popComent.salvando ? 'Salvando...' : 'Comentar'}
+            </button>
+          </div>
+        </form>
+      </div>
+    `;
+  },
+
+  /**
+   * Otimista com rollback, e nao o round-trip unico que a casa usa para criar.
+   *
+   * A regra existe porque fingir uma linha cujo id nasce no servidor deixa a
+   * tela com um registro que nenhuma acao seguinte alcanca. Aqui o risco e
+   * removido em vez de aceito: o comentario pendente e marcado, o botao de
+   * apagar nao aparece nele, e a resposta do servidor SUBSTITUI a lista
+   * inteira em vez de completar a que foi fingida. O que se ganha e nao
+   * encarar um botao desabilitado por ~10s depois de escrever uma frase, que
+   * e a escrita mais frequente desta tela.
+   */
+  async enviarComentario(evento) {
+    evento?.preventDefault();
+    const nome = this.popComent.instrutor;
+    const instrutor = this.instrutores.find(i => i.nome === nome);
+    const campo = document.getElementById('hi-coment-campo');
+    if (!instrutor || !campo || this.popComent.salvando) return;
+
+    const texto = String(campo.value || '').trim();
+    if (!texto) {
+      toast('Escreva o comentário antes de salvar.', 'warning');
+      campo.focus();
+      return;
+    }
+
+    const anteriores = this.comentariosDe(instrutor);
+    instrutor.comentarios = [
+      ...anteriores,
+      { id: '', autor: this.autorAtual(), data: '', texto, pendente: true }
+    ];
+    delete this.popComent.rascunhos[nome];
+    this.popComent.salvando = true;
+    this.renderizarTudo();
+    this.renderizarPopComent();
+    this.posicionarPopComent();
+
+    try {
+      const resultado = await this.enviar('add_comment', {
+        nome: instrutor.nome,
+        texto,
+        autor: this.autorAtual()
+      });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar o comentário.');
+      }
+      instrutor.comentarios = Array.isArray(resultado.data?.comentarios)
+        ? resultado.data.comentarios
+        : anteriores;
+    } catch (erro) {
+      console.error('[Comentário do instrutor]', erro);
+      instrutor.comentarios = anteriores;
+      // Devolve o texto ao campo: o comentario nao foi gravado, e digitar de
+      // novo e o tipo de perda que faz a pessoa deixar de usar o recurso.
+      this.popComent.rascunhos[nome] = texto;
+      toast(erro.message || 'Erro ao salvar o comentário.', 'error', 5000);
+    } finally {
+      this.popComent.salvando = false;
+      this.renderizarTudo();
+      if (this.popComentAberto()) {
+        this.renderizarPopComent();
+        this.posicionarPopComent();
+        document.getElementById('hi-coment-campo')?.focus();
+      }
+    }
+  },
+
+  /** Round-trip unico: quem decide se pode apagar e o servidor. */
+  async excluirComentario(id) {
+    const nome = this.popComent.instrutor;
+    const instrutor = this.instrutores.find(i => i.nome === nome);
+    if (!instrutor || !id) return;
+    if (!confirm('Apagar este comentário?')) return;
+
+    this.guardarRascunho();
+    const botao = document.querySelector(`[data-coment-acao="excluir"][data-id="${CSS.escape(id)}"]`);
+    if (botao) botao.disabled = true;
+    try {
+      const resultado = await this.enviar('delete_comment', { id, autor: this.autorAtual() });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível apagar o comentário.');
+      }
+      instrutor.comentarios = Array.isArray(resultado.data?.comentarios)
+        ? resultado.data.comentarios
+        : this.comentariosDe(instrutor).filter(c => c.id !== id);
+      this.renderizarTudo();
+      if (this.popComentAberto()) { this.renderizarPopComent(); this.posicionarPopComent(); }
+    } catch (erro) {
+      console.error('[Excluir comentário]', erro);
+      toast(erro.message || 'Erro ao apagar o comentário.', 'error', 5000);
+      const atual = document.querySelector(`[data-coment-acao="excluir"][data-id="${CSS.escape(id)}"]`);
+      if (atual) atual.disabled = false;
+    }
+  },
+
   // ── Etiquetas no formulário de cadastro ─────────────────────
 
   renderizarEtiquetasCadastro() {
@@ -652,6 +939,31 @@ const HorasVoadasInva = {
     document.getElementById('kpi-liberados').textContent = liberados;
   },
 
+  /**
+   * O balao ao lado do "+". Nasce discreto e vazado; com recado, vira pilula
+   * cheia com o numero, para a linha dizer de longe que existe algo escrito
+   * sobre a pessoa sem precisar abrir nada.
+   */
+  botaoComentarios(instrutor, nomeEscapado) {
+    if (!this.suportaComentarios()) return '';
+    const quantos = this.comentariosDe(instrutor).length;
+    const rotulo = quantos === 0
+      ? `Sem comentário sobre ${instrutor.nome}`
+      : `${quantos} ${quantos === 1 ? 'comentário' : 'comentários'} sobre ${instrutor.nome}`;
+    return `
+      <button class="hi-coment${quantos ? ' tem' : ''}" type="button" data-coment="${nomeEscapado}"
+        aria-haspopup="dialog" aria-expanded="false"
+        title="${this.escape(rotulo)}" aria-label="${this.escape(rotulo)}">
+        <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+          <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.4 9.4 0 0 1-2.9-.4L3 21l1.6-4.6A8.3 8.3 0 0 1 3.6 11.5 8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"
+            fill="none" stroke="currentColor" stroke-width="2.1"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        ${quantos ? `<span class="hi-coment-n">${quantos}</span>` : ''}
+      </button>
+    `;
+  },
+
   linhaInstrutor(instrutor, base) {
     const outra = this.bases.find(b => b !== base) || base;
     const horas = this.horasDe(instrutor);
@@ -679,6 +991,7 @@ const HorasVoadasInva = {
               title="Etiquetas de ${nome}" aria-label="Etiquetas de ${nome}">
               <span aria-hidden="true">+</span>
             </button>
+            ${this.botaoComentarios(instrutor, nome)}
             ${liberado ? `<span class="hi-selo-opr">OPR${instrutor.liberadoEm ? ` · ${this.escape(instrutor.liberadoEm)}` : ''}</span>` : ''}
           </span>
         </div>
@@ -704,12 +1017,18 @@ const HorasVoadasInva = {
       // A busca tambem casa etiqueta: com nomes como LIBERADO IFR AVIAO, a
       // pergunta real da operacao e "quem tem", e digitar o nome dela responde
       // sem precisar de um filtro proprio na tela.
+      // E casa o TEXTO dos comentarios pelo mesmo motivo: guardar recado sem
+      // conseguir achar recado nao resolve nada seis meses depois.
       const visiveis = daBase.filter(i => {
         if (!termo) return true;
         if (String(i.nome || '').toLocaleLowerCase('pt-BR').includes(termo)) return true;
-        return this.etiquetasDo(i).some(id =>
+        const naEtiqueta = this.etiquetasDo(i).some(id =>
           String(this.etiquetaPorId(id)?.nome || '')
             .toLocaleLowerCase('pt-BR').includes(termo)
+        );
+        if (naEtiqueta) return true;
+        return this.comentariosDe(i).some(c =>
+          String(c.texto || '').toLocaleLowerCase('pt-BR').includes(termo)
         );
       });
       const horasBase = daBase.reduce((soma, i) => soma + this.horasDe(i), 0);
@@ -806,6 +1125,10 @@ const HorasVoadasInva = {
     if (this.popAberto()) {
       this.marcarGatilhoAtivo();
       this.posicionarPop();
+    }
+    if (this.popComentAberto()) {
+      this.marcarGatilhoComentAtivo();
+      this.posicionarPopComent();
     }
   },
 
@@ -1183,7 +1506,14 @@ const HorasVoadasInva = {
         // Sem isto o mesmo clique borbulha ate o handler de "clique fora" no
         // document e fecha o popover que acabou de abrir.
         evento.stopPropagation();
+        this.fecharPopComent();
         this.abrirPop(etiquetas.dataset.etiquetas);
+        return;
+      }
+      const comentarios = evento.target.closest('.hi-coment');
+      if (comentarios) {
+        evento.stopPropagation();
+        this.abrirPopComent(comentarios.dataset.coment);
         return;
       }
 
@@ -1227,6 +1557,44 @@ const HorasVoadasInva = {
         campo?.setSelectionRange(campo.value.length, campo.value.length);
       }
       this.posicionarPop();
+    });
+
+    // ── Popover de comentários ────────────────────────────────
+    const popComent = document.getElementById('hi-pop-coment');
+    popComent.addEventListener('click', evento => {
+      const acao = evento.target.closest('[data-coment-acao]');
+      if (!acao) return;
+      const tipo = acao.dataset.comentAcao;
+      if (tipo === 'fechar') { this.fecharPopComent(); return; }
+      if (tipo === 'excluir') { this.excluirComentario(acao.dataset.id); return; }
+    });
+    popComent.addEventListener('submit', evento => {
+      if (evento.target.dataset.comentForm !== undefined) this.enviarComentario(evento);
+    });
+    // Enter envia, Shift+Enter quebra linha: e o que se espera de um campo de
+    // comentario, e o botao continua ali para quem prefere o mouse.
+    popComent.addEventListener('keydown', evento => {
+      if (evento.key !== 'Enter' || evento.shiftKey) return;
+      if (!evento.target.classList.contains('hi-co-campo')) return;
+      evento.preventDefault();
+      this.enviarComentario();
+    });
+    document.addEventListener('click', evento => {
+      if (!this.popComentAberto()) return;
+      // Mesma armadilha do popover de etiquetas: o innerHTML e refeito durante
+      // o proprio despacho, entao o closest sobe uma arvore sem o popover.
+      const caminho = evento.composedPath();
+      const dentro = caminho.some(no =>
+        no.id === 'hi-pop-coment' || no.classList?.contains('hi-coment')
+      );
+      if (dentro) return;
+      this.fecharPopComent();
+    });
+    window.addEventListener('scroll', () => {
+      if (this.popComentAberto()) this.posicionarPopComent();
+    }, true);
+    window.addEventListener('resize', () => {
+      if (this.popComentAberto()) this.posicionarPopComent();
     });
 
     document.addEventListener('click', evento => {
@@ -1295,6 +1663,9 @@ const HorasVoadasInva = {
         else this.fecharPop();
         return;
       }
+      // O rascunho e guardado no fechamento, entao Escape nao apaga o que a
+      // pessoa escreveu: reabrir devolve o texto.
+      if (this.popComentAberto()) { this.fecharPopComent(); return; }
       if (document.querySelector('.hi-ordenar-menu:not([hidden])')) {
         this.fecharMenusOrdem();
         return;

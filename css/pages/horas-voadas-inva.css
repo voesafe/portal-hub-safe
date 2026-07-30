@@ -181,6 +181,58 @@
   background: var(--brand-surface);
 }
 
+/* ── Botão de comentários (ao lado do "+" das etiquetas) ────────
+   Vazado enquanto não há recado, para não competir com os chips em cada
+   linha; cheio e com o número quando há, que é o estado que a operação
+   precisa enxergar sem abrir nada. */
+.hi-coment {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 4px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: .64rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: var(--transition);
+}
+
+.hi-coment svg {
+  flex: 0 0 12px;
+}
+
+.hi-coment:hover,
+.hi-coment.is-aberto {
+  border-style: solid;
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--brand-surface);
+}
+
+.hi-coment.tem {
+  padding: 0 7px 0 5px;
+  border-style: solid;
+  border-color: transparent;
+  color: var(--ink-info);
+  background: var(--tint-info);
+}
+
+/* Com recado, o hover só contorna: trocar o fundo faria a pílula piscar de
+   cor toda vez que o ponteiro cruzasse a linha. */
+.hi-coment.tem:hover,
+.hi-coment.tem.is-aberto {
+  border-color: var(--blue);
+  color: var(--ink-info);
+  background: var(--tint-info);
+}
+
+.hi-coment-n {
+  font-variant-numeric: tabular-nums;
+}
+
 .horas-inva-hours {
   font-family: var(--font-title);
   font-weight: 800;
@@ -837,6 +889,146 @@ body.hi-arrastando {
   color: var(--danger);
 }
 
+/* ── Comentários dentro do popover ──────────────────────────────
+   Reusa .hi-pop, .hi-pop-head, .hi-pop-body e .hi-pop-alvo das etiquetas:
+   o que muda é só o miolo. */
+
+/* ⚠️ Mesma especificidade de `.hi-pop { width: 288px }` (0,1,0), então quem
+   decide é a ORDEM: este bloco tem que continuar DEPOIS do bloco do popover
+   no arquivo. Etiqueta é uma linha curta por item; comentário é texto
+   corrido, e 288px o quebra cedo demais. */
+.hi-pop-coment {
+  width: 316px;
+}
+
+.hi-co-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Sem rolador próprio de propósito: quem rola é o .hi-pop-body, e dois
+     roladores aninhados fariam a roda do mouse parar no de dentro e o campo
+     de escrever nunca aparecer. Mesma decisão da .hi-pop-lista. */
+  list-style: none;
+}
+
+.hi-co-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Enquanto o servidor não confirma. Some assim que a resposta chega e a
+   lista é substituída pela do backend. */
+.hi-co-item.is-pendente {
+  opacity: .6;
+}
+
+.hi-co-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: var(--text-on-brand);
+  background: var(--brand-surface);
+  font-family: var(--font-title);
+  font-size: .62rem;
+  font-weight: 800;
+}
+
+.hi-co-corpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.hi-co-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+  font-size: .66rem;
+}
+
+.hi-co-meta b {
+  color: var(--text-2);
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.hi-co-texto {
+  margin-top: 2px;
+  color: var(--text-2);
+  font-size: .75rem;
+  line-height: 1.5;
+  /* ⚠️ Obrigatório: o comentário pode ter quebra de linha, e ela sobrevive da
+     planilha até aqui. Sem o pre-wrap, duas linhas viram uma só e o texto
+     muda de sentido. O anywhere é para um link colado não estourar o popover. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Só aparece no hover ou no foco do teclado: um X fixo em cada comentário
+   transformaria a leitura numa fileira de botões. */
+.hi-co-excluir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.hi-co-item:hover .hi-co-excluir,
+.hi-co-excluir:focus-visible {
+  opacity: 1;
+}
+
+.hi-co-excluir:hover {
+  color: var(--danger);
+  background: var(--tint-erro);
+}
+
+/* Toque não tem hover: no celular o botão fica sempre visível, senão não há
+   como apagar um comentário. */
+@media (hover: none) {
+  .hi-co-excluir {
+    opacity: 1;
+  }
+}
+
+.hi-co-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.hi-co-campo {
+  min-height: 56px;
+  padding: 8px 10px;
+  font-size: .78rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.hi-co-acoes {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hi-co-acoes .btn {
+  padding: 7px 14px;
+  font-size: .74rem;
+}
+
 /* ── Etiquetas no formulário de cadastro ───────────────────────── */
 
 .hi-cadastro-dica {
@@ -967,5 +1159,11 @@ body.hi-arrastando {
 
   .hi-pop {
     width: 268px;
+  }
+
+  /* O de comentários precisa de mais largura útil que o de etiquetas: o texto
+     é corrido, e a 268px uma frase comum quebra em cinco linhas. */
+  .hi-pop-coment {
+    width: min(300px, calc(100vw - 16px));
   }
 }
