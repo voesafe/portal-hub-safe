@@ -55,6 +55,8 @@ const HorasVoadasInva = {
   // da lista, que é o que a tela existe para mostrar.
   graficoAberto: false,
   CHAVE_GRAFICO: 'horas-inva-grafico',
+  diretrizAberta: false,
+  CHAVE_DIRETRIZ: 'horas-inva-diretriz',
   ROTULOS_ORDEM: {
     prioridade: 'Prioridade de acionamento',
     alfabetica: 'Ordem alfabética',
@@ -1252,6 +1254,39 @@ const HorasVoadasInva = {
       : 'Ver o gráfico de horas por instrutor';
   },
 
+  // ── Diretriz recolhível ─────────────────────────────────────
+  //
+  // Mesmo molde do gráfico, com uma diferença: aqui não há nada a
+  // construir ao abrir. O conteúdo é HTML estático, então basta mostrar,
+  // sem o cuidado do canvas medido em container escondido.
+
+  carregarEstadoDiretriz() {
+    try {
+      this.diretrizAberta = localStorage.getItem(this.CHAVE_DIRETRIZ) === 'aberto';
+    } catch (ignore) {
+      this.diretrizAberta = false;
+    }
+  },
+
+  aplicarEstadoDiretriz() {
+    const corpo = document.getElementById('hi-diretriz-corpo');
+    const botao = document.getElementById('hi-diretriz-toggle');
+    if (!corpo || !botao) return;
+    corpo.hidden = !this.diretrizAberta;
+    botao.setAttribute('aria-expanded', String(this.diretrizAberta));
+    botao.title = this.diretrizAberta
+      ? 'Recolher a diretriz'
+      : 'Ver a diretriz de missões dos instrutores eventuais';
+  },
+
+  alternarDiretriz() {
+    this.diretrizAberta = !this.diretrizAberta;
+    try {
+      localStorage.setItem(this.CHAVE_DIRETRIZ, this.diretrizAberta ? 'aberto' : 'fechado');
+    } catch (ignore) {}
+    this.aplicarEstadoDiretriz();
+  },
+
   alternarGrafico() {
     this.graficoAberto = !this.graficoAberto;
     // Recolher e abrir é preferência de quem usa, e nada aqui pode ser lido
@@ -1769,6 +1804,10 @@ const HorasVoadasInva = {
       'click',
       () => this.alternarGrafico()
     );
+    document.getElementById('hi-diretriz-toggle').addEventListener(
+      'click',
+      () => this.alternarDiretriz()
+    );
     document.getElementById('busca-instrutor').addEventListener('input', evento => {
       this.filtro = evento.target.value;
       this.renderizarBases();
@@ -2004,6 +2043,8 @@ const HorasVoadasInva = {
     this.carregarOrdens();
     this.carregarEstadoGrafico();
     this.aplicarEstadoGrafico();
+    this.carregarEstadoDiretriz();
+    this.aplicarEstadoDiretriz();
     this.pintarMenusOrdem();
     this.renderizarEtiquetasCadastro();
     this.vincularEventos();

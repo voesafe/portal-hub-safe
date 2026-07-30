@@ -1336,3 +1336,94 @@ body.hi-arrastando {
     width: min(300px, calc(100vw - 16px));
   }
 }
+
+/* ── Diretriz de missões dos instrutores eventuais ──────────────
+   Reprodução literal do documento da operação. O card usa o mesmo
+   recolhível do gráfico (.hi-chart-h2, .hi-chart-toggle, .hi-chart-seta),
+   então aqui só entra o miolo. */
+
+.hi-diretriz {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.hi-diretriz-titulo {
+  margin-bottom: 14px;
+  color: var(--text);
+  font-family: var(--font-title);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+/* Dois blocos por faixa no desktop: os cursos são curtos e empilhá-los
+   numa coluna só devolveria a altura que a passada de espaço em branco
+   tirou da página. auto-fit encolhe sozinho até uma coluna. */
+.hi-diretriz-cursos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+  list-style: none;
+}
+
+.hi-diretriz-curso {
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  /* Barra lateral no mesmo idioma da linha do instrutor, onde a cor da
+     borda esquerda também carrega estado. */
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+/* Curso sem missão autorizada: o vermelho é o mesmo par de estado do
+   resto do Hub, legível nos dois modos. */
+.hi-diretriz-curso.is-nenhuma {
+  border-left-color: var(--danger);
+  background: var(--tint-erro);
+}
+
+.hi-diretriz-nome {
+  margin-bottom: 6px;
+  color: var(--text);
+  font-family: var(--font-title);
+  font-size: .84rem;
+  font-weight: 800;
+}
+
+.hi-diretriz-fases {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+}
+
+.hi-diretriz-fases li {
+  color: var(--text-2);
+  font-size: .76rem;
+  line-height: 1.45;
+  /* Código de missão não pode quebrar no meio: NAV X1/NAV X2 e a lista
+     separada por vírgula quebram entre itens, nunca dentro de um código. */
+  overflow-wrap: break-word;
+}
+
+.hi-diretriz-curso.is-nenhuma .hi-diretriz-fases li {
+  color: var(--ink-erro);
+  font-weight: 700;
+}
+
+.hi-diretriz-fase {
+  color: var(--text);
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .hi-diretriz-cursos {
+    grid-template-columns: 1fr;
+  }
+
+  .hi-diretriz-titulo {
+    font-size: .74rem;
+  }
+}
