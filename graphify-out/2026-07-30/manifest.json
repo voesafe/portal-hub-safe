@@ -340,8 +340,8 @@
     "semantic_hash": ""
   },
   "horas-voadas-inva.html": {
-    "mtime": 1785421937.3839407,
-    "ast_hash": "5499d7bb312e11e0153bb57df582027c",
+    "mtime": 1785424069.5035603,
+    "ast_hash": "a6aff1074e7a99c74ffa8c296983c8a2",
     "semantic_hash": ""
   },
   "index.html": {
@@ -895,8 +895,8 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1785422131.0844934,
-    "ast_hash": "0f7b15aaa62e409d8d039c3b7c52dca4",
+    "mtime": 1785424342.7259197,
+    "ast_hash": "23c37c0b0f4ce1f38aacdc27bbec204d",
     "semantic_hash": ""
   },
   "notams.html": {
@@ -980,8 +980,8 @@
     "semantic_hash": "73e8343cf81b81f274e9393a3f762240"
   },
   "js/pages/horas-voadas-inva.js": {
-    "mtime": 1785422038.7486,
-    "ast_hash": "2c2d564169eff305743e3ccda4738e93",
+    "mtime": 1785423574.7033613,
+    "ast_hash": "27de6d0e7cf446c5080e22be6e2ebf2b",
     "semantic_hash": ""
   },
   "js/pages/inicio.js": {
