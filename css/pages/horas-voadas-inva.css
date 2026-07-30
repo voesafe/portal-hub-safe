@@ -284,6 +284,20 @@
 
 /* ── Instrutores por base (arrastar entre SJK e CPQ) ────────── */
 
+/* A regra da tela, não um aviso de erro: por isso a tinta de informação e o
+   filete lateral, e não um bloco de alerta. Ela precisa ser lida antes da
+   lista, porque é o que dá sentido à ordem dela. */
+.hi-prioridade {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--tint-info);
+  color: var(--ink-info);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
 .hi-ajuda {
   display: flex;
   align-items: center;
@@ -292,6 +306,24 @@
   margin-bottom: 10px;
   color: var(--text-muted);
   font-size: .75rem;
+}
+
+/* Só existe enquanto a base está numa vista que não é a de prioridade. */
+.hi-vista-aviso {
+  margin-bottom: 8px;
+  padding: 6px 9px;
+  border-radius: var(--radius-sm);
+  background: var(--tint-aviso);
+  color: var(--ink-aviso);
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+/* display de baixa especificidade não venceria o atributo; aqui a regra base
+   não tem display, mas a armadilha já mordeu cinco vezes no projeto e o
+   custo de blindar é uma linha. */
+.hi-vista-aviso[hidden] {
+  display: none;
 }
 
 .hi-legenda {
@@ -515,6 +547,29 @@
 
 .hi-punho-icone::before { top: -4px; }
 .hi-punho-icone::after  { top: 4px; }
+
+/* O número da posição na fila. Tabular para a coluna não dançar entre 9 e 10,
+   e largura mínima para o mesmo motivo. */
+.hi-posicao {
+  flex: 0 0 auto;
+  min-width: 15px;
+  color: var(--text-muted);
+  font-family: var(--font-title);
+  font-size: .74rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Onde o instrutor vai cair ao soltar. Sem altura própria de conteúdo: é uma
+   faixa fina que ocupa o mesmo vão do gap entre os itens. */
+.hi-drop-marca {
+  height: 3px;
+  border-radius: 3px;
+  background: var(--blue);
+  box-shadow: 0 0 0 3px var(--tint-info);
+  list-style: none;
+}
 
 /* Nome e badge na MESMA linha. Em coluna, o badge sozinho na segunda
    linha levava cada item de 46px para 71px, e sao varios por base.

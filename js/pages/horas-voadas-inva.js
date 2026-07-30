@@ -42,12 +42,17 @@ const HorasVoadasInva = {
   ],
   COR_PADRAO: 'cinza',
   NOME_MAX: 60,
-  // Uma ordem por base, escolhida no menuzinho do cabecalho de cada card.
-  ordens: { SJK: 'alfabetica', CPQ: 'alfabetica' },
-  // O Hub recarrega a pagina inteira a cada item da sidebar, entao sem
-  // persistir a escolha se perderia a cada visita.
-  CHAVE_ORDENS: 'horas-inva-ordens',
+  // ⚠️ A ordem de PRIORIDADE e a ordem de verdade da lista, decidida pela
+  // coordenacao e guardada na planilha. As outras tres sao VISTAS temporarias
+  // para ajudar a decidir (quem esta com menos horas, por exemplo) e por isso
+  // nao sao persistidas: uma preferencia de ordenacao esquecida semanas atras
+  // faria a lista parecer a fila de acionamento sem ser. Como o Hub recarrega
+  // a pagina inteira a cada navegacao, a vista ja volta sozinha ao padrao.
+  ordens: { SJK: 'prioridade', CPQ: 'prioridade' },
+  ORDEM_PADRAO: 'prioridade',
+  CHAVE_ORDENS_LEGADA: 'horas-inva-ordens',
   ROTULOS_ORDEM: {
+    prioridade: 'Prioridade de acionamento',
     alfabetica: 'Ordem alfabética',
     'horas-asc': 'Horas, da menor',
     'horas-desc': 'Horas, da maior'
@@ -837,23 +842,17 @@ const HorasVoadasInva = {
 
   // ── Ordenação de cada base ──────────────────────────────────
 
+  /**
+   * A escolha de ordenacao nao e mais persistida (ver o comentario em
+   * `ordens`). Isto so limpa a chave que ficou nos navegadores de quem usou a
+   * versao anterior, para nao deixar lixo no localStorage.
+   */
   carregarOrdens() {
-    try {
-      const salvo = JSON.parse(localStorage.getItem(this.CHAVE_ORDENS) || '{}');
-      this.bases.forEach(base => {
-        // So aceita ordem conhecida: um valor estranho no localStorage nao
-        // pode deixar a lista sem criterio nenhum.
-        if (this.ROTULOS_ORDEM[salvo[base]]) this.ordens[base] = salvo[base];
-      });
-    } catch (ignore) {
-      // localStorage indisponivel ou JSON quebrado: fica no padrao alfabetico.
-    }
+    try { localStorage.removeItem(this.CHAVE_ORDENS_LEGADA); } catch (ignore) {}
   },
 
-  salvarOrdens() {
-    try {
-      localStorage.setItem(this.CHAVE_ORDENS, JSON.stringify(this.ordens));
-    } catch (ignore) {}
+  emPrioridade(base) {
+    return this.ordens[base] === 'prioridade';
   },
 
   compararNome(a, b) {
@@ -862,17 +861,116 @@ const HorasVoadasInva = {
     return String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR');
   },
 
+  /**
+   * Posicao do instrutor na fila da base.
+   *
+   * ⚠️ Zero significa "sem posicao definida" e vale INFINITO aqui, ou seja,
+   * vai para o FIM. Tratar zero como zero jogaria todo instrutor ainda nao
+   * posicionado para a primeira chamada, que e o oposto do que a ausencia de
+   * decisao significa. Quando NINGUEM tem posicao (base nunca ordenada),
+   * todos empatam em infinito e o desempate por nome devolve exatamente a
+   * ordem alfabetica de antes: nao ha migracao a fazer.
+   */
+  ordemDe(instrutor) {
+    const valor = Number(instrutor?.ordem) || 0;
+    return valor > 0 ? valor : Number.POSITIVE_INFINITY;
+  },
+
   ordenarInstrutores(lista, ordem) {
     const copia = [...lista];
-    // Empate desempata por nome nas duas ordens de horas, senao a lista
-    // muda de posicao sozinha entre um render e outro.
+    // Empate desempata por nome em todas as ordens, senao a lista muda de
+    // posicao sozinha entre um render e outro.
     if (ordem === 'horas-asc') {
       return copia.sort((a, b) => this.horasDe(a) - this.horasDe(b) || this.compararNome(a, b));
     }
     if (ordem === 'horas-desc') {
       return copia.sort((a, b) => this.horasDe(b) - this.horasDe(a) || this.compararNome(a, b));
     }
-    return copia.sort((a, b) => this.compararNome(a, b));
+    if (ordem === 'alfabetica') {
+      return copia.sort((a, b) => this.compararNome(a, b));
+    }
+    return copia.sort((a, b) => this.ordemDe(a) - this.ordemDe(b) || this.compararNome(a, b));
+  },
+
+  /** A base inteira na ordem de prioridade, SEM o filtro da busca. */
+  nomesDaBase(base) {
+    return this.ordenarInstrutores(
+      this.instrutores.filter(i => this.baseDoInstrutor(i) === base),
+      'prioridade'
+    ).map(i => i.nome);
+  },
+
+  /**
+   * Grava a nova fila de UMA base. Otimista com rollback: e reposicionamento
+   * de itens que ja estao no estado local e o servidor nao recalcula nada.
+   * Com ~10s de latencia, esperar deixaria o instrutor parado no lugar antigo
+   * depois do arraste, que e a coisa que o arraste promete desfazer.
+   */
+  async aplicarOrdem(base, nomes) {
+    if (!this.bases.includes(base) || !nomes.length) return;
+
+    // O instantaneo cobre base E ordem porque um arraste entre bases muda as
+    // duas, e o rollback tem que devolver o instrutor para a base de origem
+    // na posicao que ele tinha la.
+    const antes = this.instrutores.map(i => ({ i, base: i.base, ordem: i.ordem }));
+    nomes.forEach((nome, indice) => {
+      const instrutor = this.instrutores.find(i => i.nome === nome);
+      if (!instrutor) return;
+      instrutor.base = base;
+      instrutor.ordem = indice + 1;
+    });
+    this.renderizarTudo();
+
+    try {
+      const resultado = await this.enviar('set_instructor_order', { base, nomes });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar a ordem.');
+      }
+    } catch (erro) {
+      console.error('[Ordem de prioridade]', erro);
+      antes.forEach(({ i, base: b, ordem }) => { i.base = b; i.ordem = ordem; });
+      this.renderizarTudo();
+      toast(erro.message || 'Erro ao salvar a ordem de prioridade.', 'error', 5000);
+    }
+  },
+
+  /**
+   * Move o instrutor para a posicao imediatamente antes de `nomeAlvo` na base
+   * de destino, ou para o fim quando `nomeAlvo` e nulo.
+   *
+   * ⚠️ Trabalha sobre a lista COMPLETA da base, nunca sobre o que esta
+   * visivel. Com a busca ativa, montar a fila a partir dos itens na tela
+   * apagaria a posicao de todo mundo que o filtro escondeu.
+   */
+  reposicionar(nome, base, nomeAlvo) {
+    const fila = this.nomesDaBase(base).filter(n => n !== nome);
+    const destino = nomeAlvo && nomeAlvo !== nome ? fila.indexOf(nomeAlvo) : -1;
+    if (destino >= 0) fila.splice(destino, 0, nome);
+    else fila.push(nome);
+    return this.aplicarOrdem(base, fila);
+  },
+
+  /** Um degrau para cima ou para baixo, para quem usa teclado. */
+  moverNaFila(nome, passo) {
+    const instrutor = this.instrutores.find(i => i.nome === nome);
+    if (!instrutor) return;
+    const base = this.baseDoInstrutor(instrutor);
+    if (!this.emPrioridade(base)) return;
+
+    const fila = this.nomesDaBase(base);
+    const atual = fila.indexOf(nome);
+    const novo = atual + passo;
+    if (atual < 0 || novo < 0 || novo >= fila.length) return;
+    fila.splice(atual, 1);
+    fila.splice(novo, 0, nome);
+    this.aplicarOrdem(base, fila);
+    // O innerHTML da lista destroi o botao que estava com o foco: sem
+    // devolve-lo, a segunda seta teria que ser precedida de um tab.
+    requestAnimationFrame(() => {
+      document.querySelector(
+        `.hi-item[data-nome="${CSS.escape(nome)}"] .hi-punho`
+      )?.focus();
+    });
   },
 
   pintarMenusOrdem() {
@@ -910,7 +1008,6 @@ const HorasVoadasInva = {
   escolherOrdem(base, ordem) {
     if (!this.ROTULOS_ORDEM[ordem] || !this.bases.includes(base)) return;
     this.ordens[base] = ordem;
-    this.salvarOrdens();
     this.fecharMenusOrdem();
     this.pintarMenusOrdem();
     this.renderizarBases();
@@ -964,21 +1061,32 @@ const HorasVoadasInva = {
     `;
   },
 
-  linhaInstrutor(instrutor, base) {
+  linhaInstrutor(instrutor, base, posicao) {
     const outra = this.bases.find(b => b !== base) || base;
     const horas = this.horasDe(instrutor);
     const liberado = instrutor.liberadoOpr === true;
     const flag = this.temFlagVerde(instrutor);
     const nome = this.escape(instrutor.nome);
     const motivo = this.escape(this.motivoDaFlag(instrutor));
+    const prioridade = this.emPrioridade(base);
+    // ⚠️ O numero e a posicao na fila COMPLETA, nao a posicao na tela. Com a
+    // busca ativa, ver 1, 2 e 7 e o que diz a verdade: os outros existem e
+    // estao escondidos. Numerar o que esta visivel faria o quinto da fila
+    // parecer o segundo.
+    const rotuloPunho = prioridade
+      ? `${nome} está em ${posicao}º na prioridade de ${base}. Arraste para mudar a posição, `
+        + `use as setas para cima e para baixo, ou clique para mover para a base ${outra}`
+      : `Arraste para a outra base, ou clique para mover ${nome} para a base ${outra}`;
 
     return `
       <li class="hi-item${flag ? ' is-liberado' : ''}" data-nome="${nome}">
         <button class="hi-punho" type="button" data-mover="${outra}"
-          title="Arraste para a outra base, ou clique para mover para ${outra}"
-          aria-label="Mover ${nome} para a base ${outra}">
+          title="${this.escape(rotuloPunho)}" aria-label="${this.escape(rotuloPunho)}">
           <span class="hi-punho-icone" aria-hidden="true"></span>
         </button>
+        ${prioridade
+          ? `<span class="hi-posicao" aria-hidden="true">${posicao}</span>`
+          : ''}
         <div class="hi-item-info">
           <span class="hi-item-nome">
             ${nome}
@@ -1040,6 +1148,18 @@ const HorasVoadasInva = {
       }
       if (total) total.textContent = `${this.formatarHoras(horasBase)}h`;
 
+      const aviso = document.getElementById(`hi-vista-${base}`);
+      if (aviso) {
+        // ⚠️ Sem este aviso, uma vista ordenada por horas seria lida como a
+        // fila de acionamento, que e exatamente o que o texto no topo da
+        // tela afirma. A vista some no recarregamento, mas enquanto ela
+        // estiver ativa a tela tem que dizer que aquilo nao e a prioridade.
+        aviso.hidden = this.emPrioridade(base);
+        aviso.textContent = this.emPrioridade(base)
+          ? ''
+          : `Vendo por ${this.ROTULOS_ORDEM[this.ordens[base]].toLowerCase()}. Esta não é a ordem de prioridade.`;
+      }
+
       if (!visiveis.length) {
         const texto = termo && daBase.length
           ? 'Nenhum instrutor com esse nome nesta base.'
@@ -1048,7 +1168,12 @@ const HorasVoadasInva = {
         return;
       }
 
-      lista.innerHTML = visiveis.map(i => this.linhaInstrutor(i, base)).join('');
+      // A posicao vem da fila completa da base, para o numero nao mentir
+      // quando a busca esconde parte dela.
+      const posicoes = new Map(this.nomesDaBase(base).map((nome, i) => [nome, i + 1]));
+      lista.innerHTML = visiveis
+        .map(i => this.linhaInstrutor(i, base, posicoes.get(i.nome) || 0))
+        .join('');
     });
   },
 
@@ -1132,7 +1257,7 @@ const HorasVoadasInva = {
     }
   },
 
-  // ── Arrastar entre bases ────────────────────────────────────
+  // ── Arrastar: posição na fila e troca de base ───────────────
 
   iniciarArraste(evento, punho) {
     // Botao direito do mouse nao arrasta.
@@ -1150,6 +1275,11 @@ const HorasVoadasInva = {
       largura: item.getBoundingClientRect().width,
       ativo: false,
       alvo: null,
+      // Nome do instrutor ANTES do qual o arrastado vai entrar. Nulo = fim da
+      // fila. Guardar o nome, e nao o indice, e o que faz o alvo sobreviver a
+      // um render no meio do arraste.
+      antesDe: null,
+      marca: null,
       ghost: null
     };
     // A captura garante que o pointermove continue chegando mesmo quando o
@@ -1183,11 +1313,54 @@ const HorasVoadasInva = {
     const sob = document.elementFromPoint(evento.clientX, evento.clientY);
     const zona = sob?.closest('[data-drop-base]') || null;
     const base = zona?.dataset.dropBase || null;
-    if (base === a.alvo) return;
-    a.alvo = base;
-    document.querySelectorAll('[data-drop-base]').forEach(el => {
-      el.classList.toggle('is-drop', el.dataset.dropBase === base);
-    });
+
+    if (base !== a.alvo) {
+      a.alvo = base;
+      document.querySelectorAll('[data-drop-base]').forEach(el => {
+        el.classList.toggle('is-drop', el.dataset.dropBase === base);
+      });
+    }
+
+    this.marcarPosicaoDeSoltura(evento, zona, base);
+  },
+
+  /**
+   * Desenha onde o instrutor vai cair na fila. Sem isto o arraste dentro da
+   * mesma base seria as cegas: a lista so mudaria depois de soltar, e a
+   * pessoa teria que tentar de novo para acertar a posicao.
+   *
+   * Numa vista que nao e a de prioridade, a marca nao aparece e a posicao nao
+   * e calculada: reordenar uma lista ordenada por horas gravaria uma fila que
+   * nao e a que esta na tela.
+   */
+  marcarPosicaoDeSoltura(evento, zona, base) {
+    const a = this.arraste;
+    const lista = base && this.emPrioridade(base) ? zona.querySelector('.hi-lista') : null;
+    if (!lista) {
+      a.antesDe = null;
+      a.marca?.remove();
+      a.marca = null;
+      return;
+    }
+
+    const itens = [...lista.querySelectorAll('.hi-item')].filter(el => el !== a.item);
+    let alvo = null;
+    for (const el of itens) {
+      const caixa = el.getBoundingClientRect();
+      // A metade da altura e a fronteira: acima dela entra antes, abaixo
+      // continua procurando. E o que faz o indicador acompanhar o ponteiro
+      // sem oscilar entre duas posicoes na borda.
+      if (evento.clientY < caixa.top + caixa.height / 2) { alvo = el; break; }
+    }
+
+    a.antesDe = alvo?.dataset.nome || null;
+    if (!a.marca) {
+      a.marca = document.createElement('li');
+      a.marca.className = 'hi-drop-marca';
+      a.marca.setAttribute('aria-hidden', 'true');
+    }
+    if (alvo) lista.insertBefore(a.marca, alvo);
+    else lista.appendChild(a.marca);
   },
 
   encerrarArraste(evento) {
@@ -1197,6 +1370,7 @@ const HorasVoadasInva = {
 
     try { a.punho.releasePointerCapture(a.pointerId); } catch (ignore) {}
     a.ghost?.remove();
+    a.marca?.remove();
     a.item.classList.remove('is-arrastando');
     document.body.classList.remove('hi-arrastando');
     document.querySelectorAll('[data-drop-base]')
@@ -1204,13 +1378,33 @@ const HorasVoadasInva = {
 
     if (!a.ativo) return; // clique simples: quem resolve e o handler de click
     this.ignorarCliqueDoPunho = true;
-    if (a.alvo) this.moverBase(a.nome, a.alvo);
+    if (!a.alvo) return;
+
+    const instrutor = this.instrutores.find(i => i.nome === a.nome);
+    const origem = instrutor ? this.baseDoInstrutor(instrutor) : null;
+
+    // Fora da vista de prioridade nao ha posicao a gravar, entao um arraste
+    // so vale se atravessar as bases.
+    if (!this.emPrioridade(a.alvo)) {
+      if (a.alvo !== origem) this.moverBase(a.nome, a.alvo);
+      return;
+    }
+
+    // Soltar exatamente onde ja estava nao e uma mudanca: sem esta checagem,
+    // todo arraste desistido gravaria a fila inteira de novo.
+    const fila = this.nomesDaBase(a.alvo);
+    const atual = fila.indexOf(a.nome);
+    const seguinte = atual >= 0 ? (fila[atual + 1] || null) : null;
+    if (a.alvo === origem && (a.antesDe === seguinte || a.antesDe === a.nome)) return;
+
+    this.reposicionar(a.nome, a.alvo, a.antesDe);
   },
 
   cancelarArraste() {
     const a = this.arraste;
     if (!a) return;
     a.alvo = null;
+    a.antesDe = null;
     this.encerrarArraste({ pointerId: a.pointerId });
   },
 
@@ -1225,7 +1419,14 @@ const HorasVoadasInva = {
     // Otimista: e mutacao simples de item que ja existe no estado local e o
     // servidor nao recalcula nada. Com ~10s de latencia, esperar deixaria o
     // instrutor parado na base antiga depois do arraste.
+    const ordemAnterior = instrutor.ordem;
     instrutor.base = base;
+    // O backend poe quem chega no FIM da fila da base de destino. Espelhar
+    // isso aqui evita o instrutor aparecer no meio por um instante e pular
+    // para o fim quando a resposta chegar.
+    instrutor.ordem = this.instrutores
+      .filter(i => this.baseDoInstrutor(i) === base && i !== instrutor)
+      .reduce((maior, i) => Math.max(maior, Number(i.ordem) || 0), 0) + 1;
     this.renderizarTudo();
 
     try {
@@ -1233,10 +1434,15 @@ const HorasVoadasInva = {
       if (resultado.status !== 'success') {
         throw new Error(resultado.message || 'Não foi possível mudar a base.');
       }
+      if (Number(resultado.data?.ordem) > 0) {
+        instrutor.ordem = Number(resultado.data.ordem);
+        this.renderizarBases();
+      }
       toast(`${nome} agora está na base ${base}.`, 'success');
     } catch (erro) {
       console.error('[Base do instrutor]', erro);
       instrutor.base = anterior;
+      instrutor.ordem = ordemAnterior;
       this.renderizarTudo();
       toast(erro.message || 'Erro ao mudar a base do instrutor.', 'error', 5000);
     }
@@ -1479,6 +1685,17 @@ const HorasVoadasInva = {
     bases.addEventListener('pointerdown', evento => {
       const punho = evento.target.closest('.hi-punho');
       if (punho) this.iniciarArraste(evento, punho);
+    });
+    // Arrastar por teclado nao existe. As setas dao o mesmo resultado, um
+    // degrau por vez, e o preventDefault impede a pagina de rolar junto.
+    bases.addEventListener('keydown', evento => {
+      if (evento.key !== 'ArrowUp' && evento.key !== 'ArrowDown') return;
+      const punho = evento.target.closest('.hi-punho');
+      if (!punho) return;
+      const item = punho.closest('.hi-item');
+      if (!item) return;
+      evento.preventDefault();
+      this.moverNaFila(item.dataset.nome, evento.key === 'ArrowUp' ? -1 : 1);
     });
     bases.addEventListener('click', evento => {
       const gatilhoOrdem = evento.target.closest('.hi-ordenar-btn');

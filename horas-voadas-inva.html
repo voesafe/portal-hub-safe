@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260730-comentarios-v1">
+  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260730-prioridade-v1">
 </head>
 <body>
 <div class="app-shell">
@@ -131,10 +131,21 @@
               <input class="form-control horas-inva-search" id="busca-instrutor" type="search" placeholder="Buscar instrutor">
             </div>
 
+            <p class="hi-prioridade">
+              A ordem que aparece na lista é a ordem de prioridade de acionamento.
+            </p>
+
+            <!-- ⚠️ A prosa vai dentro de um <span> porque .hi-ajuda é flex: solto,
+                 cada <strong> vira um item de flex e ganha o gap de 14px em volta,
+                 o que abre buracos no meio da frase ("as setas  ↑  e  ↓  movem"). -->
             <p class="hi-ajuda">
-              Arraste o instrutor pelo punho para trocar de base. No celular, um toque
-              no punho já move para a outra base. O <strong>+</strong> ao lado do nome
-              abre as etiquetas, e o balão abre os comentários.
+              <span>
+                Arraste o instrutor pelo punho para mudar a posição dele na fila ou para
+                levá-lo à outra base. Com o punho em foco, as setas <strong>↑</strong> e
+                <strong>↓</strong> movem um degrau. No celular, um toque no punho move
+                para a outra base. O <strong>+</strong> ao lado do nome abre as etiquetas,
+                e o balão abre os comentários.
+              </span>
               <span class="hi-legenda"><span class="hi-flag" aria-hidden="true"></span> 100h voadas ou liberado pela operação</span>
             </p>
 
@@ -156,12 +167,14 @@
                       </svg>
                     </button>
                     <div class="hi-ordenar-menu" data-menu="SJK" role="menu" hidden>
+                      <button type="button" role="menuitemradio" data-ordem="prioridade">Prioridade de acionamento</button>
                       <button type="button" role="menuitemradio" data-ordem="alfabetica">Ordem alfabética</button>
                       <button type="button" role="menuitemradio" data-ordem="horas-asc">Horas, da menor</button>
                       <button type="button" role="menuitemradio" data-ordem="horas-desc">Horas, da maior</button>
                     </div>
                   </div>
                 </header>
+                <p class="hi-vista-aviso" id="hi-vista-SJK" hidden></p>
                 <ul class="hi-lista" id="hi-lista-SJK">
                   <li class="hi-vazio">Carregando dados...</li>
                 </ul>
@@ -184,12 +197,14 @@
                       </svg>
                     </button>
                     <div class="hi-ordenar-menu" data-menu="CPQ" role="menu" hidden>
+                      <button type="button" role="menuitemradio" data-ordem="prioridade">Prioridade de acionamento</button>
                       <button type="button" role="menuitemradio" data-ordem="alfabetica">Ordem alfabética</button>
                       <button type="button" role="menuitemradio" data-ordem="horas-asc">Horas, da menor</button>
                       <button type="button" role="menuitemradio" data-ordem="horas-desc">Horas, da maior</button>
                     </div>
                   </div>
                 </header>
+                <p class="hi-vista-aviso" id="hi-vista-CPQ" hidden></p>
                 <ul class="hi-lista" id="hi-lista-CPQ">
                   <li class="hi-vazio">Carregando dados...</li>
                 </ul>
@@ -295,6 +310,6 @@
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260729-post-perdido-v1"></script>
 <script src="js/core/auth.js?v=20260728-notams-sync-v1"></script>
-<script src="js/pages/horas-voadas-inva.js?v=20260730-comentarios-v1"></script>
+<script src="js/pages/horas-voadas-inva.js?v=20260730-prioridade-v1"></script>
 </body>
 </html>
