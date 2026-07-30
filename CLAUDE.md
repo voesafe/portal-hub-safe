@@ -625,6 +625,15 @@ Recado da operação sobre cada instrutor (afastamento, restrição combinada, c
 - **Assets em `?v=20260730-comentarios-v1`** (só a página, nada de `core/`).
 - **Backend em produção no @10** desde 2026-07-30. Rollback: `clasp redeploy AKfycbyThE1… -V 9`.
 
+### O popover não rolava, corrigido em 2026-07-30 (só frontend)
+
+Reportado num navegador Windows: com a lista de etiquetas maior que o popover, o conteúdo não descia **nem com a roda do mouse nem arrastando a barra**. O CSS estava certo (a mesma estrutura isolada rola), e a causa era JS.
+
+- ⚠️ **`window.addEventListener('scroll', …, true)` recebe TAMBÉM o scroll dos descendentes.** O `capture: true` existe para reancorar o popover quando a página rola, já que `fixed` não acompanha a rolagem. Só que na fase de captura o listener enxerga o scroll do **próprio corpo do popover**, e aí chama `posicionarPopover`, que faz `pop.style.maxHeight = ''` para medir a altura natural. Sem o teto o corpo deixa de transbordar, **o navegador zera o `scrollTop`**, e o teto volta logo depois com a rolagem já perdida. Cada tentativa era desfeita no mesmo quadro. Os dois listeners agora ignoram scroll originado dentro do popover (`scrollVeioDeDentro`).
+- **`posicionarPopover` guarda e devolve o `scrollTop`** em volta da medição. Sem isso, rolar a **página** com o popover aberto jogaria o conteúdo dele de volta ao topo, que é a mesma perda pela porta dos fundos.
+- ⚠️ **`page.mouse.wheel` funciona no headless, mas ARRASTAR A BARRA DE ROLAGEM não**, nem numa página sem JS nenhum (medido num controle isolado). Ao testar rolagem aqui, use a roda e, para o gesto da barra, teste o **mecanismo** (despachar `scroll` e conferir que o `scrollTop` sobrevive) em vez do gesto.
+- **Verificação:** 12 checagens, incluindo a causa raiz isolada, a roda não vazando para a página, rolar a página preservando a posição do popover, o popover seguindo ancorado, marcar etiqueta depois de rolar, o popover de comentários e o celular. Antes de acusar o código, dois controles provaram que o instrumento servia: scroller aninhado isolado rola, e a estrutura exata do popover isolada também.
+
 ### Ordem de prioridade de acionamento, desde 2026-07-30
 
 A lista deixou de ser alfabética fixa. **A ordem em que os instrutores aparecem é a ordem de prioridade de acionamento**, decidida pela coordenação e escrita na tela em cima da lista. Quem consulta sabe quem chamar primeiro; quem coordena arrasta para mudar.
