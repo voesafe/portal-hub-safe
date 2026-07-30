@@ -1061,6 +1061,35 @@ const HorasVoadasInva = {
     `;
   },
 
+  /**
+   * O check da liberação por OPR.
+   *
+   * ⚠️ Sem texto visível, TODO o significado passa a viver no title e no
+   * aria-label: eles precisam dizer o estado atual, quem liberou e quando, e
+   * o que o clique faz. Um ✓ mudo seria um botão que ninguém sabe apertar, e
+   * pior, um botão que ninguém sabe que já está apertado.
+   *
+   * `aria-pressed` porque é alternador de estado, não uma ação de mão única.
+   */
+  botaoLiberar(instrutor, nomeEscapado, liberado) {
+    const quando = instrutor.liberadoEm ? ` em ${instrutor.liberadoEm}` : '';
+    const quem = instrutor.liberadoPor ? ` por ${instrutor.liberadoPor}` : '';
+    const rotulo = liberado
+      ? `Liberado pela operação${quando}${quem}. Clique para remover a liberação de ${instrutor.nome}.`
+      : `Liberar ${instrutor.nome} pela operação, mesmo sem as 100h. Pede a senha da operação.`;
+
+    return `
+      <button class="hi-liberar${liberado ? ' is-liberado' : ''}" type="button"
+        data-liberar="${liberado ? 'remover' : 'conceder'}" aria-pressed="${liberado}"
+        title="${this.escape(rotulo)}" aria-label="${this.escape(rotulo)}">
+        <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+          <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    `;
+  },
+
   linhaInstrutor(instrutor, base, posicao) {
     const outra = this.bases.find(b => b !== base) || base;
     const horas = this.horasDe(instrutor);
@@ -1104,9 +1133,7 @@ const HorasVoadasInva = {
           </span>
         </div>
         <span class="horas-inva-hours">${this.formatarHoras(horas)}h</span>
-        <button class="btn btn-ghost hi-liberar" type="button" data-liberar="${liberado ? 'remover' : 'conceder'}">
-          ${liberado ? 'Remover liberação' : 'Liberado por OPR'}
-        </button>
+        ${this.botaoLiberar(instrutor, nome, liberado)}
       </li>
     `;
   },

@@ -623,11 +623,46 @@
   white-space: nowrap;
 }
 
+/* O check da liberação por OPR. Era um botão de texto que comia ~150px de
+   cada linha; virou um alvo de 28px na ponta direita, que é a zona de ação
+   da linha. Discreto enquanto não está concedido, verde e cheio quando está,
+   porque o estado precisa ser lido de longe sem passar o mouse. */
 .hi-liberar {
-  flex: 0 0 auto;
-  padding: 6px 10px;
-  font-size: .68rem;
-  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-subtle);
+  background: transparent;
+  transition: var(--transition);
+}
+
+.hi-liberar:hover {
+  border-color: var(--success);
+  color: var(--success);
+  background: var(--tint-ok);
+}
+
+/* ⚠️ Tinta e fundo do par de estado (--ink-ok sobre --tint-ok), NÃO branco
+   sobre --success. O verde da paleta é claro: check branco em cima dele mede
+   2,1:1, abaixo do mínimo de 3:1 para elemento gráfico, e no escuro o
+   --success clareia ainda mais e piora. O par de estado foi feito para
+   funcionar nos dois modos, e é o mesmo do selo de OPR. */
+.hi-liberar.is-liberado {
+  border-color: var(--success);
+  color: var(--ink-ok);
+  background: var(--tint-ok);
+}
+
+/* Concedido, o hover só anuncia que dá para desfazer. Trocar para vermelho
+   aqui faria o botão parecer perigoso a cada passada do ponteiro, sendo que
+   o que ele abre é um modal com senha, não uma exclusão imediata. */
+.hi-liberar.is-liberado:hover {
+  box-shadow: 0 0 0 3px var(--tint-ok);
 }
 
 .hi-vazio {
@@ -1201,10 +1236,10 @@ body.hi-arrastando {
     flex-wrap: wrap;
   }
 
-  .hi-liberar {
-    flex: 1 0 100%;
-    justify-content: center;
-  }
+  /* O `.hi-liberar { flex: 1 0 100% }` saiu daqui junto com o botão de texto:
+     ele existia porque "Liberado por OPR" não cabia numa faixa de ~350px e
+     descia para uma segunda linha. Com 28px, o check cabe na linha principal
+     e cada item do celular ficou uma faixa mais baixo. */
 
   /* Numa faixa de ~350px o chip precisa caber ao lado do nome sem empurrar
      as horas: teto menor aqui, e o nome inteiro segue no title. */
