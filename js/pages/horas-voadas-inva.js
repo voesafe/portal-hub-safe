@@ -252,8 +252,28 @@ const HorasVoadasInva = {
    * duplicar as tres armadilhas dela (medir escondido, teto de altura, grude
    * na borda), e a segunda copia envelheceria sozinha.
    */
+  /**
+   * O scroll do corpo do popover NAO deve reancorar o popover.
+   *
+   * ⚠️ Os listeners de scroll usam capture:true, entao recebem tambem o
+   * scroll dos descendentes. Reancorar ali zera a rolagem (o
+   * posicionarPopover limpa o max-height para medir, e sem o teto o corpo
+   * deixa de transbordar), e o conteudo fica preso no topo: nem a roda do
+   * mouse nem a barra de rolagem funcionam.
+   */
+  scrollVeioDeDentro(alvo, id) {
+    const pop = document.getElementById(id);
+    return !!(pop && alvo && alvo.nodeType === 1 && pop.contains(alvo));
+  },
+
   posicionarPopover(pop, gatilho) {
     if (!pop || !gatilho) return;
+
+    // Guarda a rolagem antes de mexer no teto de altura e devolve no fim.
+    // Sem isso, rolar a PAGINA com o popover aberto joga o conteudo dele de
+    // volta para o topo, que e a mesma perda pela porta dos fundos.
+    const corpo = pop.querySelector('.hi-pop-body');
+    const rolagem = corpo ? corpo.scrollTop : 0;
 
     const alvo = gatilho.getBoundingClientRect();
     const margem = 8;
@@ -289,6 +309,8 @@ const HorasVoadasInva = {
     pop.style.top =
       `${Math.max(margem, Math.min(topo, window.innerHeight - altura - margem))}px`;
     pop.style.left = `${Math.max(margem, esquerda)}px`;
+
+    if (corpo && rolagem) corpo.scrollTop = rolagem;
   },
 
   paletaHtml(selecionada) {
@@ -1888,8 +1910,10 @@ const HorasVoadasInva = {
       if (dentro) return;
       this.fecharPopComent();
     });
-    window.addEventListener('scroll', () => {
-      if (this.popComentAberto()) this.posicionarPopComent();
+    window.addEventListener('scroll', evento => {
+      if (!this.popComentAberto()) return;
+      if (this.scrollVeioDeDentro(evento.target, 'hi-pop-coment')) return;
+      this.posicionarPopComent();
     }, true);
     window.addEventListener('resize', () => {
       if (this.popComentAberto()) this.posicionarPopComent();
@@ -1912,8 +1936,10 @@ const HorasVoadasInva = {
     });
     // Fixed nao acompanha a rolagem: sem reancorar, o popover ficaria parado
     // enquanto o instrutor dele sobe na tela.
-    window.addEventListener('scroll', () => {
-      if (this.popAberto()) this.posicionarPop();
+    window.addEventListener('scroll', evento => {
+      if (!this.popAberto()) return;
+      if (this.scrollVeioDeDentro(evento.target, 'hi-pop')) return;
+      this.posicionarPop();
     }, true);
     window.addEventListener('resize', () => {
       if (this.popAberto()) this.posicionarPop();
