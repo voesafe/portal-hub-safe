@@ -625,6 +625,16 @@ Recado da operação sobre cada instrutor (afastamento, restrição combinada, c
 - **Assets em `?v=20260730-comentarios-v1`** (só a página, nada de `core/`).
 - **Backend em produção no @10** desde 2026-07-30. Rollback: `clasp redeploy AKfycbyThE1… -V 9`.
 
+### Diretriz de missões dos eventuais, desde 2026-07-30 (só frontend)
+
+Card recolhível no fim do grid com a **reprodução literal** do documento da operação: missões por curso autorizadas para instrutor eventual. Decidido com o Victor em 2026-07-30: **fixa no código**, não em planilha, porque é regra de operação que muda raramente, e padrão para todos, já que a exceção por pessoa é o que as etiquetas resolvem.
+
+- ⚠️ **O texto é reprodução literal e não pode ser reescrito.** Isso inclui "Voo Administrativos" e o hífen em "Curso de Formação de Instrutor - CFI". O teste compara o `innerText` do card, linha a linha, contra o original: se alguém "corrigir" a gramática, o teste quebra, e é para quebrar mesmo.
+- **Reusa o recolhível do gráfico** (`.hi-chart-h2`, `.hi-chart-toggle`, `.hi-chart-seta`), com uma diferença: **não há nada a construir ao abrir**, então não existe aqui o cuidado do canvas medido em container escondido. Estado próprio em `localStorage['horas-inva-diretriz']`, independente do gráfico.
+- **Nasce recolhida e fica por ÚLTIMO no grid.** Acima da lista custaria altura justamente na parte que a tela existe para mostrar, e a passada de espaço em branco de 2026-07-28 tinha derrubado a página de 1276px para 1002px para caber numa tela.
+- Grade `auto-fit` com `minmax(280px, 1fr)`: quatro colunas em 1440px, uma no celular, sem breakpoint escrito à mão além do de 600px. Curso sem missão autorizada usa o par `--danger`/`--tint-erro`/`--ink-erro`, medido em **8,37:1** no escuro.
+- **Verificação:** 18 checagens nas três combinações (desktop claro, desktop escuro, 390px), incluindo o texto idêntico linha a linha, os 6 cursos, os 2 marcados como sem missão, a escolha sobrevivendo ao recarregamento, a altura voltando ao recolher e o gráfico seguindo independente.
+
 ### O popover não rolava, corrigido em 2026-07-30 (só frontend)
 
 Reportado num navegador Windows: com a lista de etiquetas maior que o popover, o conteúdo não descia **nem com a roda do mouse nem arrastando a barra**. O CSS estava certo (a mesma estrutura isolada rola), e a causa era JS.
