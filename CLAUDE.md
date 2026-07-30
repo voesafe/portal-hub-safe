@@ -649,7 +649,24 @@ O `Liberado por OPR` era um botão de texto de ~150px na ponta de cada linha. Vi
 - **O hover do concedido não vira vermelho.** O que o botão abre é um modal com senha, não uma exclusão imediata; pintar de perigo a cada passada do ponteiro mentiria sobre o que vai acontecer.
 - **O selo `OPR · data` continua na linha**, de propósito: ele carrega a data, que o check não mostra sem passar o mouse.
 
-- **Publicado em 2026-07-30: backend em produção no @11** e frontend na `main`, assets em `?v=20260730-prioridade-v1` (o check saiu em `?v=20260730-check-opr-v1`, só frontend). Rollback do backend: `clasp redeploy AKfycbyThE1… -V 10`. Aditivo dos dois lados, e a ordem certa foi backend primeiro: o campo `ordem` novo é ignorado pela tela antiga, enquanto a tela nova sem o campo cairia no alfabético.
+### Gráfico recolhido e etiqueta longa legível, em 2026-07-30 (só frontend)
+
+Duas melhorias sem backend, em `?v=20260730-grafico-etiquetas-v1`.
+
+**O card "Horas por instrutor" nasce recolhido.** É consulta ocasional e custava ~330px acima da lista, que é o que a tela existe para mostrar. **Medido: a lista sobe 246px e a página encolhe 196px**; no desktop ela passou a caber sem rolagem.
+
+- ⚠️ **O Chart.js mede o canvas no momento da criação.** Dentro de um container escondido ele nasce 0×0 e **continua quebrado depois de abrir**, porque nada o manda medir de novo. Por isso `renderizarGrafico` devolve cedo com o card fechado, e o gráfico é **criado a cada abertura e destruído ao recolher**. Recriar custa nada com 18 barras, e evita um Chart.js vivo preso a um canvas de tamanho zero, que é o estado do qual ele não se recupera sozinho.
+- ⚠️ **O `<button>` vai DENTRO do `<h2>`, nunca o contrário.** O conteúdo de um botão é conteúdo de frase: um `<h2>` ou um `<p>` dentro dele é HTML inválido. O subtítulo fica fora do botão, para não entrar no nome acessível.
+- **A escolha de abrir é persistida** em `localStorage['horas-inva-grafico']`, ao contrário das ordenações. A diferença é que um gráfico fechado não engana ninguém, enquanto uma vista de ordenação salva mentiria sobre a fila de prioridade.
+- A seta gira 90° em vez de trocar de ícone, e o corpo entra com a mesma animação das abas.
+
+**Etiqueta de nome longo dá para ler onde se escolhe.** `LIBERADO P-MENTOR VFR/IFR SIC` saía cortado no popover, no formulário de cadastro e na prévia de edição, e nesses três lugares **não havia `title`**: a pessoa escolhia o que não conseguia ler.
+
+- ⚠️ **A quebra entrou só onde se ESCOLHE, e o corte continua onde se LEMBRA.** Na linha do instrutor o chip disputa espaço com as horas, e cortar com reticências deixando o nome inteiro no `title` segue certo (é o que já estava documentado). No popover, no cadastro e na prévia, `white-space: normal` + `overflow-wrap: break-word`: a barra colorida cresce em altura e mostra o nome inteiro. O `break-word` só age se um único token não couber sozinho.
+- O teto de `190px` do `.hi-chip` foi removido nos chips do cadastro: sem ele o chip ocupa a largura que precisar e o container quebra para a linha seguinte, preservando o formato de pílula; só quebra o texto quando nem uma faixa inteira comporta.
+- **Verificação:** 378 checagens nas quatro combinações (desktop e 390px × claro e escuro), zero erro de JS. Cobrem o gráfico nascendo fechado sem criar o Chart, o canvas com tamanho de verdade depois de abrir, a destruição ao recolher, a escolha sobrevivendo ao recarregamento, o redesenho ao atualizar os dados com ele aberto, e o ganho de altura medido; mais o nome longo inteiro nos três lugares (com `scrollWidth > clientWidth` como assinatura de corte), o chip da linha continuando a cortar com `title`, e marcar a etiqueta longa continuando a funcionar.
+
+- **Publicado em 2026-07-30: backend em produção no @11** e frontend na `main`, assets em `?v=20260730-prioridade-v1` (o check saiu em `?v=20260730-check-opr-v1` e estas duas em `?v=20260730-grafico-etiquetas-v1`, só frontend). Rollback do backend: `clasp redeploy AKfycbyThE1… -V 10`. Aditivo dos dois lados, e a ordem certa foi backend primeiro: o campo `ordem` novo é ignorado pela tela antiga, enquanto a tela nova sem o campo cairia no alfabético.
 
 **Faxina de dado:** qualquer linha `SALDO INICIAL` cujo valor esteja na casa dos 4xxxx é uma data disfarçada, não um saldo. O estrago só acontece com saldo **decimal** cujas duas partes formem dia e mês válidos (5.8, 1.2, 12.5); saldo inteiro escapava por acaso. O `Code.gs` ganhou duas funções dormentes (sem rota, rodadas pelo editor): **`inspecionarDadosInva()`**, que só lê e relata, e **`repararDadosInva()`**, que desfaz o estrago. Rode a inspeção primeiro.
 

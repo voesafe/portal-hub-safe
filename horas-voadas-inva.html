@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260730-check-opr-v1">
+  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=20260730-grafico-etiquetas-v1">
 </head>
 <body>
 <div class="app-shell">
@@ -110,14 +110,29 @@
         </div>
 
         <div class="horas-inva-grid">
+          <!-- Recolhido por padrão: o gráfico é consulta ocasional e custava
+               ~330px acima da lista, que é o que a tela existe para mostrar.
+               O <button> vai DENTRO do <h2>, e não o contrário: o conteúdo de
+               um botão é conteúdo de frase, então título e parágrafo dentro
+               dele seriam HTML inválido. -->
           <article class="card horas-inva-chart-card">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">Horas por instrutor</h2>
-                <p class="horas-inva-card-subtitle">Comparativo das horas registradas no backend.</p>
-              </div>
-            </div>
-            <div class="horas-inva-chart">
+            <h2 class="card-title hi-chart-h2">
+              <button class="hi-chart-toggle" id="hi-chart-toggle" type="button"
+                aria-expanded="false" aria-controls="hi-chart-corpo"
+                title="Ver o gráfico de horas por instrutor">
+                <span class="hi-chart-seta" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="12" height="12">
+                    <path d="M6 3.5L10.5 8L6 12.5" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                Horas por instrutor
+              </button>
+            </h2>
+            <p class="horas-inva-card-subtitle hi-chart-sub">
+              Comparativo das horas registradas no backend.
+            </p>
+            <div class="horas-inva-chart" id="hi-chart-corpo" hidden>
               <canvas id="hours-chart"></canvas>
             </div>
           </article>
@@ -311,6 +326,6 @@
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260729-post-perdido-v1"></script>
 <script src="js/core/auth.js?v=20260728-notams-sync-v1"></script>
-<script src="js/pages/horas-voadas-inva.js?v=20260730-check-opr-v1"></script>
+<script src="js/pages/horas-voadas-inva.js?v=20260730-grafico-etiquetas-v1"></script>
 </body>
 </html>

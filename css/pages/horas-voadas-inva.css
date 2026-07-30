@@ -75,11 +75,73 @@
   margin-bottom: 14px;
 }
 
+/* ── Gráfico recolhível ─────────────────────────────────────── */
+
+.hi-chart-h2 {
+  /* O h2 só existe para dar semântica de título ao botão. O respiro vem do
+     próprio botão, senão sobraria uma faixa morta acima dele. */
+  margin: 0;
+}
+
+.hi-chart-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  color: var(--text);
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.hi-chart-toggle:hover {
+  color: var(--ink-blue);
+}
+
+.hi-chart-seta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  transition: transform .2s cubic-bezier(.4,0,.2,1), color .2s, background .2s;
+}
+
+.hi-chart-toggle:hover .hi-chart-seta {
+  color: var(--ink-blue);
+  background: var(--tint-info);
+}
+
+.hi-chart-toggle[aria-expanded="true"] .hi-chart-seta {
+  transform: rotate(90deg);
+}
+
+/* Recolhido, o card fica com título e subtítulo apenas: sem o respiro de
+   baixo ele encostaria na borda. */
+.hi-chart-sub {
+  margin-bottom: 0;
+}
+
 /* Sem min-height: ele obrigava 430px mesmo quando o conteudo pedia menos,
    e o grafico ja tem altura propria. */
 .horas-inva-chart {
   position: relative;
   height: 232px;
+  margin-top: 14px;
+  animation: horasInvaEntrada .2s ease-out;
+}
+
+/* display de baixa especificidade não venceria o atributo se um dia esta
+   regra ganhar um display próprio. Sétima vez que a armadilha aparece. */
+.horas-inva-chart[hidden] {
+  display: none;
 }
 
 .horas-inva-card-subtitle,
@@ -837,12 +899,18 @@ body.hi-arrastando {
   box-shadow: inset 0 0 0 1.5px var(--et-solida);
 }
 
+/* ⚠️ Aqui o nome QUEBRA em vez de cortar, ao contrário do chip na linha do
+   instrutor. São dois papéis diferentes: na lista do instrutor o chip é um
+   lembrete e o espaço é disputado com as horas, então cortar com reticências
+   e deixar o nome inteiro no title é aceitável. Aqui a pessoa está
+   ESCOLHENDO a etiqueta, e escolher o que não dá para ler não é escolher.
+   Nome como LIBERADO P-MENTOR VFR/IFR SIC saía cortado e sem title.
+   O break-word só entra em ação se um único token não couber sozinho. */
 .hi-pop-marcar-nome {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 /* ⚠️ A caixa tem tamanho FIXO e quem desenha o tique e o ::after. Tentar
@@ -925,10 +993,15 @@ body.hi-arrastando {
   background: var(--surface-2);
 }
 
+/* A prévia mostra como a etiqueta vai ficar. Cortada, ela mostraria uma
+   etiqueta que não existe. */
 .hi-pop-previa .hi-chip {
   max-width: 100%;
   padding: 5px 12px;
   font-size: .74rem;
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: center;
 }
 
 .hi-pop-rotulo {
@@ -1134,10 +1207,16 @@ body.hi-arrastando {
   gap: 7px;
 }
 
+/* Mesmo motivo da lista do popover: no cadastro a pessoa está escolhendo, e
+   o teto de 190px do .hi-chip cortava os nomes longos. Sem o teto, o chip
+   ocupa a largura que precisar e o container quebra para a linha seguinte;
+   só quebra o texto quando nem uma faixa inteira comporta. */
 .hi-chip-toggle {
   max-width: 100%;
   padding: 6px 12px;
   font-size: .7rem;
+  white-space: normal;
+  overflow-wrap: break-word;
   /* Vazado enquanto nao marcado: cheio nos dois estados nao daria para
      saber o que ja foi escolhido. */
   background: transparent;

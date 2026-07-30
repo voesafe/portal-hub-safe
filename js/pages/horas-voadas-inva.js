@@ -51,6 +51,10 @@ const HorasVoadasInva = {
   ordens: { SJK: 'prioridade', CPQ: 'prioridade' },
   ORDEM_PADRAO: 'prioridade',
   CHAVE_ORDENS_LEGADA: 'horas-inva-ordens',
+  // O gráfico nasce recolhido: é consulta ocasional e custava ~330px em cima
+  // da lista, que é o que a tela existe para mostrar.
+  graficoAberto: false,
+  CHAVE_GRAFICO: 'horas-inva-grafico',
   ROTULOS_ORDEM: {
     prioridade: 'Prioridade de acionamento',
     alfabetica: 'Ordem alfabética',
@@ -1204,7 +1208,53 @@ const HorasVoadasInva = {
     });
   },
 
+  // ── Gráfico recolhível ──────────────────────────────────────
+
+  carregarEstadoGrafico() {
+    try {
+      this.graficoAberto = localStorage.getItem(this.CHAVE_GRAFICO) === 'aberto';
+    } catch (ignore) {
+      this.graficoAberto = false;
+    }
+  },
+
+  /** Só visibilidade e rótulo. Quem desenha é o renderizarGrafico. */
+  aplicarEstadoGrafico() {
+    const corpo = document.getElementById('hi-chart-corpo');
+    const botao = document.getElementById('hi-chart-toggle');
+    if (!corpo || !botao) return;
+    corpo.hidden = !this.graficoAberto;
+    botao.setAttribute('aria-expanded', String(this.graficoAberto));
+    botao.title = this.graficoAberto
+      ? 'Recolher o gráfico'
+      : 'Ver o gráfico de horas por instrutor';
+  },
+
+  alternarGrafico() {
+    this.graficoAberto = !this.graficoAberto;
+    // Recolher e abrir é preferência de quem usa, e nada aqui pode ser lido
+    // errado por estar fechado: diferente das ordenações, que não são
+    // persistidas justamente porque uma vista salva mentiria sobre a fila.
+    try {
+      localStorage.setItem(this.CHAVE_GRAFICO, this.graficoAberto ? 'aberto' : 'fechado');
+    } catch (ignore) {}
+    this.aplicarEstadoGrafico();
+    if (this.graficoAberto) {
+      this.renderizarGrafico();
+    } else {
+      // Destruir ao recolher evita um Chart.js vivo preso a um canvas de
+      // tamanho zero, que é o estado do qual ele não se recupera sozinho.
+      this.grafico?.destroy();
+      this.grafico = null;
+    }
+  },
+
   renderizarGrafico() {
+    // ⚠️ O Chart.js mede o canvas no momento da criação. Dentro de um
+    // container escondido ele nasce 0x0 e CONTINUA quebrado depois de abrir,
+    // porque nada o manda medir de novo. Por isso o gráfico só é criado com o
+    // card aberto, e é recriado a cada abertura.
+    if (!this.graficoAberto) return;
     if (typeof Chart === 'undefined') {
       toast('Não foi possível carregar o componente do gráfico.', 'warning');
       return;
@@ -1693,6 +1743,10 @@ const HorasVoadasInva = {
       'click',
       () => this.sincronizar()
     );
+    document.getElementById('hi-chart-toggle').addEventListener(
+      'click',
+      () => this.alternarGrafico()
+    );
     document.getElementById('busca-instrutor').addEventListener('input', evento => {
       this.filtro = evento.target.value;
       this.renderizarBases();
@@ -1922,6 +1976,8 @@ const HorasVoadasInva = {
     if (!Auth.protegerHorasVoadasInva()) return;
     Auth.preencherUI();
     this.carregarOrdens();
+    this.carregarEstadoGrafico();
+    this.aplicarEstadoGrafico();
     this.pintarMenusOrdem();
     this.renderizarEtiquetasCadastro();
     this.vincularEventos();
