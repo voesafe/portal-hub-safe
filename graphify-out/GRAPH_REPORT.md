@@ -1,16 +1,16 @@
 # Graph Report - portal-hub-safe  (2026-07-30)
 
 ## Corpus Check
-- 77 files · ~536,284 words
+- 77 files · ~537,407 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1280 nodes · 1423 edges · 370 communities (79 shown, 291 thin omitted)
+- 1281 nodes · 1424 edges · 371 communities (80 shown, 291 thin omitted)
 - Extraction: 86% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dde71f0a`
+- Built from commit: `6d33d20e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -374,6 +374,7 @@
 - [[_COMMUNITY_Header e navegação unificados na auditoria de 2026-07-26|Header e navegação unificados na auditoria de 2026-07-26]]
 - [[_COMMUNITY_Módulo NOTAMs (bases SAFE) — desde 2026-07-17|Módulo NOTAMs (bases SAFE) — desde 2026-07-17]]
 - [[_COMMUNITY_Layout mobile invariantes descobertas na auditoria de 2026-07-26|Layout mobile: invariantes descobertas na auditoria de 2026-07-26]]
+- [[_COMMUNITY_Módulo Aniversários de alunos — desde 2026-07-24|Módulo Aniversários de alunos — desde 2026-07-24]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `css/layout.css` - 30 edges
@@ -426,7 +427,7 @@
 - **Fluxo de cálculo da Receita Global no Dashboard (Vendas KPI + Faturamento 4 canais, validado no Diagnóstico)** — preview_clean_dashboard_kpi_receita_global, preview_clean_faturamento_canais_receita, preview_refinado_debug_receita_global_calculo, preview_refinado_debug_inconsistencia_mes_ano [INFERRED 0.85]
 - **Módulos de Escala Operacional (CCO e PAV) compartilham padrão Calendário/Financeiro/Cadastro** — preview_clean_escala_cco_calendario, preview_clean_escala_cco_fechamento_financeiro, preview_refinado_escala_pav_view_calendario, preview_refinado_escala_pav_view_financeiro, preview_refinado_escala_pav_view_cadastro [INFERRED 0.80]
 
-## Communities (370 total, 291 thin omitted)
+## Communities (371 total, 291 thin omitted)
 
 ### Community 0 - "Escala PAV de Base"
 Cohesion: 0.07
@@ -437,8 +438,8 @@ Cohesion: 0.06
 Nodes (42): Controle de Acesso (RBAC) Page, Catálogo de Permissões Panel, Grupos de Acesso Panel, Diretório de Acessos Table, Gestão de Usuários (Admin) Page, Identidade Única por E-mail (concept), Modal Novo/Editar Usuário, Senha Padrão = CPF (rationale) (+34 more)
 
 ### Community 2 - "Cadastro de Aluno e Gastos"
-Cohesion: 0.05
-Nodes (39): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab (+31 more)
+Cohesion: 0.06
+Nodes (31): Cadastro de Aluno Page, Fila Operacional S141 (Trello sync), Importar XLS do CAVOK, Acesso Somente Visualização (rationale), Categorias de Gastos Tab, Controle de Gastos Page, Fechamento Mensal Tab (Gastos), Receita Total por Base Tab (+23 more)
 
 ### Community 3 - "Diagnóstico de Faturamento"
 Cohesion: 0.08
@@ -454,15 +455,15 @@ Nodes (34): KPI Receita Global (Vendas + Faturamento), Performance por Consultor
 
 ### Community 7 - "Ações do Backend da Escala CCO"
 Cohesion: 0.12
-Nodes (24): Ação getLog, Ação getUsers, Ação login, Ação saveUser, Ação setShift, Ação toggleUserActive, Param actor (autor real gravado no LOG), alternarAtivoFunc(username, reativar) (+16 more)
+Nodes (25): Ação getLog, Ação getUsers, Ação login, Ação saveUser, Ação setConfig, Ação setShift, Ação toggleUserActive, Param actor (autor real gravado no LOG) (+17 more)
 
 ### Community 8 - "CLI de Administração"
 Cohesion: 0.22
 Nodes (23): ajuda(), apiGet(), apiPost(), c, cmdAdicionar(), cmdListar(), cmdRemover(), cmdResetar() (+15 more)
 
 ### Community 10 - "SAFE MINIONS e Mínimos ANAC"
-Cohesion: 0.09
-Nodes (23): Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos, Tipo PPA — Piloto Privado de Avião, Upload de Extrato SACI (.xlt/.xltx/.xlsx/.xls) (+15 more)
+Cohesion: 0.06
+Nodes (31): Atualizar pela API CAVOK, Cadastrar Instrutor Form, Horas Voadas INVA Mês Page, Sincronizar CAVOK (Instrutores/Horas), Resultado da Análise (Duplo Comando, Horas PIC/IFR), SAFE MINIONS Page, Tipo INVA — Instrutor de Voo de Avião, Tipo PC/IFR — Piloto Comercial + Instrumentos (+23 more)
 
 ### Community 11 - "Página de Controle de Acesso"
 Cohesion: 0.13
@@ -541,16 +542,16 @@ Cohesion: 0.27
 Nodes (11): Pagina Cadastro de Aluno (cadastro-alunos.html), Barra de seleção em massa (sincronizar selecionados), Coluna de checkbox (nth-child(1)) exclusiva da aba Prontos Trello, Card de resumo da última importação, Controles de ordenação e busca da fila, Tabela da fila operacional (9 colunas, table-layout fixed), Abas de filtro com contadores (ativos, pendentes, trello, concluídos, atenção, inativos), Importação do XLS do CAVOK (input file + label como botão) (+3 more)
 
 ### Community 37 - "computeFinForMonth(idx)"
-Cohesion: 0.12
-Nodes (21): atualizarPreviewExport(), computeFinForMonth(idx), Helpers de data (dateKey, daysInMonth, dayOfWeek), Duplo turno T1+T2 (dia todo), Espera das gravações pendentes antes de ler (await gasWriteChain), exportIrParaConfirmacao(), financeiroExclude (exclusão do resumo financeiro), fmtMoedaCco(v) (+13 more)
+Cohesion: 0.18
+Nodes (13): atualizarPreviewExport(), computeFinForMonth(idx), Helpers de data (dateKey, daysInMonth, dayOfWeek), Duplo turno T1+T2 (dia todo), exportIrParaConfirmacao(), financeiroExclude (exclusão do resumo financeiro), fmtMoedaCco(v), removeBothShifts(dk) (+5 more)
 
 ### Community 38 - "Ação getLog"
 Cohesion: 0.25
 Nodes (8): carregarHistorico(), currentUser (identidade da sessão), Diff antes → depois no histórico, Formatadores do histórico (histTurnoLabel, histNomes, histFmtData), Modal de Histórico (auditoria), histEntries (cache das entradas do LOG), Sentinel safe-hub-admin (param by), renderHistorico()
 
 ### Community 39 - "Página Concorrência"
-Cohesion: 0.20
-Nodes (12): Ação setConfig, Painel admin do valor do turno (#adminPanel), #appScreen (shell do app), View Calendário (#calendarGrid), criarCardUser(uname, isAtivo), Resumo financeiro (#financials), formatCPF(v), formatPhone(v) (+4 more)
+Cohesion: 0.13
+Nodes (19): Painel admin do valor do turno (#adminPanel), #appScreen (shell do app), View Calendário (#calendarGrid), criarCardUser(uname, isAtivo), Espera das gravações pendentes antes de ler (await gasWriteChain), Resumo financeiro (#financials), formatCPF(v), formatPhone(v) (+11 more)
 
 ### Community 40 - "exportConfirmarExportacao"
 Cohesion: 0.22
@@ -561,8 +562,8 @@ Cohesion: 0.18
 Nodes (10): dependencies, playwright-core, description, name, private, scripts, preview, shot (+2 more)
 
 ### Community 42 - "Campos operacionais do CCO"
-Cohesion: 0.12
-Nodes (16): Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09, Auditoria de alterações (Escala CCO) — desde 2026-07-22, Bases na home: pinta na hora, confere depois, desde 2026-07-27, Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20), Captura de tela das páginas (tools/), desde 2026-07-27, Cargos e tela de criação de usuário (desde 2026-07-09), CLAUDE.md — Regras do Projeto SAFE Hub, Conferir a interface antes de publicar (tools/preview.sh) (+8 more)
+Cohesion: 0.13
+Nodes (14): Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09, Auditoria de alterações (Escala CCO) — desde 2026-07-22, Bases na home: pinta na hora, confere depois, desde 2026-07-27, Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20), Captura de tela das páginas (tools/), desde 2026-07-27, Cargos e tela de criação de usuário (desde 2026-07-09), CLAUDE.md — Regras do Projeto SAFE Hub, Conferir a interface antes de publicar (tools/preview.sh) (+6 more)
 
 ### Community 45 - "css/notams.css"
 Cohesion: 0.27
@@ -700,6 +701,10 @@ Nodes (6): Horário de funcionamento das bases (ROTAER), desde 2026-07-29, Módu
 Cohesion: 0.67
 Nodes (3): Layout mobile: invariantes descobertas na auditoria de 2026-07-26, Segunda leva, fechada no mesmo dia, Zoom automático em campo no celular, corrigido em 2026-07-28
 
+### Community 370 - "Módulo Aniversários de alunos — desde 2026-07-24"
+Cohesion: 0.67
+Nodes (3): Entrega (deliverability) do e-mail de aniversário, Lembrete de trocar o template do e-mail, desde 2026-07-30, Módulo Aniversários de alunos — desde 2026-07-24
+
 ## Ambiguous Edges - Review These
 - `carregarFaturamento()` → `KPIs de gastos, horas voadas e custo por hora`  [AMBIGUOUS]
   controle-gastos.html · relation: conceptually_related_to
@@ -709,7 +714,7 @@ Nodes (3): Layout mobile: invariantes descobertas na auditoria de 2026-07-26, Se
   escala-cco.html · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **522 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `oauthScopes`, `runtimeVersion` (+517 more)
+- **523 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `oauthScopes`, `runtimeVersion` (+518 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **291 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -724,9 +729,9 @@ _Questions this graph is uniquely positioned to answer:_
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **Why does `css/layout.css` connect `Grid de bases` to `Pagina Cadastro de Aluno`, `Página de Controle de Acesso`, `css/notams.css`, `access-control.html`, `Controle de Gastos e Gráficos`, `Controle de Acesso page (access-control.html)`, `Aniversários e Progresso de Alunos`, `css/horas-voadas-inva.css`, `toggleUsersView() (módulo legado)`, `css/fechamento-horas.css`, `Gestão de Usuários page`?**
   _High betweenness centrality (0.007) - this node is a cross-community bridge._
-- **Why does `Pagina NOTAMs (notams.html)` connect `css/notams.css` to `Página de Controle de Acesso`, `Controle de Acesso page (access-control.html)`, `Menu da Sidebar e NOTAMs`, `toggleUsersView() (módulo legado)`, `Grid de bases`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
 - **Why does `Vendas page (vendas.html)` connect `Gestão de Usuários page` to `Página de Controle de Acesso`, `Controle de Gastos e Gráficos`, `Aniversários e Progresso de Alunos`, `Controle de Acesso page (access-control.html)`, `toggleUsersView() (módulo legado)`, `Grid de bases`?**
+  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+- **Why does `Progresso de Alunos page (progresso-alunos.html)` connect `Aniversários e Progresso de Alunos` to `Página de Controle de Acesso`, `Controle de Acesso page (access-control.html)`, `toggleUsersView() (módulo legado)`, `Gestão de Usuários page`, `Grid de bases`?**
   _High betweenness centrality (0.003) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `css/layout.css` (e.g. with `css/access-control.css (Controle de Acesso)` and `css/aniversarios.css (Aniversários)`) actually correct?**
   _`css/layout.css` has 12 INFERRED edges - model-reasoned connections that need verification._

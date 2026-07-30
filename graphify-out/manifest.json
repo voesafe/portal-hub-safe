@@ -340,8 +340,8 @@
     "semantic_hash": ""
   },
   "horas-voadas-inva.html": {
-    "mtime": 1785439732.0345361,
-    "ast_hash": "367adc080487b2a19abab5aba61c82d8",
+    "mtime": 1785439893.7534475,
+    "ast_hash": "7c40ce9b5b7a758c27a7ff54b77b633e",
     "semantic_hash": ""
   },
   "index.html": {
@@ -895,8 +895,8 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1785439780.237991,
-    "ast_hash": "7d26d6f121f4989ca13a2be9a510d359",
+    "mtime": 1785442314.5474794,
+    "ast_hash": "d8f875d303543c0010633ae566107426",
     "semantic_hash": ""
   },
   "notams.html": {
@@ -905,8 +905,8 @@
     "semantic_hash": ""
   },
   "aniversarios.html": {
-    "mtime": 1785350911.8179934,
-    "ast_hash": "9d3e2733147e29bde0b18022cace813a",
+    "mtime": 1785441972.958597,
+    "ast_hash": "8167341eb6c8976124eee0a19a1d5f71",
     "semantic_hash": ""
   },
   "tools/package.json": {
@@ -945,9 +945,9 @@
     "semantic_hash": ""
   },
   "js/pages/aniversarios.js": {
-    "mtime": 1785107843.7795115,
-    "ast_hash": "8087499ba80938b25555f51e065c9fdb",
-    "semantic_hash": "8087499ba80938b25555f51e065c9fdb"
+    "mtime": 1785441942.6924462,
+    "ast_hash": "f93b77aa583bee1a456685beac6df12f",
+    "semantic_hash": ""
   },
   "js/pages/bases.js": {
     "mtime": 1784136472.1297796,

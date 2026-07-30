@@ -3637,10 +3637,20 @@
       "norm_label": "comentarios por instrutor, desde 2026-07-30"
     },
     {
-      "label": "O popover n\u00e3o rolava, corrigido em 2026-07-30 (s\u00f3 frontend)",
+      "label": "Diretriz de miss\u00f5es dos eventuais, desde 2026-07-30 (s\u00f3 frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
       "source_location": "L628",
+      "_origin": "ast",
+      "id": "claude_diretriz_de_miss\u00f5es_dos_eventuais_desde_2026_07_30_s\u00f3_frontend",
+      "community": 52,
+      "norm_label": "diretriz de missoes dos eventuais, desde 2026-07-30 (so frontend)"
+    },
+    {
+      "label": "O popover n\u00e3o rolava, corrigido em 2026-07-30 (s\u00f3 frontend)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L638",
       "_origin": "ast",
       "id": "claude_o_popover_n\u00e3o_rolava_corrigido_em_2026_07_30_s\u00f3_frontend",
       "community": 52,
@@ -3650,7 +3660,7 @@
       "label": "Ordem de prioridade de acionamento, desde 2026-07-30",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L637",
+      "source_location": "L647",
       "_origin": "ast",
       "id": "claude_ordem_de_prioridade_de_acionamento_desde_2026_07_30",
       "community": 52,
@@ -3660,7 +3670,7 @@
       "label": "O bot\u00e3o de OPR virou um check, em 2026-07-30 (s\u00f3 frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L654",
+      "source_location": "L664",
       "_origin": "ast",
       "id": "claude_o_bot\u00e3o_de_opr_virou_um_check_em_2026_07_30_s\u00f3_frontend",
       "community": 52,
@@ -3670,7 +3680,7 @@
       "label": "Gr\u00e1fico recolhido e etiqueta longa leg\u00edvel, em 2026-07-30 (s\u00f3 frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L664",
+      "source_location": "L674",
       "_origin": "ast",
       "id": "claude_gr\u00e1fico_recolhido_e_etiqueta_longa_leg\u00edvel_em_2026_07_30_s\u00f3_frontend",
       "community": 52,
@@ -3680,7 +3690,7 @@
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L688",
+      "source_location": "L698",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 42,
@@ -3690,7 +3700,7 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L700",
+      "source_location": "L710",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 42,
@@ -5273,7 +5283,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "horas voadas inva mes page",
       "id": "preview_denso_horas_voadas_inva_horas_voadas_inva_page"
     },
@@ -5286,7 +5296,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_denso_horas_voadas_inva_sincronizar_cavok"
     },
@@ -5299,7 +5309,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "cadastrar instrutor form",
       "id": "preview_denso_horas_voadas_inva_cadastrar_instrutor"
     },
@@ -6248,7 +6258,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "horas voadas inva mes page",
       "id": "preview_refinado_horas_voadas_inva_horas_voadas_inva_page"
     },
@@ -6261,7 +6271,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_refinado_horas_voadas_inva_sincronizar_cavok"
     },
@@ -6274,7 +6284,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "cadastrar instrutor form",
       "id": "preview_refinado_horas_voadas_inva_cadastrar_instrutor"
     },
@@ -6547,7 +6557,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "controle de acesso page (access-control.html)",
       "id": "access_control_page"
     },
@@ -6677,7 +6687,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "rbac \u2014 grupos e permissoes efetivas",
       "id": "rbac_effective_permissions"
     },
@@ -7626,7 +7636,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "atualizar pela api cavok",
       "id": "preview_clean_fechamento_horas_atualizar_api_cavok"
     },
@@ -7652,7 +7662,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 2,
       "norm_label": "sincronizar cavok (instrutores/horas)",
       "id": "preview_clean_horas_voadas_inva_sincronizar_cavok"
     },
@@ -10307,7 +10317,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 11,
       "norm_label": "protecao de pagina por permissao efetiva (auth.proteger*)",
       "id": "protecao_de_pagina_rbac"
     },
@@ -10359,7 +10369,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 11,
       "norm_label": "auth.proteger()",
       "id": "js_auth_proteger"
     },
@@ -10372,7 +10382,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 11,
       "norm_label": "auth.preencherui()",
       "id": "js_auth_preencherui"
     },
@@ -10411,7 +10421,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "manifesto pwa + icones + theme-color (#19213f)",
       "id": "pwa_manifest_icones"
     },
@@ -10424,7 +10434,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "css/access-control.css (controle de acesso)",
       "id": "css_access_control"
     },
@@ -10645,7 +10655,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "painel de grupos de acesso com busca",
       "id": "access_control_painel_grupos"
     },
@@ -10658,7 +10668,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "painel do catalogo de permissoes",
       "id": "access_control_catalogo_permissoes"
     },
@@ -10671,7 +10681,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "modal criar/editar grupo (nome, id, descricao, ativo, permissoes)",
       "id": "access_control_modal_grupo"
     },
@@ -10684,7 +10694,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 49,
       "norm_label": "fecharmodal(id) chamada por onclick inline no html",
       "id": "fechar_modal_inline"
     },
@@ -10710,7 +10720,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 11,
       "norm_label": "script inline de protecao e preenchimento da tela de acesso negado",
       "id": "acesso_negado_inline_guard"
     },
@@ -10723,7 +10733,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 11,
       "norm_label": "parametro de query ?recurso= com o nome do modulo bloqueado",
       "id": "acesso_negado_param_recurso"
     },
@@ -10736,7 +10746,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 11,
       "norm_label": "botao voltar (history.back com fallback para inicio.html)",
       "id": "acesso_negado_botao_voltar"
     },
@@ -10840,7 +10850,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 11,
       "norm_label": "botao \"+ nova base\" comeca hidden e e liberado por permissao",
       "id": "bases_btn_nova_oculto"
     },
@@ -11711,7 +11721,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "js/core/auth.js",
       "id": "escala_cco_auth_js"
     },
@@ -11724,7 +11734,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 12,
       "norm_label": "sidebar do hub na escala cco",
       "id": "escala_cco_sidebar_hub"
     },
@@ -11776,7 +11786,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 12,
       "norm_label": "drawer lateral da escala cco",
       "id": "escala_cco_drawer"
     },
@@ -11841,7 +11851,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "setupdrawerforuser(u)",
       "id": "escala_cco_setupdrawerforuser"
     },
@@ -11854,7 +11864,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 31,
       "norm_label": "barra de progresso #loadingbar",
       "id": "escala_cco_loading_bar"
     },
@@ -11867,7 +11877,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "overlay de carregamento inicial (#escala-cco-loading)",
       "id": "escala_cco_loading_overlay"
     },
@@ -11880,7 +11890,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "tela de login propria (#loginscreen)",
       "id": "escala_cco_login_screen"
     },
@@ -11893,7 +11903,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "#appscreen (shell do app)",
       "id": "escala_cco_app_screen"
     },
@@ -11906,7 +11916,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "view calendario (#calendargrid)",
       "id": "escala_cco_calendar_view"
     },
@@ -11945,7 +11955,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 7,
       "norm_label": "view usuarios legada (#usersview)",
       "id": "escala_cco_users_view"
     },
@@ -11958,7 +11968,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "painel admin do valor do turno (#adminpanel)",
       "id": "escala_cco_admin_panel"
     },
@@ -11971,7 +11981,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "resumo financeiro (#financials)",
       "id": "escala_cco_financials_section"
     },
@@ -12023,7 +12033,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 14,
       "norm_label": "modal de exportacao ifood (#modalexportifood)",
       "id": "escala_cco_export_modal"
     },
@@ -12179,7 +12189,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 39,
       "norm_label": "acao setconfig",
       "id": "escala_cco_action_setconfig"
     },
@@ -12231,7 +12241,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "currentuser (identidade da sessao)",
       "id": "escala_cco_currentuser"
     },
@@ -12244,7 +12254,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "sentinel safe-hub-admin (param by)",
       "id": "escala_cco_hub_admin_sentinel"
     },
@@ -12270,7 +12280,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "permissao canviewlog",
       "id": "escala_cco_canviewlog"
     },
@@ -12283,7 +12293,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "sso pelo hub (sessao do auth)",
       "id": "escala_cco_sso_hub"
     },
@@ -12296,7 +12306,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "usuario exclusivo cco (auth.eusuarioexclusivocco)",
       "id": "escala_cco_usuario_exclusivo_cco"
     },
@@ -12309,7 +12319,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "sessionstorage cco_session",
       "id": "escala_cco_cco_session"
     },
@@ -12322,7 +12332,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "auth.protegerescalacco()",
       "id": "escala_cco_protegerescalacco"
     },
@@ -12335,7 +12345,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "auth.getsessao()",
       "id": "escala_cco_getsessao"
     },
@@ -12348,7 +12358,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "papeis admin / financeiro / user",
       "id": "escala_cco_papeis"
     },
@@ -12361,7 +12371,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "bootstrap domcontentloaded",
       "id": "escala_cco_domcontentloaded"
     },
@@ -12374,7 +12384,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "iniciarshellhub()",
       "id": "escala_cco_iniciarshellhub"
     },
@@ -12387,7 +12397,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "iniciarapp(u)",
       "id": "escala_cco_iniciarapp"
     },
@@ -12413,7 +12423,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "dologin(e)",
       "id": "escala_cco_dologin"
     },
@@ -12439,7 +12449,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 37,
       "norm_label": "users (mapa de usuarios carregado do sheets)",
       "id": "escala_cco_users_map"
     },
@@ -12452,7 +12462,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 37,
       "norm_label": "schedule_users (visiveis na escala)",
       "id": "escala_cco_schedule_users"
     },
@@ -12465,7 +12475,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 14,
       "norm_label": "scheduledata (escala do mes em memoria)",
       "id": "escala_cco_scheduledata"
     },
@@ -12491,7 +12501,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 37,
       "norm_label": "shift_labels (t1, t2, not)",
       "id": "escala_cco_shift_labels"
     },
@@ -12504,7 +12514,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "shiftvalue (valor do turno)",
       "id": "escala_cco_shiftvalue"
     },
@@ -12595,7 +12605,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 37,
       "norm_label": "helpers de data (datekey, daysinmonth, dayofweek)",
       "id": "escala_cco_date_helpers"
     },
@@ -12608,7 +12618,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "isadmin()",
       "id": "escala_cco_isadmin"
     },
@@ -12621,7 +12631,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 12,
       "norm_label": "isfinanceiro()",
       "id": "escala_cco_isfinanceiro"
     },
@@ -12634,7 +12644,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 37,
       "norm_label": "shortname(fullname)",
       "id": "escala_cco_shortname"
     },
@@ -12647,7 +12657,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 31,
       "norm_label": "setloading(pct)",
       "id": "escala_cco_setloading"
     },
@@ -12686,7 +12696,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "formatcpf(v)",
       "id": "escala_cco_formatcpf"
     },
@@ -12699,7 +12709,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "formatphone(v)",
       "id": "escala_cco_formatphone"
     },
@@ -12790,7 +12800,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 37,
       "norm_label": "rendercalendar()",
       "id": "escala_cco_rendercalendar"
     },
@@ -12803,7 +12813,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 14,
       "norm_label": "rendercalendarreadonly()",
       "id": "escala_cco_rendercalendarreadonly"
     },
@@ -12881,7 +12891,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "saveshiftvalue()",
       "id": "escala_cco_saveshiftvalue"
     },
@@ -12894,7 +12904,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "togglemydays() (filtro meus dias)",
       "id": "escala_cco_togglemydays"
     },
@@ -12907,7 +12917,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 14,
       "norm_label": "togglescaleview() (mostrar escala p/ financeiro)",
       "id": "escala_cco_togglescaleview"
     },
@@ -12920,7 +12930,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 37,
       "norm_label": "computefinformonth(idx)",
       "id": "escala_cco_computefinformonth"
     },
@@ -12933,7 +12943,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "renderfinancials()",
       "id": "escala_cco_renderfinancials"
     },
@@ -12946,7 +12956,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 37,
       "norm_label": "financeiroexclude (exclusao do resumo financeiro)",
       "id": "escala_cco_financeiro_exclude"
     },
@@ -12959,7 +12969,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 14,
       "norm_label": "secao ifood beneficios (logo base64 embutido)",
       "id": "escala_cco_ifood_section"
     },
@@ -12972,7 +12982,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 37,
       "norm_label": "fmtmoedacco(v)",
       "id": "escala_cco_fmtmoedacco"
     },
@@ -12998,7 +13008,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 14,
       "norm_label": "abrirmodalexport()",
       "id": "escala_cco_abrirmodalexport"
     },
@@ -13011,7 +13021,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 37,
       "norm_label": "atualizarpreviewexport()",
       "id": "escala_cco_atualizarpreviewexport"
     },
@@ -13024,7 +13034,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 37,
       "norm_label": "exportirparaconfirmacao()",
       "id": "escala_cco_exportirparaconfirmacao"
     },
@@ -13167,7 +13177,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 7,
       "norm_label": "renderfunclist()",
       "id": "escala_cco_renderfunclist"
     },
@@ -13180,7 +13190,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 7,
       "norm_label": "criarcardfunc(u)",
       "id": "escala_cco_criarcardfunc"
     },
@@ -13193,7 +13203,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 7,
       "norm_label": "filtrarfuncs(f)",
       "id": "escala_cco_filtrarfuncs"
     },
@@ -13206,7 +13216,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 7,
       "norm_label": "toggleverinativos()",
       "id": "escala_cco_toggleverinativos"
     },
@@ -13336,7 +13346,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 7,
       "norm_label": "toggleusersview() (modulo legado)",
       "id": "escala_cco_toggleusersview"
     },
@@ -13349,7 +13359,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 7,
       "norm_label": "renderuserslist()",
       "id": "escala_cco_renderuserslist"
     },
@@ -13362,7 +13372,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "criarcarduser(uname, isativo)",
       "id": "escala_cco_criarcarduser"
     },
@@ -13492,7 +13502,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 49,
+      "community": 7,
       "norm_label": "duplicacao: dois modulos de funcionarios coexistindo",
       "id": "escala_cco_duplicacao_modulo_funcionarios"
     },
@@ -13505,7 +13515,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 12,
       "norm_label": "abrirmodalhistorico()",
       "id": "escala_cco_abrirmodalhistorico"
     },
@@ -13596,7 +13606,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 12,
       "norm_label": "gate defensivo no cliente + validacao no servidor",
       "id": "escala_cco_gate_defensivo_historico"
     },
@@ -13674,7 +13684,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 370,
+      "community": 14,
       "norm_label": "dashcache (cache por mes do dashboard)",
       "id": "escala_cco_dashcache"
     },
@@ -18542,7 +18552,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L700",
+      "source_location": "L710",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -18552,7 +18562,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L688",
+      "source_location": "L698",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
@@ -18942,6 +18952,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
+      "source_location": "L628",
+      "weight": 1.0,
+      "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
+      "target": "claude_diretriz_de_miss\u00f5es_dos_eventuais_desde_2026_07_30_s\u00f3_frontend",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
       "source_location": "L577",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
@@ -18962,7 +18982,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L664",
+      "source_location": "L674",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_gr\u00e1fico_recolhido_e_etiqueta_longa_leg\u00edvel_em_2026_07_30_s\u00f3_frontend",
@@ -18972,7 +18992,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L654",
+      "source_location": "L664",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_o_bot\u00e3o_de_opr_virou_um_check_em_2026_07_30_s\u00f3_frontend",
@@ -18982,7 +19002,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L628",
+      "source_location": "L638",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_o_popover_n\u00e3o_rolava_corrigido_em_2026_07_30_s\u00f3_frontend",
@@ -18992,7 +19012,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L637",
+      "source_location": "L647",
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_ordem_de_prioridade_de_acionamento_desde_2026_07_30",
@@ -30518,5 +30538,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "53cdf6c5533a9ba2c7378367a5f4a678583727d0"
+  "built_at_commit": "dde71f0a4546a17f6a8ed3f7bdb86c1c726afeda"
 }
