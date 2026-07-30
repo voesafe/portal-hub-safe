@@ -87,6 +87,7 @@ const Aniversarios = {
   renderizar() {
     if (!this.dados) return;
     this.renderStatus();
+    this.renderTemplate();
     this.renderKpis();
     this.renderHoje();
     this.renderProximos();
@@ -122,6 +123,56 @@ const Aniversarios = {
       label.textContent = 'Envio desligado';
       pill.title = 'Nenhum e-mail está sendo enviado. Para ligar, rode aniversariosInstalarTrigger() no Apps Script.';
     }
+  },
+
+  /**
+   * Lembrete de trocar o template do e-mail.
+   *
+   * O aluno recebe um e-mail por ano, pela vida inteira que estudar aqui.
+   * Sem trocar o texto e a foto, o de 2027 é palavra por palavra o de 2026,
+   * e quem guardou a mensagem do ano passado percebe.
+   *
+   * ⚠️ NÃO existe botão de "já troquei" de propósito. Dispensar o aviso é
+   * exatamente o jeito de silenciá-lo sem trocar nada, que é a falha que ele
+   * existe para evitar. A única forma de apagá-lo é editar o template e
+   * atualizar ANIVERSARIOS_TEMPLATE_ANO no Aniversarios.gs, ou seja, fazer
+   * o trabalho. Backend antigo (sem o campo) simplesmente não desenha nada.
+   */
+  renderTemplate() {
+    const alvo = document.getElementById('aniv-template-aviso');
+    if (!alvo) return;
+
+    const t = this.dados.template;
+    if (!t || !t.estado || t.estado === 'ok') {
+      alvo.hidden = true;
+      alvo.innerHTML = '';
+      return;
+    }
+
+    const vencido = t.estado === 'vencido';
+    const dias = Number(t.diasAteVirada);
+
+    const titulo = vencido
+      ? `O e-mail de aniversário ainda é o de ${this.esc(t.ano)}`
+      : `Prepare o e-mail de aniversário de ${this.esc(t.proximoAno)}`;
+
+    const texto = vencido
+      ? `Quem faz aniversário em ${this.esc(t.anoAtual)} está recebendo a mesma mensagem que recebeu em ${this.esc(t.ano)}. Troque o texto e a foto antes do próximo envio.`
+      : `O template atual é o de ${this.esc(t.anoAtual)} e ${dias === 1 ? 'falta 1 dia' : `faltam ${this.esc(dias)} dias`} para o primeiro aniversariante de ${this.esc(t.proximoAno)}, que chega no dia 1º de janeiro.`;
+
+    alvo.hidden = false;
+    alvo.className = `aniv-template-aviso ${vencido ? 'is-vencido' : 'is-preparar'}`;
+    alvo.innerHTML = `
+      <div class="aniv-template-titulo">${titulo}</div>
+      <p class="aniv-template-texto">${texto}</p>
+      <p class="aniv-template-como">
+        Trocar em <code>apps-script/Aniversarios.gs</code>: a mensagem e a citação em
+        <code>templateEmailAniversario_</code>, a versão em texto puro em
+        <code>textoEmailAniversario_</code> e a foto em <code>HeroAsset.gs</code>.
+        Depois atualize <code>ANIVERSARIOS_TEMPLATE_ANO</code> para
+        ${this.esc(vencido ? t.anoAtual : t.proximoAno)}, publique o backend, e este aviso some.
+      </p>
+    `;
   },
 
   // ── Indicadores ────────────────────────────────────────────

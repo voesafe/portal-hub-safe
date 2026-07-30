@@ -364,6 +364,66 @@ function marcarAniversarioEnviado_(sheet, rowNumber, indices, ano) {
 // TEMPLATE DO E-MAIL
 // ============================================================
 
+// ⚠️ ANO EM QUE O TEXTO E A FOTO DESTE TEMPLATE FORAM FEITOS.
+//
+// AO TROCAR O TEMPLATE (o HTML abaixo, o texto puro de
+// textoEmailAniversario_ ou a foto do HeroAsset.gs), ATUALIZE ESTE NUMERO.
+//
+// A pagina de Aniversarios compara este ano com o ano corrente e avisa
+// quando o template ficou velho. E a unica prova de que a troca aconteceu:
+// nada no codigo consegue adivinhar que a citacao mudou. Sem isso o aluno
+// recebe, ano apos ano, exatamente o mesmo e-mail, e quem faz aniversario em
+// janeiro percebe rapido, porque guarda a mensagem do ano passado.
+var ANIVERSARIOS_TEMPLATE_ANO = 2026;
+
+// Antecedencia do aviso de "prepare o do ano que vem". 61 dias cobrem
+// novembro e dezembro inteiros: o primeiro aniversariante do ano novo chega
+// em 1 de janeiro, e escrever texto novo no dia 31 de dezembro nao acontece.
+var ANIVERSARIOS_TEMPLATE_ANTECEDENCIA_DIAS = 61;
+
+/**
+ * Estado do template, para o lembrete da tela. Tres estados:
+ *
+ *  - 'vencido'  o template e de um ano anterior. Quem faz aniversario agora
+ *               esta recebendo o mesmo e-mail que recebeu da ultima vez.
+ *  - 'preparar' ainda e o deste ano, mas a virada esta perto.
+ *  - 'ok'       nada a dizer (inclui o caso de alguem ja ter adiantado o
+ *               template do ano que vem).
+ *
+ * Devolve tambem `diasAteVirada` para o aviso dizer quanto tempo sobra em
+ * vez de so pedir pressa.
+ */
+function aniversariosStatusTemplate_(hoje) {
+  var anoAtual = Number(hoje.ano);
+  var anoTemplate = Number(ANIVERSARIOS_TEMPLATE_ANO) || 0;
+
+  var tz = aniversariosTimeZone_();
+  var agora = new Date();
+  // Meio-dia nos dois lados: elimina a borda do horario de verao, que faria
+  // a conta de dias errar por um em duas semanas do ano.
+  var hojeMeioDia = new Date(
+    Number(Utilities.formatDate(agora, tz, 'yyyy')),
+    Number(Utilities.formatDate(agora, tz, 'MM')) - 1,
+    Number(Utilities.formatDate(agora, tz, 'dd')), 12, 0, 0);
+  var virada = new Date(anoAtual + 1, 0, 1, 12, 0, 0);
+  var diasAteVirada = Math.round((virada.getTime() - hojeMeioDia.getTime()) / 86400000);
+
+  var estado = 'ok';
+  if (anoTemplate && anoTemplate < anoAtual) {
+    estado = 'vencido';
+  } else if (anoTemplate === anoAtual && diasAteVirada <= ANIVERSARIOS_TEMPLATE_ANTECEDENCIA_DIAS) {
+    estado = 'preparar';
+  }
+
+  return {
+    ano: anoTemplate,
+    anoAtual: anoAtual,
+    proximoAno: anoAtual + 1,
+    estado: estado,
+    diasAteVirada: diasAteVirada
+  };
+}
+
 function templateEmailAniversario_(primeiroNome, linkDescadastro, ano) {
   var nome = escapeHtmlEmail_(primeiroNome);
   var link = escapeHtmlEmail_(linkDescadastro);
@@ -785,6 +845,15 @@ function listarAniversarios(usuario, mesSolicitado) {
     ? Math.round((resumo.comData / resumo.ativos) * 100)
     : 0;
 
+  // O lembrete do template e um adorno; a lista de aniversariantes e o que a
+  // tela existe para mostrar. Um erro na conta de datas nao pode derrubar ela.
+  var statusTemplate = null;
+  try {
+    statusTemplate = aniversariosStatusTemplate_(hoje);
+  } catch (e) {
+    statusTemplate = null;
+  }
+
   return {
     hoje: listaHoje,
     proximos: listaProximos,
@@ -793,6 +862,7 @@ function listarAniversarios(usuario, mesSolicitado) {
     resumo: resumo,
     hojeLabel: hoje.diaMes,
     ano: hoje.ano,
+    template: statusTemplate,
     gatilhoAtivo: aniversariosTriggerAtivo_(),
     ultimaExecucao: ultima,
     usuario: String(usuario && (usuario.email || usuario.nome) || '')

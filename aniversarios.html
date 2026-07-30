@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/aniversarios.css?v=20260727-contraste-v1">
+  <link rel="stylesheet" href="css/pages/aniversarios.css?v=20260730-lembrete-template-v1">
 </head>
 <body>
 <div class="app-shell">
@@ -74,6 +74,12 @@
     </div>
 
     <div class="page aniversarios-page">
+
+      <!-- Lembrete anual de trocar o template do e-mail.
+           Nasce escondido e só aparece quando o template ficou velho ou a
+           virada do ano está perto. Sem botão de dispensar: ver o comentário
+           de renderTemplate() no aniversarios.js. -->
+      <section class="aniv-template-aviso" id="aniv-template-aviso" hidden></section>
 
       <!-- Indicadores -->
       <section class="aniv-kpis" id="aniv-kpis"></section>
@@ -153,6 +159,6 @@
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260729-post-perdido-v1"></script>
 <script src="js/core/auth.js?v=20260728-notams-sync-v1"></script>
-<script src="js/pages/aniversarios.js?v=20260727-tema-global-v1"></script>
+<script src="js/pages/aniversarios.js?v=20260730-lembrete-template-v1"></script>
 </body>
 </html>

@@ -20,6 +20,71 @@
    quando o envio está ligado, `.is-warn` quando está desligado. O
    `[hidden]` e o recolhimento no celular também vêm de lá. */
 
+/* ── Lembrete de trocar o template ────────────────────────────
+   Fica no topo da página, acima dos indicadores, porque é a única
+   coisa aqui que ninguém vai procurar por conta própria: o e-mail
+   continua saindo certinho todo dia enquanto o texto envelhece.
+
+   ⚠️ O `[hidden]` precisa da regra própria: qualquer `display` na
+   regra base ganha do atributo. Mesma armadilha da .topbar-status,
+   da .cadastro-bulk-bar e da .notam-note. */
+.aniv-template-aviso {
+  display: block;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  background: var(--surface);
+}
+
+.aniv-template-aviso[hidden] { display: none; }
+
+.aniv-template-aviso.is-vencido {
+  background: var(--tint-erro);
+  border-color: var(--danger);
+}
+
+.aniv-template-aviso.is-preparar {
+  background: var(--tint-aviso);
+  border-color: var(--warning);
+}
+
+.aniv-template-titulo {
+  font-weight: 700;
+  font-size: .98rem;
+  line-height: 1.3;
+}
+
+.is-vencido  .aniv-template-titulo { color: var(--ink-erro); }
+.is-preparar .aniv-template-titulo { color: var(--ink-aviso); }
+
+.aniv-template-texto {
+  margin: 6px 0 0;
+  font-size: .87rem;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+/* O "como fazer" é para quem vai mexer no código, então fica menor e
+   mais apagado: quem só olha a tela lê o título e segue a vida. */
+.aniv-template-como {
+  margin: 8px 0 0;
+  font-size: .8rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.aniv-template-como code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .93em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  /* Nome de função é longo e não pode estourar a largura no celular. */
+  overflow-wrap: break-word;
+}
+
 /* ── Indicadores ──────────────────────────────────────────── */
 .aniv-kpis {
   display: grid;
@@ -273,4 +338,11 @@
 
   .aniv-bloco-head { flex-direction: column; }
   .aniv-select-mes { width: 100%; }
+
+  /* O "como fazer" do lembrete some no celular. São nomes de função que
+     quebram em seis linhas nessa largura e empurram a página inteira para
+     baixo, para instruir uma edição de Apps Script que ninguém faz pelo
+     telefone. O aviso em si (título e texto) continua: é ele que precisa
+     ser visto onde quer que a página seja aberta. */
+  .aniv-template-como { display: none; }
 }
