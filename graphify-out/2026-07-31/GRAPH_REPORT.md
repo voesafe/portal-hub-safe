@@ -1,16 +1,16 @@
-# Graph Report - portal-hub-safe  (2026-07-31)
+# Graph Report - portal-hub-safe  (2026-07-30)
 
 ## Corpus Check
-- 77 files · ~538,687 words
+- 77 files · ~537,407 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1283 nodes · 1426 edges · 371 communities (80 shown, 291 thin omitted)
+- 1281 nodes · 1424 edges · 371 communities (80 shown, 291 thin omitted)
 - Extraction: 86% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a414257e`
+- Built from commit: `6d33d20e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -467,7 +467,7 @@ Nodes (31): Atualizar pela API CAVOK, Cadastrar Instrutor Form, Horas Voadas INV
 
 ### Community 11 - "Página de Controle de Acesso"
 Cohesion: 0.13
-Nodes (21): Painel do catálogo de permissões, Overview de KPIs (grupos ativos, permissões catalogadas, usuários em grupos), Modal criar/editar grupo (nome, id, descrição, ativo, permissões), Controle de Acesso page (access-control.html), Painel de grupos de acesso com busca, Card "Você não possui acesso a este módulo", CSS embutido da página (não usa arquivo de módulo), Página Acesso restrito (+13 more)
+Nodes (19): Overview de KPIs (grupos ativos, permissões catalogadas, usuários em grupos), Botão Voltar (history.back com fallback para inicio.html), Card "Você não possui acesso a este módulo", CSS embutido da página (não usa arquivo de módulo), Script inline de proteção e preenchimento da tela de acesso negado, Página Acesso restrito, Parâmetro de query ?recurso= com o nome do módulo bloqueado, Shell padrão do Hub (app-shell + sidebar + topbar + main) (+11 more)
 
 ### Community 12 - "Drawer e Auditoria da Escala CCO"
 Cohesion: 0.16
@@ -578,8 +578,8 @@ Cohesion: 0.18
 Nodes (10): dependencies, exceptionLogging, executionApi, access, oauthScopes, runtimeVersion, timeZone, webapp (+2 more)
 
 ### Community 49 - "Controle de Acesso page (access-control.html)"
-Cohesion: 0.33
-Nodes (6): Botão Voltar (history.back com fallback para inicio.html), Script inline de proteção e preenchimento da tela de acesso negado, Parâmetro de query ?recurso= com o nome do módulo bloqueado, Botão "+ Nova base" começa hidden e é liberado por permissão, Auth.proteger(), Proteção de página por permissão efetiva (Auth.proteger*)
+Cohesion: 0.29
+Nodes (8): Painel do catálogo de permissões, Modal criar/editar grupo (nome, id, descrição, ativo, permissões), Controle de Acesso page (access-control.html), Painel de grupos de acesso com busca, css/access-control.css (Controle de Acesso), fecharModal(id) chamada por onclick inline no HTML, Manifesto PWA + ícones + theme-color (#19213f), RBAC — grupos e permissões efetivas
 
 ### Community 50 - "Admin Panel — Valor"
 Cohesion: 0.25
@@ -590,8 +590,8 @@ Cohesion: 0.25
 Nodes (8): Admin Panel — Valor por Turno Presencial, Calendário (Escala Mensal do Time), Dashboard de Métricas e Relatórios (CCO), Escala CCO App (Centro de Controle de Operações), Fechamento Financeiro (Total Pago no Mês/Ano), Exportar iFood (Planilha do Mês), Gerenciar Funcionários (CCO), iFood Benefícios (Plataforma de Pagamento)
 
 ### Community 52 - "Horas Voadas INVA Mês: cadastro de instrutor, desde 2026-07-28"
-Cohesion: 0.14
-Nodes (14): Bases SJK/CPQ, flag de 100h e liberação por OPR, desde 2026-07-28, Comentários por instrutor, desde 2026-07-30, Diretriz de missões dos eventuais, desde 2026-07-30 (só frontend), Etiquetas no molde do Trello, desde 2026-07-29, Gatilhos diários, desde 2026-07-28, Gráfico recolhido e etiqueta longa legível, em 2026-07-30 (só frontend), Horas Voadas INVA Mês: cadastro de instrutor, desde 2026-07-28, O botão de OPR virou um check, em 2026-07-30 (só frontend) (+6 more)
+Cohesion: 0.15
+Nodes (13): Bases SJK/CPQ, flag de 100h e liberação por OPR, desde 2026-07-28, Comentários por instrutor, desde 2026-07-30, Diretriz de missões dos eventuais, desde 2026-07-30 (só frontend), Etiquetas no molde do Trello, desde 2026-07-29, Gatilhos diários, desde 2026-07-28, Gráfico recolhido e etiqueta longa legível, em 2026-07-30 (só frontend), Horas Voadas INVA Mês: cadastro de instrutor, desde 2026-07-28, O botão de OPR virou um check, em 2026-07-30 (só frontend) (+5 more)
 
 ### Community 53 - "css/horas-voadas-inva.css"
 Cohesion: 0.38
@@ -702,8 +702,8 @@ Cohesion: 0.67
 Nodes (3): Layout mobile: invariantes descobertas na auditoria de 2026-07-26, Segunda leva, fechada no mesmo dia, Zoom automático em campo no celular, corrigido em 2026-07-28
 
 ### Community 370 - "Módulo Aniversários de alunos — desde 2026-07-24"
-Cohesion: 0.50
-Nodes (4): Entrega (deliverability) do e-mail de aniversário, Lembrete de trocar o template do e-mail, desde 2026-07-30, Módulo Aniversários de alunos — desde 2026-07-24, Passo a passo para trocar o template (a fazer a cada ano)
+Cohesion: 0.67
+Nodes (3): Entrega (deliverability) do e-mail de aniversário, Lembrete de trocar o template do e-mail, desde 2026-07-30, Módulo Aniversários de alunos — desde 2026-07-24
 
 ## Ambiguous Edges - Review These
 - `carregarFaturamento()` → `KPIs de gastos, horas voadas e custo por hora`  [AMBIGUOUS]
@@ -714,7 +714,7 @@ Nodes (4): Entrega (deliverability) do e-mail de aniversário, Lembrete de troca
   escala-cco.html · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **524 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `oauthScopes`, `runtimeVersion` (+519 more)
+- **523 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `oauthScopes`, `runtimeVersion` (+518 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **291 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -727,11 +727,11 @@ _Questions this graph is uniquely positioned to answer:_
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **What is the exact relationship between `Fila de gravação serializada (gasWriteChain)` and `Capacidade máxima de 1 pessoa por turno`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
-- **Why does `css/layout.css` connect `Grid de bases` to `Pagina Cadastro de Aluno`, `Página de Controle de Acesso`, `css/notams.css`, `access-control.html`, `Controle de Gastos e Gráficos`, `Aniversários e Progresso de Alunos`, `css/horas-voadas-inva.css`, `toggleUsersView() (módulo legado)`, `css/fechamento-horas.css`, `Gestão de Usuários page`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **Why does `Pagina NOTAMs (notams.html)` connect `css/notams.css` to `Menu da Sidebar e NOTAMs`, `Página de Controle de Acesso`, `Grid de bases`, `toggleUsersView() (módulo legado)`?**
+- **Why does `css/layout.css` connect `Grid de bases` to `Pagina Cadastro de Aluno`, `Página de Controle de Acesso`, `css/notams.css`, `access-control.html`, `Controle de Gastos e Gráficos`, `Controle de Acesso page (access-control.html)`, `Aniversários e Progresso de Alunos`, `css/horas-voadas-inva.css`, `toggleUsersView() (módulo legado)`, `css/fechamento-horas.css`, `Gestão de Usuários page`?**
+  _High betweenness centrality (0.007) - this node is a cross-community bridge._
+- **Why does `Vendas page (vendas.html)` connect `Gestão de Usuários page` to `Página de Controle de Acesso`, `Controle de Gastos e Gráficos`, `Aniversários e Progresso de Alunos`, `Controle de Acesso page (access-control.html)`, `toggleUsersView() (módulo legado)`, `Grid de bases`?**
   _High betweenness centrality (0.004) - this node is a cross-community bridge._
-- **Why does `css/safe-theme.css` connect `Grid de bases` to `Pagina Cadastro de Aluno`, `Página de Controle de Acesso`, `css/notams.css`, `access-control.html`, `Controle de Gastos e Gráficos`, `Aniversários e Progresso de Alunos`, `css/horas-voadas-inva.css`, `toggleUsersView() (módulo legado)`, `css/fechamento-horas.css`, `Gestão de Usuários page`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+- **Why does `Progresso de Alunos page (progresso-alunos.html)` connect `Aniversários e Progresso de Alunos` to `Página de Controle de Acesso`, `Controle de Acesso page (access-control.html)`, `toggleUsersView() (módulo legado)`, `Gestão de Usuários page`, `Grid de bases`?**
+  _High betweenness centrality (0.003) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `css/layout.css` (e.g. with `css/access-control.css (Controle de Acesso)` and `css/aniversarios.css (Aniversários)`) actually correct?**
   _`css/layout.css` has 12 INFERRED edges - model-reasoned connections that need verification._
