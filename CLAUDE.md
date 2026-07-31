@@ -699,6 +699,20 @@ O `Liberado por OPR` era um botão de texto de ~150px na ponta de cada linha. Vi
 - **O hover do concedido não vira vermelho.** O que o botão abre é um modal com senha, não uma exclusão imediata; pintar de perigo a cada passada do ponteiro mentiria sobre o que vai acontecer.
 - **O selo `OPR · data` continua na linha**, de propósito: ele carrega a data, que o check não mostra sem passar o mouse.
 
+### O check trava em verde nas 100h, desde 2026-07-31 (só frontend)
+
+Quem bate a meta de horas fica com o check da operação **verde e desabilitado**, no mesmo estado de quem foi liberado com senha pelo coordenador. Antes o check ficava apagado ao lado de uma flag verde no nome, e a linha dizia duas coisas diferentes sobre o mesmo instrutor: a flag sempre teve as duas origens (`temFlagVerde` = meta **ou** liberação da operação), só o check é que ignorava a primeira.
+
+- **Travado porque não há o que decidir.** Pela meta a pessoa já está liberada, então conceder ou remover a marca de OPR não mudaria nada na tela. Um botão que aceita clique, pede senha e não produz efeito visível é pior que um botão travado.
+- ⚠️ **Quem tem meta batida E liberação de OPR também trava, e isso é escolha, não descuido.** A marca continua registrada (o selo `OPR · data` segue na linha, e o `title` do check avisa), mas deixa de ser editável enquanto as horas estiverem acima da meta. A alternativa era manter o botão clicável, e aí remover a liberação deixaria o check **verde do mesmo jeito**, pela meta: o clique pareceria não ter funcionado. Se as horas caírem abaixo de 100 numa reconciliação, o botão volta a ser editável sozinho.
+- ⚠️ **O `:hover` continua valendo em elemento desabilitado** (só o clique é que não dispara), e `.hi-liberar.is-liberado:hover` vale 0,3,0. Por isso o seletor do travado é `.hi-liberar.is-liberado[disabled]:hover`, 0,4,0: sem ele o botão travado ainda ganharia o realce de "dá para clicar".
+- **Nada de opacidade nem cinza de desabilitado.** O check aqui não é uma ação indisponível, é o estado concedido; apagá-lo diria o contrário da flag verde ao lado do nome. Só o `cursor` muda, porque o `button { cursor: pointer }` do tema convidaria a um clique que não vai acontecer.
+- **O guarda vive em dois lugares:** o botão nasce `disabled` e o `abrirLiberacao` recusa quem passou da meta. Esconder o botão não impede uma chamada direta, e o modal é o único caminho de escrita da liberação.
+- ⚠️ **O rótulo do estado travado não flexiona gênero.** Ele é montado para qualquer instrutor a partir do nome, e "liberado" sairia errado em metade da lista. Ficou "já cumpre a meta de 100h. Não depende da liberação da operação."
+- **O limite segue fechado em 100**, então 99,9h não trava nem acende, exatamente como a flag.
+- **Verificação:** 160 checagens nas quatro combinações (desktop e 390px × claro e escuro) com o Apps Script interceptado, cobrindo os cinco casos (abaixo da meta, só OPR, exatamente 100h, 99,9h e meta+OPR juntos), o verde travado medido como **idêntico** ao verde concedido, o hover não mudando nada, o clique não abrindo o modal nem disparando POST, o `abrirLiberacao` recusando quando chamado na mão, o `cursor: default`, o contraste ≥ 3:1 e o modal continuando a abrir para quem ainda depende da operação.
+- **Assets em `?v=20260731-check-100h-v1`** (só a página, nada de `core/`). Sem backend: o campo `liberadoOpr` e a coluna `LIBERADO_OPR` não mudaram, e a regra da meta já existia no frontend.
+
 ### Gráfico recolhido e etiqueta longa legível, em 2026-07-30 (só frontend)
 
 Duas melhorias sem backend, em `?v=20260730-grafico-etiquetas-v1`.
