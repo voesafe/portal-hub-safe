@@ -1098,17 +1098,41 @@ const HorasVoadasInva = {
    * pior, um botão que ninguém sabe que já está apertado.
    *
    * `aria-pressed` porque é alternador de estado, não uma ação de mão única.
+   *
+   * ⚠️ Quem bateu a meta de horas fica com o check verde e TRAVADO. A flag
+   * verde da linha já vem das duas origens (meta ou liberação da operação),
+   * então deixar o check apagado ao lado dela dizia duas coisas diferentes
+   * sobre o mesmo instrutor. Travado porque não há o que a operação decidir:
+   * pela meta ele já está liberado, e conceder ou remover a marca de OPR não
+   * mudaria nada na tela. Quem já tinha liberação da operação e depois bateu
+   * a meta mantém a marca registrada (o selo continua na linha), e ela volta
+   * a ser editável se as horas caírem abaixo da meta numa reconciliação.
    */
   botaoLiberar(instrutor, nomeEscapado, liberado) {
+    const horas = this.horasDe(instrutor);
     const quando = instrutor.liberadoEm ? ` em ${instrutor.liberadoEm}` : '';
     const quem = instrutor.liberadoPor ? ` por ${instrutor.liberadoPor}` : '';
-    const rotulo = liberado
-      ? `Liberado pela operação${quando}${quem}. Clique para remover a liberação de ${instrutor.nome}.`
-      : `Liberar ${instrutor.nome} pela operação, mesmo sem as 100h. Pede a senha da operação.`;
+    const porHoras = horas >= this.metaHoras;
+    const verde = porHoras || liberado;
+
+    let rotulo;
+    if (porHoras) {
+      // Sem flexao de genero: o rotulo e montado para qualquer instrutor, e
+      // "liberado" sairia errado em metade da lista.
+      rotulo = `${instrutor.nome} tem ${this.formatarHoras(horas)}h voadas e já cumpre a meta `
+        + `de ${this.metaHoras}h. Não depende da liberação da operação.`
+        + (liberado ? ` A liberação da operação${quando}${quem} segue registrada.` : '');
+    } else if (liberado) {
+      rotulo = `Liberado pela operação${quando}${quem}. Clique para remover a liberação de ${instrutor.nome}.`;
+    } else {
+      rotulo = `Liberar ${instrutor.nome} pela operação, mesmo sem as ${this.metaHoras}h. `
+        + 'Pede a senha da operação.';
+    }
 
     return `
-      <button class="hi-liberar${liberado ? ' is-liberado' : ''}" type="button"
-        data-liberar="${liberado ? 'remover' : 'conceder'}" aria-pressed="${liberado}"
+      <button class="hi-liberar${verde ? ' is-liberado' : ''}" type="button"
+        ${porHoras ? 'disabled' : `data-liberar="${liberado ? 'remover' : 'conceder'}"`}
+        aria-pressed="${verde}"
         title="${this.escape(rotulo)}" aria-label="${this.escape(rotulo)}">
         <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
           <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor"
@@ -1587,6 +1611,10 @@ const HorasVoadasInva = {
   abrirLiberacao(nome, remover) {
     const instrutor = this.instrutores.find(i => i.nome === nome);
     if (!instrutor) return;
+    // Mesma regra do botao travado: quem bateu a meta ja esta liberado, entao
+    // nao ha senha a pedir. O guarda vive aqui tambem porque o modal e o unico
+    // caminho de escrita, e esconder o botao nao impede uma chamada direta.
+    if (this.horasDe(instrutor) >= this.metaHoras) return;
 
     this.liberacao = { nome, remover };
     const overlay = document.getElementById('modal-liberacao');
@@ -1878,6 +1906,10 @@ const HorasVoadasInva = {
 
       const liberar = evento.target.closest('.hi-liberar');
       if (!liberar) return;
+      // Botao desabilitado nao dispara clique, mas o closest sobe a partir do
+      // alvo real: se algum dia o svg deixar de ser pointer-events none, o
+      // clique chegaria aqui pelo filho. Barato garantir.
+      if (liberar.disabled) return;
       const item = liberar.closest('.hi-item');
       if (item) this.abrirLiberacao(item.dataset.nome, liberar.dataset.liberar === 'remover');
     });

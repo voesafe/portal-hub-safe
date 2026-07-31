@@ -727,6 +727,30 @@
   box-shadow: 0 0 0 3px var(--tint-ok);
 }
 
+/* Liberado pela meta de horas: verde e travado. Nada de opacidade nem cinza
+   de "desabilitado" — o check aqui não é uma ação indisponível, é o estado
+   concedido, e apagá-lo diria o contrário da flag verde ao lado do nome. Só
+   o cursor muda, porque o `button { cursor: pointer }` do tema convidaria a
+   um clique que não vai acontecer. */
+.hi-liberar[disabled] {
+  cursor: default;
+  border-color: var(--success);
+  color: var(--ink-ok);
+  background: var(--tint-ok);
+}
+
+/* ⚠️ `:hover` continua valendo em elemento desabilitado (só o clique é que
+   não dispara), e `.hi-liberar.is-liberado:hover` vale 0,3,0. Por isso o
+   seletor com as duas classes mais o atributo, 0,4,0: sem ele o botão
+   travado ainda ganharia o realce de "dá para clicar". */
+.hi-liberar[disabled]:hover,
+.hi-liberar.is-liberado[disabled]:hover {
+  box-shadow: none;
+  border-color: var(--success);
+  color: var(--ink-ok);
+  background: var(--tint-ok);
+}
+
 .hi-vazio {
   padding: 26px 12px;
   border: 1px dashed var(--border-strong);
