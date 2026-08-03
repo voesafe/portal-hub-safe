@@ -202,3 +202,76 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ── Campo pendente ────────────────────────────────────────── */
+/* A borda vermelha e um reforço, nunca o unico sinal: o modal de pendencias
+   diz por escrito qual campo falta e o que ha de errado nele. Cor sozinha
+   nao serve a quem nao distingue vermelho de cinza. */
+.form-control.is-invalid,
+.curso-picker-trigger.is-invalid {
+  border-color: var(--danger);
+  background: var(--tint-erro);
+}
+.form-control.is-invalid:focus,
+.curso-picker-trigger.is-invalid:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--tint-erro);
+}
+/* Campo desabilitado (a cidade antes de haver estado, o PAC de quem nao e
+   admin) precisa parecer bloqueado, senao a pessoa clica e acha que travou. */
+.form-control:disabled {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* ── Modal de campos que faltam ────────────────────────────── */
+.faltando-intro {
+  font-size: .9rem;
+  color: var(--text-2);
+  margin: 0 0 14px;
+}
+.faltando-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* Cada pendencia e um botao que leva ao campo: o formulario rola, e sair do
+   aviso sem saber onde clicar devolve a pessoa ao mesmo erro. */
+.faltando-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: var(--tint-erro);
+  transition: var(--transition);
+}
+.faltando-item:hover  { background: var(--surface-2); }
+.faltando-item:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.faltando-rotulo {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.faltando-motivo {
+  font-size: .74rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--ink-erro);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+@media (max-width: 480px) {
+  .faltando-item { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .faltando-motivo { white-space: normal; }
+}

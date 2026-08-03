@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
-  <link rel="stylesheet" href="css/pages/vendas.css?v=20260727-contraste-v1">
+  <link rel="stylesheet" href="css/pages/vendas.css?v=20260803-venda-obrigatorios-v1">
 </head>
 <body>
 
@@ -192,7 +192,7 @@
           <input type="date" class="form-control" id="f-data">
         </div>
         <div class="form-group">
-          <label class="form-label">Consultor (PAC)</label>
+          <label class="form-label">Consultor (PAC) *</label>
           <select class="form-control" id="f-pac">
             <option value="Thiago">Thiago</option>
             <option value="Marlon">Marlon</option>
@@ -227,7 +227,7 @@
           <input type="text" inputmode="numeric" class="form-control" id="f-valor" placeholder="0,00">
         </div>
         <div class="form-group">
-          <label class="form-label">Origem do Lead</label>
+          <label class="form-label">Origem do Lead *</label>
           <select class="form-control" id="f-origem">
             <option value="">Selecione</option>
             <!-- em ordem alfabetica, com "Outros" sempre por ultimo -->
@@ -242,16 +242,17 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Lead Novo?</label>
+          <label class="form-label">Lead Novo? *</label>
           <select class="form-control" id="f-lead-novo">
+            <option value="">Selecione</option>
             <option value="Não">Não</option>
             <option value="Sim">Sim</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Quem Comprou</label>
+          <label class="form-label">Quem Comprou *</label>
           <select class="form-control" id="f-quem-comprou">
-            <option value="">—</option>
+            <option value="">Selecione</option>
             <option value="Aluno">Aluno</option>
             <option value="Pai">Pai</option>
             <option value="Mãe">Mãe</option>
@@ -274,33 +275,31 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Sexo</label>
+          <label class="form-label">Sexo *</label>
           <select class="form-control" id="f-sexo">
-            <option value="">—</option>
+            <option value="">Selecione</option>
             <option value="Masculino">Masculino</option>
             <option value="Feminino">Feminino</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Data de Nascimento</label>
+          <label class="form-label">Data de Nascimento *</label>
           <input type="date" class="form-control" id="f-nascimento">
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">E-mail</label>
+        <label class="form-label">E-mail *</label>
         <input type="email" class="form-control" id="f-email" placeholder="email@exemplo.com">
       </div>
 
+      <!-- Estado vem ANTES da cidade porque a lista de cidades depende dele:
+           o campo Cidade fica desabilitado ate haver um estado escolhido. -->
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Cidade</label>
-          <input type="text" class="form-control" id="f-cidade" placeholder="Cidade">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Estado</label>
+          <label class="form-label">Estado *</label>
           <select class="form-control" id="f-estado">
-            <option value="">—</option>
+            <option value="">Selecione</option>
             <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
             <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
             <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
@@ -308,6 +307,12 @@
             <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
             <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
             <option>SP</option><option>SE</option><option>TO</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cidade *</label>
+          <select class="form-control" id="f-cidade" disabled>
+            <option value="">Escolha o estado primeiro</option>
           </select>
         </div>
       </div>
@@ -320,12 +325,35 @@
   </div>
 </div>
 
+<!-- ── Modal: campos que faltam ──────────────────────────────
+     Fica DEPOIS do modal-venda no HTML de proposito: os dois sao
+     .modal-overlay com o mesmo z-index, entao quem vem por ultimo e que
+     aparece por cima. -->
+<div class="modal-overlay" id="modal-campos-faltando" role="alertdialog" aria-modal="true" aria-labelledby="faltando-titulo">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <h3 id="faltando-titulo" style="font-size:1.05rem">Faltam campos para salvar</h3>
+      <button class="modal-close" id="faltando-close" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="faltando-intro" id="faltando-intro">Preencha os campos abaixo para registrar a venda:</p>
+      <ul class="faltando-lista" id="faltando-lista"></ul>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="faltando-ok">Voltar e preencher</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast-container" class="toast-container"></div>
 
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260803-marketing-v1"></script>
 <script src="js/core/auth.js?v=20260803-marketing-v1"></script>
-<script src="js/pages/vendas.js?v=20260727-tema-global-v1"></script>
+<script src="js/data/municipios-br.js?v=20260803-venda-obrigatorios-v1"></script>
+<script src="js/pages/vendas.js?v=20260803-venda-obrigatorios-v1"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {

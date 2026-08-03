@@ -23,6 +23,41 @@ const CURSOS_VENDAS = [
   'Voo de Incentivo'
 ];
 
+// Campos exigidos no cadastro de uma venda NOVA, na ordem em que aparecem no
+// modal: a lista de pendencias segue a mesma ordem da tela, senao quem le tem
+// que caçar cada campo fora de ordem.
+//
+// `foco` existe porque nem todo campo obrigatorio e um campo focavel: o curso
+// e um <input type="hidden"> alimentado pelo seletor, entao quem recebe o foco
+// e a marca de erro e o botao do seletor.
+//
+// A regra NAO vale na edicao (decidido em 2026-08-03). Venda antiga foi gravada
+// quando so data, nome, curso e valor eram obrigatorios: exigir tudo ali
+// travaria a correcao de um valor errado ate alguem caçar um e-mail de 2023.
+// `validarVenda` recebe `novo` e e por isso que o parametro existe.
+const CAMPOS_OBRIGATORIOS_VENDA = [
+  { id: 'f-data',         rotulo: 'Data da Venda' },
+  { id: 'f-pac',          rotulo: 'Consultor (PAC)' },
+  { id: 'f-curso',        rotulo: 'Curso / Produto Comprado', foco: 'curso-picker-trigger' },
+  { id: 'f-valor',        rotulo: 'Valor da Compra' },
+  { id: 'f-origem',       rotulo: 'Origem do Lead' },
+  { id: 'f-lead-novo',    rotulo: 'Lead Novo?' },
+  { id: 'f-quem-comprou', rotulo: 'Quem Comprou' },
+  { id: 'f-nome',         rotulo: 'Nome Completo' },
+  { id: 'f-sexo',         rotulo: 'Sexo' },
+  { id: 'f-nascimento',   rotulo: 'Data de Nascimento' },
+  { id: 'f-email',        rotulo: 'E-mail' },
+  { id: 'f-estado',       rotulo: 'Estado' },
+  { id: 'f-cidade',       rotulo: 'Cidade' }
+];
+
+// Campos que a edicao continua exigindo, como antes desta entrega.
+const CAMPOS_OBRIGATORIOS_EDICAO = ['f-data', 'f-nome', 'f-curso', 'f-valor'];
+
+// Motivo do campo simplesmente vazio. Fica numa constante porque a lista de
+// pendencias o usa para decidir NAO desenhar etiqueta nenhuma nesse caso.
+const MOTIVO_VAZIO = 'não preenchido';
+
 const PACOTES_LEGADOS_CURSOS = {
   'Pacote Piloto Privado Teórico + Prático': ['Piloto Privado Teórico', 'Piloto Privado Prático'],
   'Pacote Piloto Comercial/IFR Teórico + Prático': ['Piloto Comercial Teórico', 'Piloto Comercial/IFR Prático'],
@@ -88,6 +123,14 @@ const Vendas = {
     if (!campoPac || !this.pacs.length) return;
     const valorAtual = campoPac.value;
     campoPac.innerHTML = '';
+    // Placeholder para o admin ter que escolher o consultor de proposito. Sem
+    // ele o campo abre no primeiro da lista e uma venda de outra pessoa entra
+    // no PAC errado so porque ninguem olhou o campo. Para quem nao e admin o
+    // valor vem da sessao e o campo fica desabilitado, entao nao atrapalha.
+    const vazio = document.createElement('option');
+    vazio.value = '';
+    vazio.textContent = 'Selecione';
+    campoPac.appendChild(vazio);
     this.pacs.forEach(u => {
       const opt = document.createElement('option');
       opt.value = u.pac;
@@ -220,10 +263,204 @@ const Vendas = {
 
   initForm() {
     this.initCursoPicker();
+    this.initCidadeEstado();
+    this.initValidacao();
     document.getElementById('btn-nova-venda')?.addEventListener('click',   () => this.abrirForm());
     document.getElementById('modal-close')?.addEventListener('click',      () => fecharModal('modal-venda'));
     document.getElementById('modal-cancelar')?.addEventListener('click',   () => fecharModal('modal-venda'));
     document.getElementById('btn-salvar')?.addEventListener('click',       () => this.salvar());
+  },
+
+  // ── Cidade dependente do estado ─────────────────────────────
+  initCidadeEstado() {
+    document.getElementById('f-estado')?.addEventListener('change', e => {
+      this.preencherCidades(e.target.value);
+    });
+  },
+
+  // Repopula o dropdown de cidades com os municipios da UF.
+  //
+  // `desejada` e o que esta gravado na venda. Cidade antiga foi digitada a mao,
+  // entao pode vir "SAO PAULO" ou "sao paulo": `municipioOficial` casa ignorando
+  // caixa e acento. Quando nao casa com municipio nenhum, o valor entra como uma
+  // opcao extra e continua selecionado. Descartar em silencio apagaria dado que
+  // ninguem pediu para apagar, e a pessoa so notaria depois de salvar.
+  preencherCidades(uf, desejada = '') {
+    const sel = document.getElementById('f-cidade');
+    if (!sel) return;
+
+    const estado   = String(uf || '').trim().toUpperCase();
+    const gravada  = String(desejada || '').trim();
+    const cidades  = municipiosDoEstado(estado);
+
+    if (!cidades.length) {
+      // Sem estado escolhido nao ha lista possivel. Se a venda ja trazia uma
+      // cidade, ela fica ali sozinha para nao se perder.
+      sel.innerHTML = '';
+      sel.appendChild(this._opcaoCidade('', gravada ? 'Selecione' : 'Escolha o estado primeiro'));
+      if (gravada) sel.appendChild(this._opcaoCidade(gravada, `${gravada} (fora da lista)`));
+      sel.value = gravada;
+      sel.disabled = !gravada;
+      return;
+    }
+
+    sel.disabled = false;
+    sel.innerHTML = '';
+    sel.appendChild(this._opcaoCidade('', 'Selecione a cidade'));
+    cidades.forEach(cidade => sel.appendChild(this._opcaoCidade(cidade, cidade)));
+
+    if (!gravada) { sel.value = ''; return; }
+
+    const oficial = municipioOficial(estado, gravada);
+    if (oficial) { sel.value = oficial; return; }
+
+    sel.appendChild(this._opcaoCidade(gravada, `${gravada} (fora da lista)`));
+    sel.value = gravada;
+  },
+
+  _opcaoCidade(valor, texto) {
+    const opt = document.createElement('option');
+    opt.value = valor;
+    opt.textContent = texto;
+    return opt;
+  },
+
+  // ── Validacao e modal de pendencias ─────────────────────────
+  initValidacao() {
+    const fechar = () => this.fecharCamposFaltando();
+    document.getElementById('faltando-close')?.addEventListener('click', fechar);
+    document.getElementById('faltando-ok')?.addEventListener('click', fechar);
+    document.getElementById('modal-campos-faltando')?.addEventListener('click', e => {
+      if (e.target.id === 'modal-campos-faltando') fechar();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && document.getElementById('modal-campos-faltando')?.classList.contains('open')) fechar();
+    });
+
+    // A marca vermelha some assim que a pessoa mexe no campo. Deixar o campo
+    // vermelho depois de preenchido faria a tela continuar acusando erro que
+    // ja foi resolvido, e a proxima tentativa de salvar seria as cegas.
+    CAMPOS_OBRIGATORIOS_VENDA.forEach(campo => {
+      const el = document.getElementById(campo.id);
+      if (!el) return;
+      ['input', 'change'].forEach(evt => el.addEventListener(evt, () => this._desmarcarCampo(campo)));
+    });
+  },
+
+  // Devolve a lista de pendencias, na ordem da tela. Vazia = pode salvar.
+  validarVenda(dados, novo) {
+    const exigidos = novo
+      ? CAMPOS_OBRIGATORIOS_VENDA
+      : CAMPOS_OBRIGATORIOS_VENDA.filter(c => CAMPOS_OBRIGATORIOS_EDICAO.includes(c.id));
+
+    return exigidos
+      .map(campo => {
+        const motivo = this._motivoInvalido(campo.id, dados);
+        return motivo ? { ...campo, motivo } : null;
+      })
+      .filter(Boolean);
+  },
+
+  // null = campo ok. String = o que esta errado, mostrado na lista do modal.
+  _motivoInvalido(id, dados) {
+    const hoje = new Date().toISOString().split('T')[0];
+
+    if (id === 'f-valor') {
+      if (!dados.valor) return MOTIVO_VAZIO;
+      return dados.valor > 0 ? null : 'precisa ser maior que zero';
+    }
+    if (id === 'f-email') {
+      if (!dados.email.trim()) return MOTIVO_VAZIO;
+      // Checagem de forma, nao de existencia: exige texto, @, dominio e ponto.
+      // Campo obrigatorio que aceita "abc" garante preenchimento e nao dado.
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(dados.email.trim()) ? null : 'e-mail inválido';
+    }
+    if (id === 'f-nascimento') {
+      if (!dados.nascimento) return MOTIVO_VAZIO;
+      if (dados.nascimento > hoje) return 'não pode ser uma data futura';
+      return dados.nascimento >= '1900-01-01' ? null : 'ano fora do razoável';
+    }
+    if (id === 'f-data') {
+      if (!dados.data) return MOTIVO_VAZIO;
+      return dados.data > hoje ? 'não pode ser uma data futura' : null;
+    }
+    // Para quem nao e admin o PAC vem da sessao, nao do campo, que fica
+    // desabilitado: e o valor que vai ser gravado que precisa ser conferido.
+    if (id === 'f-pac') return String(dados.pac || '').trim() ? null : MOTIVO_VAZIO;
+
+    const valor = String(this._valorDoCampo(id) || '').trim();
+    return valor ? null : MOTIVO_VAZIO;
+  },
+
+  _valorDoCampo(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : '';
+  },
+
+  // Pinta os campos pendentes, lista as pendencias e abre o modal por cima do
+  // formulario. O modal-venda continua aberto atras: fechar o formulario para
+  // avisar de campo faltando jogaria fora o que ja foi digitado.
+  mostrarCamposFaltando(faltando) {
+    this.limparMarcasInvalidas();
+    faltando.forEach(campo => this._marcarCampo(campo));
+
+    const intro = document.getElementById('faltando-intro');
+    const lista = document.getElementById('faltando-lista');
+    if (intro) {
+      intro.textContent = faltando.length === 1
+        ? 'Falta um campo para registrar a venda:'
+        : `Faltam ${faltando.length} campos para registrar a venda:`;
+    }
+    if (lista) {
+      // A etiqueta do motivo so aparece quando ela diz algo alem do obvio.
+      // "NAO PREENCHIDO" repetido em doze linhas vira ruido e apaga justamente
+      // o aviso que importa, que e o campo preenchido de forma errada.
+      lista.innerHTML = faltando.map(campo => {
+        const etiqueta = campo.motivo === MOTIVO_VAZIO
+          ? ''
+          : `<span class="faltando-motivo">${escapeHtml(campo.motivo)}</span>`;
+        return `
+        <li>
+          <button type="button" class="faltando-item" data-foco="${escapeHtml(campo.foco || campo.id)}">
+            <span class="faltando-rotulo">${escapeHtml(campo.rotulo)}</span>
+            ${etiqueta}
+          </button>
+        </li>`;
+      }).join('');
+      lista.querySelectorAll('[data-foco]').forEach(btn => {
+        btn.addEventListener('click', () => this.fecharCamposFaltando(btn.dataset.foco));
+      });
+    }
+
+    this._focoAoFechar = faltando[0] ? (faltando[0].foco || faltando[0].id) : '';
+    abrirModal('modal-campos-faltando');
+    setTimeout(() => document.getElementById('faltando-ok')?.focus(), 150);
+  },
+
+  // Ao fechar, leva a pessoa ao campo: sem isso ela sai do aviso e tem que
+  // procurar sozinha o que estava vermelho, num modal que rola.
+  fecharCamposFaltando(alvoId = '') {
+    fecharModal('modal-campos-faltando');
+    const id = alvoId || this._focoAoFechar;
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    setTimeout(() => {
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      el.focus({ preventScroll: true });
+    }, 180);
+  },
+
+  _marcarCampo(campo) {
+    document.getElementById(campo.foco || campo.id)?.classList.add('is-invalid');
+  },
+
+  _desmarcarCampo(campo) {
+    document.getElementById(campo.foco || campo.id)?.classList.remove('is-invalid');
+  },
+
+  limparMarcasInvalidas() {
+    document.querySelectorAll('#modal-venda .is-invalid').forEach(el => el.classList.remove('is-invalid'));
   },
 
   initCursoPicker() {
@@ -328,6 +565,12 @@ const Vendas = {
   atualizarCursoHidden() {
     const campo = document.getElementById('f-curso');
     if (campo) campo.value = this.cursosSelecionados.join(' + ');
+    // O curso e um input hidden preenchido por codigo, e atribuir `.value` nao
+    // dispara evento nenhum: sem esta linha o botao do seletor ficaria vermelho
+    // para sempre depois de um aviso, mesmo com curso ja escolhido.
+    if (this.cursosSelecionados.length) {
+      document.getElementById('curso-picker-trigger')?.classList.remove('is-invalid');
+    }
   },
 
   renderCursoPicker() {
@@ -653,14 +896,19 @@ const Vendas = {
     this.editandoId = venda ? venda.id : null;
     document.getElementById('modal-titulo').textContent = venda ? 'Editar Venda' : 'Nova Venda';
 
+    this.limparMarcasInvalidas();
+
     if (venda) {
       document.getElementById('f-data').value         = venda.data        || '';
       document.getElementById('f-pac').value          = venda.pac         || '';
       document.getElementById('f-nome').value         = venda.nome        || '';
       document.getElementById('f-sexo').value         = venda.sexo        || '';
       document.getElementById('f-nascimento').value   = venda.nascimento  || venda.idade || '';
-      document.getElementById('f-cidade').value       = venda.cidade      || '';
-      document.getElementById('f-estado').value       = venda.estado      || '';
+      // A UF gravada pode vir em caixa baixa ou com espaco; sem normalizar, o
+      // select cai em vazio e a venda parece nao ter estado.
+      const uf = String(venda.estado || '').trim().toUpperCase();
+      document.getElementById('f-estado').value       = municipiosDoEstado(uf).length ? uf : '';
+      this.preencherCidades(uf, venda.cidade);
       document.getElementById('f-origem').value       = venda.origem      || '';
       this.setCursosSelecionados(this.cursosPorTexto(venda.curso));
       document.getElementById('f-email').value        = venda.email       || '';
@@ -668,16 +916,19 @@ const Vendas = {
       document.getElementById('f-lead-novo').value    = venda.leadNovo    || 'Não';
       document.getElementById('f-quem-comprou').value = venda.quemComprou || '';
     } else {
-      ['f-nome','f-nascimento','f-cidade','f-email','f-valor'].forEach(id => {
+      ['f-nome','f-nascimento','f-email','f-valor'].forEach(id => {
         const el = document.getElementById(id); if (el) el.value = '';
       });
       document.getElementById('f-data').value         = new Date().toISOString().split('T')[0];
-      document.getElementById('f-pac').value          = Auth.eAdmin() ? (this.pacs[0]?.pac || '') : Auth.getPac();
+      // Admin escolhe o consultor a cada venda; quem nao e admin so pode ser
+      // ele mesmo, entao o proprio PAC da sessao ja vem preenchido.
+      document.getElementById('f-pac').value          = Auth.eAdmin() ? '' : Auth.getPac();
       document.getElementById('f-sexo').value         = '';
       document.getElementById('f-estado').value       = '';
+      this.preencherCidades('');
       document.getElementById('f-origem').value       = '';
       this.setCursosSelecionados([]);
-      document.getElementById('f-lead-novo').value    = 'Não';
+      document.getElementById('f-lead-novo').value    = '';
       document.getElementById('f-quem-comprou').value = '';
     }
 
@@ -741,12 +992,11 @@ const Vendas = {
       quemComprou: document.getElementById('f-quem-comprou').value
     };
 
-    if (!dados.data || !dados.nome || !dados.valor || !dados.curso) {
-      toast('Data, nome, curso e valor são obrigatórios.', 'warning');
-      return;
-    }
-
     const editando = this.editandoId;
+
+    const faltando = this.validarVenda(dados, !editando);
+    if (faltando.length) { this.mostrarCamposFaltando(faltando); return; }
+    this.limparMarcasInvalidas();
 
     if (editando) {
       // Edição otimista: aplica na tela e fecha o modal na hora; reverte se falhar.
