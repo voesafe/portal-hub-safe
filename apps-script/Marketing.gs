@@ -81,7 +81,7 @@ function linhaParaMarketing_(bruto, exibido) {
     mes:    dataVenda.mes,
     ano:    dataVenda.ano,
     pac:    marketingTexto_(bruto[2]),
-    sexo:   marketingTexto_(bruto[4]),
+    sexo:   marketingSexo_(bruto[4]),
     // Idade NA DATA DA COMPRA, não a idade de hoje. Ver marketingIdade_.
     idade:  marketingIdade_(exibido[5], dataVenda),
     cidade: marketingTexto_(bruto[6]),
@@ -94,6 +94,47 @@ function linhaParaMarketing_(bruto, exibido) {
 
 function marketingTexto_(valor) {
   return String(valor === null || valor === undefined ? '' : valor).trim();
+}
+
+/**
+ * Normaliza o campo SEXO para o domínio fechado do formulário.
+ *
+ * Devolve '' (não informado), 'Masculino', 'Feminino' ou MARKETING_SEXO_INVALIDO.
+ * É o único campo que sai daqui já com o texto de tela, e é de propósito: ver
+ * as duas razões abaixo.
+ *
+ * ⚠️ **RAZÃO 1, privacidade.** Medido na produção em 2026-08-03: a coluna SEXO
+ * tem NOME DE PESSOA em parte das linhas. Como o recorte repassava o valor cru,
+ * esses nomes estavam atravessando a rota e chegando ao navegador, o que fura
+ * a garantia do topo deste arquivo de que nome não sai daqui. Normalizar na
+ * origem é o que fecha isso: o que não for reconhecido como sexo vira um
+ * marcador e o texto original **não sai da planilha**.
+ *
+ * ⚠️ **RAZÃO 2, o gráfico.** Sexo é domínio fechado (o formulário oferece dois
+ * valores). Qualquer coisa fora disso é dado errado, não uma categoria nova, e
+ * tratá-la como categoria foi o que encheu o card de letra: cada nome virou uma
+ * barra. Some a isso "MASCULINO" e "Masculino" contando separado.
+ *
+ * O marcador é uma categoria à parte, e **não** se funde com "não informado",
+ * porque as duas coisas pedem ações diferentes: campo vazio é alguém que não
+ * preencheu; campo com nome dentro é alguém que preencheu na coluna errada, e
+ * isso precisa aparecer para ser corrigido na planilha.
+ */
+var MARKETING_SEXO_INVALIDO = '(valor inválido)';
+
+function marketingSexo_(valor) {
+  var texto = marketingTexto_(valor);
+  if (!texto) return '';
+
+  // Sem acento e em caixa baixa, senão "MASCULINO", "masculino" e "Masculino"
+  // viram três categorias, que foi metade do problema na tela.
+  var n = texto.toLowerCase()
+    .replace(/[áàâã]/g, 'a').replace(/[éèê]/g, 'e').replace(/[íì]/g, 'i')
+    .replace(/[óòôõ]/g, 'o').replace(/[úùû]/g, 'u').replace(/ç/g, 'c');
+
+  if (n === 'm' || n.indexOf('masc') === 0 || n === 'homem') return 'Masculino';
+  if (n === 'f' || n.indexOf('femin') === 0 || n === 'fem' || n === 'mulher') return 'Feminino';
+  return MARKETING_SEXO_INVALIDO;
 }
 
 /**

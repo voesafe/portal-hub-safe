@@ -36,6 +36,20 @@ const Marketing = {
   // decisão de mídia sairia de um retrato que não existe.
   SEM: '(não informado)',
 
+  // Campo preenchido com coisa que não é do domínio dele. Hoje só o SEXO
+  // produz isto, marcado no servidor (ver marketingSexo_ no Marketing.gs).
+  // Fica SEPARADO de "não informado" porque as duas coisas pedem ações
+  // diferentes: vazio é quem não preencheu, inválido é quem preencheu errado
+  // e precisa ser corrigido na planilha.
+  INVALIDO: '(valor inválido)',
+
+  // Sobra das categorias além do limite do gráfico.
+  // ⚠️ Existe porque cortar a cauda e sumir com ela mentiria dobrado: além de
+  // esconder gente, deixava o percentual do tooltip ser calculado sobre o
+  // subconjunto mostrado, inflando cada fatia. Com a sobra somada aqui, o
+  // total volta a ser o do recorte inteiro.
+  DEMAIS: 'Demais',
+
   // Ordem fixa das faixas. É a mesma régua do filtro da página de Vendas, para
   // as duas telas quererem dizer a mesma coisa quando disserem "25 a 34".
   FAIXAS: [
@@ -149,6 +163,7 @@ const Marketing = {
         return;
       }
       this.leads = (res.data?.leads || []).map(lead => this._preparar(lead));
+      this._unificarGrafias();
       this.geradoEm = res.data?.geradoEm || '';
       this.preencherPeriodo();
       this.renderizar();
@@ -182,6 +197,56 @@ const Marketing = {
       curso:  texto(lead.curso),
       faixa:  this._faixa(lead.idade)
     };
+  },
+
+  /**
+   * Junta as grafias que só diferem em caixa, acento ou espaço.
+   *
+   * ⚠️ Sem isto "SÃO JOSÉ DOS CAMPOS" e "São José dos Campos" viram duas
+   * barras e a cidade que mais vende pode simplesmente não aparecer no topo,
+   * porque o volume dela ficou dividido em duas. É o mesmo defeito que o
+   * "MASCULINO" separado do "Masculino" mostrou na produção em 2026-08-03,
+   * só que nos campos abertos ele é silencioso: não polui a tela, mas erra o
+   * ranking, que é justamente o que a página existe para responder.
+   *
+   * A grafia que fica é a MAIS FREQUENTE, não a primeira encontrada: assim a
+   * tela mostra como a equipe de fato escreve, e uma digitação torta isolada
+   * não vira o rótulo de todo mundo. O sexo não entra aqui porque já chega
+   * normalizado do servidor.
+   */
+  _unificarGrafias() {
+    ['origem', 'estado', 'cidade', 'curso'].forEach(campo => {
+      const grupos = new Map();
+      this.leads.forEach(lead => {
+        if (this.ehMarcador(lead[campo])) return;
+        const chave = this._chaveGrafia(lead[campo]);
+        const grupo = grupos.get(chave) || new Map();
+        grupo.set(lead[campo], (grupo.get(lead[campo]) || 0) + 1);
+        grupos.set(chave, grupo);
+      });
+
+      const canonico = new Map();
+      grupos.forEach((variantes, chave) => {
+        canonico.set(chave, [...variantes.entries()]
+          // Empate desempata pelo texto, senão a grafia escolhida poderia
+          // mudar de um carregamento para outro sem o dado ter mudado.
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'))[0][0]);
+      });
+
+      this.leads.forEach(lead => {
+        if (this.ehMarcador(lead[campo])) return;
+        lead[campo] = canonico.get(this._chaveGrafia(lead[campo])) || lead[campo];
+      });
+    });
+  },
+
+  /** Chave de agrupamento: sem caixa, sem acento, sem espaço repetido. */
+  _chaveGrafia(valor) {
+    return String(valor)
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .trim();
   },
 
   _faixa(idade) {
@@ -232,9 +297,15 @@ const Marketing = {
       mapa.set(chave, atual);
     });
     const itens = [...mapa.values()];
-    const sem = itens.filter(i => i.chave === this.SEM);
-    const comDado = itens.filter(i => i.chave !== this.SEM).sort((a, b) => b.qtd - a.qtd);
-    return comDado.concat(sem);
+    const cauda = itens.filter(i => this.ehMarcador(i.chave));
+    const comDado = itens.filter(i => !this.ehMarcador(i.chave)).sort((a, b) => b.qtd - a.qtd);
+    // Marcadores vão sempre para o fim, fora da disputa de ranking: eles não
+    // são categorias, são a ausência de uma ou o registro de um erro.
+    return comDado.concat(cauda.sort((a, b) => a.chave.localeCompare(b.chave, 'pt-BR')));
+  },
+
+  ehMarcador(chave) {
+    return chave === this.SEM || chave === this.INVALIDO;
   },
 
   // ── Render ────────────────────────────────────────────────
@@ -318,7 +389,10 @@ const Marketing = {
     // card diz sobre quantas pessoas ele fala. "O estado que mais compra é
     // (não informado)" seria verdade e não serviria para nada.
     const topo = campo => {
-      const comDado = lista.filter(l => l[campo] !== this.SEM);
+      // Valor inválido não conta como dado: um nome no campo Sexo está
+      // preenchido e é inútil, então entrar na base do percentual faria o
+      // KPI dizer "de 900 com o dado preenchido" contando lixo.
+      const comDado = lista.filter(l => !this.ehMarcador(l[campo]));
       if (!comDado.length) return null;
       const itens = this.contar(comDado, campo);
       const primeiro = itens[0];
@@ -630,24 +704,41 @@ const Marketing = {
    * das faixas mudaria o sentido, então a cor carrega a ordem. As demais são
    * nominais e ficam de uma cor só.
    */
-  renderDimensao(dim, idCanvas, idWrap, { limite = 0, ordinal = false, vertical = false } = {}) {
+  renderDimensao(dim, idCanvas, idWrap, { limite = 12, ordinal = false, vertical = false } = {}) {
     const cfg = this.DIMENSOES[dim];
     const lista = this.listaPara(dim);
     let itens = this.contar(lista, cfg.campo);
+    // ⚠️ O total do percentual é o do RECORTE INTEIRO, medido ANTES de
+    // qualquer corte. Calculá-lo depois inflava cada fatia: num top 10 de
+    // cidades, "89 (23%)" era 89 sobre a soma das 10 mostradas, não sobre as
+    // matrículas do recorte.
+    const total = itens.reduce((s, i) => s + i.qtd, 0);
 
     if (ordinal) {
       // A ordem é a das faixas, não a do ranking.
-      const ordem = this.FAIXAS.map(f => f.label).concat(this.SEM);
+      const ordem = this.FAIXAS.map(f => f.label).concat(this.SEM, this.INVALIDO);
       itens = ordem
         .map(label => itens.find(i => i.chave === label))
         .filter(Boolean);
     } else if (limite && itens.length > limite) {
-      // O "(não informado)" nunca é cortado pelo limite: ele é o aviso de que
-      // falta dado, e é justamente nele que o corte bateria primeiro se ficasse
-      // no fim de uma lista longa.
-      const sem = itens.filter(i => i.chave === this.SEM);
-      const comDado = itens.filter(i => i.chave !== this.SEM);
-      itens = comDado.slice(0, limite).concat(sem);
+      // ⚠️ Os marcadores nunca são cortados pelo limite: eles vivem no fim da
+      // lista, que é exatamente onde o corte bate primeiro, e são justamente o
+      // aviso de que o dado está faltando ou errado.
+      const marcadores = itens.filter(i => this.ehMarcador(i.chave));
+      const comDado = itens.filter(i => !this.ehMarcador(i.chave));
+      const mostrados = comDado.slice(0, limite);
+      const sobra = comDado.slice(limite);
+      // A cauda vira uma barra "Demais" com a soma de verdade, em vez de
+      // sumir da tela. Ver a constante DEMAIS.
+      const demais = sobra.length
+        ? [{
+            chave: this.DEMAIS,
+            qtd: sobra.reduce((s, i) => s + i.qtd, 0),
+            valor: sobra.reduce((s, i) => s + i.valor, 0),
+            quantas: sobra.length
+          }]
+        : [];
+      itens = mostrados.concat(demais, marcadores);
     }
 
     if (!itens.length) {
@@ -662,39 +753,54 @@ const Marketing = {
     const neutro = this._cor('--mkt-sem-dado');
 
     const cores = itens.map((item, i) => {
-      // O "(não informado)" é cinza de propósito: ele não é uma categoria, é a
-      // ausência de uma. Pintado com a cor da série, entraria no gráfico
+      // Marcador e sobra ficam em cinza de propósito: nenhum dos dois é uma
+      // categoria. Pintados com a cor da série, entrariam no gráfico
       // parecendo mais um valor real.
-      if (item.chave === this.SEM) return this._pintar(neutro, !selecionado || item.chave === selecionado);
-      const cor = ordinal ? rampa[Math.min(i, rampa.length - 1)] : base;
-      return this._pintar(cor, !selecionado || item.chave === selecionado);
+      const ativo = !selecionado || item.chave === selecionado;
+      if (this.ehMarcador(item.chave) || item.chave === this.DEMAIS) {
+        return this._pintar(neutro, ativo);
+      }
+      return this._pintar(ordinal ? rampa[Math.min(i, rampa.length - 1)] : base, ativo);
     });
 
     const canvas = this._canvas(idWrap, idCanvas);
     if (!canvas) return;
     this._destruir(idCanvas);
 
-    const total = itens.reduce((s, i) => s + i.qtd, 0);
     const opcoes = this._opcoesBase(deitado);
     opcoes.plugins.tooltip.callbacks = {
       // Explícito de propósito: é aqui que o nome INTEIRO aparece quando o
       // eixo teve que encurtá-lo. Ver _encurtar.
-      title: tips => itens[tips[0].dataIndex].chave,
+      title: tips => {
+        const it = itens[tips[0].dataIndex];
+        return it.chave === this.DEMAIS
+          ? `${this.DEMAIS} (${it.quantas} ${it.quantas === 1 ? 'categoria' : 'categorias'})`
+          : it.chave;
+      },
       label: item => {
         const it = itens[item.dataIndex];
         const pct = total ? Math.round((it.qtd / total) * 100) : 0;
         const plural = it.qtd === 1 ? 'matrícula' : 'matrículas';
-        return [`${it.qtd} ${plural} (${pct}%)`, formatBRL(it.valor)];
+        const linhas = [`${it.qtd} ${plural} (${pct}%)`, formatBRL(it.valor)];
+        if (it.chave === this.INVALIDO) {
+          linhas.push('Campo preenchido com algo que não é sexo.');
+          linhas.push('Corrigir na planilha de vendas.');
+        }
+        return linhas;
       }
     };
     opcoes.onClick = (_evento, elementos) => {
       if (!elementos.length) return;
       const chave = itens[elementos[0].index].chave;
+      // "Demais" é a soma de várias categorias, não um valor: filtrar por ela
+      // não casaria com venda nenhuma e a tela ficaria vazia sem explicação.
+      if (chave === this.DEMAIS) return;
       this.filtros[dim] = this.filtros[dim] === chave ? '' : chave;
       this.renderizar();
     };
     opcoes.onHover = (evento, elementos) => {
-      evento.native.target.style.cursor = elementos.length ? 'pointer' : 'default';
+      const clicavel = elementos.length && itens[elementos[0].index]?.chave !== this.DEMAIS;
+      evento.native.target.style.cursor = clicavel ? 'pointer' : 'default';
     };
 
     const chart = new Chart(canvas, {
@@ -773,7 +879,9 @@ const Marketing = {
     ];
 
     cont.innerHTML = campos.map(c => {
-      const preenchidos = lista.filter(l => l[c.campo] !== this.SEM).length;
+      // Mesma regra do KPI: preenchido com lixo não é preenchido. É por aqui
+      // que a barra de Sexo cai e denuncia o estado real da planilha.
+      const preenchidos = lista.filter(l => !this.ehMarcador(l[c.campo])).length;
       const pct = Math.round((preenchidos / lista.length) * 100);
       // Os limites existem para a barra dizer sozinha se dá para confiar:
       // abaixo de 50% o corte fala por menos da metade das pessoas.
