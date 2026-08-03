@@ -422,6 +422,16 @@ function doPost(e) {
         var usuarioImportaCavok = exigirAcessoFechamentoHoras(token);
         return jsonSuccess(importarFechamentoHorasCavok(dados, usuarioImportaCavok));
 
+      // Manutenção: roda função de manutenção sem clique no editor.
+      // ⚠️ NÃO usa sessão do Hub de propósito. A autenticação é o token
+      // em `dados.chave`, guardado só em Propriedade do script, e a lista
+      // de funções permitidas é fechada. Ver o topo do Manutencao.gs.
+      // Fica FORA de `acoesUniversaisHub` porque não é ação de usuário:
+      // sem token de sessão, `validarAcaoPerfilExclusivo_` já sai na
+      // primeira linha e nunca alcança esta rota.
+      case 'manutencao':
+        return jsonSuccess(manutencaoExecutar(dados));
+
       default:
         return jsonError('Ação desconhecida: ' + action);
     }

@@ -7,3 +7,7 @@
 tools/node_modules/
 tools/shots/
 tools/package-lock.json
+
+# ⚠️ Token da rota de manutencao dos backends. NUNCA entra no git:
+# este repositorio e publico (GitHub Pages em hub.voesafe.com.br).
+tools/deploy/.segredos.json

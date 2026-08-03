@@ -832,7 +832,99 @@ A página abre já filtrada no **ano corrente** e com o painel de filtros **fech
 - ⚠️ **Ler é seguro, salvar é real.** Não existe banco de teste. Para exercitar escrita, use registro descartável, ou aponte `CADASTRO_ALUNOS_SHEET_ID` para uma cópia (vale só para o módulo de alunos).
 - **A Escala CCO e a Escala PAV têm backend próprio** e também respondem local. A CCO é a única que precisa do backend de pé para sair da tela de login.
 - Publicar continua sendo `git push` na `main` (GitHub Pages). O que está no working tree **não** afeta produção.
-- ⚠️ **Depois de publicar, o cache do GitHub Pages serve o arquivo antigo para quem já visitou** se o `?v=` não subiu. Local você não vê esse erro, porque o servidor do Python não guarda cache: é a classe de bug que só aparece em produção, e a única defesa é o `?v=`.
+- ⚠️ **Depois de publicar, o cache do GitHub Pages serve o arquivo antigo para quem já visitou** se o `?v=` não subiu. Local você não vê esse erro, porque o servidor do Python não guarda cache: é a classe de bug que só aparece em produção, e a única defesa é o `?v=`. **Desde 2026-08-03 o `?v=` é calculado sozinho**, ver a seção abaixo.
+
+## Publicação automatizada (tools/deploy/), desde 2026-08-03
+
+Toda publicação do Hub passou a ser um comando só, com as conferências que antes dependiam de alguém lembrar. Nada aqui é capacidade nova: é a mesma sequência de `clasp` e de `git` que já era feita a mão, com as travas que faltavam.
+
+```
+node tools/deploy/deploy.mjs front --msg="fix(vendas): ..."   # GitHub Pages
+node tools/deploy/deploy.mjs hub   --msg="..."                # backend do Hub
+node tools/deploy/deploy.mjs inva  --msg="..."                # backend das Horas INVA
+node tools/deploy/deploy.mjs cco   --msg="..."                # backend da Escala CCO
+node tools/deploy/deploy.mjs tudo  --msg="..."
+node tools/deploy/deploy.mjs hub --seco                       # ensaio, não publica
+```
+
+Os ids de script e as implantações de produção vivem em [tools/deploy/alvos.mjs](tools/deploy/alvos.mjs), que virou a fonte de verdade. Antes eles existiam só neste CLAUDE.md e eram colados a mão em cada `clasp deploy`, que é como se publica no lugar errado.
+
+### O `?v=` deixou de ser escolhido a mão
+
+`?v=` agora são os 8 primeiros hex do **sha256 do próprio arquivo** ([tools/deploy/bump.mjs](tools/deploy/bump.mjs)), e o bump roda dentro do deploy do frontend. Mudou o conteúdo, muda o `?v=` em todo HTML que referencia aquele arquivo; não mudou, nada muda, então rodar de novo não suja o diff.
+
+- ⚠️ **O rótulo legível (`20260803-marketing-v3`) acabou.** Ele nomeava a entrega, mas não conseguia garantir a única coisa que importa: que o mesmo arquivo tenha o mesmo `?v=` nos 22 HTML. Na conversão inicial foram **250 referências em 22 arquivos**, e o `js/config.js` chegou a ter **quatro** `?v=` diferentes sendo o mesmo arquivo. Para datar entrega, use o commit e este arquivo.
+- A ferramenta versiona **qualquer** referência local em `href`/`src` que exista no disco (css, js, png, ico, webmanifest), então imagem que nunca teve `?v=` passou a ter. Referência que **não** casa com arquivo no disco não recebe `?v=` inventado: ela é relatada, porque costuma ser link quebrado e engolir isso o esconderia.
+- `node tools/deploy/bump.mjs --seco` mostra o que mudaria sem gravar.
+
+### As travas do deploy de backend
+
+1. **Sintaxe de todos os `.gs`** por `new Function()` ([verificar-gs.mjs](tools/deploy/verificar-gs.mjs)). ⚠️ Erro de sintaxe em **um** arquivo derruba o projeto Apps Script inteiro, porque tudo compartilha um escopo só: o modo de falha não é "o recurso novo não funciona", é "a plataforma inteira sai do ar".
+2. **Par `.js`/`.gs` com o mesmo nome.** O `clasp pull` grava `Auth.js` ao lado de `Auth.gs` (por causa do `scriptExtensions`), e empurrar os dois deixa o projeto com todas as funções duplicadas. Recusa antes do push.
+3. **Função de topo declarada em dois arquivos.** No escopo único do Apps Script a última vence, em silêncio. `--permitir-duplicatas` tolera.
+4. **Guarda de drift** contra edição feita direto no editor do Apps Script.
+5. **Sonda de fumaça** na URL de produção depois do deploy: a implantação tem que responder JSON. Resposta que não é JSON é erro de compilação.
+6. O comando de **rollback** é impresso com a versão anterior já preenchida.
+
+⚠️ **`clasp push` sozinho mexe só no `@HEAD` e produção não muda.** Era o erro mais fácil de cometer e o mais difícil de perceber, porque tudo parece ter dado certo. O `deploy.mjs` sempre faz o par push + `create-deployment`.
+
+### ⚠️ A guarda de drift precisa de memória, e nasceu errada
+
+A primeira versão comparava o `@HEAD` remoto com o **local**. Não serve para nada: "eu mudei o arquivo aqui" e "alguém editou pelo editor do Apps Script" produzem **exatamente a mesma diferença**. Uma guarda que acusa toda entrega normal vira `--forcar` de hábito, e aí não guarda mais nada.
+
+O que separa as duas coisas é a memória do que este toolkit empurrou por último, em [tools/deploy/estado-backends.json](tools/deploy/estado-backends.json) (hash por arquivo, versionado no git). **Remoto diferente do último push daqui = alguém mexeu por fora**, e aí sim o push apagaria trabalho que nunca esteve no git.
+
+- Na **primeira** publicação de um alvo não há memória, então o único parâmetro é o local. Se bate, adota em silêncio. Se não bate, recusa e oferece `--adotar-remoto` (o caso comum: a diferença é trabalho local a publicar) ou `--forcar`.
+- Em recusa a pasta temporária do `pull` **não é apagada**, e a mensagem traz o `diff -ru` pronto.
+
+### O frontend só diz "publicado" quando o Pages publicou
+
+O `git push` volta na hora, mas o GitHub Pages leva de segundos a minutos. Dizer "publicado" no push é o motivo de alguém conferir cedo demais, ver o comportamento antigo e achar que o deploy não funcionou. O [frontend.mjs](tools/deploy/frontend.mjs) busca `hub.voesafe.com.br/inicio.html` de verdade e espera o hash novo do `auth.js` aparecer (até 4 min). `--sem-espera` pula.
+
+## Rodar manutenção sem clique no editor, desde 2026-08-03
+
+⚠️ **A causa de `clasp run` não funcionar foi medida, e não é o que estava escrito aqui.** Não é "este projeto não suporta": o `appsscript.json` do Hub **já tem** `executionApi: { access: "MYSELF" }`. O que falta é credencial. `clasp show-authorized-user` mostra o OAuth client **fornecido pelo Google**, e `clasp run` exige client próprio de um projeto GCP padrão.
+
+**Resolver pelo GCP foi avaliado e recusado**: trocar o projeto GCP de um script invalida a autorização existente, e os gatilhos (NOTAM de hora em hora, aniversários, sincronia do INVA) **parariam** até alguém abrir cada script e reautorizar. Não vale o risco só para rodar `instalarTrigger`.
+
+O caminho é por onde o backend já atende: o próprio web app. Rota `manutencao` no [Manutencao.gs](apps-script/Manutencao.gs) (Hub) e no bloco MANUTENCAO do `Código.js` (INVA), com cliente local em [tools/deploy/manutencao.mjs](tools/deploy/manutencao.mjs).
+
+```
+node tools/deploy/manutencao.mjs catalogo hub
+node tools/deploy/manutencao.mjs rodar hub notamsInstalarTrigger
+node tools/deploy/manutencao.mjs rodar inva instalarEtiquetasInva
+node tools/deploy/manutencao.mjs rodar hub notamsDebugRaw --args='["SBSJ"]'
+node tools/deploy/manutencao.mjs props hub
+node tools/deploy/manutencao.mjs set-prop hub AISWEB_API_KEY <valor>
+node tools/deploy/manutencao.mjs gatilhos hub
+```
+
+**Isto é o que tira da frente os "passos humanos" que sobravam em toda entrega**: instalar gatilho, gravar propriedade de script, e `sincronizarGruposPadrao_`, que era o documentado "abrir o Controle de Acesso em produção uma vez" (ele não roda no login: roda ao abrir aquela tela e nos criar/atualizar usuário).
+
+### As travas, e por que cada uma existe
+
+- ⚠️ **Lista FECHADA de funções** (`MANUTENCAO_FUNCOES` / `MANUTENCAO_FUNCOES_INVA`). Um `eval` remoto atrás de um web app anônimo seria outra categoria de risco. Função nova de manutenção precisa entrar na lista, com a descrição, que é o que a operação `catalogo` devolve.
+- ⚠️ **Token só em Propriedade do script, nunca no código.** Este repositório é público (GitHub Pages). Do lado de cá ele vive em `tools/deploy/.segredos.json`, que está no `.gitignore`.
+- ⚠️ **Sem token configurado, tudo é recusado.** Backend aberto ao anônimo não pode ficar permissivo por esquecimento, mesma regra do `verificarSenhaOprInva_`.
+- ⚠️ **O token vai no CORPO do POST**, nunca na query string, para não cair em log de servidor nem no histórico do terminal.
+- **Bootstrap:** a primeira chamada grava o token e a porta fecha para sempre; trocar depois exige o token atual (`rotacionar`). A janela de exposição é de segundos entre o deploy e o bootstrap, e o que a torna aceitável é o **e-mail ao dono do script** em toda mudança de estado (bootstrap, rotação, gravação de propriedade): se alguém tomar o token, o Victor descobre no mesmo minuto.
+- ⚠️ **A propriedade alvo vem em `propriedade`, NUNCA em `chave`.** `chave` já carrega o token da rota. Escrevi errado na primeira versão, e reusar aquele campo criaria uma propriedade com o nome do próprio token, ou sobrescreveria o token com um valor qualquer.
+- ⚠️ **O retorno é serializado dentro da própria rota.** Função de manutenção pode devolver objeto do Apps Script (Sheet, Trigger) que o `JSON.stringify` do roteador não daria conta, e a resposta viraria erro opaco **depois** de a função já ter rodado e mudado estado.
+- `props` **omite as `SAFE_SESSION_*`**: são centenas e exporiam token de sessão.
+
+### A Escala CCO não tem rota de manutenção, de propósito
+
+O `Código.js` dela tem só `doGet`, sem gatilho e sem propriedade de script: não existe função de manutenção para rodar. A rota lá seria superfície exposta sem uso. O deploy dela continua automatizado pelo toolkit.
+
+### ⚠️ POST de fora do navegador chega ao `doPost`, ao contrário do que estava escrito aqui
+
+Medido em 2026-08-03: `fetch` do Node com `redirect: 'follow'` (o padrão) entrega o corpo ao `doPost` e devolve o JSON, com o nome da ação ecoado. Quem perde o corpo é o **`curl -L`**, porque o 302 converte POST em GET. A nota antiga ("não dá para testar rota POST do web app com curl") continua certa para o `curl`, mas não vale para o Node.
+
+## Backend das Horas INVA sob git, desde 2026-08-03
+
+O `Código.js` de produção vivia **fora de qualquer repositório**: um push errado pelo clasp não tinha como ser desfeito, e não havia histórico dizendo o que mudou entre uma versão publicada e a seguinte. Agora `../horas-voadas-inva-main/` é um repo git local (sem remoto ainda).
+
+O primeiro commit é a **linha de base honesta**: o `@HEAD` remoto baixado por `clasp pull`, não o working tree com as mudanças novas. A rota de manutenção entrou como segundo commit, 215 linhas puramente aditivas.
 
 ## Captura de tela das páginas (tools/), desde 2026-07-27
 

@@ -1,0 +1,37 @@
+{
+  "hub": {
+    "empurradoEm": "2026-08-03T23:16:30.238Z",
+    "arquivos": {
+      "AccessControl": "fd1eb522ca0aca3cbc5963356719f68c6a2e04d2c634f233d7b400fe8c76149c",
+      "Aniversarios": "9721b0115a82953c3c53e6b94e589c9fe64a2cd051cf3dc43936bce43e0406b5",
+      "Auth": "09e12ce9a4e4b943200bb57c2bf5be2dadf1b8e8327c0289c0334c91b9408015",
+      "Bases": "36c91fd3e23db399e1ffdc7d850b60590e33f7d04d896a81b897893797a68045",
+      "CadastroAlunos": "392a945c48ad76f1a121d695e0b825f6efdc2c0dd2dd0d551859b1d1268a7735",
+      "Cavok": "0f2137626c21f253c0b57021b17b357b8dfb9ac8dff849f6d041977542df9dd9",
+      "Cco": "dfbf61f9cf7f0f6a33ee00fa75ae38268ba48f2a43932997cbd0b93e4a842187",
+      "Code": "f065108226e851439a1edefc7b4875f412c7d6234e4d5d26a9e66f3a5df11783",
+      "Concorrencia": "c702abef2978a3652623c05c492e4671e5b9b594b3d38743be2c1e6f57e8d608",
+      "ControleGastos": "9cce6dbfcb51c09ceb37901040020a459dc63071beee0782083b6c2f104baf58",
+      "Faturamento": "a278a2bbe4042f6caa854c0cdbc64a8ac81aad84e6d319557461a21d02697656",
+      "FechamentoHoras": "35347be8a1dd0048b43465d5be985c0fbb6e9860938f31333f9555328903ada8",
+      "HeroAsset": "3b6e842f16696ad7d3fa1f5dcae0b4f5adb83edbb1bd23f8233e32ccb669c78f",
+      "LogoAsset": "ac07c315050a31c9d28355cddb4a51bda4dbacc817c7fa474f80956a992aa1ab",
+      "Manutencao": "9cdda33e831259fd61f91cc4baeb49b290aa4e57fe66367e3ed8a05f472efeb7",
+      "Marketing": "013de4ffd41f695459cd26d34e84fd6a691fefc2dd1b02ad13a2c3da23c7879a",
+      "Migracao": "b11dd2d27b8b76d76d144bdee96a5b4c58d93b63892aadbf91ebe6d8d49f9479",
+      "Newzenler": "3ece52263d4ac5cc29a925b56b48d9c03bb2f98e923c1839d1f49b9f6e52a220",
+      "Notams": "f7a6c0c558ddc2de5f2ae46309612c3554f6301296fe99bf6f747b83d9ff2ff2",
+      "Rotaer": "dd9b9f6ab9ff1d90ac5515a285269c19f450e7e64d5f24b8a2ab7136999559c2",
+      "Utils": "c682239aec1d8f3e19f266d3c439e444b037ff1249a08c95085f069834834d28",
+      "Vendas": "313a4d09d883e90ef053d12457cf865c09ba5270cbd7b07a573b87242ac0440d",
+      "appsscript": "eda75aa6485dc21bacb094be0427a39e4e30fb6a6a99fa63afd5b25d4178640e"
+    }
+  },
+  "inva": {
+    "empurradoEm": "2026-08-03T23:16:50.820Z",
+    "arquivos": {
+      "Código": "d73284872edd737204ede3963c27b22eae79b51e02efa968d6bd8269a6f1f747",
+      "appsscript": "4e5a3ad66bd6aaa5911307cf78b515cc304b2f1cdc90c18e58c119a64b4adda7"
+    }
+  }
+}

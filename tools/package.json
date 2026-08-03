@@ -6,7 +6,18 @@
   "scripts": {
     "preview": "bash preview.sh",
     "shot": "node screenshot.mjs",
-    "shot:tudo": "node screenshot.mjs inicio.html && node screenshot.mjs inicio.html --dark && node screenshot.mjs vendas.html && node screenshot.mjs vendas.html --dark"
+    "shot:tudo": "node screenshot.mjs inicio.html && node screenshot.mjs inicio.html --dark && node screenshot.mjs vendas.html && node screenshot.mjs vendas.html --dark",
+
+    "deploy": "node deploy/deploy.mjs",
+    "deploy:front": "node deploy/deploy.mjs front",
+    "deploy:hub": "node deploy/deploy.mjs hub",
+    "deploy:inva": "node deploy/deploy.mjs inva",
+    "deploy:cco": "node deploy/deploy.mjs cco",
+    "deploy:tudo": "node deploy/deploy.mjs tudo",
+    "bump": "node deploy/bump.mjs",
+    "bump:seco": "node deploy/bump.mjs --seco",
+    "manutencao": "node deploy/manutencao.mjs",
+    "checar:gs": "node deploy/verificar-gs.mjs ../apps-script"
   },
   "dependencies": {
     "playwright-core": "^1.62.0"
