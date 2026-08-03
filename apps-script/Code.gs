@@ -46,6 +46,15 @@ function doGet(e) {
         return jsonSuccess(vendaItem);
       }
 
+      // Marketing — recorte anônimo e SEMPRE global das vendas.
+      // Não reusa a rota `vendas` de propósito: aquela filtra por PAC para quem
+      // não é admin, e aqui o retrato parcial mentiria. Ver o topo do
+      // Marketing.gs. O guarda é `marketing.visualizar_todos`.
+      case 'marketing': {
+        exigirMarketing(token);
+        return jsonSuccess(listarMarketingLeads());
+      }
+
       case 'faturamento': {
         var uFat = exigirSessao(token);
         if (!usuarioEhSuperadmin(uFat) && !perfilEhAdmin(uFat.perfil)) return jsonError('Acesso negado');

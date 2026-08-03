@@ -145,6 +145,10 @@ const Auth = {
     // a página a ninguém. Ver ACCESS_DEFAULT_GROUPS no AccessControl.gs.
     'notams.html':            { ver: ['notams.visualizar'], editar: ['notams.sincronizar'] },
     'dashboard.html':         { ver: ['dashboard_vendas.visualizar_proprio', 'dashboard_vendas.visualizar_todos'] },
+    // Marketing: só leitura, sem `editar`. O escopo é sempre global, então a
+    // permissão não tem variante "só as próprias" — ver o catálogo no
+    // AccessControl.gs.
+    'marketing-origem-lead.html': { ver: ['marketing.visualizar_todos'] },
     'vendas.html':            { ver: ['vendas.visualizar_proprias', 'vendas.visualizar_todas'],
                                 editar: ['vendas.criar_propria', 'vendas.criar_para_qualquer_pac', 'vendas.editar_propria', 'vendas.editar_todas', 'vendas.excluir_propria', 'vendas.excluir_todas'] },
     'faturamento.html':       { ver: ['faturamento.visualizar', 'faturamento.visualizar_resumo'],
@@ -181,6 +185,7 @@ const Auth = {
   ROTULOS_PAGINA: {
     'notams.html': 'NOTAMs',
     'dashboard.html': 'Dashboard de Vendas',
+    'marketing-origem-lead.html': 'Origem do Lead',
     'vendas.html': 'Vendas',
     'faturamento.html': 'Faturamento',
     'concorrencia.html': 'Concorrência',
@@ -385,6 +390,7 @@ const Auth = {
   protegerProgressoAlunos() { return this.protegerPagina('progresso-alunos.html', 'Progresso de Alunos'); },
   protegerCadastroAlunos()  { return this.protegerPagina('cadastro-alunos.html', 'Cadastro de Aluno'); },
   protegerAniversarios()    { return this.protegerPagina('aniversarios.html', 'Aniversários'); },
+  protegerMarketing()       { return this.protegerPagina('marketing-origem-lead.html', 'Origem do Lead'); },
   protegerFinanceiro()      { return this.protegerPagina('controle-gastos.html', 'Controle de Gastos'); },
   protegerFechamentoHoras() { return this.protegerPagina('fechamento-horas.html', 'Fechamento de Horas / Cotistas'); },
   protegerGestaoUsuarios()  { return this.protegerPagina('admin.html', 'Gestão central de usuários'); },
@@ -434,6 +440,8 @@ const Auth = {
       aniversario:  `<svg ${base}><path d="M4 21h16"></path><path d="M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"></path><path d="M5 16.5c1.5 0 1.5-1 3-1s1.5 1 3 1 1.5-1 3-1 1.5 1 3 1"></path><path d="M9 12V9"></path><path d="M12 12V8"></path><path d="M15 12V9"></path></svg>`,
       comercial:     `<svg ${base}><path d="M3 3v18h18"></path><path d="m7 15 4-4 3 3 5-6"></path></svg>`,
       administracao: `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 9h18"></path></svg>`,
+      marketing:     `<svg ${base}><path d="m3 11 15-6v14L3 13Z"></path><path d="M3 11v2a2 2 0 0 0 2 2h1"></path><path d="M7 15v4a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-3"></path><path d="M21 10v4"></path></svg>`,
+      origem:        `<svg ${base}><circle cx="12" cy="12" r="3"></circle><path d="M12 3v6"></path><path d="M12 15v6"></path><path d="M3 12h6"></path><path d="M15 12h6"></path><path d="m5.6 5.6 3.2 3.2"></path><path d="m15.2 15.2 3.2 3.2"></path><path d="m18.4 5.6-3.2 3.2"></path><path d="m8.8 15.2-3.2 3.2"></path></svg>`,
       financeiro:    `<svg ${base}><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h3"></path></svg>`,
       ti:            `<svg ${base}><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8 9h8"></path><path d="M8 13h5"></path><path d="M8 17h3"></path></svg>`,
       planilha:      `<svg ${base}><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path></svg>`,
@@ -554,6 +562,10 @@ const Auth = {
       { pagina: 'faturamento.html', label: 'Faturamento', icone: 'faturamento' },
       { pagina: 'fechamento-horas.html', label: 'Fechamento de Horas / Cotistas', icone: 'horas' }
     ], ['concorrencia.html', 'controle-gastos.html', 'faturamento.html', 'fechamento-horas.html']));
+
+    secoes.push(secaoSeTiver('marketing', 'Marketing', 'marketing', [
+      { pagina: 'marketing-origem-lead.html', label: 'Origem do Lead', icone: 'origem' }
+    ], ['marketing-origem-lead.html']));
 
     secoes.push(secaoSeTiver('portal-aluno', 'Portal do Aluno', 'academico', [
       { pagina: 'progresso-alunos.html', label: 'Progresso de Alunos', icone: 'academico' }

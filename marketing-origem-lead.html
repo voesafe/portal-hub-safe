@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- tema:guarda-anti-flash -->
+  <script>
+    /* Carimba o modo escuro no <html> ANTES da primeira pintura.
+       O Hub recarrega a pagina inteira a cada item da sidebar, entao sem
+       isto quem usa escuro leva um clarao branco a cada navegacao.
+       Precisa ser inline e sincrono no <head>: um arquivo externo chega
+       tarde demais. Claro e o padrao e o sistema operacional nao opina,
+       por decisao de produto, so entra no escuro quem pedir no menu. */
+    (function () {
+      try {
+        var t = localStorage.getItem('safe-hub-theme');
+        /* herda a preferencia de quem ja usava o escuro so dos NOTAMs */
+        if (!t && localStorage.getItem('notams-theme') === 'dark') t = 'dark';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+  <title>Origem do Lead — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20260706">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260706">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260706">
+  <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
+  <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/pages/marketing-origem-lead.css?v=20260803-marketing-v1">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-context">
+          <div class="topbar-title">Origem do Lead</div>
+          <div class="topbar-subtitle">Perfil de quem compra, para direcionar a mídia</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-status" id="mkt-atualizado" hidden>
+          <span class="topbar-status-dot" aria-hidden="true"></span>
+          <span id="mkt-atualizado-label">—</span>
+        </span>
+        <button class="btn btn-ghost" id="mkt-atualizar" type="button">Atualizar</button>
+      </div>
+    </div>
+
+    <div class="page mkt-page">
+
+      <!-- ⚠️ Este aviso não é decoração e não deve ser removido para "limpar" a
+           tela. A aba VENDAS guarda venda FECHADA, então tudo aqui é o perfil de
+           quem comprou. Sem o aviso, é natural ler os gráficos como "de onde
+           vêm os leads" e concluir que um canal com poucas barras traz pouco
+           lead, quando pode trazer muito lead que não converte. São conclusões
+           opostas sobre onde investir. -->
+      <p class="mkt-escopo">
+        <strong>O que este painel mede:</strong> o perfil de quem <strong>fechou</strong> matrícula.
+        A base é o cadastro de vendas, então lead que não converteu não aparece aqui,
+        e estes gráficos não são taxa de conversão por canal.
+      </p>
+
+      <!-- Filtros. Cruzam entre si e com o clique nos gráficos. -->
+      <section class="card mkt-filtros" aria-label="Filtros">
+        <div class="mkt-filtros-grid">
+          <div class="mkt-campo">
+            <label for="mkt-periodo">Período</label>
+            <select id="mkt-periodo" class="form-control"></select>
+          </div>
+          <div class="mkt-campo">
+            <label for="mkt-f-origem">Origem</label>
+            <select id="mkt-f-origem" class="form-control"></select>
+          </div>
+          <div class="mkt-campo">
+            <label for="mkt-f-estado">Estado</label>
+            <select id="mkt-f-estado" class="form-control"></select>
+          </div>
+          <div class="mkt-campo">
+            <label for="mkt-f-cidade">Cidade</label>
+            <select id="mkt-f-cidade" class="form-control"></select>
+          </div>
+          <div class="mkt-campo">
+            <label for="mkt-f-faixa">Faixa etária</label>
+            <select id="mkt-f-faixa" class="form-control"></select>
+          </div>
+          <div class="mkt-campo">
+            <label for="mkt-f-sexo">Sexo</label>
+            <select id="mkt-f-sexo" class="form-control"></select>
+          </div>
+          <div class="mkt-campo">
+            <label for="mkt-f-curso">Curso</label>
+            <select id="mkt-f-curso" class="form-control"></select>
+          </div>
+        </div>
+        <div class="mkt-filtros-foot">
+          <span class="mkt-chips" id="mkt-chips"></span>
+          <button class="btn btn-ghost btn-sm" id="mkt-limpar" type="button" hidden>Limpar filtros</button>
+        </div>
+        <p class="mkt-dica">Clique numa barra ou fatia para filtrar por ela. Clique de novo para desfazer.</p>
+      </section>
+
+      <section class="mkt-kpis" id="mkt-kpis"></section>
+
+      <section class="card mkt-card mkt-card-largo">
+        <header class="mkt-card-head">
+          <div>
+            <h2>Vendas por mês</h2>
+            <p class="mkt-card-sub" id="mkt-mensal-sub">Volume no recorte selecionado</p>
+          </div>
+          <div class="mkt-metrica" role="group" aria-label="Métrica do gráfico mensal">
+            <button type="button" class="mkt-metrica-btn is-ativo" data-metrica="qtd">Quantidade</button>
+            <button type="button" class="mkt-metrica-btn" data-metrica="valor">Receita</button>
+          </div>
+        </header>
+        <div class="mkt-chart mkt-chart-alto" id="wrap-mkt-mensal">
+          <canvas id="mkt-mensal"></canvas>
+        </div>
+      </section>
+
+      <div class="mkt-grid">
+        <section class="card mkt-card">
+          <header class="mkt-card-head">
+            <div>
+              <h2>Origem do lead</h2>
+              <p class="mkt-card-sub">Como a pessoa chegou até a SAFE</p>
+            </div>
+          </header>
+          <div class="mkt-chart" id="wrap-mkt-origem"><canvas id="mkt-origem"></canvas></div>
+        </section>
+
+        <section class="card mkt-card">
+          <header class="mkt-card-head">
+            <div>
+              <h2>Faixa etária</h2>
+              <!-- O rótulo "na data da compra" é obrigatório: ver marketingIdade_
+                   no Marketing.gs. Quem comprou aos 22 há três anos tem 25 hoje,
+                   e mirar 25 no anúncio erraria o público que converte. -->
+              <p class="mkt-card-sub">Idade na data da compra</p>
+            </div>
+          </header>
+          <div class="mkt-chart" id="wrap-mkt-faixa"><canvas id="mkt-faixa"></canvas></div>
+        </section>
+
+        <section class="card mkt-card">
+          <header class="mkt-card-head">
+            <div>
+              <h2>Estado</h2>
+              <p class="mkt-card-sub">Onde mora quem matricula</p>
+            </div>
+          </header>
+          <div class="mkt-chart" id="wrap-mkt-estado"><canvas id="mkt-estado"></canvas></div>
+        </section>
+
+        <section class="card mkt-card">
+          <header class="mkt-card-head">
+            <div>
+              <h2>Cidade</h2>
+              <p class="mkt-card-sub">As 10 primeiras</p>
+            </div>
+          </header>
+          <div class="mkt-chart" id="wrap-mkt-cidade"><canvas id="mkt-cidade"></canvas></div>
+        </section>
+
+        <section class="card mkt-card">
+          <header class="mkt-card-head">
+            <div>
+              <h2>Sexo</h2>
+              <p class="mkt-card-sub">Público que fecha matrícula</p>
+            </div>
+          </header>
+          <div class="mkt-chart" id="wrap-mkt-sexo"><canvas id="mkt-sexo"></canvas></div>
+        </section>
+
+        <section class="card mkt-card">
+          <header class="mkt-card-head">
+            <div>
+              <h2>Curso</h2>
+              <p class="mkt-card-sub">Qual produto puxa o público</p>
+            </div>
+          </header>
+          <div class="mkt-chart" id="wrap-mkt-curso"><canvas id="mkt-curso"></canvas></div>
+        </section>
+      </div>
+
+      <!-- ⚠️ Cobertura é parte do resultado, não um extra. Um gráfico de faixa
+           etária construído sobre 30% da base parece igualzinho a um construído
+           sobre 100%, e a decisão de mídia que sai dele custa dinheiro. Este
+           bloco é o que impede alguém de confiar num corte que quase não tem
+           dado por trás. -->
+      <section class="card mkt-card">
+        <header class="mkt-card-head">
+          <div>
+            <h2>Cobertura dos dados</h2>
+            <p class="mkt-card-sub">Quanto de cada campo está preenchido no recorte. Barra baixa significa gráfico apoiado em pouca gente.</p>
+          </div>
+        </header>
+        <div class="mkt-cobertura" id="mkt-cobertura"></div>
+      </section>
+
+      <div class="dashboard-loading-overlay" id="mkt-loading">
+        <div class="dashboard-loading-card">
+          <img class="dashboard-loading-logo" src="assets/img/logo.png" alt="">
+          <span class="dashboard-loading-text" id="mkt-loading-text">Carregando dados de marketing...</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
+<script src="js/core/api.js?v=20260803-marketing-v1"></script>
+<script src="js/core/auth.js?v=20260803-marketing-v1"></script>
+<script src="js/pages/marketing-origem-lead.js?v=20260803-marketing-v1"></script>
+</body>
+</html>

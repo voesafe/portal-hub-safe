@@ -1,0 +1,305 @@
+/* ============================================================
+   marketing-origem-lead.css — Origem do Lead
+   SAFE Hub
+   ============================================================ */
+
+/* ── Cores dos gráficos ────────────────────────────────────────
+   ⚠️ O <canvas> não herda NADA do CSS: eixo, grade, rótulo e barra são
+   pintados por JS. Estas variáveis existem para o modo escuro continuar
+   resolvido num lugar só, aqui, em vez de virar hex solto dentro do
+   JavaScript, que é exatamente como as cores dos gráficos do Dashboard de
+   Vendas ficaram presas no modo claro.
+
+   Os valores NÃO foram escolhidos a olho. Passaram no validador de paleta
+   nos dois modos:
+   - `--mkt-serie` #3d8cc4 é o único tom que fica dentro da faixa de
+     luminosidade E acima de 3:1 de contraste tanto sobre a superfície clara
+     quanto sobre a escura, o que permite a mesma cor de série nos dois modos.
+   - A rampa das faixas etárias é ORDINAL (um matiz só, do claro ao escuro),
+     porque trocar a ordem das faixas mudaria o sentido. Cada degrau tem
+     ΔL ≥ 0,06 do vizinho e a ponta clara passa de 2:1 sobre a superfície.
+     No escuro ela é INVERTIDA, não é a mesma lista de cabeça para baixo: são
+     degraus próprios, medidos contra a superfície escura.
+   - `--mkt-sem-dado` é cinza de propósito, porque "não informado" não é uma
+     categoria, é a ausência de uma. O tom muda entre os modos porque o cinza
+     de um não alcança 3:1 no outro.
+
+   Ao mexer aqui, rode o validador de novo. As barras ficam perto do piso de
+   contraste, então um tom "quase igual" pode reprovar. */
+.mkt-page {
+  --mkt-serie:      #3d8cc4;
+  --mkt-sem-dado:   #6E86A6;
+  --mkt-rampa-1:    #7fbadf;
+  --mkt-rampa-2:    #5aa3d3;
+  --mkt-rampa-3:    #3d8cc4;
+  --mkt-rampa-4:    #2e7099;
+  --mkt-rampa-5:    #22587a;
+  --mkt-rampa-6:    #17405a;
+  --mkt-eixo:       #5E7A9A;
+  --mkt-grade:      rgba(29, 41, 81, .08);
+  --mkt-rotulo:     #3E5475;
+  --mkt-tooltip-bg: #1D2951;
+  --mkt-tooltip-texto: #FFFFFF;
+}
+
+:root[data-theme="dark"] .mkt-page {
+  --mkt-sem-dado:   #8EA4C0;
+  --mkt-rampa-1:    #24587f;
+  --mkt-rampa-2:    #30729f;
+  --mkt-rampa-3:    #3d8cc4;
+  --mkt-rampa-4:    #55a4d8;
+  --mkt-rampa-5:    #7cc0e8;
+  --mkt-rampa-6:    #a8d8f2;
+  --mkt-eixo:       #c2cee6;
+  --mkt-grade:      rgba(255, 255, 255, .10);
+  --mkt-rotulo:     #eaf0fb;
+  --mkt-tooltip-bg: #0b1120;
+  --mkt-tooltip-texto: #eaf0fb;
+}
+
+.mkt-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Aviso de escopo ──────────────────────────────────────── */
+.mkt-escopo {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.mkt-escopo strong { color: var(--text); font-weight: 700; }
+
+/* ── Filtros ──────────────────────────────────────────────── */
+.mkt-filtros { padding: 16px; }
+
+.mkt-filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.mkt-campo { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.mkt-campo label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.mkt-campo .form-control { width: 100%; }
+
+.mkt-filtros-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+/* Sem isto, o `display: inline-flex` do botão ganha do atributo `hidden` e
+   sobra um botão fantasma na barra. É a mesma armadilha que já mordeu a
+   .cadastro-bulk-bar, a .topbar-status, a .hi-ordenar-menu, a .notam-note,
+   a .hi-pop e a .aniv-template-aviso. */
+.mkt-filtros-foot .btn[hidden] { display: none; }
+
+.mkt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.mkt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 10px;
+  border: 1px solid var(--blue);
+  border-radius: 999px;
+  background: rgba(91, 174, 226, .12);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.mkt-chip:hover { background: rgba(91, 174, 226, .22); }
+.mkt-chip-rot { color: var(--text-muted); font-size: 11px; }
+.mkt-chip-val { font-weight: 600; }
+.mkt-chip-x { font-size: 15px; line-height: 1; color: var(--text-2); }
+
+:root[data-theme="dark"] .mkt-chip { background: rgba(91, 174, 226, .18); }
+:root[data-theme="dark"] .mkt-chip:hover { background: rgba(91, 174, 226, .28); }
+
+.mkt-dica {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── KPIs ─────────────────────────────────────────────────── */
+.mkt-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.mkt-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  min-width: 0;
+}
+.mkt-kpi-rot {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.mkt-kpi-val {
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text);
+  /* Nome de cidade ou curso longo não pode esticar o card e estourar a grade. */
+  overflow-wrap: break-word;
+}
+.mkt-kpi-nota { font-size: 12px; color: var(--text-2); }
+
+/* ── Cards de gráfico ─────────────────────────────────────── */
+.mkt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.mkt-card { padding: 16px; }
+
+.mkt-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.mkt-card-head h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+.mkt-card-sub {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.mkt-metrica {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mkt-metrica-btn {
+  border: 0;
+  background: transparent;
+  padding: 5px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.mkt-metrica-btn:hover { background: var(--surface-2); }
+.mkt-metrica-btn.is-ativo {
+  background: var(--blue);
+  color: var(--text-on-brand);
+}
+
+.mkt-chart { position: relative; height: 260px; }
+.mkt-chart-alto { height: 300px; }
+.mkt-chart canvas { max-width: 100%; }
+
+/* Quando o recorte zera, o canvas é trocado pela mensagem e o wrapper precisa
+   centralizá-la sem perder a altura, senão o card colapsa e a grade "pula". */
+.mkt-chart-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+.mkt-vazio {
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ── Cobertura ────────────────────────────────────────────── */
+.mkt-cobertura {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px 20px;
+}
+
+.mkt-cob-item { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+
+.mkt-cob-topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.mkt-cob-rot { font-size: 13px; font-weight: 600; color: var(--text); }
+.mkt-cob-pct { font-size: 13px; font-weight: 700; color: var(--text-2); }
+
+.mkt-cob-trilho {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.mkt-cob-barra { height: 100%; border-radius: 999px; }
+/* O tom é o sinal de "dá para confiar neste corte?". Abaixo de 50% o gráfico
+   fala por menos da metade das pessoas do recorte, e isso precisa saltar aos
+   olhos sem ninguém ter que ler o número. */
+.mkt-cob-barra.is-ok    { background: var(--success); }
+.mkt-cob-barra.is-aviso { background: var(--warning); }
+.mkt-cob-barra.is-baixo { background: var(--danger); }
+
+.mkt-cob-nota { font-size: 11px; color: var(--text-muted); }
+
+/* ── Celular ──────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .mkt-card-head { flex-direction: column; align-items: stretch; }
+  .mkt-metrica { align-self: flex-start; }
+}
+
+@media (max-width: 600px) {
+  .mkt-page { gap: 12px; }
+  .mkt-grid { grid-template-columns: 1fr; gap: 12px; }
+  .mkt-filtros-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .mkt-chart { height: 240px; }
+  .mkt-chart-alto { height: 250px; }
+  .mkt-kpi-val { font-size: 19px; }
+  /* O texto do aviso de escopo é o que impede a leitura errada da página, e
+     não pode encolher a ponto de virar rodapé ignorável. */
+  .mkt-escopo { font-size: 12.5px; padding: 11px 13px; }
+}

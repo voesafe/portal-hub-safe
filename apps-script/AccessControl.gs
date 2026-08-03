@@ -17,6 +17,11 @@ var ACCESS_PERMISSIONS = [
   ['dashboard_vendas.visualizar_todos', 'Dashboard de Vendas', 'Visualizar indicadores gerais'],
   ['dashboard_vendas.visualizar_receita_global', 'Dashboard de Vendas', 'Visualizar receita global'],
   ['dashboard_vendas.visualizar_ranking_pac', 'Dashboard de Vendas', 'Visualizar ranking por PAC'],
+  // Marketing — o nome diz `_todos` porque a rota é sempre global, sem recorte
+  // por PAC. Não existe a variante "só as próprias" de propósito: um perfil de
+  // público montado sobre a carteira de um consultor não serve para decidir
+  // mídia da escola, e a tela não teria como avisar que o retrato é parcial.
+  ['marketing.visualizar_todos', 'Marketing', 'Visualizar Origem do Lead (todas as vendas)'],
   ['vendas.visualizar_proprias', 'Vendas', 'Visualizar vendas próprias'],
   ['vendas.visualizar_todas', 'Vendas', 'Visualizar todas as vendas'],
   ['vendas.criar_propria', 'Vendas', 'Criar venda própria'],
@@ -139,6 +144,7 @@ var ACCESS_DEFAULT_GROUPS = [
       'dashboard_vendas.visualizar_todos',
       'dashboard_vendas.visualizar_receita_global',
       'dashboard_vendas.visualizar_ranking_pac',
+      'marketing.visualizar_todos',
       'vendas.visualizar_proprias',
       'vendas.visualizar_todas',
       'vendas.criar_propria',
@@ -283,6 +289,7 @@ var ACCESS_DEFAULT_GROUPS = [
       'dashboard_vendas.visualizar_todos',
       'dashboard_vendas.visualizar_receita_global',
       'dashboard_vendas.visualizar_ranking_pac',
+      'marketing.visualizar_todos',
       'vendas.visualizar_proprias',
       'vendas.visualizar_todas',
       'faturamento.visualizar',

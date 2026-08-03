@@ -26,7 +26,9 @@ const Cache = {
     });
   },
 
-  invalidarVendas()       { this.invalidar('vendas|'); this.invalidar('kpis|'); },
+  // `marketing|` entra aqui porque aquele recorte é derivado da mesma aba
+  // VENDAS: mexeu numa venda, o retrato de marketing envelheceu junto.
+  invalidarVendas()       { this.invalidar('vendas|'); this.invalidar('kpis|'); this.invalidar('marketing|'); },
   invalidarConcorrencia() { this.invalidar('listar-concorrencia|'); this.invalidar('listar-precos-safe|'); }
 };
 
@@ -137,6 +139,13 @@ const API = {
   async criarVenda(dados)  { const r = await this.post('criar-venda',  dados); if (r.ok) Cache.invalidarVendas(); return r; },
   async editarVenda(dados) { const r = await this.post('editar-venda', dados); if (r.ok) Cache.invalidarVendas(); return r; },
   async excluirVenda(id)   { const r = await this.post('excluir-venda', { id }); if (r.ok) Cache.invalidarVendas(); return r; },
+
+  // ── Marketing ──────────────────────────────────────────────
+  // Recorte anônimo e sempre global das vendas. Sem parâmetro de mês: a base
+  // inteira vem de uma vez e os cortes são feitos no navegador, porque com os
+  // ~10s de latência do Apps Script uma ida ao servidor por clique de filtro
+  // deixaria a tela inutilizável.
+  async getMarketing(usarCache = true) { return this.get('marketing', {}, usarCache); },
 
   // ── Faturamento ────────────────────────────────────────────
   async getFaturamento(mes, ano)     { return this.get('faturamento',        { ...(mes && {mes}), ...(ano && {ano}) }); },

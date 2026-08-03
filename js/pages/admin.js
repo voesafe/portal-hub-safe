@@ -15,6 +15,10 @@ const RBAC_MODULOS = [
     escLabels: ['Só o próprio', 'De todos'],
     ver: { proprias: ['dashboard_vendas.visualizar_proprio'],
            todas: ['dashboard_vendas.visualizar_proprio', 'dashboard_vendas.visualizar_todos', 'dashboard_vendas.visualizar_receita_global', 'dashboard_vendas.visualizar_ranking_pac'] } },
+  // Marketing é só leitura e sem escopo: a rota é sempre global (não existe a
+  // variante "só as próprias"), então o interruptor tem dois estados, — e Ver.
+  { id: 'marketing', nome: 'Marketing', nota: 'origem do lead e perfil de público', viewOnly: true,
+    ver: ['marketing.visualizar_todos'] },
   { id: 'vendas', nome: 'Vendas', nota: 'cadastro e acompanhamento', escopo: true,
     escLabels: ['Só as próprias', 'De todos'],
     ver: { proprias: ['vendas.visualizar_proprias'], todas: ['vendas.visualizar_proprias', 'vendas.visualizar_todas'] },
