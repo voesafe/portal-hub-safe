@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ============================================================
-// manutencao.mjs — Cliente da rota de manutencao dos backends.
+// manutencao.mjs: Cliente da rota de manutencao dos backends.
 //
 // Substitui o "abra o editor do Apps Script e clique em Run", que era
 // o unico passo que sobrava depois de todo deploy e o motivo de varias
@@ -232,7 +232,7 @@ async function opGatilhos(chaveAlvo) {
 // ── CLI ─────────────────────────────────────────────────────
 
 const AJUDA = `
-${forte('manutencao.mjs')} — roda manutencao nos backends sem abrir o editor
+${forte('manutencao.mjs')}: roda manutencao nos backends sem abrir o editor
 
   ${forte('Comandos')}
     bootstrap <alvo>                     ativa a rota e cria o token (uma vez so)

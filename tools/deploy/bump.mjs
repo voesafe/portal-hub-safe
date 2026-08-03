@@ -1,5 +1,5 @@
 // ============================================================
-// bump.mjs — Cache-bust automatico por hash do conteudo.
+// bump.mjs: Cache-bust automatico por hash do conteudo.
 //
 // O `?v=` era escolhido e colado a mao em cada HTML. Isso falha de
 // duas formas, as duas so visiveis em producao (local o servidor do

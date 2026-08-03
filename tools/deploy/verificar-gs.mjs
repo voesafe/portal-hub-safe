@@ -1,5 +1,5 @@
 // ============================================================
-// verificar-gs.mjs — Rede de seguranca antes de qualquer push.
+// verificar-gs.mjs: Rede de seguranca antes de qualquer push.
 //
 // ⚠️ Erro de sintaxe em UM .gs derruba o projeto Apps Script INTEIRO,
 // porque todos os arquivos compartilham um escopo so. O modo de falha

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ============================================================
-// deploy.mjs — Um comando para cada alvo de publicacao do SAFE Hub.
+// deploy.mjs: Um comando para cada alvo de publicacao do SAFE Hub.
 //
 //   node tools/deploy/deploy.mjs front --msg="feat(x): ..."
 //   node tools/deploy/deploy.mjs hub   --msg="rota nova de manutencao"
@@ -20,7 +20,7 @@ import { ALVOS } from './alvos.mjs';
 import { Recusa, lerArgs, titulo, ok, erro, aviso, nota, forte, cinza, verde, vermelho } from './util.mjs';
 
 const AJUDA = `
-${forte('deploy.mjs')} — publicacao do SAFE Hub
+${forte('deploy.mjs')}: publicacao do SAFE Hub
 
   ${forte('Alvos')}
     front       frontend do Hub no GitHub Pages (bump + commit + push + confere o Pages)

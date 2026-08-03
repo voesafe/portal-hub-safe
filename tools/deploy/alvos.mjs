@@ -1,5 +1,5 @@
 // ============================================================
-// alvos.mjs — Registro unico dos alvos de deploy do SAFE Hub.
+// alvos.mjs: Registro unico dos alvos de deploy do SAFE Hub.
 //
 // Fonte de verdade dos scriptId e das implantacoes de PRODUCAO.
 // Antes disso os ids viviam so no CLAUDE.md e eram colados a mao

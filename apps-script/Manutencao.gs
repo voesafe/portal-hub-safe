@@ -1,5 +1,5 @@
 // ============================================================
-// Manutencao.gs — Rodar manutencao sem clique no editor.
+// Manutencao.gs: Rodar manutencao sem clique no editor.
 //
 // PROBLEMA QUE ISTO RESOLVE
 // `clasp run` nao funciona neste projeto: o clasp esta logado com o

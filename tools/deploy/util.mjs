@@ -1,5 +1,5 @@
 // ============================================================
-// util.mjs — Encanamento comum do toolkit de deploy.
+// util.mjs: Encanamento comum do toolkit de deploy.
 // ============================================================
 
 import { spawn } from 'node:child_process';

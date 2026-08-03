@@ -1,5 +1,5 @@
 // ============================================================
-// frontend.mjs — Publica o Hub no GitHub Pages.
+// frontend.mjs: Publica o Hub no GitHub Pages.
 //
 // O deploy em si sempre foi so `git push` na main. O que faltava era
 // as duas pontas:

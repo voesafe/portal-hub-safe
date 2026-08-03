@@ -1,5 +1,5 @@
 // ============================================================
-// backend.mjs — Publica um backend Apps Script de ponta a ponta.
+// backend.mjs: Publica um backend Apps Script de ponta a ponta.
 //
 // Substitui a sequencia que era feita a mao e que tinha tres jeitos
 // conhecidos de dar errado:
