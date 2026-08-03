@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="css/core/safe-theme.css?v=20260728-zoom-mobile-v1">
   <link rel="stylesheet" href="css/core/layout.css?v=20260728-avatar-recorte-v1">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="css/pages/marketing-origem-lead.css?v=20260803-marketing-v1">
+  <link rel="stylesheet" href="css/pages/marketing-origem-lead.css?v=20260803-marketing-v3">
 </head>
 <body>
 <div class="app-shell">
@@ -88,8 +88,27 @@
         e estes gráficos não são taxa de conversão por canal.
       </p>
 
-      <!-- Filtros. Cruzam entre si e com o clique nos gráficos. -->
+      <!-- Filtros. Cruzam entre si e com o clique nos gráficos.
+           Nascem RECOLHIDOS para a tela abrir limpa.
+           ⚠️ O resumo do lado do botão fica FORA do corpo recolhível e não pode
+           entrar nele: painel fechado escondendo filtro ativo é uma página
+           mostrando um recorte com cara de estar mostrando tudo. O período
+           aparece sempre, porque desde 2026-08-03 ele já nasce preenchido. -->
       <section class="card mkt-filtros" aria-label="Filtros">
+        <div class="mkt-filtros-head">
+          <button class="mkt-filtros-toggle" id="mkt-filtros-toggle" type="button"
+                  aria-expanded="false" aria-controls="mkt-filtros-corpo">
+            <span class="mkt-filtros-seta" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+            </span>
+            <span>Filtros</span>
+          </button>
+          <span class="mkt-resumo" id="mkt-resumo"></span>
+          <button class="btn btn-ghost btn-sm" id="mkt-limpar" type="button" hidden>Limpar filtros</button>
+        </div>
+
+        <div class="mkt-filtros-corpo" id="mkt-filtros-corpo" hidden>
         <div class="mkt-filtros-grid">
           <div class="mkt-campo">
             <label for="mkt-periodo">Período</label>
@@ -120,11 +139,8 @@
             <select id="mkt-f-curso" class="form-control"></select>
           </div>
         </div>
-        <div class="mkt-filtros-foot">
-          <span class="mkt-chips" id="mkt-chips"></span>
-          <button class="btn btn-ghost btn-sm" id="mkt-limpar" type="button" hidden>Limpar filtros</button>
+        <p class="mkt-dica">Clique numa barra de qualquer gráfico para filtrar por ela. Clique de novo para desfazer.</p>
         </div>
-        <p class="mkt-dica">Clique numa barra ou fatia para filtrar por ela. Clique de novo para desfazer.</p>
       </section>
 
       <section class="mkt-kpis" id="mkt-kpis"></section>
@@ -239,6 +255,6 @@
 <script src="js/core/config.js?v=20260728-notams-rbac-v1"></script>
 <script src="js/core/api.js?v=20260803-marketing-v1"></script>
 <script src="js/core/auth.js?v=20260803-marketing-v1"></script>
-<script src="js/pages/marketing-origem-lead.js?v=20260803-marketing-v2"></script>
+<script src="js/pages/marketing-origem-lead.js?v=20260803-marketing-v3"></script>
 </body>
 </html>

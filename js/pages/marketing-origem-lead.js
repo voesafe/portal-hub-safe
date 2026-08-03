@@ -30,6 +30,12 @@ const Marketing = {
   geradoEm: '',
   metricaMensal: 'qtd',
   charts: {},
+  _primeiraCarga: true,
+
+  // Onde fica a escolha de abrir os filtros. O Hub recarrega a página inteira a
+  // cada item da sidebar, então sem isto a pessoa que trabalha filtrando teria
+  // que reabrir o painel toda vez que voltasse aqui.
+  CHAVE_FILTROS: 'marketing-filtros-abertos',
 
   // Rótulo do que não foi preenchido. Aparece na tela de propósito: esconder
   // faria os percentuais somarem 100% sobre uma base menor do que a real, e a
@@ -79,6 +85,7 @@ const Marketing = {
     if (!Auth.protegerMarketing()) return;
     Auth.preencherUI();
     this._bindHamburger();
+    this._bindFiltros();
     this.vincularEventos();
     await this.carregar();
   },
@@ -105,6 +112,40 @@ const Marketing = {
     });
   },
 
+  /**
+   * Recolhe e abre o painel de filtros.
+   *
+   * Nasce FECHADO para a tela abrir limpa. A escolha de abrir é guardada,
+   * porque a página recarrega inteira a cada navegação e quem trabalha
+   * filtrando teria que reabrir o painel toda vez.
+   *
+   * ⚠️ Só o CORPO é recolhido. O resumo dos filtros ativos e o botão de limpar
+   * ficam no cabeçalho, sempre visíveis: painel fechado escondendo filtro ativo
+   * seria uma página mostrando um recorte com cara de estar mostrando tudo, que
+   * é o mesmo tipo de engano que o bloco de cobertura existe para evitar.
+   */
+  _bindFiltros() {
+    const botao = document.getElementById('mkt-filtros-toggle');
+    const corpo = document.getElementById('mkt-filtros-corpo');
+    if (!botao || !corpo) return;
+
+    let aberto = false;
+    try { aberto = localStorage.getItem(this.CHAVE_FILTROS) === '1'; } catch (e) {}
+
+    const aplicar = () => {
+      corpo.hidden = !aberto;
+      botao.setAttribute('aria-expanded', String(aberto));
+      botao.classList.toggle('is-aberto', aberto);
+    };
+    aplicar();
+
+    botao.addEventListener('click', () => {
+      aberto = !aberto;
+      aplicar();
+      try { localStorage.setItem(this.CHAVE_FILTROS, aberto ? '1' : '0'); } catch (e) {}
+    });
+  },
+
   vincularEventos() {
     document.getElementById('mkt-atualizar')
       ?.addEventListener('click', () => this.carregar(true));
@@ -126,7 +167,12 @@ const Marketing = {
     });
 
     document.getElementById('mkt-limpar')?.addEventListener('click', () => {
+      // Limpar devolve ao estado PADRÃO, não a "todo o período". O que a tela
+      // mostra ao abrir e o que ela mostra depois de limpar têm que ser a mesma
+      // coisa, senão "limpar" viraria um terceiro estado que ninguém pediu.
+      // Para ver o histórico inteiro existe a opção no seletor de período.
       Object.keys(this.filtros).forEach(k => { this.filtros[k] = ''; });
+      this.filtros.ano = this._anoPadrao();
       this.renderizar();
     });
 
@@ -140,7 +186,7 @@ const Marketing = {
     });
 
     // Os chips são criados a cada render, então o clique é delegado.
-    document.getElementById('mkt-chips')?.addEventListener('click', evento => {
+    document.getElementById('mkt-resumo')?.addEventListener('click', evento => {
       const botao = evento.target.closest('[data-remover]');
       if (!botao) return;
       this.filtros[botao.dataset.remover] = '';
@@ -165,6 +211,12 @@ const Marketing = {
       this.leads = (res.data?.leads || []).map(lead => this._preparar(lead));
       this._unificarGrafias();
       this.geradoEm = res.data?.geradoEm || '';
+      // Só na PRIMEIRA carga: o botão Atualizar recarrega os dados e não pode
+      // desfazer o período que a pessoa acabou de escolher.
+      if (this._primeiraCarga) {
+        this.filtros.ano = this._anoPadrao();
+        this._primeiraCarga = false;
+      }
       this.preencherPeriodo();
       this.renderizar();
       this.renderAtualizadoEm();
@@ -323,11 +375,33 @@ const Marketing = {
     this.renderCobertura();
   },
 
+  /** Anos com venda, do mais recente para o mais antigo. */
+  _anosDisponiveis() {
+    return [...new Set(this.leads.map(l => l.ano).filter(Boolean))]
+      .sort((a, b) => Number(b) - Number(a));
+  },
+
+  /**
+   * Período que a página abre selecionado: o ANO VIGENTE.
+   *
+   * A pergunta de marketing é quase sempre sobre o ano corrente, e abrir com o
+   * histórico inteiro faz a média de anos anteriores diluir o que está
+   * acontecendo agora.
+   *
+   * ⚠️ Se o ano corrente ainda não tem venda (começo de janeiro, ou base nova),
+   * cai no ano mais recente que existe. Abrir a página vazia por causa de um
+   * padrão esconderia a base inteira e pareceria erro de carregamento.
+   */
+  _anoPadrao() {
+    const anos = this._anosDisponiveis();
+    const atual = String(CONFIG.ANO_ATUAL);
+    return anos.includes(atual) ? atual : (anos[0] || '');
+  },
+
   preencherPeriodo() {
     const sel = document.getElementById('mkt-periodo');
     if (!sel) return;
-    const anos = [...new Set(this.leads.map(l => l.ano).filter(Boolean))]
-      .sort((a, b) => Number(b) - Number(a));
+    const anos = this._anosDisponiveis();
     sel.innerHTML = '<option value="">Todo o período</option>'
       + anos.map(a => `<option value="${a}">${a}</option>`).join('');
     sel.value = this.filtros.ano;
@@ -352,10 +426,22 @@ const Marketing = {
     if (periodo) periodo.value = this.filtros.ano;
   },
 
+  /**
+   * Resumo do que está filtrado, no cabeçalho do painel.
+   *
+   * ⚠️ Fica FORA do corpo recolhível de propósito. Com o painel fechado, este
+   * resumo é a única coisa que diz que a tela mostra um recorte, e não a base
+   * inteira. Não mova para dentro.
+   */
   renderChips() {
-    const cont = document.getElementById('mkt-chips');
+    const cont = document.getElementById('mkt-resumo');
     const limpar = document.getElementById('mkt-limpar');
     if (!cont) return;
+
+    // O período aparece SEMPRE e não é removível: ele tem valor o tempo todo
+    // (o padrão é o ano vigente), então um "×" ali não teria para onde apagar.
+    // Trocá-lo é o seletor de Período, dentro do painel.
+    const periodo = this.filtros.ano || 'Todo o período';
 
     const chips = [];
     if (this.filtros.mes) chips.push({ dim: 'mes', rotulo: 'Mês', valor: this.rotuloMes(this.filtros.mes) });
@@ -363,7 +449,8 @@ const Marketing = {
       if (this.filtros[dim]) chips.push({ dim, rotulo: cfg.rotulo, valor: this.filtros[dim] });
     });
 
-    cont.innerHTML = chips.map(c => `
+    cont.innerHTML = `<span class="mkt-periodo-tag">${escapeHtml(periodo)}</span>`
+      + chips.map(c => `
       <button type="button" class="mkt-chip" data-remover="${c.dim}"
               title="Remover o filtro de ${escapeHtml(c.rotulo.toLowerCase())}">
         <span class="mkt-chip-rot">${escapeHtml(c.rotulo)}</span>
@@ -372,9 +459,9 @@ const Marketing = {
       </button>
     `).join('');
 
-    // O ano fica fora dos chips porque o próprio select já o mostra, mas conta
-    // para habilitar o "Limpar filtros".
-    const algum = chips.length > 0 || !!this.filtros.ano;
+    // "Limpar" só aparece quando há o que limpar, e o padrão não é sujeira:
+    // com o ano vigente selecionado e nada mais, não há nada a desfazer.
+    const algum = chips.length > 0 || this.filtros.ano !== this._anoPadrao();
     if (limpar) limpar.hidden = !algum;
   },
 

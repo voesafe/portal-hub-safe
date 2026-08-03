@@ -788,6 +788,19 @@ No primeiro dia no ar o card de Sexo apareceu **ilegível, com dezenas de barras
 - **Duas camadas, de propósito:** o servidor resolve o domínio fechado do sexo, e o teto de categorias do frontend segura qualquer dimensão suja independente da versão publicada do backend. Testado: com o backend antigo (valores crus, 40 nomes distintos), o card mostra 12 barras mais `Demais` em vez de 40, e nenhuma venda some da contagem.
 - **Verificação:** 38 checagens novas no `marketingSexo_` (as variantes de caixa, abreviações, acento errado, e a prova de que nome nenhum sobrevive no recorte) e 19 no navegador em dois cenários, o do servidor novo e o da janela entre os deploys.
 
+### Período no ano vigente e filtros recolhidos, desde 2026-08-03 (só frontend)
+
+A página abre já filtrada no **ano corrente** e com o painel de filtros **fechado**, pedido do Victor no mesmo dia. Assets em `?v=20260803-marketing-v3`.
+
+- **`_anoPadrao()`** devolve o ano vigente, e a pergunta de marketing é quase sempre sobre ele: abrir com o histórico inteiro deixa a média de anos anteriores diluir o que está acontecendo agora. ⚠️ **Se o ano corrente ainda não tem venda** (começo de janeiro, base nova), cai no ano mais recente que existe; abrir a tela vazia por causa de um padrão esconderia a base inteira e pareceria erro de carregamento.
+- **O padrão só é aplicado na PRIMEIRA carga** (`_primeiraCarga`). O botão Atualizar recarrega os dados e não pode desfazer o período que a pessoa acabou de escolher.
+- ⚠️ **"Limpar filtros" devolve ao PADRÃO, não a "todo o período".** O que a tela mostra ao abrir e o que ela mostra depois de limpar têm que ser a mesma coisa, senão limpar vira um terceiro estado que ninguém pediu. Para o histórico inteiro existe a opção no seletor. Pelo mesmo motivo o botão **só aparece quando há o que limpar**: o ano vigente sozinho não é sujeira.
+- ⚠️⚠️ **Só o CORPO do painel é recolhido. O resumo do recorte e o botão de limpar ficam no cabeçalho, sempre visíveis, e não podem ser movidos para dentro.** Painel fechado escondendo filtro ativo é uma página mostrando um recorte com cara de estar mostrando tudo, que é a mesma família de engano que o bloco de cobertura existe para evitar. O resumo traz a tarja do período mais um chip removível por filtro ativo.
+- **O período é tarja, não chip com "×"**, porque ele sempre tem valor: um "×" ali não teria para onde apagar. Trocá-lo é o seletor dentro do painel.
+- **A escolha de abrir é persistida** em `localStorage['marketing-filtros-abertos']`, padrão fechado. A página recarrega inteira a cada navegação da sidebar, e quem trabalha filtrando teria que reabrir o painel toda vez. Painel fechado não engana ninguém (o resumo está no cabeçalho), então persistir aqui é seguro, ao contrário das vistas de ordenação das Horas INVA.
+- ⚠️ **`.mkt-filtros-corpo[hidden]{display:none}` é obrigatório**, oitava ocorrência dessa armadilha no projeto: a regra base é `display: grid` e ganharia do atributo `hidden`, deixando o painel sempre aberto.
+- ⚠️ **Teste que mexe nos filtros precisa ABRIR o painel primeiro.** Os selects nascem escondidos e o Playwright não interage com elemento invisível: a suíte quebrou inteira até os cenários ganharem o clique no `#mkt-filtros-toggle`.
+
 ### Acesso
 
 - **Permissão `marketing.visualizar_todos`**, presente nos cargos **Gerente Comercial** (`comercial_gerencia`) e **DIRETORIA** (`somente_leitura`). Aparece no Controle de Acesso e como módulo **viewOnly** na matriz do [admin.js](js/pages/admin.js), então liberar para uma pessoa específica é um clique, sem tocar em código.

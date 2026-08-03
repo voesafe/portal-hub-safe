@@ -78,7 +78,77 @@
 .mkt-escopo strong { color: var(--text); font-weight: 700; }
 
 /* ── Filtros ──────────────────────────────────────────────── */
-.mkt-filtros { padding: 16px; }
+.mkt-filtros { padding: 14px 16px; }
+
+.mkt-filtros-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+/* O rótulo "Filtros" fica DENTRO do botão, e o botão não carrega título nem
+   parágrafo: conteúdo de botão é conteúdo de frase. Mesma regra do recolhível
+   das Horas INVA. */
+.mkt-filtros-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  padding: 4px 2px;
+  font-family: var(--font-title);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.mkt-filtros-toggle:hover { color: var(--blue-dark); }
+
+.mkt-filtros-seta {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  transition: transform .18s cubic-bezier(.4, 0, .2, 1);
+}
+.mkt-filtros-seta svg { width: 100%; height: 100%; }
+/* Gira em vez de trocar de ícone, como o recolhível das Horas INVA. */
+.mkt-filtros-toggle.is-aberto .mkt-filtros-seta { transform: rotate(90deg); }
+
+/* ⚠️ Obrigatório: a regra base é `display: grid` e ela ganharia do atributo
+   `hidden`, deixando o painel sempre aberto. Oitava ocorrência desta armadilha
+   no projeto, depois de .cadastro-bulk-bar, .topbar-status, .hi-ordenar-menu,
+   .notam-note, .hi-pop e .aniv-template-aviso. */
+.mkt-filtros-corpo { display: grid; gap: 12px; margin-top: 14px; }
+.mkt-filtros-corpo[hidden] { display: none; }
+
+/* Resumo do recorte, sempre visível mesmo com o painel fechado. */
+.mkt-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* O período não é removível: ele sempre tem valor. Por isso é tarja, não chip
+   com "×". Ver renderChips no JS. */
+.mkt-periodo-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--brand-surface);
+  color: var(--text-on-brand);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.mkt-filtros-head .btn[hidden] { display: none; }
 
 .mkt-filtros-grid {
   display: grid;
@@ -95,27 +165,6 @@
   color: var(--text-muted);
 }
 .mkt-campo .form-control { width: 100%; }
-
-.mkt-filtros-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-}
-/* Sem isto, o `display: inline-flex` do botão ganha do atributo `hidden` e
-   sobra um botão fantasma na barra. É a mesma armadilha que já mordeu a
-   .cadastro-bulk-bar, a .topbar-status, a .hi-ordenar-menu, a .notam-note,
-   a .hi-pop e a .aniv-template-aviso. */
-.mkt-filtros-foot .btn[hidden] { display: none; }
-
-.mkt-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  flex: 1;
-  min-width: 0;
-}
 
 .mkt-chip {
   display: inline-flex;
@@ -140,7 +189,7 @@
 :root[data-theme="dark"] .mkt-chip:hover { background: rgba(91, 174, 226, .28); }
 
 .mkt-dica {
-  margin: 10px 0 0;
+  margin: 2px 0 0;
   font-size: 12px;
   color: var(--text-muted);
 }
