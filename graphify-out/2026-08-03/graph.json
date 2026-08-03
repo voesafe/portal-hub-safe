@@ -488,7 +488,7 @@
       "label": "API",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L35",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "js_core_api_api",
       "community": 32,
@@ -498,7 +498,7 @@
       "label": "toast()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L318",
+      "source_location": "L309",
       "_origin": "ast",
       "id": "js_core_api_toast",
       "community": 32,
@@ -508,7 +508,7 @@
       "label": "escapeHtml()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L344",
+      "source_location": "L335",
       "_origin": "ast",
       "id": "js_core_api_escapehtml",
       "community": 32,
@@ -518,7 +518,7 @@
       "label": "formatBRL()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L353",
+      "source_location": "L344",
       "_origin": "ast",
       "id": "js_core_api_formatbrl",
       "community": 32,
@@ -528,7 +528,7 @@
       "label": "formatData()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L357",
+      "source_location": "L348",
       "_origin": "ast",
       "id": "js_core_api_formatdata",
       "community": 32,
@@ -538,7 +538,7 @@
       "label": "nomeMes()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L363",
+      "source_location": "L354",
       "_origin": "ast",
       "id": "js_core_api_nomemes",
       "community": 32,
@@ -548,7 +548,7 @@
       "label": "abrirModal()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L365",
+      "source_location": "L356",
       "_origin": "ast",
       "id": "js_core_api_abrirmodal",
       "community": 32,
@@ -558,7 +558,7 @@
       "label": "fecharModal()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L366",
+      "source_location": "L357",
       "_origin": "ast",
       "id": "js_core_api_fecharmodal",
       "community": 32,
@@ -568,7 +568,7 @@
       "label": "btnLoading()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L368",
+      "source_location": "L359",
       "_origin": "ast",
       "id": "js_core_api_btnloading",
       "community": 32,
@@ -578,7 +578,7 @@
       "label": "skeletonTabela()",
       "file_type": "code",
       "source_file": "js/core/api.js",
-      "source_location": "L380",
+      "source_location": "L371",
       "_origin": "ast",
       "id": "js_core_api_skeletontabela",
       "community": 32,
@@ -623,66 +623,6 @@
       "id": "js_core_config_config",
       "community": 84,
       "norm_label": "config"
-    },
-    {
-      "label": "municipios-br.js",
-      "file_type": "code",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "js_data_municipios_br",
-      "community": 373,
-      "norm_label": "municipios-br.js"
-    },
-    {
-      "label": "MUNICIPIOS_BR",
-      "file_type": "code",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L20",
-      "_origin": "ast",
-      "id": "js_data_municipios_br_municipios_br",
-      "community": 373,
-      "norm_label": "municipios_br"
-    },
-    {
-      "label": "CACHE_MUNICIPIOS",
-      "file_type": "code",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L50",
-      "_origin": "ast",
-      "id": "js_data_municipios_br_cache_municipios",
-      "community": 373,
-      "norm_label": "cache_municipios"
-    },
-    {
-      "label": "municipiosDoEstado()",
-      "file_type": "code",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L53",
-      "_origin": "ast",
-      "id": "js_data_municipios_br_municipiosdoestado",
-      "community": 373,
-      "norm_label": "municipiosdoestado()"
-    },
-    {
-      "label": "municipioOficial()",
-      "file_type": "code",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L64",
-      "_origin": "ast",
-      "id": "js_data_municipios_br_municipiooficial",
-      "community": 373,
-      "norm_label": "municipiooficial()"
-    },
-    {
-      "label": "_chaveMunicipio()",
-      "file_type": "code",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L70",
-      "_origin": "ast",
-      "id": "js_data_municipios_br_chavemunicipio",
-      "community": 373,
-      "norm_label": "_chavemunicipio()"
     },
     {
       "label": "access-control.js",
@@ -748,7 +688,7 @@
       "label": "Admin",
       "file_type": "code",
       "source_file": "js/pages/admin.js",
-      "source_location": "L73",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "js_pages_admin_admin",
       "community": 63,
@@ -935,26 +875,6 @@
       "norm_label": "inicio"
     },
     {
-      "label": "marketing-origem-lead.js",
-      "file_type": "code",
-      "source_file": "js/pages/marketing-origem-lead.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "js_pages_marketing_origem_lead",
-      "community": 375,
-      "norm_label": "marketing-origem-lead.js"
-    },
-    {
-      "label": "Marketing",
-      "file_type": "code",
-      "source_file": "js/pages/marketing-origem-lead.js",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "js_pages_marketing_origem_lead_marketing",
-      "community": 375,
-      "norm_label": "marketing"
-    },
-    {
       "label": "notams.js",
       "file_type": "code",
       "source_file": "js/pages/notams.js",
@@ -1015,30 +935,10 @@
       "norm_label": "cursos_vendas"
     },
     {
-      "label": "CAMPOS_OBRIGATORIOS_VENDA",
-      "file_type": "code",
-      "source_file": "js/pages/vendas.js",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "js_pages_vendas_campos_obrigatorios_venda",
-      "community": 54,
-      "norm_label": "campos_obrigatorios_venda"
-    },
-    {
-      "label": "CAMPOS_OBRIGATORIOS_EDICAO",
-      "file_type": "code",
-      "source_file": "js/pages/vendas.js",
-      "source_location": "L55",
-      "_origin": "ast",
-      "id": "js_pages_vendas_campos_obrigatorios_edicao",
-      "community": 54,
-      "norm_label": "campos_obrigatorios_edicao"
-    },
-    {
       "label": "PACOTES_LEGADOS_CURSOS",
       "file_type": "code",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L61",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "js_pages_vendas_pacotes_legados_cursos",
       "community": 54,
@@ -1048,7 +948,7 @@
       "label": "Vendas",
       "file_type": "code",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L68",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "js_pages_vendas_vendas",
       "community": 54,
@@ -1058,7 +958,7 @@
       "label": "aplicarMascaraBRL()",
       "file_type": "code",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L1056",
+      "source_location": "L806",
       "_origin": "ast",
       "id": "js_pages_vendas_aplicarmascarabrl",
       "community": 54,
@@ -1068,7 +968,7 @@
       "label": "setInputBRL()",
       "file_type": "code",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L1064",
+      "source_location": "L814",
       "_origin": "ast",
       "id": "js_pages_vendas_setinputbrl",
       "community": 54,
@@ -1078,7 +978,7 @@
       "label": "getInputBRL()",
       "file_type": "code",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L1075",
+      "source_location": "L825",
       "_origin": "ast",
       "id": "js_pages_vendas_getinputbrl",
       "community": 54,
@@ -3817,90 +3717,10 @@
       "norm_label": "grafico recolhido e etiqueta longa legivel, em 2026-07-30 (so frontend)"
     },
     {
-      "label": "M\u00f3dulo Marketing / Origem do Lead, desde 2026-08-03",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L740",
-      "_origin": "ast",
-      "id": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "community": 372,
-      "norm_label": "modulo marketing / origem do lead, desde 2026-08-03"
-    },
-    {
-      "label": "Filtro cruzado e as decis\u00f5es da tela",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L754",
-      "_origin": "ast",
-      "id": "claude_filtro_cruzado_e_as_decis\u00f5es_da_tela",
-      "community": 372,
-      "norm_label": "filtro cruzado e as decisoes da tela"
-    },
-    {
-      "label": "Cores dos gr\u00e1ficos (foram medidas, n\u00e3o escolhidas a olho)",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L762",
-      "_origin": "ast",
-      "id": "claude_cores_dos_gr\u00e1ficos_foram_medidas_n\u00e3o_escolhidas_a_olho",
-      "community": 372,
-      "norm_label": "cores dos graficos (foram medidas, nao escolhidas a olho)"
-    },
-    {
-      "label": "O corte do r\u00f3tulo do eixo, que s\u00f3 a captura de tela pegou",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L771",
-      "_origin": "ast",
-      "id": "claude_o_corte_do_r\u00f3tulo_do_eixo_que_s\u00f3_a_captura_de_tela_pegou",
-      "community": 372,
-      "norm_label": "o corte do rotulo do eixo, que so a captura de tela pegou"
-    },
-    {
-      "label": "A coluna SEXO tem nome de pessoa dentro (achado em produ\u00e7\u00e3o, 2026-08-03)",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L780",
-      "_origin": "ast",
-      "id": "claude_a_coluna_sexo_tem_nome_de_pessoa_dentro_achado_em_produ\u00e7\u00e3o_2026_08_03",
-      "community": 372,
-      "norm_label": "a coluna sexo tem nome de pessoa dentro (achado em producao, 2026-08-03)"
-    },
-    {
-      "label": "Per\u00edodo no ano vigente e filtros recolhidos, desde 2026-08-03 (s\u00f3 frontend)",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L792",
-      "_origin": "ast",
-      "id": "claude_per\u00edodo_no_ano_vigente_e_filtros_recolhidos_desde_2026_08_03_s\u00f3_frontend",
-      "community": 372,
-      "norm_label": "periodo no ano vigente e filtros recolhidos, desde 2026-08-03 (so frontend)"
-    },
-    {
-      "label": "Acesso",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L805",
-      "_origin": "ast",
-      "id": "claude_acesso",
-      "community": 372,
-      "norm_label": "acesso"
-    },
-    {
-      "label": "Publica\u00e7\u00e3o, nesta ordem",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L813",
-      "_origin": "ast",
-      "id": "claude_publica\u00e7\u00e3o_nesta_ordem",
-      "community": 372,
-      "norm_label": "publicacao, nesta ordem"
-    },
-    {
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L825",
+      "source_location": "L740",
       "_origin": "ast",
       "id": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
       "community": 42,
@@ -3910,41 +3730,11 @@
       "label": "Captura de tela das p\u00e1ginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L837",
+      "source_location": "L752",
       "_origin": "ast",
       "id": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
       "community": 42,
       "norm_label": "captura de tela das paginas (tools/), desde 2026-07-27"
-    },
-    {
-      "label": "Cadastro de venda: campos obrigat\u00f3rios e cidade por estado, desde 2026-08-03",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L853",
-      "_origin": "ast",
-      "id": "claude_cadastro_de_venda_campos_obrigat\u00f3rios_e_cidade_por_estado_desde_2026_08_03",
-      "community": 374,
-      "norm_label": "cadastro de venda: campos obrigatorios e cidade por estado, desde 2026-08-03"
-    },
-    {
-      "label": "Todos os campos obrigat\u00f3rios, com modal de pend\u00eancias",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L857",
-      "_origin": "ast",
-      "id": "claude_todos_os_campos_obrigat\u00f3rios_com_modal_de_pend\u00eancias",
-      "community": 374,
-      "norm_label": "todos os campos obrigatorios, com modal de pendencias"
-    },
-    {
-      "label": "Cidade virou dropdown dependente do estado",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L873",
-      "_origin": "ast",
-      "id": "claude_cidade_virou_dropdown_dependente_do_estado",
-      "community": 374,
-      "norm_label": "cidade virou dropdown dependente do estado"
     },
     {
       "label": "README.md",
@@ -11961,7 +11751,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "js/core/auth.js",
       "id": "escala_cco_auth_js"
     },
@@ -11974,7 +11764,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 12,
       "norm_label": "sidebar do hub na escala cco",
       "id": "escala_cco_sidebar_hub"
     },
@@ -12026,7 +11816,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 12,
       "norm_label": "drawer lateral da escala cco",
       "id": "escala_cco_drawer"
     },
@@ -12091,7 +11881,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "setupdrawerforuser(u)",
       "id": "escala_cco_setupdrawerforuser"
     },
@@ -12104,7 +11894,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 31,
       "norm_label": "barra de progresso #loadingbar",
       "id": "escala_cco_loading_bar"
     },
@@ -12117,7 +11907,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "overlay de carregamento inicial (#escala-cco-loading)",
       "id": "escala_cco_loading_overlay"
     },
@@ -12130,7 +11920,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "tela de login propria (#loginscreen)",
       "id": "escala_cco_login_screen"
     },
@@ -12143,7 +11933,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "#appscreen (shell do app)",
       "id": "escala_cco_app_screen"
     },
@@ -12156,7 +11946,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "view calendario (#calendargrid)",
       "id": "escala_cco_calendar_view"
     },
@@ -12195,7 +11985,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 7,
       "norm_label": "view usuarios legada (#usersview)",
       "id": "escala_cco_users_view"
     },
@@ -12208,7 +11998,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "painel admin do valor do turno (#adminpanel)",
       "id": "escala_cco_admin_panel"
     },
@@ -12221,7 +12011,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "resumo financeiro (#financials)",
       "id": "escala_cco_financials_section"
     },
@@ -12273,7 +12063,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 14,
       "norm_label": "modal de exportacao ifood (#modalexportifood)",
       "id": "escala_cco_export_modal"
     },
@@ -12481,7 +12271,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "currentuser (identidade da sessao)",
       "id": "escala_cco_currentuser"
     },
@@ -12494,7 +12284,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 38,
       "norm_label": "sentinel safe-hub-admin (param by)",
       "id": "escala_cco_hub_admin_sentinel"
     },
@@ -12520,7 +12310,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "permissao canviewlog",
       "id": "escala_cco_canviewlog"
     },
@@ -12533,7 +12323,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "sso pelo hub (sessao do auth)",
       "id": "escala_cco_sso_hub"
     },
@@ -12546,7 +12336,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "usuario exclusivo cco (auth.eusuarioexclusivocco)",
       "id": "escala_cco_usuario_exclusivo_cco"
     },
@@ -12559,7 +12349,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "sessionstorage cco_session",
       "id": "escala_cco_cco_session"
     },
@@ -12572,7 +12362,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "auth.protegerescalacco()",
       "id": "escala_cco_protegerescalacco"
     },
@@ -12585,7 +12375,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "auth.getsessao()",
       "id": "escala_cco_getsessao"
     },
@@ -12598,7 +12388,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "papeis admin / financeiro / user",
       "id": "escala_cco_papeis"
     },
@@ -12611,7 +12401,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "bootstrap domcontentloaded",
       "id": "escala_cco_domcontentloaded"
     },
@@ -12624,7 +12414,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 28,
       "norm_label": "iniciarshellhub()",
       "id": "escala_cco_iniciarshellhub"
     },
@@ -12637,7 +12427,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "iniciarapp(u)",
       "id": "escala_cco_iniciarapp"
     },
@@ -12663,7 +12453,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 28,
       "norm_label": "dologin(e)",
       "id": "escala_cco_dologin"
     },
@@ -12689,7 +12479,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 37,
       "norm_label": "users (mapa de usuarios carregado do sheets)",
       "id": "escala_cco_users_map"
     },
@@ -12702,7 +12492,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 37,
       "norm_label": "schedule_users (visiveis na escala)",
       "id": "escala_cco_schedule_users"
     },
@@ -12715,7 +12505,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "scheduledata (escala do mes em memoria)",
       "id": "escala_cco_scheduledata"
     },
@@ -12741,7 +12531,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 37,
       "norm_label": "shift_labels (t1, t2, not)",
       "id": "escala_cco_shift_labels"
     },
@@ -12754,7 +12544,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "shiftvalue (valor do turno)",
       "id": "escala_cco_shiftvalue"
     },
@@ -12858,7 +12648,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "isadmin()",
       "id": "escala_cco_isadmin"
     },
@@ -12871,7 +12661,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 12,
       "norm_label": "isfinanceiro()",
       "id": "escala_cco_isfinanceiro"
     },
@@ -12884,7 +12674,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 37,
       "norm_label": "shortname(fullname)",
       "id": "escala_cco_shortname"
     },
@@ -12897,7 +12687,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 31,
       "norm_label": "setloading(pct)",
       "id": "escala_cco_setloading"
     },
@@ -12936,7 +12726,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "formatcpf(v)",
       "id": "escala_cco_formatcpf"
     },
@@ -12949,7 +12739,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "formatphone(v)",
       "id": "escala_cco_formatphone"
     },
@@ -13040,7 +12830,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 37,
       "norm_label": "rendercalendar()",
       "id": "escala_cco_rendercalendar"
     },
@@ -13053,7 +12843,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 14,
       "norm_label": "rendercalendarreadonly()",
       "id": "escala_cco_rendercalendarreadonly"
     },
@@ -13105,7 +12895,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 37,
       "norm_label": "duplo turno t1+t2 (dia todo)",
       "id": "escala_cco_double_shift"
     },
@@ -13118,7 +12908,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 39,
+      "community": 37,
       "norm_label": "removebothshifts(dk)",
       "id": "escala_cco_removebothshifts"
     },
@@ -13131,7 +12921,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "saveshiftvalue()",
       "id": "escala_cco_saveshiftvalue"
     },
@@ -13144,7 +12934,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 12,
       "norm_label": "togglemydays() (filtro meus dias)",
       "id": "escala_cco_togglemydays"
     },
@@ -13157,7 +12947,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 14,
       "norm_label": "togglescaleview() (mostrar escala p/ financeiro)",
       "id": "escala_cco_togglescaleview"
     },
@@ -13183,7 +12973,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "renderfinancials()",
       "id": "escala_cco_renderfinancials"
     },
@@ -13209,7 +12999,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 14,
       "norm_label": "secao ifood beneficios (logo base64 embutido)",
       "id": "escala_cco_ifood_section"
     },
@@ -13248,7 +13038,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 14,
       "norm_label": "abrirmodalexport()",
       "id": "escala_cco_abrirmodalexport"
     },
@@ -13417,7 +13207,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 7,
       "norm_label": "renderfunclist()",
       "id": "escala_cco_renderfunclist"
     },
@@ -13430,7 +13220,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 7,
       "norm_label": "criarcardfunc(u)",
       "id": "escala_cco_criarcardfunc"
     },
@@ -13443,7 +13233,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 7,
       "norm_label": "filtrarfuncs(f)",
       "id": "escala_cco_filtrarfuncs"
     },
@@ -13456,7 +13246,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 7,
       "norm_label": "toggleverinativos()",
       "id": "escala_cco_toggleverinativos"
     },
@@ -13586,7 +13376,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 7,
       "norm_label": "toggleusersview() (modulo legado)",
       "id": "escala_cco_toggleusersview"
     },
@@ -13599,7 +13389,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 7,
       "norm_label": "renderuserslist()",
       "id": "escala_cco_renderuserslist"
     },
@@ -13612,7 +13402,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 39,
       "norm_label": "criarcarduser(uname, isativo)",
       "id": "escala_cco_criarcarduser"
     },
@@ -13742,7 +13532,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 371,
+      "community": 7,
       "norm_label": "duplicacao: dois modulos de funcionarios coexistindo",
       "id": "escala_cco_duplicacao_modulo_funcionarios"
     },
@@ -13755,7 +13545,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 12,
       "norm_label": "abrirmodalhistorico()",
       "id": "escala_cco_abrirmodalhistorico"
     },
@@ -13846,7 +13636,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 38,
+      "community": 12,
       "norm_label": "gate defensivo no cliente + validacao no servidor",
       "id": "escala_cco_gate_defensivo_historico"
     },
@@ -13924,7 +13714,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 14,
       "norm_label": "dashcache (cache por mes do dashboard)",
       "id": "escala_cco_dashcache"
     },
@@ -16280,7 +16070,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L365",
+      "source_location": "L356",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_abrirmodal",
@@ -16290,7 +16080,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L35",
+      "source_location": "L33",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_api",
@@ -16300,7 +16090,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L368",
+      "source_location": "L359",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_btnloading",
@@ -16320,7 +16110,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L344",
+      "source_location": "L335",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_escapehtml",
@@ -16330,7 +16120,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L366",
+      "source_location": "L357",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_fecharmodal",
@@ -16340,7 +16130,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L353",
+      "source_location": "L344",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_formatbrl",
@@ -16350,7 +16140,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L357",
+      "source_location": "L348",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_formatdata",
@@ -16360,7 +16150,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L363",
+      "source_location": "L354",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_nomemes",
@@ -16370,7 +16160,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L380",
+      "source_location": "L371",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_skeletontabela",
@@ -16380,7 +16170,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/api.js",
-      "source_location": "L318",
+      "source_location": "L309",
       "weight": 1.0,
       "source": "js_core_api",
       "target": "js_core_api_toast",
@@ -16409,78 +16199,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L50",
-      "weight": 1.0,
-      "source": "js_data_municipios_br",
-      "target": "js_data_municipios_br_cache_municipios",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L70",
-      "weight": 1.0,
-      "source": "js_data_municipios_br",
-      "target": "js_data_municipios_br_chavemunicipio",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "js_data_municipios_br",
-      "target": "js_data_municipios_br_municipiooficial",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L20",
-      "weight": 1.0,
-      "source": "js_data_municipios_br",
-      "target": "js_data_municipios_br_municipios_br",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L53",
-      "weight": 1.0,
-      "source": "js_data_municipios_br",
-      "target": "js_data_municipios_br_municipiosdoestado",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L67",
-      "weight": 1.0,
-      "source": "js_data_municipios_br_municipiooficial",
-      "target": "js_data_municipios_br_municipiosdoestado",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/data/municipios-br.js",
-      "source_location": "L65",
-      "weight": 1.0,
-      "source": "js_data_municipios_br_municipiooficial",
-      "target": "js_data_municipios_br_chavemunicipio",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "js/pages/access-control.js",
       "source_location": "L5",
       "weight": 1.0,
@@ -16492,7 +16210,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/pages/admin.js",
-      "source_location": "L73",
+      "source_location": "L69",
       "weight": 1.0,
       "source": "js_pages_admin",
       "target": "js_pages_admin_admin",
@@ -16621,16 +16339,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "js/pages/marketing-origem-lead.js",
-      "source_location": "L28",
-      "weight": 1.0,
-      "source": "js_pages_marketing_origem_lead",
-      "target": "js_pages_marketing_origem_lead_marketing",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "js/pages/notams.js",
       "source_location": "L7",
       "weight": 1.0,
@@ -16652,30 +16360,10 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L1056",
+      "source_location": "L806",
       "weight": 1.0,
       "source": "js_pages_vendas",
       "target": "js_pages_vendas_aplicarmascarabrl",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/pages/vendas.js",
-      "source_location": "L55",
-      "weight": 1.0,
-      "source": "js_pages_vendas",
-      "target": "js_pages_vendas_campos_obrigatorios_edicao",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/pages/vendas.js",
-      "source_location": "L38",
-      "weight": 1.0,
-      "source": "js_pages_vendas",
-      "target": "js_pages_vendas_campos_obrigatorios_venda",
       "confidence_score": 1.0
     },
     {
@@ -16692,7 +16380,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L1075",
+      "source_location": "L825",
       "weight": 1.0,
       "source": "js_pages_vendas",
       "target": "js_pages_vendas_getinputbrl",
@@ -16702,7 +16390,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L61",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "js_pages_vendas",
       "target": "js_pages_vendas_pacotes_legados_cursos",
@@ -16712,7 +16400,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L1064",
+      "source_location": "L814",
       "weight": 1.0,
       "source": "js_pages_vendas",
       "target": "js_pages_vendas_setinputbrl",
@@ -16722,7 +16410,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/pages/vendas.js",
-      "source_location": "L68",
+      "source_location": "L33",
       "weight": 1.0,
       "source": "js_pages_vendas",
       "target": "js_pages_vendas_vendas",
@@ -18894,17 +18582,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L853",
-      "weight": 1.0,
-      "source": "claude_claude_md_regras_do_projeto_safe_hub",
-      "target": "claude_cadastro_de_venda_campos_obrigat\u00f3rios_e_cidade_por_estado_desde_2026_08_03",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L837",
+      "source_location": "L752",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_captura_de_tela_das_p\u00e1ginas_tools_desde_2026_07_27",
@@ -18914,7 +18592,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L825",
+      "source_location": "L740",
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_conferir_a_interface_antes_de_publicar_tools_preview_sh",
@@ -18988,16 +18666,6 @@
       "weight": 1.0,
       "source": "claude_claude_md_regras_do_projeto_safe_hub",
       "target": "claude_m\u00f3dulo_anivers\u00e1rios_de_alunos_desde_2026_07_24",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L740",
-      "weight": 1.0,
-      "source": "claude_claude_md_regras_do_projeto_safe_hub",
-      "target": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
       "confidence_score": 1.0
     },
     {
@@ -19438,96 +19106,6 @@
       "weight": 1.0,
       "source": "claude_horas_voadas_inva_m\u00eas_cadastro_de_instrutor_desde_2026_07_28",
       "target": "claude_tr\u00eas_bugs_corrigidos_em_2026_07_28",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L780",
-      "weight": 1.0,
-      "source": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "target": "claude_a_coluna_sexo_tem_nome_de_pessoa_dentro_achado_em_produ\u00e7\u00e3o_2026_08_03",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L805",
-      "weight": 1.0,
-      "source": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "target": "claude_acesso",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L762",
-      "weight": 1.0,
-      "source": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "target": "claude_cores_dos_gr\u00e1ficos_foram_medidas_n\u00e3o_escolhidas_a_olho",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L754",
-      "weight": 1.0,
-      "source": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "target": "claude_filtro_cruzado_e_as_decis\u00f5es_da_tela",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L771",
-      "weight": 1.0,
-      "source": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "target": "claude_o_corte_do_r\u00f3tulo_do_eixo_que_s\u00f3_a_captura_de_tela_pegou",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L792",
-      "weight": 1.0,
-      "source": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "target": "claude_per\u00edodo_no_ano_vigente_e_filtros_recolhidos_desde_2026_08_03_s\u00f3_frontend",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L813",
-      "weight": 1.0,
-      "source": "claude_m\u00f3dulo_marketing_origem_do_lead_desde_2026_08_03",
-      "target": "claude_publica\u00e7\u00e3o_nesta_ordem",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L873",
-      "weight": 1.0,
-      "source": "claude_cadastro_de_venda_campos_obrigat\u00f3rios_e_cidade_por_estado_desde_2026_08_03",
-      "target": "claude_cidade_virou_dropdown_dependente_do_estado",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L857",
-      "weight": 1.0,
-      "source": "claude_cadastro_de_venda_campos_obrigat\u00f3rios_e_cidade_por_estado_desde_2026_08_03",
-      "target": "claude_todos_os_campos_obrigat\u00f3rios_com_modal_de_pend\u00eancias",
       "confidence_score": 1.0
     },
     {
@@ -31020,5 +30598,5 @@
       "source_file": "preview/refinado/escala-pav.html"
     }
   ],
-  "built_at_commit": "89dddd5924a8dac534301eb25f1a06035df2f8e1"
+  "built_at_commit": "a414257e50b64909fed4b369be6932fb5134f741"
 }
