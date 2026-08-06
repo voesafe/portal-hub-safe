@@ -41,11 +41,42 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
-      - name: Empacotar a raiz do site
+      # ⚠️ Publica so o que o navegador precisa. Antes ia a arvore inteira, e
+      # `graphify-out` sozinho sao 14 MB em 239 arquivos de artefato de
+      # desenvolvimento, mais o codigo do backend (`apps-script`) e as
+      # ferramentas de deploy (`tools`), nada disso servido a ninguem.
+      #
+      # Nao e so arrumacao: o passo de publicar estourava o tempo com o
+      # deployment ainda `in_progress`, ou seja, a publicacao funcionava e era
+      # lenta demais. Cortar quase metade dos arquivos ataca a causa.
+      #
+      # `preview/` FICA de proposito: e o preview de redesign, tem URL propria
+      # e tirar quebraria os links que ja foram compartilhados.
+      - name: Montar o site
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'graphify-out' \
+            --exclude 'apps-script' \
+            --exclude 'tools' \
+            --exclude 'node_modules' \
+            ./ _site/
+          echo "arquivos publicados: $(find _site -type f | wc -l)"
+          echo "peso: $(du -sh _site | cut -f1)"
+
+      - name: Empacotar
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Publicar
         id: deploy
         uses: actions/deploy-pages@v4
+        with:
+          # O padrao e 10 min, e foi ele que abortou uma publicacao que estava
+          # AVANCANDO (`deployment_in_progress`). Aborta-la deixava o run
+          # marcado como falha mesmo com o site subindo, que e o pior dos
+          # mundos: nao da para confiar nem no sucesso nem na falha.
+          timeout: 1800000
