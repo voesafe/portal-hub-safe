@@ -19,11 +19,16 @@ permissions:
   pages: write
   id-token: write
 
-# Nao cancela uma publicacao em andamento: derrubar um deploy pela metade
-# deixaria o site num estado que ninguem pediu.
+# ⚠️ `cancel-in-progress: true`, ao contrario do workflow padrao do GitHub.
+# O motivo e concreto: em 2026-08-06 um run ficou preso no passo de publicar
+# (ele comecou ANTES de a fonte do Pages virar `workflow`, entao tentava
+# publicar num modo que ainda nao existia). Com `false`, todo push seguinte
+# ficava na FILA atras do run morto, e nao havia como destravar sem direito de
+# admin para cancelar na mao. Publicacao aqui e sempre a arvore inteira, entao
+# a mais recente substituir a anterior e o comportamento certo de qualquer jeito.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   publicar:
