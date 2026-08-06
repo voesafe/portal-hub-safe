@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
   <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
-  <link rel="stylesheet" href="css/pages/portal-aluno.css?v=9df12a49">
+  <link rel="stylesheet" href="css/pages/portal-aluno.css?v=bc57e68b">
 </head>
 <body>
 
@@ -73,6 +73,20 @@
     </div>
 
     <div class="page">
+
+      <!-- Abas de sub-visão. Ficam na PÁGINA e não na topbar: no celular a
+           topbar já carrega o hamburger, o Atualizar e o avatar, e mais duas
+           abas ali quebrariam a faixa em duas linhas. -->
+      <div class="pa-tabs" role="tablist" aria-label="Seções do Portal do Aluno">
+        <button class="pa-tab is-active" id="pa-tab-liberar" type="button" role="tab"
+                aria-selected="true" aria-controls="pa-painel-liberar">Liberar acesso</button>
+        <button class="pa-tab" id="pa-tab-alunos" type="button" role="tab"
+                aria-selected="false" aria-controls="pa-painel-alunos">
+          Alunos <span class="pa-tab-n" id="pa-tab-alunos-n"></span>
+        </button>
+      </div>
+
+      <div id="pa-painel-liberar" role="tabpanel" aria-labelledby="pa-tab-liberar">
 
       <!-- ⚠️ O aviso NAO tem botao de dispensar: criar o aluno dispara o
            e-mail de boas-vindas da Zenler, e e-mail enviado nao volta. Quem
@@ -171,6 +185,33 @@
         </div>
       </div>
 
+      </div><!-- /painel liberar -->
+
+      <div id="pa-painel-alunos" role="tabpanel" aria-labelledby="pa-tab-alunos" hidden>
+        <div class="card">
+          <div class="card-header pa-alunos-header">
+            <div class="card-title">Alunos com acesso</div>
+            <div class="pa-sinc">
+              <!-- ⚠️ A hora da última sincronia fica VISÍVEL, não escondida num
+                   title: a lista é um retrato guardado, e quem decide em cima
+                   dela precisa saber de quando ele é. -->
+              <span class="pa-sinc-quando" id="pa-sinc-quando">—</span>
+              <button class="btn btn-ghost pa-sinc-btn" id="pa-sincronizar" type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+                Sincronizar
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <label class="sr-only" for="pa-busca">Buscar aluno</label>
+            <input type="search" class="form-control pa-busca" id="pa-busca"
+                   placeholder="Buscar por nome ou e-mail" autocomplete="off">
+            <div class="pa-lista" id="pa-lista"></div>
+            <p class="pa-lista-nota" id="pa-lista-nota" hidden></p>
+          </div>
+        </div>
+      </div>
+
       <div class="dashboard-loading-overlay active" id="pa-loading">
         <div class="dashboard-loading-card">
           <img class="dashboard-loading-logo" src="assets/img/logo.png?v=59c27084" alt="">
@@ -217,11 +258,67 @@
   </div>
 </div>
 
+<!-- Ficha do aluno: o que ele já tem e o que dá para acrescentar. O
+     acréscimo acontece AQUI, sem voltar para o formulário: o fluxo que este
+     modal existe para resolver é "achar o aluno e dar mais um curso". -->
+<div class="modal-overlay" id="pa-aluno">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h3 style="font-size:1.05rem" id="pa-aluno-titulo">Aluno</h3>
+      <button class="modal-close" id="pa-aluno-close" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="pa-aluno-email" id="pa-aluno-email"></p>
+
+      <div class="pa-aluno-secao">Cursos em que está matriculado (<span id="pa-aluno-n">0</span>)</div>
+      <ul class="pa-aluno-cursos" id="pa-aluno-cursos"></ul>
+
+      <div class="pa-add" id="pa-add">
+        <div class="pa-aluno-secao">Acrescentar cursos</div>
+        <label class="form-label" for="pa-add-pacote">Pacote</label>
+        <select class="form-control" id="pa-add-pacote">
+          <option value="">Nenhum</option>
+        </select>
+        <!-- Só aparecem os cursos que ele ainda NÃO tem: oferecer o que já
+             está lá faria a tela pedir uma ação sem efeito. -->
+        <div class="form-label pa-add-rotulo">Cursos avulsos que ele ainda não tem</div>
+        <div class="pa-add-cursos" id="pa-add-cursos"></div>
+        <div class="pa-add-previa" id="pa-add-previa" hidden></div>
+        <button class="btn btn-primary pa-add-btn" id="pa-add-btn" type="button" disabled>Matricular nos cursos escolhidos</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="pa-aluno-fechar" type="button">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmação da remoção. ⚠️ O texto diz que o progresso vai junto porque
+     isso foi MEDIDO: rematriculando, a data de matrícula reinicia, ou seja, a
+     Zenler destrói o registro em vez de escondê-lo. Não suavize esta frase. -->
+<div class="modal-overlay" id="pa-remover">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3 style="font-size:1.05rem">Remover matrícula</h3>
+      <button class="modal-close" id="pa-remover-close" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="pa-remover-corpo"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="pa-remover-cancelar" type="button">Cancelar</button>
+      <button class="btn btn-danger" id="pa-remover-confirmar" type="button">Remover matrícula</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-container" id="toast-container"></div>
 
-<script src="js/core/config.js?v=cac00e61"></script>
+<script src="js/core/config.js?v=e18544d3"></script>
 <script src="js/core/auth.js?v=47cb2ebd"></script>
-<script src="js/core/api.js?v=43d13a41"></script>
-<script src="js/pages/portal-aluno.js?v=e7c04eec"></script>
+<script src="js/core/api.js?v=275f12fb"></script>
+<script src="js/pages/portal-aluno.js?v=3bad01cb"></script>
 </body>
 </html>

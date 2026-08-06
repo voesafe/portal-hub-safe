@@ -75,6 +75,7 @@ var ACCESS_PERMISSIONS = [
   // Consultar quem já tem acesso é outra coisa, e mais gente pode precisar.
   ['portal_aluno.visualizar', 'Portal do Aluno', 'Ver acessos e liberações'],
   ['portal_aluno.liberar', 'Portal do Aluno', 'Liberar acesso ao portal'],
+  ['portal_aluno.remover', 'Portal do Aluno', 'Remover matrícula de um curso'],
   ['progresso_alunos.visualizar', 'Progresso de Alunos', 'Visualizar progresso'],
   ['progresso_alunos.buscar_aluno', 'Progresso de Alunos', 'Buscar aluno'],
   ['progresso_alunos.visualizar_detalhe', 'Progresso de Alunos', 'Visualizar detalhe'],
@@ -158,6 +159,7 @@ var ACCESS_DEFAULT_GROUPS = [
       'vendas.criar_para_qualquer_pac',
       'portal_aluno.visualizar',
       'portal_aluno.liberar',
+      'portal_aluno.remover',
       'vendas.editar_propria',
       'vendas.editar_todas',
       'vendas.excluir_propria',

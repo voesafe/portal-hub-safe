@@ -856,8 +856,36 @@ Tudo abaixo foi **medido contra a API de produção**, não lido na documentaç�
 `apps-script/NewzenlerSonda.gs`, **temporário e já removido**, registrado em `MANUTENCAO_FUNCOES` e rodado por `tools/deploy/manutencao.mjs`. Alvo `victor.pinho+zenlerteste@voesafe.com` (o Google entrega na caixa normal, mas na Zenler é conta separada), apagado no fim.
 
 - ⚠️ **Não dá para sondar a API localmente:** extrair a `NEWZENLER_API_KEY` por `manutencao.mjs props hub --revelar=` é **bloqueado pelo classificador de segurança**, e com razão. O caminho é publicar a sonda no Apps Script, onde a chave já vive.
-- ⚠️ **Varredura dos 54 cursos não cabe numa execução.** Conferir em que cursos um aluno está exige uma consulta por curso (o filtro `email_is[]` é quebrado, já documentado), e 54 × 2 estoura o teto de 6 minutos do Apps Script. A sonda foi refeita para conferir só os cursos que interessavam.
+- ⚠️ **Varredura dos 54 cursos não cabe numa execução SEQUENCIAL.** Conferir em que cursos um aluno está exige uma consulta por curso (o filtro `email_is[]` é quebrado, já documentado), e 54 × 2 em sequência estoura o teto de 6 minutos do Apps Script. A sonda foi refeita para conferir só os cursos que interessavam. ⚠️ **Corrigido em 2026-08-06, mais tarde no mesmo dia: com `UrlFetchApp.fetchAll` a varredura inteira leva 7 segundos.** O gargalo era a espera de uma resposta por vez, não o número de chamadas. Ver a seção "O mapa aluno para cursos" abaixo, e **não repita a conclusão antiga**: ela inviabilizaria de novo um recurso que é barato.
 - Backend publicado do @54 ao @57 durante a sondagem, e o código temporário retirado depois.
+
+### O mapa aluno para cursos, e o unenroll, medidos em 2026-08-06 (segunda sondagem)
+
+Feita para responder se dá para o Hub **listar todos os alunos matriculados com os cursos de cada um** e **excluir uma matrícula**. Sonda temporária publicada do @62 ao @65 e retirada no @66.
+
+**Não existe atalho por aluno.** `GET /users/{id}` responde 200 mas devolve só o cadastro (`first_name`, `email`, `phone`, `roles`, endereço), sem matrícula nenhuma. `/users/{id}/courses`, `/enrollments` e `/enrolled-courses` devolvem **301**, não 404, o que engana: parece que existe e não existe. O único caminho é o relatório de progresso.
+
+- ⚠️ **O relatório EXIGE `course_id`**: sem filtro devolve `400` com `"No course ids provided"`. Não há chamada global.
+- ⚠️ **E ignora o segundo curso em diante, apesar do plural da mensagem.** Testado nas duas formas (`course_id[]` repetido e separado por vírgula): as duas devolvem exatamente os mesmos 7 itens que o primeiro curso sozinho, e ainda ecoam `courseId: "201375,170035,170178"` no item, que **parece** confirmação de que os três entraram. É uma chamada por curso mesmo.
+- ⚠️⚠️ **`pagination.total` PARA EM 100, que é o tamanho da página, e não é o total do curso.** Somar esse campo deu 1.276 matrículas; o número real é 2.984, mais que o dobro. Quem diz o tamanho é **`total_pages`**. O erro passa despercebido porque 1.276 é um número plausível.
+
+**Custo real da varredura completa, medido:** 41 cursos publicados, 63 requisições (41 primeiras páginas mais 22 de continuação), duas rodadas de `UrlFetchApp.fetchAll`, **6,6 segundos**, 911 KB, zero falha. Resultado: **2.984 matrículas, 707 alunos distintos**, média de 4,2 cursos por aluno e máximo de 16. Cada linha traz nome, e-mail, curso, `status` e `enrollment_date`.
+
+- ⚠️ **É `fetchAll` que torna isto viável, e é isso que a nota antiga errava.** Em sequência seriam 63 esperas de rede; em paralelo são duas.
+- O `completion_percentage` continua zero, como já documentado. O campo confiável é `status`.
+
+**O `POST /users/{id}/unenroll` funciona, e foi provado por ida e volta** numa conta descartável (criada, matriculada na Loja SAFE, conferida no relatório, desmatriculada, conferida de novo, rematriculada e apagada no fim):
+
+- **Sucesso:** HTTP 200 com JSON `{"response_code":200,"message":"success","data":"User unenrolled successfully"}`, e o aluno **some do relatório** do curso.
+- **Não estava matriculado:** HTTP 400 com `"User is not enrolled in this course."`. Dá para distinguir dos dois lados.
+- ⚠️⚠️ **Com `course_id` INEXISTENTE, a rota devolve HTTP 200 com uma PÁGINA HTML de erro** (`<title>Oops...Something went wrong!</title>`). O `enroll`, no mesmo argumento ruim, devolve JSON limpo (`404`, `"Invalid Course"`). Ou seja, **a regra "decidir pelo status HTTP", que vale para matricular, NÃO vale para desmatricular**: aqui 200 pode ser fracasso. Quem for implementar tem que exigir corpo **JSON com `message: "success"`**, e tratar resposta HTML como falha. O caso não é teórico: curso apagado na Zenler cai exatamente nele.
+- ⚠️ **Desmatricular DESTRÓI o registro, não o esconde.** Rematriculando, a `enrollment_date` reinicia (17:53:01 virou 17:53:11 no teste). O progresso do aluno vai junto, e rematricular não traz de volta. A tela precisa dizer isso antes de confirmar.
+- **Não existe remoção em lote:** `POST /courses/{id}/unenroll` responde `405`, "Supported methods: GET, HEAD". O `DELETE` na rota do usuário também é `405`, e é justamente esse 405 que **prova** que `POST /users/{id}/unenroll` existe ("Supported methods: GET, HEAD, POST").
+- `DELETE /users/{id}` apaga a conta inteira e responde `"User deleted successfully"`. Não é o que o botão de remover matrícula deve fazer.
+
+⚠️ **A sonda de escrita foi retirada do `MANUTENCAO_FUNCOES` junto com o arquivo.** Ela sabia criar e apagar usuário na Zenler, e deixá-la na lista fechada significaria que o token de manutenção passa a poder fazer isso. Sonda que escreve **entra e sai no mesmo dia**.
+
+⚠️ **Depois de `clasp create-deployment`, o `/exec` serve o código antigo por alguns segundos.** Aconteceu duas vezes: a função recém-registrada voltou "Funcao fora da lista de manutencao", e no catálogo ela estava lá. Não é erro de registro, é propagação. Repita a chamada antes de investigar.
 
 ## Módulo Portal do Aluno: liberar acesso, desde 2026-08-06
 
@@ -880,6 +908,35 @@ Resolve a dor descrita pelo Victor: o cadastro inicial da Zenler aceita **um** c
 - ⚠️ **`#pa-resultado-refazer[hidden]{display:none}` é obrigatório**, décima ocorrência dessa armadilha no projeto e a **primeira em que ela morde um `.btn`**: `.btn` é `display: inline-flex` e ganha do atributo, então sem a regra o botão "Refazer o que faltou" aparece numa liberação que deu certo inteira, convidando a refazer o que não falhou. Foi pego pelo teste, não pela leitura.
 - **Verificação:** 165 checagens no navegador nas quatro combinações (desktop e 390px × claro e escuro) com o Apps Script interceptado por um backend falso com estado, cobrindo a prévia nascendo escondida sem reservar faixa, o pacote preenchendo a prévia, o curso ausente marcado, os avulsos com busca, o salvamento barrado sem dados **e sem disparar POST**, o CPF de dígitos iguais recusado, o payload com CPF só de dígitos, a falha parcial contando "2 de 4", o refazer mandando **só os dois que faltaram**, o histórico marcando o parcial, e o acesso negado a quem não tem a permissão.
   - ⚠️ **`isVisible` do Playwright NÃO distingue modal aberto de fechado neste projeto:** `.modal-overlay` é `display: flex` sempre e abre por opacidade. Teste de modal precisa olhar a classe `.open`.
+
+### Aba "Alunos": quem está matriculado em quê, desde 2026-08-06
+
+Segunda entrega do módulo, pedida pelo Victor no mesmo dia: listar os alunos com acesso, ver os cursos de cada um, **acrescentar curso a quem já existe** e **remover matrícula**. A página ganhou duas abas, `Liberar acesso` e `Alunos`. Tudo o que a API permite e proíbe está medido na seção "O mapa aluno para cursos, e o unenroll".
+
+- **O mapa vive num cache, a aba `PORTAL_MATRICULAS`** (uma linha por matrícula: e-mail, nome, curso, status, data). Reconstruído por gatilho **diário às 04h** (`portalInstalarTriggerMatriculas`), pelo botão **Sincronizar** e, incrementalmente, a cada liberação ou remoção feita pelo Hub.
+- ⚠️ **Não existe endpoint "cursos deste aluno".** O mapa só existe porque `portalVarrerMatriculas_` consulta os 41 cursos com **`UrlFetchApp.fetchAll`**, em duas rodadas paralelas: 6,6 s no total. **Não troque por laço sequencial**, que é de onde veio a nota antiga de que isso não caberia numa execução.
+- ⚠️ **Varre a UNIÃO dos cursos publicados com os da planilha.** Curso despublicado some do `/courses`, mas os alunos dele continuam matriculados; deixá-lo de fora faria a tela dizer que o aluno não tem um acesso que ele tem. Pelo mesmo motivo o `nomesCursos` mandado à tela cobre **todos** os cursos, não só os avulsos liberáveis.
+- ⚠️ **Varredura que falha inteira NÃO apaga o cache** (`sincronizarMatriculasPortal` lança antes de gravar). Matrícula velha e datada é melhor que tela vazia, e a hora da última sincronia fica **escrita na tela**, não num `title`: quem decide em cima de um retrato guardado precisa saber de quando ele é.
+- ⚠️ **`portalGravarMatriculas_` roda sob `LockService`** e a escrita é `clearContent` + `setValues`. Dois escritores disputam a faixa (o gatilho e o botão), e sem a trava um clique no segundo exato da rodada automática deixa a lista pela metade. Mesma decisão do `notamGravarCache_`. O `setNumberFormats('@')` vem antes do `setValues`, senão a coluna de data vira `Date` e volta deslocada.
+- **A base inteira viaja no `listarPortalAluno`** (707 alunos, 2.984 matrículas), como no módulo de Marketing: com ~10 s por chamada, buscar os cursos ao clicar no aluno custaria uma espera visível a cada clique. A lista desenha no máximo **80 por vez**, sempre com a nota dizendo quantos casaram: lista cortada em silêncio faz a pessoa concluir que o aluno não existe.
+- ⚠️ **O CPF deixou de ser obrigatório para aluno que já existe.** Ele é a senha do **primeiro** acesso, então quem cobra é o `portalAcharOuCriarAluno_`, que sabe se vai criar. Sem isso, acrescentar um curso a um aluno antigo exigiria caçar o CPF dele. A tela do aluno manda `cpf: ''` de propósito.
+- **O bloco de acrescentar só oferece o que ele ainda não tem**, inclusive descartando do pacote o que já está lá: oferecer o resto seria pedir uma ação sem efeito, cuja resposta viria "já estava matriculado".
+
+**Remover matrícula** (rota `remover-matricula-portal`, permissão **`portal_aluno.remover`**, no cargo **Gerente Comercial**):
+
+- ⚠️⚠️ **A regra do `enroll` não vale no `unenroll`: aqui HTTP 200 pode ser fracasso.** Com curso inexistente a Zenler devolve **200 com página HTML de erro**. `portalDesmatricular_` exige corpo **JSON com `message: "success"`** e trata HTML como falha. Curso apagado na Zenler cai exatamente nesse caso.
+- **"Não estava matriculado" conta como sucesso**, mesma lógica do "já estava matriculado" no enroll: o objetivo é o aluno não ter o acesso.
+- ⚠️ **Desmatricular DESTRÓI o registro** (medido: a data de matrícula reinicia ao rematricular), então o progresso vai junto e não volta. **O modal diz isso por escrito, e essa frase não deve ser suavizada.**
+- A remoção é gravada em `PORTAL_LIBERACOES` com `PACOTE = REMOÇÃO` e `STATUS = REMOVIDO`, para a aba seguir respondendo quem mexeu e quando.
+- **Permissão separada de liberar por decisão do Victor:** o consultor libera acesso, o gerente tira. `Sincronizar` fica atrás de `portal_aluno.liberar`, porque vai à Zenler e regrava a planilha.
+
+⚠️⚠️ **BUG PRÉ-EXISTENTE CORRIGIDO JUNTO: o módulo não estava em `RBAC_MODULOS` ([admin.js](js/pages/admin.js)), e a ausência revogava acesso em silêncio.** As permissões negadas são calculadas como "o que o cargo tem menos o que a matriz pede", então **editar um Consultor ou Gerente Comercial pela tela de usuários mandava `portal_aluno.*` para as NEGADAS** e a pessoa perdia o módulo sem ninguém ter pedido. O módulo entrou usando o interruptor de **escopo** (`Sem remover` / `Pode remover`), que é o que permite os dois cargos coexistirem na mesma matriz. **Ao criar módulo novo, entre em `RBAC_MODULOS` no mesmo dia**, e rode o round-trip nos 8 cargos.
+
+- **Verificação:** 182 checagens no navegador nas quatro combinações (desktop e 390px × claro e escuro) com o Apps Script interceptado por um backend falso **com estado**, cobrindo as abas, a busca por nome e por e-mail, a ficha do aluno, o curso fora da lista de avulsos aparecendo pelo nome, o pacote não repetindo o que ele já tem, o payload sem CPF, a remoção mandando e-mail e curso, a ficha se refazendo sem o curso removido, os três níveis de permissão (superadmin, quem libera sem remover, quem só visualiza), o backend antigo sem os campos novos, e a **falha na remoção não apagando o curso da tela**. Mais o round-trip da matriz RBAC nos 8 cargos.
+- ⚠️ **Duas armadilhas de captura de tela, as duas por transição de opacidade:** o overlay de carregamento perde a classe `active` **antes** de terminar de sumir, e o `.modal-overlay` ganha `.open` **antes** de estar pintado. Capturar pela classe deixa a página lavada com um "Carregando..." no meio, ou fotografa a tela sem o modal. Espere `opacity` chegar a `0` e a `1`.
+- ⚠️ **Escopar `.pa-vazio` ao medir a lista:** a mesma classe é a célula "Nenhuma liberação ainda" do histórico, que vem **antes** no DOM e vence um `.first()`.
+- **Dois defeitos de celular que só a captura pegou** (as 170 checagens funcionais passavam nos dois): o X da matrícula caía sozinho numa terceira linha, desligado do curso, e a contagem de cursos caía numa faixa própria embaixo do e-mail. Os dois eram colocação automática de flex e de grid, resolvidos com `order` e com linha e coluna explícitas. Hoje há regressão por **geometria medida** para os dois.
+- **Assets em `?v=` por hash** (`bump.mjs`), e `CONFIG.SESSION_VERSION` + `SAFE_AUTH_VERSION` em `2026.08.06-portal-alunos-v1`: sem o relogin, o Gerente Comercial só veria o botão de remover no dia seguinte, porque o menu e as permissões do frontend leem a cópia do `localStorage` gravada no login.
 
 ## Progresso de Alunos desligado, desde 2026-08-06
 

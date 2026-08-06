@@ -25,10 +25,13 @@
 var PORTAL_SHEETS = {
   CURSOS:    'PORTAL_CURSOS',
   PACOTES:   'PORTAL_PACOTES',
-  LIBERACOES:'PORTAL_LIBERACOES'
+  LIBERACOES:'PORTAL_LIBERACOES',
+  MATRICULAS:'PORTAL_MATRICULAS'
 };
 
 var PORTAL_CURSOS_HEADERS = ['ID', 'NOME', 'ATIVO', 'GRUPO', 'ATUALIZADO_EM'];
+var PORTAL_MATRICULAS_HEADERS = ['EMAIL', 'NOME', 'CURSO_ID', 'STATUS', 'MATRICULADO_EM'];
+var PORTAL_MATRICULAS_PROP = 'PORTAL_MATRICULAS_SINC';
 var PORTAL_PACOTES_HEADERS = ['ID', 'NOME', 'CURSOS', 'ATIVO', 'ORDEM'];
 var PORTAL_LIBERACOES_HEADERS = [
   'ID', 'DATA', 'AUTOR', 'ALUNO_NOME', 'ALUNO_EMAIL', 'ALUNO_CPF',
@@ -188,6 +191,274 @@ function portalInstalar() {
   return { cursos: cursos, pacotesSemeados: semeados };
 }
 
+// ── Cache das matriculas (quem esta em que curso) ───────────
+//
+// A API NAO tem "cursos deste aluno": /users/{id} devolve so o cadastro e
+// /users/{id}/courses responde 301, que engana por parecer que existe. O
+// unico caminho e o relatorio de progresso, que EXIGE course_id e ignora do
+// segundo em diante. Entao o mapa e montado curso a curso.
+//
+// ⚠️ O que torna isso barato e o `fetchAll`, nao o numero de chamadas:
+// medido em 2026-08-06, 63 requisicoes em duas rodadas paralelas levam 6,6s
+// e trazem 2.984 matriculas de 707 alunos. Em sequencia seriam 63 esperas de
+// rede, que e de onde veio a nota antiga de que isso nao caberia numa
+// execucao. Nao volte para o laco sequencial.
+
+/**
+ * Varre todos os cursos e devolve uma linha por matricula.
+ *
+ * ⚠️ Varre a UNIAO dos cursos publicados com os que estao na planilha: um
+ * curso despublicado na Zenler some do /courses, mas os alunos dele
+ * continuam matriculados, e sumir da lista faria a tela dizer que o aluno
+ * nao tem um acesso que ele tem.
+ */
+function portalVarrerMatriculas_() {
+  var headers = newzenlerHeaders_();
+
+  var ids = {}, nomes = {};
+  newzenlerListarCursos().forEach(function (c) {
+    ids[String(c.id)] = true;
+    nomes[String(c.id)] = c.name || '';
+  });
+  portalLerCursos_().forEach(function (c) {
+    ids[c.id] = true;
+    if (!nomes[c.id]) nomes[c.id] = c.nome;
+  });
+  var cursos = Object.keys(ids);
+
+  function url(cursoId, pagina) {
+    return NEWZENLER_BASE_URL + '/reports/course-progress/detailed?course_id[]=' +
+           encodeURIComponent(cursoId) + '&limit=100&page=' + pagina;
+  }
+  function pedir(lista) {
+    return UrlFetchApp.fetchAll(lista.map(function (x) {
+      return { url: url(x.curso, x.page), method: 'get', headers: headers, muteHttpExceptions: true };
+    }));
+  }
+
+  var linhas = [], falhas = 0;
+
+  function consumir(res, cursoId) {
+    if (res.getResponseCode() !== 200) { falhas++; return 1; }
+    var j;
+    try { j = JSON.parse(res.getContentText()); } catch (e) { falhas++; return 1; }
+    var dados = (j && j.data) ? j.data : {};
+    portalItensRelatorio_(dados).forEach(function (it) {
+      var email = String(it.email || '').trim().toLowerCase();
+      if (!email) return;
+      linhas.push([
+        email,
+        String(it.name || '').trim(),
+        String(cursoId),
+        String(it.status || ''),
+        String(it.enrollment_date || '')
+      ]);
+    });
+    // ⚠️ `pagination.total` PARA EM 100, que e o tamanho da pagina, e nao o
+    // total do curso. Somar aquele campo subestimou a base pela metade na
+    // medicao. Quem diz o tamanho e `total_pages`.
+    return Number((dados.pagination || {}).total_pages || 1);
+  }
+
+  var primeira = cursos.map(function (c) { return { curso: c, page: 1 }; });
+  var extras = [];
+  pedir(primeira).forEach(function (res, i) {
+    var tp = consumir(res, primeira[i].curso);
+    for (var p = 2; p <= tp; p++) extras.push({ curso: primeira[i].curso, page: p });
+  });
+
+  if (extras.length) {
+    pedir(extras).forEach(function (res, i) { consumir(res, extras[i].curso); });
+  }
+
+  return { linhas: linhas, falhas: falhas, cursosVarridos: cursos.length, nomes: nomes };
+}
+
+/** Os itens do relatorio vem como objeto indexado, nao array. */
+function portalItensRelatorio_(dados) {
+  var raw = (dados && dados.items) ? dados.items : {};
+  if (Object.prototype.toString.call(raw) === '[object Array]') return raw;
+  return Object.keys(raw).map(function (k) { return raw[k]; });
+}
+
+/**
+ * ⚠️ Sob `LockService`, e a escrita e clearContent + setValues: dois
+ * escritores disputam esta faixa (o gatilho diario e o botao Sincronizar).
+ * Sem a trava, um clique no segundo exato da rodada automatica deixaria a
+ * tela com a lista pela metade. Mesma decisao do `notamGravarCache_`.
+ *
+ * ⚠️ `setNumberFormats('@')` ANTES do setValues: a coluna MATRICULADO_EM e
+ * texto tipo "2025-07-03 18:00:29" e o Sheets a converteria em Date, que
+ * volta deslocada na leitura.
+ */
+function portalGravarMatriculas_(linhas) {
+  var trava = LockService.getScriptLock();
+  if (!trava.tryLock(30000)) throw new Error('Outra sincronização está em andamento.');
+  try {
+    var aba = portalAba_(PORTAL_SHEETS.MATRICULAS, PORTAL_MATRICULAS_HEADERS, true);
+    var ultima = aba.getLastRow();
+    if (ultima > 1) {
+      aba.getRange(2, 1, ultima - 1, PORTAL_MATRICULAS_HEADERS.length).clearContent();
+    }
+    if (!linhas.length) return;
+
+    var formatos = linhas.map(function () { return ['@', '@', '@', '@', '@']; });
+    aba.getRange(2, 1, linhas.length, PORTAL_MATRICULAS_HEADERS.length)
+       .setNumberFormats(formatos)
+       .setValues(linhas);
+  } finally {
+    trava.releaseLock();
+  }
+}
+
+/** Roda a varredura e regrava o cache. Serve ao gatilho e ao botao. */
+function sincronizarMatriculasPortal() {
+  var r = portalVarrerMatriculas_();
+
+  // ⚠️ Varredura que falhou inteira NAO pode apagar o cache: matricula
+  // antiga e melhor que tela vazia, e a tela mostra a hora da ultima
+  // sincronia para ninguem decidir achando que o dado e de agora.
+  if (!r.linhas.length && r.falhas) {
+    throw new Error('A Zenler não respondeu em nenhum curso. O cache anterior foi mantido.');
+  }
+
+  portalGravarMatriculas_(r.linhas);
+
+  var resumo = {
+    quando: new Date().toISOString(),
+    matriculas: r.linhas.length,
+    cursosVarridos: r.cursosVarridos,
+    falhas: r.falhas
+  };
+  PropertiesService.getScriptProperties()
+    .setProperty(PORTAL_MATRICULAS_PROP, JSON.stringify(resumo));
+  return resumo;
+}
+
+function portalUltimaSincronia_() {
+  try {
+    var v = PropertiesService.getScriptProperties().getProperty(PORTAL_MATRICULAS_PROP);
+    return v ? JSON.parse(v) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/** Le o cache e agrupa por aluno. Nunca cria a aba (leitura nao escreve). */
+function portalLerMatriculas_() {
+  var aba = portalAba_(PORTAL_SHEETS.MATRICULAS, PORTAL_MATRICULAS_HEADERS, false);
+  if (!aba) return [];
+  var ultima = aba.getLastRow();
+  if (ultima < 2) return [];
+
+  var dados = aba.getRange(2, 1, ultima - 1, PORTAL_MATRICULAS_HEADERS.length).getDisplayValues();
+
+  var porEmail = {}, ordem = [];
+  for (var i = 0; i < dados.length; i++) {
+    var email = String(dados[i][0] || '').trim().toLowerCase();
+    var curso = String(dados[i][2] || '').trim();
+    if (!email || !curso) continue;
+    if (!porEmail[email]) {
+      porEmail[email] = { e: email, n: String(dados[i][1] || ''), c: [] };
+      ordem.push(email);
+    }
+    // Nome vazio numa linha nao apaga o que outra linha trouxe.
+    if (!porEmail[email].n && dados[i][1]) porEmail[email].n = String(dados[i][1]);
+    porEmail[email].c.push([curso, String(dados[i][3] || ''), String(dados[i][4] || '')]);
+  }
+
+  return ordem.map(function (e) { return porEmail[e]; })
+    .sort(function (a, b) { return String(a.n).localeCompare(String(b.n), 'pt-BR'); });
+}
+
+// ── Cache incremental ───────────────────────────────────────
+//
+// Depois de liberar ou remover pelo Hub, sabemos exatamente o que mudou.
+// Varrer os 41 cursos de novo custaria 7 segundos para descobrir o que ja
+// esta na mao, e deixaria a tela mentindo nesse intervalo.
+
+function portalCacheAcrescentar_(email, nome, cursos) {
+  if (!cursos.length) return;
+  var trava = LockService.getScriptLock();
+  if (!trava.tryLock(20000)) return;   // cache desatualizado nao justifica derrubar a operacao
+  try {
+    var aba = portalAba_(PORTAL_SHEETS.MATRICULAS, PORTAL_MATRICULAS_HEADERS, false);
+    if (!aba) return;                  // sem cache ainda: a proxima sincronia resolve
+
+    var jaTem = {};
+    var ultima = aba.getLastRow();
+    if (ultima > 1) {
+      var dados = aba.getRange(2, 1, ultima - 1, 3).getDisplayValues();
+      dados.forEach(function (l) {
+        jaTem[String(l[0]).trim().toLowerCase() + '|' + String(l[2]).trim()] = true;
+      });
+    }
+
+    var novas = [];
+    var agora = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
+    cursos.forEach(function (cursoId) {
+      var chave = email + '|' + String(cursoId);
+      if (jaTem[chave]) return;
+      novas.push([email, nome, String(cursoId), 'Not Started', agora]);
+    });
+    if (!novas.length) return;
+
+    var inicio = aba.getLastRow() + 1;
+    aba.getRange(inicio, 1, novas.length, PORTAL_MATRICULAS_HEADERS.length)
+       .setNumberFormats(novas.map(function () { return ['@', '@', '@', '@', '@']; }))
+       .setValues(novas);
+  } finally {
+    trava.releaseLock();
+  }
+}
+
+/** ⚠️ Apaga de baixo para cima: deletar linha desloca as de baixo. */
+function portalCacheRemover_(email, cursoId) {
+  var trava = LockService.getScriptLock();
+  if (!trava.tryLock(20000)) return;
+  try {
+    var aba = portalAba_(PORTAL_SHEETS.MATRICULAS, PORTAL_MATRICULAS_HEADERS, false);
+    if (!aba) return;
+    var ultima = aba.getLastRow();
+    if (ultima < 2) return;
+
+    var dados = aba.getRange(2, 1, ultima - 1, 3).getDisplayValues();
+    var alvo = String(email).trim().toLowerCase();
+    var curso = String(cursoId).trim();
+    var apagar = [];
+    for (var i = 0; i < dados.length; i++) {
+      if (String(dados[i][0]).trim().toLowerCase() === alvo &&
+          String(dados[i][2]).trim() === curso) apagar.push(i + 2);
+    }
+    for (var k = apagar.length - 1; k >= 0; k--) aba.deleteRow(apagar[k]);
+  } finally {
+    trava.releaseLock();
+  }
+}
+
+// ── Gatilho diario da sincronia ─────────────────────────────
+
+/**
+ * Diario, nao de hora em hora: matricula muda quando alguem libera acesso,
+ * e quem libera pelo Hub ja atualiza o cache na hora. O gatilho existe para
+ * pegar o que foi feito direto na Zenler.
+ */
+function portalInstalarTriggerMatriculas() {
+  portalRemoverTriggerMatriculas();
+  ScriptApp.newTrigger('sincronizarMatriculasPortal').timeBased().atHour(4).everyDays(1).create();
+  return { instalado: true, hora: 4 };
+}
+
+function portalRemoverTriggerMatriculas() {
+  var n = 0;
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'sincronizarMatriculasPortal') {
+      ScriptApp.deleteTrigger(t); n++;
+    }
+  });
+  return { removidos: n };
+}
+
 // ── Leitura para a tela ─────────────────────────────────────
 
 function listarPortalAluno() {
@@ -212,10 +483,22 @@ function listarPortalAluno() {
     };
   });
 
+  // O mapa de nomes cobre TODOS os cursos, nao so os avulsos liberaveis: o
+  // aluno pode estar matriculado num curso que a operacao tirou da tela, e
+  // mostrar "curso 190029" em vez do nome nao ajuda ninguem.
+  var nomesCursos = {};
+  cursos.forEach(function(c) { nomesCursos[c.id] = c.nome; });
+
   return {
     pacotes: pacotesFora,
     cursos: cursos.filter(function(c) { return c.ativo; }),
-    liberacoes: portalUltimasLiberacoes_(50)
+    nomesCursos: nomesCursos,
+    liberacoes: portalUltimasLiberacoes_(50),
+    // A base inteira numa resposta so. O Apps Script leva segundos por
+    // chamada, entao buscar os cursos do aluno ao clicar nele custaria uma
+    // espera visivel a cada clique. Mesma decisao do modulo de Marketing.
+    alunos: portalLerMatriculas_(),
+    sincronia: portalUltimaSincronia_()
   };
 }
 
@@ -284,8 +567,11 @@ function liberarAcessoPortal(dados, autor) {
   if (!email) throw new Error('E-mail do aluno é obrigatório.');
   if (!nome)  throw new Error('Nome do aluno é obrigatório.');
   if (!cursos.length) throw new Error('Escolha ao menos um curso.');
-  // A senha inicial e o CPF, entao sem CPF nao ha como criar o aluno.
-  if (cpf.length !== 11) throw new Error('CPF do aluno é obrigatório e precisa ter 11 dígitos.');
+  // ⚠️ O CPF e a senha do PRIMEIRO acesso, entao ele so e obrigatorio quando
+  // o aluno precisa ser criado. Exigi-lo para quem ja existe na Zenler seria
+  // burocracia sem funcao no fluxo de "acrescentar um curso a quem ja esta
+  // la", que e o caminho mais comum depois da lista de alunos. Quem cobra e
+  // o `portalAcharOuCriarAluno_`, que sabe se vai criar ou nao.
 
   // ⚠️ Trava: sem ela, dois cliques no botao criariam DOIS alunos com o mesmo
   // e-mail antes de qualquer um dos dois enxergar o outro, e a Zenler manda o
@@ -322,6 +608,16 @@ function liberarAcessoPortal(dados, autor) {
       resultados: resultados
     });
 
+    // O cache sabe o que acabou de mudar, entao nao ha por que varrer os 41
+    // cursos de novo. ⚠️ Dentro de try/catch: o aluno JA foi matriculado, e
+    // uma falha ao anotar isso na planilha nao pode virar erro na tela e
+    // fazer alguem repetir a operacao.
+    try {
+      portalCacheAcrescentar_(email, nome, resultados
+        .filter(function(r) { return r.status === 'OK'; })
+        .map(function(r) { return r.id; }));
+    } catch (e) {}
+
     return {
       alunoCriado: usuario.criado,
       zenlerUserId: usuario.id,
@@ -343,6 +639,10 @@ function liberarAcessoPortal(dados, autor) {
 function portalAcharOuCriarAluno_(nome, email, cpf) {
   var achado = portalBuscarPorEmail_(email);
   if (achado) return { id: achado.id, criado: false };
+
+  if (String(cpf || '').length !== 11) {
+    throw new Error('Este aluno ainda não existe na Zenler, e criar exige o CPF, que vira a senha do primeiro acesso.');
+  }
 
   var partes = nome.split(/\s+/);
   var primeiro = partes.shift() || nome;
@@ -398,6 +698,101 @@ function portalMatricular_(userId, cursoId) {
     return { ok: true, detalhe: 'já estava matriculado' };
   }
   return { ok: false, detalhe: texto };
+}
+
+// ── Remocao de matricula ────────────────────────────────────
+
+/**
+ * Tira o aluno de UM curso na Zenler.
+ *
+ * ⚠️⚠️ A REGRA DO ENROLL NAO VALE AQUI. Medido em 2026-08-06: com um
+ * `course_id` que nao existe, esta rota devolve **HTTP 200 com uma pagina
+ * HTML de erro** ("Oops...Something went wrong!"), enquanto o `/enroll`, no
+ * mesmo argumento ruim, devolve JSON limpo. Decidir pelo status HTTP, que e
+ * a regra escrita para matricular, leria esse fracasso como sucesso e a tela
+ * diria que o acesso foi tirado com o aluno ainda dentro do curso.
+ * Por isso o sucesso exige corpo JSON com `message: "success"`.
+ *
+ * ⚠️ O caso nao e teorico: curso apagado na Zenler cai exatamente nele.
+ */
+function portalDesmatricular_(userId, cursoId) {
+  var res = portalFetch_('post', '/users/' + userId + '/unenroll', { course_id: Number(cursoId) });
+
+  var corpo = res.corpo;
+  var ehObjeto = corpo && typeof corpo === 'object';
+
+  if (res.status >= 200 && res.status < 300) {
+    if (ehObjeto && String(corpo.message).toLowerCase() === 'success') {
+      return { ok: true, detalhe: 'matrícula removida' };
+    }
+    // 200 que nao e JSON de sucesso: a Zenler engasgou e nada foi removido.
+    return { ok: false, detalhe: 'A Zenler respondeu com uma página de erro. A matrícula não foi removida.' };
+  }
+
+  var texto = portalMensagem_(res);
+  // O objetivo e o aluno NAO ter o acesso. Se ele ja nao tinha, o objetivo
+  // esta cumprido, e tratar como falha faria a tela pedir para repetir algo
+  // que ja esta certo. Mesma logica do "ja estava matriculado" no enroll.
+  if (/not enrolled/i.test(texto)) {
+    return { ok: true, detalhe: 'já não estava matriculado' };
+  }
+  return { ok: false, detalhe: texto };
+}
+
+/**
+ * ⚠️ Desmatricular DESTROI o registro, nao o esconde: medido que a
+ * `enrollment_date` reinicia ao rematricular, ou seja, o progresso do aluno
+ * naquele curso vai junto e nao volta. Quem avisa a pessoa disso e a tela,
+ * antes de confirmar.
+ */
+function removerMatriculaPortal(dados, autor) {
+  var email = String((dados && dados.email) || '').trim().toLowerCase();
+  var cursoId = String((dados && dados.cursoId) || '').trim();
+  if (!email) throw new Error('E-mail do aluno é obrigatório.');
+  if (!cursoId) throw new Error('Curso é obrigatório.');
+
+  var trava = LockService.getScriptLock();
+  if (!trava.tryLock(25000)) {
+    throw new Error('Outra operação está em andamento. Tente de novo em alguns segundos.');
+  }
+
+  try {
+    // Busca exata, no nosso lado: o `search` da Zenler casa pedaco de e-mail,
+    // e tirar o acesso da pessoa errada e o pior defeito possivel aqui.
+    var usuario = portalBuscarPorEmail_(email);
+    if (!usuario) throw new Error('Esse e-mail não existe na Zenler.');
+
+    var mapaCursos = {};
+    portalLerCursos_().forEach(function (c) { mapaCursos[c.id] = c.nome; });
+    var nomeCurso = mapaCursos[cursoId] || ('curso ' + cursoId);
+
+    var r = portalDesmatricular_(usuario.id, cursoId);
+
+    if (r.ok) {
+      try { portalCacheRemover_(email, cursoId); } catch (e) {}
+    }
+
+    portalGravarLiberacao_({
+      autor: autor || '',
+      nome: String((dados && dados.nome) || ''),
+      email: email,
+      cpf: '',
+      usuarioId: usuario.id,
+      pacote: 'REMOÇÃO',
+      resultados: [{
+        id: cursoId,
+        nome: nomeCurso,
+        status: r.ok ? 'REMOVIDO' : 'ERRO',
+        detalhe: r.detalhe
+      }]
+    });
+
+    if (!r.ok) throw new Error(r.detalhe);
+
+    return { email: email, cursoId: cursoId, cursoNome: nomeCurso, detalhe: r.detalhe };
+  } finally {
+    trava.releaseLock();
+  }
 }
 
 function portalMensagem_(res) {
@@ -502,6 +897,19 @@ function exigirPortalAlunoLiberar(token) {
   if (usuarioEhSuperadmin(usuario)) return usuario;
   if (usuarioTemPermissao(usuario, 'portal_aluno.liberar')) return usuario;
   throw new Error('Sem permissão para liberar acesso ao portal do aluno.');
+}
+
+/**
+ * Remover e permissao SEPARADA de liberar, por decisao do Victor em
+ * 2026-08-06: desmatricular apaga o progresso do aluno naquele curso, sem
+ * volta. O consultor libera acesso; tirar acesso e do Gerente Comercial.
+ */
+function exigirPortalAlunoRemover(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (usuarioEhSuperadmin(usuario)) return usuario;
+  if (usuarioTemPermissao(usuario, 'portal_aluno.remover')) return usuario;
+  throw new Error('Sem permissão para remover matrícula do portal do aluno.');
 }
 
 /**

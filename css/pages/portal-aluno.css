@@ -217,6 +217,197 @@
   font-size: .86rem;
 }
 
+/* ── Abas Liberar / Alunos ────────────────────────────────── */
+.pa-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  /* ⚠️ `padding-bottom` traz o indicador da aba ativa para dentro do padding
+     box. Sem ele o `::after` transborda e, na hora que esta barra ganhar
+     rolagem, vira rolagem vertical fantasma. Mesma lição dos NOTAMs. */
+  padding-bottom: 2px;
+}
+.pa-tab {
+  position: relative;
+  background: none;
+  border: 0;
+  padding: 9px 14px;
+  font-family: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+}
+.pa-tab:hover { color: var(--text); background: var(--surface-2); }
+.pa-tab.is-active { color: var(--brand-surface); }
+.pa-tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: 10px; right: 10px; bottom: 0;
+  height: 2px;
+  background: var(--brand-surface);
+  border-radius: 2px;
+}
+.pa-tab-n {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: .74rem;
+  font-weight: 700;
+}
+.pa-tab.is-active .pa-tab-n { background: var(--tint-info); color: var(--ink-info); }
+
+/* ── Lista de alunos ──────────────────────────────────────── */
+.pa-alunos-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pa-sinc { display: flex; align-items: center; gap: 10px; }
+.pa-sinc-quando { font-size: .78rem; color: var(--text-muted); }
+.pa-sinc-quando.tem-falha { color: var(--ink-aviso); }
+.pa-sinc-btn { padding: 5px 11px; font-size: .8rem; }
+/* `.btn` é inline-flex e ganha do atributo `hidden`. */
+.pa-sinc-btn[hidden] { display: none; }
+
+.pa-busca { margin-bottom: 12px; }
+
+.pa-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 460px;
+  overflow-y: auto;
+}
+.pa-aluno-linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 11px;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pa-aluno-linha:hover { background: var(--surface-2); }
+.pa-aluno-linha-nome {
+  font-size: .87rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pa-aluno-linha-email {
+  font-size: .79rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pa-aluno-linha-n {
+  font-size: .76rem;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.pa-lista-nota {
+  margin: 10px 0 0;
+  font-size: .78rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+.pa-lista-nota[hidden] { display: none; }
+
+/* ── Ficha do aluno ───────────────────────────────────────── */
+.pa-aluno-email { margin: 0 0 14px; font-size: .84rem; color: var(--text-muted); }
+.pa-aluno-secao {
+  font-size: .76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.pa-aluno-cursos { list-style: none; margin: 0 0 18px; padding: 0; }
+.pa-aluno-curso {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.pa-ac-nome { flex: 1; min-width: 0; font-size: .86rem; color: var(--text); }
+.pa-ac-meta { font-size: .75rem; color: var(--text-muted); white-space: nowrap; }
+.pa-ac-x {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.pa-ac-x:hover { background: var(--tint-erro); color: var(--ink-erro); border-color: transparent; }
+
+.pa-add { border-top: 1px solid var(--border); padding-top: 16px; }
+.pa-add[hidden] { display: none; }
+.pa-add-rotulo { margin-top: 12px; }
+.pa-add-cursos {
+  max-height: 190px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 12px;
+}
+.pa-add-previa {
+  padding: 9px 11px;
+  border-radius: 8px;
+  background: var(--tint-info);
+  color: var(--ink-info);
+  font-size: .8rem;
+  margin-bottom: 12px;
+}
+.pa-add-previa[hidden] { display: none; }
+.pa-add-btn { width: 100%; }
+
+/* ── Confirmação da remoção ───────────────────────────────── */
+.pa-rem-curso { margin: 14px 0 10px; font-size: .88rem; color: var(--text); }
+.pa-rem-aviso {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--tint-erro);
+  color: var(--ink-erro);
+  font-size: .82rem;
+}
+
+/* Rótulo só para leitor de tela. Fica aqui, e não no layout.css, para não
+   obrigar a bumpar o CSS compartilhado nos 22 HTML por causa de uma classe. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ── Celular ──────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .pa-cursos { max-height: 260px; }
@@ -224,4 +415,23 @@
   .pa-acoes .btn { width: 100%; }
   .pa-res-lista li { flex-wrap: wrap; }
   .pa-res-det { flex-basis: 100%; padding-left: 27px; }
+  /* ⚠️ Sem posicionar as três células a colocação automática empilha em TRÊS
+     faixas (nome, e-mail, contagem), e a contagem fica sozinha lá embaixo,
+     longe do nome a que se refere. Duas faixas: nome e contagem em cima, o
+     e-mail atravessando embaixo. */
+  .pa-aluno-linha {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 1px;
+  }
+  .pa-aluno-linha-nome { grid-column: 1; grid-row: 1; }
+  .pa-aluno-linha-n { grid-column: 2; grid-row: 1; }
+  .pa-aluno-linha-email { grid-column: 1 / -1; grid-row: 2; }
+  .pa-alunos-header { align-items: flex-start; }
+  /* ⚠️ O `order` é o que impede o X de cair sozinho numa terceira linha,
+     desligado do curso a que pertence: itens de flex quebram na ordem em que
+     aparecem, então mandar a meta para o fim deixa nome e X dividindo a
+     primeira linha, que é como o item se lê como uma coisa só. */
+  .pa-aluno-curso { flex-wrap: wrap; row-gap: 2px; }
+  .pa-ac-x { order: 2; }
+  .pa-ac-meta { order: 3; flex-basis: 100%; }
 }

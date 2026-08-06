@@ -13,7 +13,7 @@ const CONFIG = {
   APP_VERSION: '2026.07.09-rbac-enforcement-v2',
   // Trocar SESSION_VERSION invalida TODAS as sessões salvas no navegador,
   // forçando novo login (necessário para recarregar as permissões efetivas).
-  SESSION_VERSION: '2026.08.03-marketing-v1',
+  SESSION_VERSION: '2026.08.06-portal-alunos-v1',
   API_TIMEOUT_MS: 30000,
 
   MESES: [

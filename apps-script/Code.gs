@@ -231,6 +231,21 @@ function doPost(e) {
         return jsonSuccess(liberarAcessoPortal(dados, autorPortal));
       }
 
+      // Guarda PRÓPRIO de novo: remover apaga o progresso do aluno naquele
+      // curso, e isso não volta. Ver o exigirPortalAlunoRemover.
+      case 'remover-matricula-portal': {
+        var uRem = exigirPortalAlunoRemover(token);
+        var autorRem = (uRem.nome || '') + (uRem.email ? ' (' + uRem.email + ')' : '');
+        return jsonSuccess(removerMatriculaPortal(dados, autorRem));
+      }
+
+      // Sincronizar é ida à Zenler mais regravação da planilha, então fica
+      // atrás de quem já pode liberar, e não de quem só visualiza.
+      case 'sincronizar-matriculas-portal': {
+        exigirPortalAlunoLiberar(token);
+        return jsonSuccess(sincronizarMatriculasPortal());
+      }
+
       // ── Vendas ─────────────────────────────────────────────
       case 'criar-venda': {
         var uCriarV = exigirSessao(token);

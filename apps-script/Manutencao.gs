@@ -72,6 +72,10 @@ var MANUTENCAO_FUNCOES = {
   portalSincronizarCursos:  'Traz os cursos da Zenler para a planilha, sem apagar a curadoria.',
   portalDiagnostico:        'So le. Confere se os cursos dos pacotes existem e estao ativos.',
   portalAplicarAvulsos:     'ESCREVE. Reescreve a curadoria: so a lista oficial fica ativa.',
+  sincronizarMatriculasPortal:   'ESCREVE o cache. Varre a Zenler e regrava quem esta em que curso.',
+  portalInstalarTriggerMatriculas: 'Instala o gatilho diario (04h) da sincronia de matriculas.',
+  portalRemoverTriggerMatriculas:  'Remove o gatilho da sincronia de matriculas.',
+
 };
 
 // ── Token ───────────────────────────────────────────────────

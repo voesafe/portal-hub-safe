@@ -20,6 +20,20 @@ const PortalAluno = {
   enviando: false,
   ultimaFalha: null,   // guarda o que faltou, para o botao de refazer
 
+  // Aba "Alunos"
+  alunos: [],          // [{ e: email, n: nome, c: [[cursoId, status, data]] }]
+  nomesCursos: {},     // TODOS os cursos, nao so os liberaveis avulsos
+  sincronia: null,
+  aba: 'liberar',
+  alunoAberto: null,
+  addSelecionados: new Set(),
+  removendo: null,
+
+  // Teto do que e desenhado de uma vez. ⚠️ Sempre acompanhado da nota que
+  // diz quantos casaram: lista cortada em silencio faz a pessoa concluir que
+  // o aluno nao existe quando ele so ficou de fora do corte.
+  LIMITE_LISTA: 80,
+
   async init() {
     Auth.proteger();
     Auth.protegerPagina('portal-aluno.html', 'Portal do Aluno');
@@ -88,6 +102,51 @@ const PortalAluno = {
       const abertos = document.querySelectorAll('.modal-overlay.open');
       if (abertos.length) abertos[abertos.length - 1].classList.remove('open');
     });
+
+    this._bindAlunos();
+  },
+
+  _bindAlunos() {
+    document.getElementById('pa-tab-liberar')?.addEventListener('click', () => this.trocarAba('liberar'));
+    document.getElementById('pa-tab-alunos')?.addEventListener('click', () => this.trocarAba('alunos'));
+    document.getElementById('pa-busca')?.addEventListener('input', () => this.renderLista());
+    document.getElementById('pa-sincronizar')?.addEventListener('click', () => this.sincronizar());
+
+    // Delegação: as linhas nascem depois deste bind e são refeitas a cada
+    // busca, então listener por linha morreria no primeiro filtro.
+    document.getElementById('pa-lista')?.addEventListener('click', (e) => {
+      const linha = e.target.closest('[data-email]');
+      if (linha) this.abrirAluno(linha.dataset.email);
+    });
+
+    document.getElementById('pa-aluno-close')?.addEventListener('click', () => fecharModal('pa-aluno'));
+    document.getElementById('pa-aluno-fechar')?.addEventListener('click', () => fecharModal('pa-aluno'));
+    document.getElementById('pa-add-pacote')?.addEventListener('change', () => this.renderAdd());
+    document.getElementById('pa-add-btn')?.addEventListener('click', () => this.acrescentar());
+
+    document.getElementById('pa-aluno-cursos')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-remover]');
+      if (btn) this.confirmarRemocao(btn.dataset.remover);
+    });
+
+    document.getElementById('pa-remover-close')?.addEventListener('click', () => fecharModal('pa-remover'));
+    document.getElementById('pa-remover-cancelar')?.addEventListener('click', () => fecharModal('pa-remover'));
+    document.getElementById('pa-remover-confirmar')?.addEventListener('click', () => this.remover());
+  },
+
+  // ── Abas ─────────────────────────────────────────────────
+
+  trocarAba(qual) {
+    this.aba = qual;
+    const ehLiberar = qual === 'liberar';
+    document.getElementById('pa-painel-liberar').hidden = !ehLiberar;
+    document.getElementById('pa-painel-alunos').hidden = ehLiberar;
+    const tl = document.getElementById('pa-tab-liberar');
+    const ta = document.getElementById('pa-tab-alunos');
+    tl?.classList.toggle('is-active', ehLiberar);
+    ta?.classList.toggle('is-active', !ehLiberar);
+    tl?.setAttribute('aria-selected', String(ehLiberar));
+    ta?.setAttribute('aria-selected', String(!ehLiberar));
   },
 
   // ── Dados ────────────────────────────────────────────────
@@ -104,11 +163,19 @@ const PortalAluno = {
       this.pacotes = d.pacotes || [];
       this.cursos = d.cursos || [];
       this.liberacoes = d.liberacoes || [];
+      // Backend antigo não manda estes campos. Cair em vazio deixa a aba
+      // "Alunos" sem lista em vez de quebrar a página inteira, e ela volta
+      // sozinha na primeira carga depois do deploy do backend.
+      this.alunos = d.alunos || [];
+      this.nomesCursos = d.nomesCursos || {};
+      this.sincronia = d.sincronia || null;
       this.renderPacotes();
       this.renderCursos();
       this.renderPreview();
       this.renderHistorico();
       this.renderSubtitulo();
+      this.renderLista();
+      this.renderSincronia();
     } finally {
       this.setCarregando(false);
     }
@@ -358,6 +425,319 @@ const PortalAluno = {
       this.enviando = false;
       if (btn) { btn.disabled = false; btn.textContent = 'Refazer o que faltou'; }
     }
+  },
+
+  // ── Aba Alunos ───────────────────────────────────────────
+
+  podeRemover() { return Auth.temPermissao('portal_aluno.remover'); },
+  podeLiberar() { return Auth.podeEditar('portal-aluno.html'); },
+
+  renderSincronia() {
+    const el = document.getElementById('pa-sinc-quando');
+    const btn = document.getElementById('pa-sincronizar');
+    // Sincronizar vai à Zenler e regrava a planilha, então segue a mesma
+    // permissão de liberar. Quem só visualiza vê a lista e a hora dela.
+    if (btn) btn.hidden = !this.podeLiberar();
+    if (!el) return;
+    if (!this.sincronia) { el.textContent = 'Nunca sincronizado'; return; }
+    const quando = this._quando(this.sincronia.quando);
+    const falhas = Number(this.sincronia.falhas || 0);
+    el.textContent = `Sincronizado ${quando}` + (falhas ? ` · ${falhas} curso(s) falharam` : '');
+    el.classList.toggle('tem-falha', falhas > 0);
+  },
+
+  alunosFiltrados() {
+    const q = (document.getElementById('pa-busca')?.value || '').trim().toLowerCase();
+    if (!q) return this.alunos;
+    return this.alunos.filter(a =>
+      String(a.n || '').toLowerCase().includes(q) || String(a.e || '').includes(q));
+  },
+
+  renderLista() {
+    const box = document.getElementById('pa-lista');
+    const nota = document.getElementById('pa-lista-nota');
+    const conta = document.getElementById('pa-tab-alunos-n');
+    if (conta) conta.textContent = this.alunos.length ? String(this.alunos.length) : '';
+    if (!box) return;
+
+    if (!this.alunos.length) {
+      box.innerHTML = `<p class="pa-vazio">Nenhum aluno no cache ainda. ${
+        this.podeLiberar() ? 'Use o Sincronizar para trazer da Zenler.' : 'Peça a alguém com permissão para sincronizar.'}</p>`;
+      if (nota) nota.hidden = true;
+      return;
+    }
+
+    const lista = this.alunosFiltrados();
+    if (!lista.length) {
+      box.innerHTML = '<p class="pa-vazio">Nenhum aluno casa com essa busca.</p>';
+      if (nota) nota.hidden = true;
+      return;
+    }
+
+    const mostrados = lista.slice(0, this.LIMITE_LISTA);
+    box.innerHTML = mostrados.map(a => `
+      <button type="button" class="pa-aluno-linha" data-email="${escapeHtml(a.e)}">
+        <span class="pa-aluno-linha-nome">${escapeHtml(a.n || '(sem nome)')}</span>
+        <span class="pa-aluno-linha-email">${escapeHtml(a.e)}</span>
+        <span class="pa-aluno-linha-n">${a.c.length} ${a.c.length === 1 ? 'curso' : 'cursos'}</span>
+      </button>`).join('');
+
+    if (nota) {
+      const sobra = lista.length - mostrados.length;
+      nota.hidden = sobra <= 0;
+      nota.textContent = sobra > 0
+        ? `Mostrando ${mostrados.length} de ${lista.length}. Use a busca para achar alguém específico.`
+        : '';
+    }
+  },
+
+  // ── Ficha do aluno ───────────────────────────────────────
+
+  abrirAluno(email) {
+    const a = this.alunos.find(x => x.e === email);
+    if (!a) return;
+    this.alunoAberto = a;
+    this.addSelecionados = new Set();
+
+    document.getElementById('pa-aluno-titulo').textContent = a.n || '(sem nome)';
+    document.getElementById('pa-aluno-email').textContent = a.e;
+
+    const sel = document.getElementById('pa-add-pacote');
+    if (sel) {
+      sel.innerHTML = '<option value="">Nenhum</option>' +
+        this.pacotes.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.nome)}</option>`).join('');
+      sel.value = '';
+    }
+
+    // Só quem pode liberar vê o bloco de acrescentar.
+    const add = document.getElementById('pa-add');
+    if (add) add.hidden = !this.podeLiberar();
+
+    this.renderCursosDoAluno();
+    this.renderAdd();
+    abrirModal('pa-aluno');
+  },
+
+  _statusLegivel(s) {
+    const m = { 'Completed': 'Concluído', 'In Progress': 'Em andamento', 'Not Started': 'Não iniciado' };
+    return m[s] || s || '—';
+  },
+
+  renderCursosDoAluno() {
+    const ul = document.getElementById('pa-aluno-cursos');
+    const n = document.getElementById('pa-aluno-n');
+    const a = this.alunoAberto;
+    if (!ul || !a) return;
+    if (n) n.textContent = String(a.c.length);
+
+    const podeRemover = this.podeRemover();
+    ul.innerHTML = a.c.map(([id, status, data]) => {
+      // Curso fora da planilha ainda mostra o id: sumir faria a tela dizer
+      // que o aluno não tem um acesso que ele tem.
+      const nome = this.nomesCursos[String(id)] || `curso ${id}`;
+      return `<li class="pa-aluno-curso">
+        <span class="pa-ac-nome">${escapeHtml(nome)}</span>
+        <span class="pa-ac-meta">${escapeHtml(this._statusLegivel(status))}${data ? ' · desde ' + escapeHtml(this._data(data)) : ''}</span>
+        ${podeRemover ? `<button type="button" class="pa-ac-x" data-remover="${escapeHtml(String(id))}"
+            aria-label="Remover matrícula em ${escapeHtml(nome)}" title="Remover matrícula">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>` : ''}
+      </li>`;
+    }).join('') || '<li class="pa-vazio">Nenhum curso.</li>';
+  },
+
+  // Só os cursos que ele ainda NÃO tem: oferecer o que já está lá seria
+  // pedir uma ação sem efeito, e a resposta viria "já estava matriculado".
+  cursosQueFaltam() {
+    const tem = new Set((this.alunoAberto?.c || []).map(c => String(c[0])));
+    return this.cursos.filter(c => !tem.has(String(c.id)));
+  },
+
+  renderAdd() {
+    const box = document.getElementById('pa-add-cursos');
+    if (!box || !this.alunoAberto) return;
+
+    const faltam = this.cursosQueFaltam();
+    box.innerHTML = faltam.length
+      ? faltam.map(c => `
+        <label class="pa-curso">
+          <input type="checkbox" value="${escapeHtml(String(c.id))}" ${this.addSelecionados.has(String(c.id)) ? 'checked' : ''}>
+          <span>${escapeHtml(c.nome)}</span>
+        </label>`).join('')
+      : '<p class="pa-vazio">Ele já está em todos os cursos avulsos disponíveis.</p>';
+
+    box.querySelectorAll('input[type=checkbox]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (cb.checked) this.addSelecionados.add(cb.value);
+        else this.addSelecionados.delete(cb.value);
+        this.renderAdd();
+      });
+    });
+
+    const escolhidos = this.cursosParaAcrescentar();
+    const previa = document.getElementById('pa-add-previa');
+    const btn = document.getElementById('pa-add-btn');
+    if (previa) {
+      previa.hidden = !escolhidos.length;
+      previa.innerHTML = escolhidos.length
+        ? `<strong>Vai matricular em ${escolhidos.length}:</strong> ` +
+          escolhidos.map(c => escapeHtml(c.nome)).join(', ')
+        : '';
+    }
+    if (btn) btn.disabled = !escolhidos.length;
+  },
+
+  // Pacote e avulsos SOMAM, como no formulário. O que o aluno já tem é
+  // descartado aqui também, inclusive quando vem dentro de um pacote.
+  cursosParaAcrescentar() {
+    const tem = new Set((this.alunoAberto?.c || []).map(c => String(c[0])));
+    const fora = [], vistos = new Set();
+    const por = (id, nome) => {
+      id = String(id);
+      if (tem.has(id) || vistos.has(id)) return;
+      vistos.add(id);
+      fora.push({ id, nome });
+    };
+    const idPacote = document.getElementById('pa-add-pacote')?.value;
+    if (idPacote) {
+      const p = this.pacotes.find(x => x.id === idPacote);
+      (p?.cursos || []).forEach(c => por(c.id, c.nome));
+    }
+    [...this.addSelecionados].forEach(id => {
+      const c = this.cursos.find(x => String(x.id) === String(id));
+      por(id, c ? c.nome : `curso ${id}`);
+    });
+    return fora;
+  },
+
+  async acrescentar() {
+    if (this.enviando || !this.alunoAberto) return;
+    const escolhidos = this.cursosParaAcrescentar();
+    if (!escolhidos.length) return;
+
+    const btn = document.getElementById('pa-add-btn');
+    this.enviando = true;
+    if (btn) { btn.disabled = true; btn.textContent = 'Matriculando...'; }
+
+    try {
+      // ⚠️ Sem CPF de propósito: o aluno já existe, e o CPF só serve como
+      // senha do primeiro acesso. O backend só o exige quando vai criar.
+      const alvo = {
+        nome: this.alunoAberto.n,
+        email: this.alunoAberto.e,
+        cpf: '',
+        pacote: document.getElementById('pa-add-pacote')?.value || '',
+        cursos: escolhidos.map(c => c.id)
+      };
+      const res = await API.liberarPortalAluno(alvo);
+
+      if (res.indeterminado) {
+        fecharModal('pa-aluno');
+        toast('Não deu para confirmar o resultado. Recarregue e confira antes de tentar de novo.', 'warning', 7000);
+        await this.carregar();
+        return;
+      }
+      if (!res.ok) {
+        toast(res.error || 'Não foi possível matricular.', 'error', 6000);
+        return;
+      }
+
+      fecharModal('pa-aluno');
+      this.mostrarResultado(res.data || {}, alvo);
+      await this.carregar();
+    } finally {
+      this.enviando = false;
+      if (btn) { btn.disabled = false; btn.textContent = 'Matricular nos cursos escolhidos'; }
+    }
+  },
+
+  // ── Remover matrícula ────────────────────────────────────
+
+  confirmarRemocao(cursoId) {
+    if (!this.alunoAberto) return;
+    const nome = this.nomesCursos[String(cursoId)] || `curso ${cursoId}`;
+    this.removendo = { cursoId: String(cursoId), cursoNome: nome };
+
+    document.getElementById('pa-remover-corpo').innerHTML = `
+      <p class="pa-conf-nome">${escapeHtml(this.alunoAberto.n || this.alunoAberto.e)}</p>
+      <p class="pa-conf-sub">${escapeHtml(this.alunoAberto.e)}</p>
+      <p class="pa-rem-curso">Vai perder o acesso a <strong>${escapeHtml(nome)}</strong>.</p>
+      <p class="pa-rem-aviso">O progresso do aluno nesse curso é apagado junto, e matricular de novo não traz de volta.</p>`;
+    abrirModal('pa-remover');
+  },
+
+  async remover() {
+    if (this.enviando || !this.removendo || !this.alunoAberto) return;
+    const btn = document.getElementById('pa-remover-confirmar');
+    this.enviando = true;
+    if (btn) { btn.disabled = true; btn.textContent = 'Removendo...'; }
+
+    try {
+      const res = await API.removerMatriculaPortal({
+        email: this.alunoAberto.e,
+        nome: this.alunoAberto.n,
+        cursoId: this.removendo.cursoId
+      });
+
+      if (res.indeterminado) {
+        fecharModal('pa-remover');
+        fecharModal('pa-aluno');
+        toast('Não deu para confirmar o resultado. Recarregue e confira os cursos do aluno.', 'warning', 7000);
+        await this.carregar();
+        return;
+      }
+      if (!res.ok) {
+        toast(res.error || 'Não foi possível remover.', 'error', 6000);
+        return;
+      }
+
+      fecharModal('pa-remover');
+      toast(`Matrícula removida: ${this.removendo.cursoNome}.`, 'success');
+      const email = this.alunoAberto.e;
+      await this.carregar();
+      // Reabre a ficha já com a lista nova, senão a pessoa fica olhando um
+      // modal que ainda mostra o curso que ela acabou de remover.
+      const ainda = this.alunos.find(x => x.e === email);
+      if (ainda) { this.alunoAberto = ainda; this.renderCursosDoAluno(); this.renderAdd(); }
+      else fecharModal('pa-aluno');
+    } finally {
+      this.enviando = false;
+      this.removendo = null;
+      if (btn) { btn.disabled = false; btn.textContent = 'Remover matrícula'; }
+    }
+  },
+
+  // ── Sincronizar com a Zenler ─────────────────────────────
+
+  async sincronizar() {
+    if (this.enviando) return;
+    const btn = document.getElementById('pa-sincronizar');
+    this.enviando = true;
+    if (btn) btn.disabled = true;
+    this.setCarregando(true, 'Lendo a Zenler curso a curso...');
+    try {
+      const res = await API.sincronizarMatriculasPortal();
+      if (res.indeterminado) {
+        toast('Não deu para confirmar. Recarregue para ver como ficou.', 'warning', 6000);
+      } else if (!res.ok) {
+        toast(res.error || 'Não foi possível sincronizar.', 'error', 6000);
+        return;
+      } else {
+        const d = res.data || {};
+        toast(`${d.matriculas || 0} matrículas em ${d.cursosVarridos || 0} cursos.`, 'success');
+      }
+      await this.carregar();
+    } finally {
+      this.enviando = false;
+      if (btn) btn.disabled = false;
+      this.setCarregando(false);
+    }
+  },
+
+  _data(v) {
+    const s = String(v || '');
+    const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    return m ? `${m[3]}/${m[2]}/${m[1]}` : s;
   },
 
   // ── Histórico ────────────────────────────────────────────

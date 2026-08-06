@@ -201,6 +201,8 @@ const API = {
   // servir um retrato velho depois de liberar faria parecer que não funcionou.
   async getPortalAluno() { return this.get('portal-aluno', {}, false); },
   async liberarPortalAluno(dados) { return this.post('liberar-portal-aluno', dados); },
+  async removerMatriculaPortal(dados) { return this.post('remover-matricula-portal', dados); },
+  async sincronizarMatriculasPortal() { return this.post('sincronizar-matriculas-portal', {}); },
 
   async getAniversarios(mes) { return this.get('aniversarios', mes ? { mes } : {}, false); },
   async reenviarAniversario(id) { return this.post('aniversarios-reenviar', { id }); },

@@ -52,6 +52,20 @@ const RBAC_MODULOS = [
     editar: ['notams.sincronizar'] },
   { id: 'progresso', nome: 'Progresso de Alunos', nota: 'acompanhamento acadêmico', viewOnly: true,
     ver: ['progresso_alunos.visualizar', 'progresso_alunos.buscar_aluno', 'progresso_alunos.visualizar_detalhe'] },
+  // ⚠️ Este módulo FALTAVA aqui, e a ausência revogava acesso em silêncio: as
+  // permissões negadas são calculadas como "o que o cargo tem menos o que a
+  // matriz pede", então editar um Consultor ou Gerente Comercial mandava
+  // `portal_aluno.*` para a lista de NEGADAS e a pessoa perdia o módulo sem
+  // ninguém ter pedido. Ao criar módulo novo, entre aqui no mesmo dia.
+  //
+  // Usa o interruptor de escopo para separar liberar de remover: remover
+  // apaga o progresso do aluno naquele curso, sem volta, então o consultor
+  // libera e só o gerente tira.
+  { id: 'portal_aluno', nome: 'Portal do Aluno', nota: 'liberar acesso na Zenler', escopo: true,
+    escLabels: ['Sem remover', 'Pode remover'],
+    ver: { proprias: ['portal_aluno.visualizar'], todas: ['portal_aluno.visualizar'] },
+    editar: { proprias: ['portal_aluno.liberar'],
+              todas: ['portal_aluno.liberar', 'portal_aluno.remover'] } },
   { id: 'cadastro_alunos', nome: 'Cadastro de Alunos', nota: 'fila S141 / Trello',
     ver: ['cadastro_alunos.visualizar'],
     editar: ['cadastro_alunos.importar_xls_cavok', 'cadastro_alunos.marcar_s141', 'cadastro_alunos.sincronizar_trello', 'cadastro_alunos.inativar', 'cadastro_alunos.reativar'] },
