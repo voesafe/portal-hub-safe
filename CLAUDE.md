@@ -859,6 +859,17 @@ Tudo abaixo foi **medido contra a API de produção**, não lido na documentaç�
 - ⚠️ **Varredura dos 54 cursos não cabe numa execução.** Conferir em que cursos um aluno está exige uma consulta por curso (o filtro `email_is[]` é quebrado, já documentado), e 54 × 2 estoura o teto de 6 minutos do Apps Script. A sonda foi refeita para conferir só os cursos que interessavam.
 - Backend publicado do @54 ao @57 durante a sondagem, e o código temporário retirado depois.
 
+## Progresso de Alunos desligado, desde 2026-08-06
+
+Decisão do Victor: a página existe e funciona, mas a escola não a usa, e item de menu que ninguém abre só atrapalha quem procura o resto. A seção **Portal do Aluno** fica vazia até a página de liberação de acesso ao portal entrar nela.
+
+Nada foi apagado: nem o [progresso-alunos.html](progresso-alunos.html), nem o JS, nem as três permissões do catálogo em [AccessControl.gs](apps-script/AccessControl.gs). Religar é trocar `Auth.PROGRESSO_ALUNOS_ATIVO` para `true`. **Sem backend**, então não houve deploy do Apps Script.
+
+- ⚠️ **Trocar a entrada de `PAGINAS` NÃO tira o item do menu de quem administra.** O `podeVer` faz bypass de superadmin e de master **antes** de olhar a regra, então o item continuaria aparecendo justamente para quem pediu para desligar, com toda a cara de que a mudança não pegou. Por isso o item do menu usa `visivel: () => this.PROGRESSO_ALUNOS_ATIVO && ver(...)`, que é o gancho que o `secaoSeTiver` já oferecia para a Planilha administrativa. A troca em `PAGINAS` continua valendo e é ela que barra o acesso direto pela URL.
+- ⚠️ **`delete` na entrada de `PAGINAS` faria o OPOSTO do pretendido**, liberando a página para todo logado: `podeVer` é fail-open e `protegerPagina` só barra quando existe entrada. Mesma lição do flag dos NOTAMs.
+- Com a seção sem item nenhum, o `secaoSeTiver` devolve vazio e ela some inteira, sem cabeçalho órfão.
+- **Verificação:** 17 checagens em dois perfis (superadmin e um usuário comum que **tem** as permissões antigas), cobrindo o sumiço do menu nos dois, a seção inteira sumindo, o resto do menu intacto, a entrada não deletada, o `podeVer` falso para quem tem a permissão antiga e o acesso direto caindo em `acesso-negado.html`.
+
 ## Conferir a interface antes de publicar (tools/preview.sh)
 
 `./tools/preview.sh` sobe o Hub em `localhost:8080` e abre o navegador. `--fundo` devolve o terminal e o servidor sobrevive ao fechamento dele; `--parar` encerra. **O login e os dados são os de produção**, com o código que ainda não subiu: o web app do Apps Script responde `Access-Control-Allow-Origin: *` e o POST usa `Content-Type: text/plain` de propósito, que é tipo "simples" e não dispara preflight de CORS. Não existe ambiente de homologação, e não é preciso: o frontend é estático e o backend é o mesmo dos dois lados.

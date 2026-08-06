@@ -14,6 +14,15 @@ const Auth = {
   // bloqueado por protegerPagina. Desligar = trocar para false.
   NOTAMS_ATIVO: true,
 
+  // Feature flag do Progresso de Alunos. DESLIGADO em 2026-08-06 a pedido do
+  // Victor: a página existe e funciona, mas a escola não a usa hoje, e item de
+  // menu que ninguém abre só atrapalha quem procura o resto. Nada foi apagado,
+  // nem a página, nem as permissões do catálogo, então religar é trocar para
+  // true e bumpar o `?v=` do auth.js. Mesmo mecanismo do NOTAMS_ATIVO: com OFF,
+  // a entrada de PAGINAS é trocada por uma permissão que ninguém tem (ver o fim
+  // do arquivo).
+  PROGRESSO_ALUNOS_ATIVO: false,
+
   salvarSessao(usuario) {
     localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(this.normalizarSessao(usuario)));
   },
@@ -567,8 +576,16 @@ const Auth = {
       { pagina: 'marketing-origem-lead.html', label: 'Origem do Lead', icone: 'origem' }
     ], ['marketing-origem-lead.html']));
 
+    // ⚠️ O Progresso de Alunos usa `visivel` em vez do `ver` padrão porque
+    // trocar a entrada de PAGINAS não o tira do menu de quem administra: o
+    // `podeVer` faz bypass de superadmin e de master, então o item continuaria
+    // aparecendo justamente para quem pediu para desligá-lo, parecendo que a
+    // mudança não pegou. A troca em PAGINAS continua valendo, e é ela que barra
+    // o acesso direto pela URL. Com a seção ficando sem item nenhum, o
+    // `secaoSeTiver` devolve vazio e ela some inteira.
     secoes.push(secaoSeTiver('portal-aluno', 'Portal do Aluno', 'academico', [
-      { pagina: 'progresso-alunos.html', label: 'Progresso de Alunos', icone: 'academico' }
+      { pagina: 'progresso-alunos.html', label: 'Progresso de Alunos', icone: 'academico',
+        visivel: () => this.PROGRESSO_ALUNOS_ATIVO && ver('progresso-alunos.html') }
     ], ['progresso-alunos.html']));
 
     secoes.push(secaoSeTiver('suporte', 'Suporte', 'suporte', [
@@ -1443,4 +1460,12 @@ const Auth = {
 // @28 (rota `notams`) + chave AISWEB estiverem prontos.
 if (!Auth.NOTAMS_ATIVO) {
   Auth.PAGINAS['notams.html'] = { ver: ['notams.indisponivel'] };
+}
+
+// Mesma mecânica para o Progresso de Alunos, desligado em 2026-08-06.
+// ⚠️ Aqui também NÃO se usa `delete`: sem regra em PAGINAS o `podeVer` é
+// fail-open e o `protegerPagina` só barra quando existe entrada, ou seja,
+// apagar a linha LIBERARIA a página para todo mundo, o oposto do pretendido.
+if (!Auth.PROGRESSO_ALUNOS_ATIVO) {
+  Auth.PAGINAS['progresso-alunos.html'] = { ver: ['progresso_alunos.indisponivel'] };
 }
