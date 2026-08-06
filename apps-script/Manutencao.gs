@@ -66,6 +66,11 @@ var MANUTENCAO_FUNCOES = {
   // login: roda ao abrir aquela tela e nos criar/atualizar usuario. Sem
   // ele, permissao nova no catalogo nunca chega aos cargos.
   sincronizarGruposPadrao_: 'Reconcilia os cargos padrao com o catalogo de permissoes.',
+
+  // ── Portal do Aluno ───────────────────────────────────────
+  portalInstalar:           'Cria as abas do Portal do Aluno e semeia os 3 pacotes. Idempotente.',
+  portalSincronizarCursos:  'Traz os cursos da Zenler para a planilha, sem apagar a curadoria.',
+  portalDiagnostico:        'So le. Confere se os cursos dos pacotes existem e estao ativos.',
 };
 
 // ── Token ───────────────────────────────────────────────────

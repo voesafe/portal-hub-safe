@@ -70,6 +70,11 @@ var ACCESS_PERMISSIONS = [
   ['horas_inva.visualizar', 'Horas Voadas INVA', 'Visualizar horas INVA'],
   ['horas_inva.sincronizar_cavok', 'Horas Voadas INVA', 'Sincronizar CAVOK'],
   ['horas_inva.cadastrar_instrutor', 'Horas Voadas INVA', 'Cadastrar instrutor'],
+  // Ver e liberar são permissões SEPARADAS de propósito: criar o aluno na
+  // Zenler dispara o e-mail de boas-vindas dela, e e-mail enviado não volta.
+  // Consultar quem já tem acesso é outra coisa, e mais gente pode precisar.
+  ['portal_aluno.visualizar', 'Portal do Aluno', 'Ver acessos e liberações'],
+  ['portal_aluno.liberar', 'Portal do Aluno', 'Liberar acesso ao portal'],
   ['progresso_alunos.visualizar', 'Progresso de Alunos', 'Visualizar progresso'],
   ['progresso_alunos.buscar_aluno', 'Progresso de Alunos', 'Buscar aluno'],
   ['progresso_alunos.visualizar_detalhe', 'Progresso de Alunos', 'Visualizar detalhe'],
@@ -120,6 +125,8 @@ var ACCESS_DEFAULT_GROUPS = [
       'dashboard_vendas.visualizar_proprio',
       'vendas.visualizar_proprias',
       'vendas.criar_propria',
+      'portal_aluno.visualizar',
+      'portal_aluno.liberar',
       'vendas.editar_propria',
       'vendas.excluir_propria',
       'concorrencia.visualizar',
@@ -149,6 +156,8 @@ var ACCESS_DEFAULT_GROUPS = [
       'vendas.visualizar_todas',
       'vendas.criar_propria',
       'vendas.criar_para_qualquer_pac',
+      'portal_aluno.visualizar',
+      'portal_aluno.liberar',
       'vendas.editar_propria',
       'vendas.editar_todas',
       'vendas.excluir_propria',

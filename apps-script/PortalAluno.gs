@@ -1,0 +1,535 @@
+// ============================================================
+// PortalAluno.gs — Liberar acesso ao portal do aluno (Newzenler)
+// SAFE Hub
+//
+// O PROBLEMA
+// O cadastro inicial da Zenler aceita UM curso. Aluno de curso pratico
+// precisa estar em quatro ou mais, e cada um era liberado a mao, entrando
+// de novo no cadastro do aluno. Aqui isso vira um clique.
+//
+// O QUE FOI MEDIDO CONTRA A API REAL em 2026-08-06 (ver CLAUDE.md):
+//   - Senha so de digitos e ACEITA na criacao e no login. Dai o CPF.
+//   - A Zenler manda o e-mail de boas-vindas sozinha. Nao mandamos nada.
+//   - Matricular duas vezes e inofensivo, mas a recusa vem em HTTP 400
+//     com `response_code: 200` no corpo. Decidir pelo status HTTP.
+//   - `POST /users` estrangula por rajada (429 ja na primeira chamada);
+//     `/enroll` nao (4 seguidos em 2,8s, todos 200).
+//
+// DECISAO DE DESENHO
+// O pacote NAO e um bundle da Zenler, por decisao do Victor: ele vive em
+// planilha, aqui, para a operacao editar sem entrar no outro sistema e sem
+// depender de deploy. O custo aceito e que a matricula passa a poder dar
+// certo pela metade, e e por isso que o estado e gravado POR CURSO.
+// ============================================================
+
+var PORTAL_SHEETS = {
+  CURSOS:    'PORTAL_CURSOS',
+  PACOTES:   'PORTAL_PACOTES',
+  LIBERACOES:'PORTAL_LIBERACOES'
+};
+
+var PORTAL_CURSOS_HEADERS = ['ID', 'NOME', 'ATIVO', 'GRUPO', 'ATUALIZADO_EM'];
+var PORTAL_PACOTES_HEADERS = ['ID', 'NOME', 'CURSOS', 'ATIVO', 'ORDEM'];
+var PORTAL_LIBERACOES_HEADERS = [
+  'ID', 'DATA', 'AUTOR', 'ALUNO_NOME', 'ALUNO_EMAIL', 'ALUNO_CPF',
+  'ZENLER_USER_ID', 'PACOTE', 'CURSO_ID', 'CURSO_NOME', 'STATUS', 'DETALHE'
+];
+
+// Semente dos pacotes, definida pelo Victor em 2026-08-06. Serve so para a
+// primeira criacao da aba: depois disso a planilha manda, e reescrever daqui
+// desfaria a edicao da operacao.
+var PORTAL_PACOTES_SEMENTE = [
+  ['pp_pratico',  'PP Prático Completo',      '145022,184036,150339,224126',               'SIM', 1],
+  ['pc_ifr',      'PC IFR Prático Completo',  '145022,184036,172586,198994,175316,224126', 'SIM', 2],
+  ['inva',        'INVA Completo',            '145022,184036,152001,224126',               'SIM', 3]
+];
+
+// Cursos que nao devem aparecer na tela. COLT e Cessna porque a escola nao tem
+// mais essas aeronaves; as turmas de 2025 porque ja passaram e turma velha na
+// tela e onde alguem clica por engano. Vale so na PRIMEIRA criacao da aba: a
+// curadoria continua depois na coluna ATIVO.
+var PORTAL_CURSOS_OCULTOS_INICIAIS = [
+  190029, 192684, 198969, 179942, 179003,      // COLT e Cessna
+  192492, 192605, 197040                        // turmas de PP Teorico de 2025
+];
+
+// ── Abas ────────────────────────────────────────────────────
+
+/**
+ * ⚠️ `criar` e falso na LEITURA, de proposito. Leitura que cria aba e escrita
+ * disfarcada: duas cargas de tela simultaneas criariam a aba duas vezes. E a
+ * mesma regra do `mapaColunasInstrutores_` das Horas INVA e do catalogo de
+ * etiquetas.
+ */
+function portalAba_(nome, headers, criar) {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var aba = ss.getSheetByName(nome);
+  if (aba) return aba;
+  if (!criar) return null;
+  aba = ss.insertSheet(nome);
+  aba.appendRow(headers);
+  return aba;
+}
+
+// ── Cursos: reconciliacao com a Zenler ──────────────────────
+
+/**
+ * Traz os cursos da Zenler para a planilha, sem apagar a curadoria.
+ *
+ * Curso novo entra como ATIVO e o nome e atualizado; a coluna ATIVO nunca e
+ * sobrescrita, porque ela e a decisao da operacao, nao um dado da Zenler.
+ * Curso que sumiu da Zenler tambem nao e apagado: perder a linha perderia o
+ * historico de por que ele estava escondido.
+ */
+function portalSincronizarCursos() {
+  var aba = portalAba_(PORTAL_SHEETS.CURSOS, PORTAL_CURSOS_HEADERS, true);
+  var existentes = aba.getDataRange().getValues();
+  var primeiraVez = existentes.length <= 1;
+
+  var daZenler = newzenlerListarCursos();
+
+  var porId = {};
+  for (var i = 1; i < existentes.length; i++) {
+    if (existentes[i][0] === '' || existentes[i][0] === null) continue;
+    porId[String(existentes[i][0])] = i + 1;   // numero da linha
+  }
+
+  var novos = 0, atualizados = 0;
+  daZenler.forEach(function(c) {
+    var id = String(c.id);
+    var linha = porId[id];
+    if (linha) {
+      // So o nome. ATIVO e da operacao.
+      if (String(existentes[linha - 1][1]) !== String(c.name || '')) {
+        aba.getRange(linha, 2).setValue(c.name || '');
+        atualizados++;
+      }
+      return;
+    }
+    var oculto = primeiraVez && PORTAL_CURSOS_OCULTOS_INICIAIS.indexOf(Number(id)) !== -1;
+    aba.appendRow([id, c.name || '', oculto ? 'NAO' : 'SIM', portalGrupoCurso_(c.name), new Date()]);
+    novos++;
+  });
+
+  return { novos: novos, atualizados: atualizados, totalZenler: daZenler.length };
+}
+
+/** Agrupamento so para a tela ficar legivel. Nao decide nada. */
+function portalGrupoCurso_(nome) {
+  var n = String(nome || '').toUpperCase();
+  if (n.indexOf('APT') === 0)                 return 'APT';
+  if (n.indexOf('GROUND SCHOOL') !== -1)      return 'Ground School';
+  if (n.indexOf('INSTRUTOR') !== -1 ||
+      n.indexOf('CFI') !== -1 ||
+      n.indexOf('MENTORES') !== -1)           return 'Formação de instrutor';
+  if (n.indexOf('(PRÁTICO)') !== -1 ||
+      n.indexOf('(PRATICO)') !== -1)          return 'Prático';
+  if (n.indexOf('(TEÓRICO)') !== -1 ||
+      n.indexOf('(TEORICO)') !== -1)          return 'Teórico';
+  if (n.indexOf('INTEGRAÇÃO') !== -1 ||
+      n.indexOf('TREINAMENTO PRE') !== -1 ||
+      n.indexOf('INTERNOS') !== -1)           return 'Interno';
+  return 'Outros';
+}
+
+function portalLerCursos_() {
+  var aba = portalAba_(PORTAL_SHEETS.CURSOS, PORTAL_CURSOS_HEADERS, false);
+  if (!aba) return [];
+  var dados = aba.getDataRange().getValues();
+  var fora = [];
+  for (var i = 1; i < dados.length; i++) {
+    var id = String(dados[i][0] || '').trim();
+    if (!id) continue;
+    fora.push({
+      id: id,
+      nome: String(dados[i][1] || ''),
+      ativo: String(dados[i][2] || '').toUpperCase() !== 'NAO',
+      grupo: String(dados[i][3] || 'Outros')
+    });
+  }
+  return fora;
+}
+
+function portalLerPacotes_() {
+  var aba = portalAba_(PORTAL_SHEETS.PACOTES, PORTAL_PACOTES_HEADERS, false);
+  if (!aba) return [];
+  var dados = aba.getDataRange().getValues();
+  var fora = [];
+  for (var i = 1; i < dados.length; i++) {
+    var id = String(dados[i][0] || '').trim();
+    if (!id) continue;
+    if (String(dados[i][3] || '').toUpperCase() === 'NAO') continue;
+    var cursos = String(dados[i][2] || '')
+      .split(',')
+      .map(function(x) { return String(x).trim(); })
+      .filter(function(x) { return x; });
+    fora.push({
+      id: id,
+      nome: String(dados[i][1] || ''),
+      cursos: cursos,
+      ordem: Number(dados[i][4] || 999)
+    });
+  }
+  return fora.sort(function(a, b) { return a.ordem - b.ordem; });
+}
+
+/** Cria as abas e semeia os pacotes. Idempotente. */
+function portalInstalar() {
+  var cursos = portalSincronizarCursos();
+
+  var abaPac = portalAba_(PORTAL_SHEETS.PACOTES, PORTAL_PACOTES_HEADERS, true);
+  var semeados = 0;
+  if (abaPac.getLastRow() <= 1) {
+    PORTAL_PACOTES_SEMENTE.forEach(function(p) { abaPac.appendRow(p); semeados++; });
+  }
+
+  portalAba_(PORTAL_SHEETS.LIBERACOES, PORTAL_LIBERACOES_HEADERS, true);
+
+  return { cursos: cursos, pacotesSemeados: semeados };
+}
+
+// ── Leitura para a tela ─────────────────────────────────────
+
+function listarPortalAluno() {
+  var cursos  = portalLerCursos_();
+  var pacotes = portalLerPacotes_();
+
+  var porId = {};
+  cursos.forEach(function(c) { porId[c.id] = c; });
+
+  // O pacote leva o nome de cada curso junto, porque a tela mostra exatamente
+  // no que o aluno vai ser matriculado ANTES de confirmar. Curso que saiu da
+  // planilha aparece marcado, e nao some em silencio: sumir faria o pacote
+  // liberar menos do que promete sem ninguem notar.
+  var pacotesFora = pacotes.map(function(p) {
+    return {
+      id: p.id,
+      nome: p.nome,
+      cursos: p.cursos.map(function(id) {
+        var c = porId[id];
+        return { id: id, nome: c ? c.nome : '(curso ' + id + ' não encontrado)', existe: !!c };
+      })
+    };
+  });
+
+  return {
+    pacotes: pacotesFora,
+    cursos: cursos.filter(function(c) { return c.ativo; }),
+    liberacoes: portalUltimasLiberacoes_(50)
+  };
+}
+
+function portalUltimasLiberacoes_(limite) {
+  var aba = portalAba_(PORTAL_SHEETS.LIBERACOES, PORTAL_LIBERACOES_HEADERS, false);
+  if (!aba) return [];
+  var dados = aba.getDataRange().getValues();
+
+  // Agrupa as linhas (uma por curso) numa liberacao so, que e como a tela le.
+  var porLiberacao = {};
+  var ordem = [];
+  for (var i = 1; i < dados.length; i++) {
+    var id = String(dados[i][0] || '').trim();
+    if (!id) continue;
+    if (!porLiberacao[id]) {
+      porLiberacao[id] = {
+        id: id,
+        data: portalDataIso_(dados[i][1]),
+        autor: String(dados[i][2] || ''),
+        nome: String(dados[i][3] || ''),
+        email: String(dados[i][4] || ''),
+        pacote: String(dados[i][7] || ''),
+        cursos: []
+      };
+      ordem.push(id);
+    }
+    porLiberacao[id].cursos.push({
+      id: String(dados[i][8] || ''),
+      nome: String(dados[i][9] || ''),
+      status: String(dados[i][10] || ''),
+      detalhe: String(dados[i][11] || '')
+    });
+  }
+
+  var lista = ordem.map(function(id) {
+    var l = porLiberacao[id];
+    l.ok = l.cursos.filter(function(c) { return c.status === 'OK'; }).length;
+    l.total = l.cursos.length;
+    return l;
+  });
+
+  return lista.reverse().slice(0, limite || 50);
+}
+
+function portalDataIso_(v) {
+  if (v instanceof Date) return v.toISOString();
+  return String(v || '');
+}
+
+// ── Liberacao ───────────────────────────────────────────────
+
+/**
+ * Cria o aluno na Zenler (se nao existir) e matricula na lista de cursos.
+ *
+ * Devolve o resultado POR CURSO, que e o que permite refazer so o que faltou.
+ * ⚠️ "Ja matriculado" conta como SUCESSO: o objetivo e o aluno ter o acesso,
+ * e nao esta operacao ter sido quem deu. Tratar como falha faria a tela pedir
+ * para refazer algo que ja esta certo, para sempre.
+ */
+function liberarAcessoPortal(dados, autor) {
+  var email = String((dados && dados.email) || '').trim().toLowerCase();
+  var nome  = String((dados && dados.nome) || '').trim();
+  var cpf   = cpfSoDigitosVenda_((dados && dados.cpf) || '');
+  var cursos = (dados && dados.cursos) || [];
+
+  if (!email) throw new Error('E-mail do aluno é obrigatório.');
+  if (!nome)  throw new Error('Nome do aluno é obrigatório.');
+  if (!cursos.length) throw new Error('Escolha ao menos um curso.');
+  // A senha inicial e o CPF, entao sem CPF nao ha como criar o aluno.
+  if (cpf.length !== 11) throw new Error('CPF do aluno é obrigatório e precisa ter 11 dígitos.');
+
+  // ⚠️ Trava: sem ela, dois cliques no botao criariam DOIS alunos com o mesmo
+  // e-mail antes de qualquer um dos dois enxergar o outro, e a Zenler manda o
+  // e-mail de boas-vindas em cada criacao.
+  var trava = LockService.getScriptLock();
+  if (!trava.tryLock(25000)) {
+    throw new Error('Outra liberação está em andamento. Tente de novo em alguns segundos.');
+  }
+
+  try {
+    var usuario = portalAcharOuCriarAluno_(nome, email, cpf);
+
+    var resultados = [];
+    var mapaCursos = {};
+    portalLerCursos_().forEach(function(c) { mapaCursos[c.id] = c.nome; });
+
+    cursos.forEach(function(cursoId) {
+      var r = portalMatricular_(usuario.id, cursoId);
+      resultados.push({
+        id: String(cursoId),
+        nome: mapaCursos[String(cursoId)] || ('curso ' + cursoId),
+        status: r.ok ? 'OK' : 'ERRO',
+        detalhe: r.detalhe
+      });
+    });
+
+    portalGravarLiberacao_({
+      autor: autor || '',
+      nome: nome,
+      email: email,
+      cpf: cpf,
+      usuarioId: usuario.id,
+      pacote: String((dados && dados.pacote) || ''),
+      resultados: resultados
+    });
+
+    return {
+      alunoCriado: usuario.criado,
+      zenlerUserId: usuario.id,
+      senhaInicial: usuario.criado ? cpf : '',
+      cursos: resultados,
+      ok: resultados.filter(function(r) { return r.status === 'OK'; }).length,
+      total: resultados.length
+    };
+  } finally {
+    trava.releaseLock();
+  }
+}
+
+/**
+ * ⚠️ A busca da Zenler e PARCIAL: `search` casa pedaco de nome e de e-mail.
+ * Matricular a pessoa errada por casar aproximado e o pior defeito possivel
+ * aqui, entao a comparacao e exata, no nosso lado.
+ */
+function portalAcharOuCriarAluno_(nome, email, cpf) {
+  var achado = portalBuscarPorEmail_(email);
+  if (achado) return { id: achado.id, criado: false };
+
+  var partes = nome.split(/\s+/);
+  var primeiro = partes.shift() || nome;
+  var resto = partes.join(' ') || '.';
+
+  var res = portalFetch_('post', '/users', {
+    first_name: primeiro,
+    last_name:  resto,
+    email:      email,
+    password:   cpf,
+    commission: 0,
+    roles:      [4]   // 4 = Student
+  });
+
+  if (res.status < 200 || res.status >= 300) {
+    // O e-mail pode ter nascido entre a busca e a criacao, ou existir com
+    // outro papel. Reconsultar antes de desistir evita erro em caso legitimo.
+    var denovo = portalBuscarPorEmail_(email);
+    if (denovo) return { id: denovo.id, criado: false };
+    throw new Error('Não foi possível criar o aluno na Zenler: ' + portalMensagem_(res));
+  }
+
+  var corpo = res.corpo || {};
+  var id = (corpo.data && corpo.data.id) || corpo.id || '';
+  if (!id) throw new Error('A Zenler criou o aluno mas não devolveu o id.');
+  return { id: String(id), criado: true };
+}
+
+function portalBuscarPorEmail_(email) {
+  var r = newzenlerRequest_('/users', { search: email, role: 4, limit: 30, page: 1 });
+  var itens = (r.data && r.data.items) ? r.data.items : [];
+  var alvo = null;
+  itens.forEach(function(u) {
+    if (String(u.email || '').trim().toLowerCase() === email) alvo = u;
+  });
+  return alvo;
+}
+
+/**
+ * ⚠️ A recusa por "ja matriculado" vem em HTTP 400 com `response_code: 200`
+ * no corpo. Quem confiar no campo do corpo le recusa como sucesso, e quem
+ * tratar todo 400 como falha vai pedir para refazer o que ja esta certo.
+ */
+function portalMatricular_(userId, cursoId) {
+  var res = portalFetch_('post', '/users/' + userId + '/enroll', { course_id: Number(cursoId) });
+
+  if (res.status >= 200 && res.status < 300) {
+    return { ok: true, detalhe: 'matriculado' };
+  }
+
+  var texto = portalMensagem_(res);
+  if (/already enrolled/i.test(texto)) {
+    return { ok: true, detalhe: 'já estava matriculado' };
+  }
+  return { ok: false, detalhe: texto };
+}
+
+function portalMensagem_(res) {
+  var c = res.corpo;
+  if (c && typeof c === 'object') {
+    return String(c.data || c.message || JSON.stringify(c)).slice(0, 300);
+  }
+  return String(c || ('HTTP ' + res.status)).slice(0, 300);
+}
+
+/**
+ * ⚠️ `followRedirects: false`: um 302 seguido automaticamente converteria o
+ * POST em GET e o corpo sumiria em silencio. Medido em 2026-08-06 que a Zenler
+ * NAO redireciona, mas isto e barato e o modo de falha e invisivel.
+ *
+ * ⚠️ O recuo existe porque o `POST /users` devolveu 429 com `retry_after` ja
+ * na PRIMEIRA chamada, apesar do limite anunciado de 1000 por minuto. O
+ * `/enroll` nao estrangula, mas passa pelo mesmo caminho sem custo.
+ */
+function portalFetch_(metodo, caminho, payload) {
+  var opcoes = {
+    method: metodo,
+    contentType: 'application/json',
+    headers: {
+      'X-API-Key':      newzenlerApiKey_(),
+      'X-Account-Name': NEWZENLER_ACCOUNT,
+      'Accept':         'application/json'
+    },
+    muteHttpExceptions: true,
+    followRedirects: false
+  };
+  if (payload) opcoes.payload = JSON.stringify(payload);
+
+  var res, status, texto;
+  for (var t = 0; t < 4; t++) {
+    res    = UrlFetchApp.fetch(NEWZENLER_BASE_URL + caminho, opcoes);
+    status = res.getResponseCode();
+    texto  = res.getContentText();
+    if (status !== 429) break;
+    var espera = 6000;
+    try {
+      var j = JSON.parse(texto);
+      if (j && j.retry_after) espera = (Number(j.retry_after) + 2) * 1000;
+    } catch (e) {}
+    Utilities.sleep(espera);
+  }
+
+  var corpo;
+  try { corpo = JSON.parse(texto); } catch (e) { corpo = String(texto).slice(0, 300); }
+  return { status: status, corpo: corpo };
+}
+
+/**
+ * Uma linha POR CURSO. E o que permite refazer so o que faltou e responder
+ * "em que esse aluno foi matriculado, quando e por quem".
+ *
+ * ⚠️ CPF gravado como TEXTO, com o formato antes do valor: so digitos, o
+ * Sheets le como numero e come o zero da frente. Mesma armadilha da coluna Q
+ * da aba VENDAS.
+ */
+function portalGravarLiberacao_(reg) {
+  var aba = portalAba_(PORTAL_SHEETS.LIBERACOES, PORTAL_LIBERACOES_HEADERS, true);
+  var id = gerarId();
+  var agora = new Date();
+
+  var linhas = reg.resultados.map(function(r) {
+    return [id, agora, reg.autor, reg.nome, reg.email, reg.cpf,
+            reg.usuarioId, reg.pacote, r.id, r.nome, r.status, r.detalhe];
+  });
+  if (!linhas.length) return;
+
+  var inicio = aba.getLastRow() + 1;
+  aba.getRange(inicio, 1, linhas.length, PORTAL_LIBERACOES_HEADERS.length)
+     .setNumberFormats(linhas.map(function() {
+       return ['@', 'dd/mm/yyyy hh:mm', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'];
+     }))
+     .setValues(linhas);
+}
+
+// ── Guardas ─────────────────────────────────────────────────
+
+/**
+ * ⚠️ Esconder o item no menu nao impede ninguem de chamar a rota na mao, entao
+ * e este guarda que vale de verdade. Mesmo padrao do exigirMarketing.
+ */
+function exigirPortalAlunoVer(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (usuarioEhSuperadmin(usuario)) return usuario;
+  if (usuarioTemPermissao(usuario, 'portal_aluno.visualizar')) return usuario;
+  throw new Error('Sem permissão para ver o Portal do Aluno.');
+}
+
+/**
+ * Liberar acesso e permissao SEPARADA de ver, de proposito: criar aluno na
+ * Zenler dispara o e-mail de boas-vindas, e e-mail enviado nao volta. Ver quem
+ * ja tem acesso e consulta; liberar e uma acao com efeito fora do Hub.
+ */
+function exigirPortalAlunoLiberar(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (usuarioEhSuperadmin(usuario)) return usuario;
+  if (usuarioTemPermissao(usuario, 'portal_aluno.liberar')) return usuario;
+  throw new Error('Sem permissão para liberar acesso ao portal do aluno.');
+}
+
+/**
+ * Confere se cada curso dos pacotes existe na planilha e esta ativo.
+ *
+ * ⚠️ Existe porque `newzenlerListarCursos` filtra `status: 1` (so publicados):
+ * medido em 2026-08-06, a Zenler tem 54 cursos e so 41 publicados. Curso de
+ * pacote que nao esteja publicado nao entra na planilha, e o pacote passaria a
+ * liberar menos do que o nome dele promete. So le.
+ */
+function portalDiagnostico() {
+  var cursos = portalLerCursos_();
+  var porId = {};
+  cursos.forEach(function(c) { porId[c.id] = c; });
+
+  var fora = { totalNaPlanilha: cursos.length, pacotes: [] };
+  portalLerPacotes_().forEach(function(p) {
+    var faltando = [], inativos = [], ok = [];
+    p.cursos.forEach(function(id) {
+      var c = porId[id];
+      if (!c) faltando.push(id);
+      else if (!c.ativo) inativos.push(id + ' :: ' + c.nome);
+      else ok.push(id + ' :: ' + c.nome);
+    });
+    fora.pacotes.push({
+      pacote: p.nome, ok: ok, faltando: faltando, inativos: inativos,
+      veredito: (faltando.length || inativos.length) ? 'PROBLEMA' : 'ok'
+    });
+  });
+  return fora;
+}

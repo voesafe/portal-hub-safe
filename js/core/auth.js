@@ -174,6 +174,9 @@ const Auth = {
                                 editar: ['escala_pav.editar_escala', 'escala_pav.gerenciar_pavs', 'escala_pav.inativar_reativar_pav'] },
     'horas-voadas-inva.html': { ver: ['horas_inva.visualizar'],
                                 editar: ['horas_inva.sincronizar_cavok', 'horas_inva.cadastrar_instrutor'] },
+    // Ver e liberar sao separadas: liberar cria o aluno na Zenler e dispara o
+    // e-mail de boas-vindas dela, que nao volta atras.
+    'portal-aluno.html':      { ver: ['portal_aluno.visualizar'], editar: ['portal_aluno.liberar'] },
     'progresso-alunos.html':  { ver: ['progresso_alunos.visualizar'] },
     'cadastro-alunos.html':   { ver: ['cadastro_alunos.visualizar'],
                                 editar: ['cadastro_alunos.importar_xls_cavok', 'cadastro_alunos.marcar_s141', 'cadastro_alunos.sincronizar_trello', 'cadastro_alunos.inativar', 'cadastro_alunos.reativar'] },
@@ -203,6 +206,7 @@ const Auth = {
     'escala-cco.html': 'Escala CCO',
     'escala-pav.html': 'Escala PAV de Base',
     'horas-voadas-inva.html': 'Horas Voadas INVA Mês',
+    'portal-aluno.html': 'Portal do Aluno',
     'progresso-alunos.html': 'Progresso de Alunos',
     'cadastro-alunos.html': 'Cadastro de Aluno',
     'aniversarios.html': 'Aniversários',
@@ -584,9 +588,10 @@ const Auth = {
     // o acesso direto pela URL. Com a seção ficando sem item nenhum, o
     // `secaoSeTiver` devolve vazio e ela some inteira.
     secoes.push(secaoSeTiver('portal-aluno', 'Portal do Aluno', 'academico', [
+      { pagina: 'portal-aluno.html', label: 'Liberar Acesso', icone: 'aluno' },
       { pagina: 'progresso-alunos.html', label: 'Progresso de Alunos', icone: 'academico',
         visivel: () => this.PROGRESSO_ALUNOS_ATIVO && ver('progresso-alunos.html') }
-    ], ['progresso-alunos.html']));
+    ], ['portal-aluno.html', 'progresso-alunos.html']));
 
     secoes.push(secaoSeTiver('suporte', 'Suporte', 'suporte', [
       { pagina: 'access-control.html', label: 'Controle de Acesso', icone: 'acesso' },
@@ -668,6 +673,7 @@ const Auth = {
       'cadastro-alunos.html': 'aluno',
       'aniversarios.html': 'aniversario',
       'bases.html': 'bases',
+      'portal-aluno.html': 'aluno',
       'progresso-alunos.html': 'academico'
     };
     document.querySelectorAll('.nav-item').forEach(item => {

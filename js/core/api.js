@@ -197,6 +197,11 @@ const API = {
   async reativarCadastroAluno(id) { return this.post('cadastro-alunos-reativar', { id }); },
 
   // ── Aniversários de alunos ─────────────────────────────────
+  // Portal do Aluno. Sem cache: a tela mostra o histórico de liberações, e
+  // servir um retrato velho depois de liberar faria parecer que não funcionou.
+  async getPortalAluno() { return this.get('portal-aluno', {}, false); },
+  async liberarPortalAluno(dados) { return this.post('liberar-portal-aluno', dados); },
+
   async getAniversarios(mes) { return this.get('aniversarios', mes ? { mes } : {}, false); },
   async reenviarAniversario(id) { return this.post('aniversarios-reenviar', { id }); },
 

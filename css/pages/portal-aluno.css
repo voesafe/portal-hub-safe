@@ -1,0 +1,207 @@
+/* ============================================================
+   portal-aluno.css — Liberar acesso ao portal do aluno
+   SAFE Hub
+
+   Regra da casa: componente usa PAPEL (--surface, --text, --border),
+   nunca a paleta crua (--navy, --white). É o que faz o modo escuro
+   sair de graça, e escrever --navy num texto novo o deixaria ilegível
+   só no escuro, que é o jeito mais fácil do erro passar.
+   ============================================================ */
+
+.pa-form { display: grid; gap: 14px; }
+
+.pa-dica {
+  display: block;
+  margin-top: 5px;
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+
+/* ── Aviso do topo ─────────────────────────────────────────
+   Não tem botão de dispensar de propósito: liberar dispara o e-mail
+   de boas-vindas da Zenler, e e-mail enviado não volta. Quem libera
+   precisa ler isso toda vez, não uma vez só. */
+.pa-aviso {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  background: var(--tint-aviso);
+  color: var(--ink-aviso);
+  font-size: .86rem;
+  line-height: 1.45;
+}
+.pa-aviso svg { flex-shrink: 0; margin-top: 2px; }
+
+/* ── Lista de cursos avulsos ──────────────────────────────── */
+.pa-busca { margin-bottom: 8px; }
+
+.pa-cursos {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px;
+  background: var(--surface-2);
+}
+
+.pa-grupo + .pa-grupo { margin-top: 10px; }
+
+.pa-grupo-nome {
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  padding: 6px 8px 4px;
+}
+
+.pa-curso {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 8px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: .88rem;
+  color: var(--text);
+}
+.pa-curso:hover { background: var(--surface); }
+.pa-curso input { flex: 0 0 auto; cursor: pointer; }
+
+/* ── Prévia do que vai ser matriculado ─────────────────────
+   ⚠️ [hidden] explícito: a regra base tem display, que ganha do
+   atributo. Nona ocorrência dessa armadilha no projeto (as anteriores:
+   .cadastro-bulk-bar, .topbar-status, .hi-ordenar-menu, .notam-note,
+   .hi-pop, .aniv-template-aviso, .mkt-filtros-corpo). */
+.pa-preview {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  background: var(--surface-2);
+}
+.pa-preview[hidden] { display: none; }
+
+.pa-preview-titulo {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+
+.pa-preview-lista,
+.pa-conf-lista,
+.pa-res-lista { margin: 0; padding-left: 18px; }
+
+.pa-preview-lista li,
+.pa-conf-lista li {
+  font-size: .86rem;
+  color: var(--text);
+  padding: 2px 0;
+}
+
+/* Curso que saiu da planilha continua visível, marcado. Sumir em
+   silêncio faria o pacote liberar menos do que promete. */
+.pa-curso-sumido { color: var(--ink-erro); }
+
+.pa-acoes { display: flex; justify-content: flex-end; }
+
+#pa-avulsos-bloco[hidden] { display: none; }
+
+/* ── Modal de confirmação ─────────────────────────────────── */
+.pa-conf-nome { font-size: 1rem; font-weight: 600; color: var(--text); margin: 0 0 2px; }
+.pa-conf-sub { font-size: .84rem; color: var(--text-muted); margin: 0 0 12px; }
+
+.pa-conf-aviso {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--tint-aviso);
+  color: var(--ink-aviso);
+  font-size: .84rem;
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+
+.pa-conf-titulo {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+
+/* ── Resultado por curso ──────────────────────────────────── */
+.pa-res-novo,
+.pa-res-existia {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: .85rem;
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+.pa-res-novo { background: var(--tint-ok); color: var(--ink-ok); }
+.pa-res-existia { background: var(--tint-info); color: var(--ink-info); }
+
+.pa-res-lista { list-style: none; padding: 0; }
+
+.pa-res-lista li {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: .87rem;
+}
+.pa-res-lista li:last-child { border-bottom: 0; }
+
+/* A marca não é o único sinal: o detalhe ao lado diz em palavras o que
+   aconteceu, para quem não distingue as cores. */
+.pa-res-marca {
+  flex: 0 0 18px;
+  text-align: center;
+  font-weight: 700;
+}
+.pa-res-lista li.ok .pa-res-marca { color: var(--ink-ok); }
+.pa-res-lista li.erro .pa-res-marca { color: var(--ink-erro); }
+
+.pa-res-nome { flex: 1 1 auto; color: var(--text); }
+.pa-res-det { flex: 0 0 auto; font-size: .78rem; color: var(--text-muted); }
+
+/* ── Histórico ────────────────────────────────────────────── */
+.pa-h-nome { color: var(--text); }
+.pa-h-email,
+.pa-h-autor { font-size: .78rem; color: var(--text-muted); }
+
+.pa-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: .76rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pa-badge.is-ok { background: var(--tint-ok); color: var(--ink-ok); }
+.pa-badge.is-parcial { background: var(--tint-erro); color: var(--ink-erro); }
+
+/* ⚠️ `.btn` é `display: inline-flex`, que GANHA do atributo `hidden`: sem esta
+   regra o "Refazer o que faltou" aparece mesmo numa liberação que deu certo
+   inteira, convidando a refazer o que não falhou. Décima ocorrência dessa
+   armadilha no projeto, e a primeira em que ela morde um `.btn`. */
+#pa-resultado-refazer[hidden] { display: none; }
+
+.pa-vazio {
+  padding: 18px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .86rem;
+}
+
+/* ── Celular ──────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .pa-cursos { max-height: 260px; }
+  .pa-acoes { justify-content: stretch; }
+  .pa-acoes .btn { width: 100%; }
+  .pa-res-lista li { flex-wrap: wrap; }
+  .pa-res-det { flex-basis: 100%; padding-left: 27px; }
+}

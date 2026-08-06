@@ -55,6 +55,11 @@ function doGet(e) {
         return jsonSuccess(listarMarketingLeads());
       }
 
+      case 'portal-aluno': {
+        exigirPortalAlunoVer(token);
+        return jsonSuccess(listarPortalAluno());
+      }
+
       case 'faturamento': {
         var uFat = exigirSessao(token);
         if (!usuarioEhSuperadmin(uFat) && !perfilEhAdmin(uFat.perfil)) return jsonError('Acesso negado');
@@ -216,6 +221,15 @@ function doPost(e) {
       case 'salvar-avatar-usuario':
         exigirGestaoUsuarios(token);
         return jsonSuccess(salvarAvatarUsuarioCentralizado(dados.id, dados.avatar));
+
+      // ── Portal do Aluno ────────────────────────────────────
+      // Guarda PRÓPRIO, separado do de ver: criar o aluno na Zenler dispara o
+      // e-mail de boas-vindas dela, e e-mail enviado não volta.
+      case 'liberar-portal-aluno': {
+        var uPortal = exigirPortalAlunoLiberar(token);
+        var autorPortal = (uPortal.nome || '') + (uPortal.email ? ' (' + uPortal.email + ')' : '');
+        return jsonSuccess(liberarAcessoPortal(dados, autorPortal));
+      }
 
       // ── Vendas ─────────────────────────────────────────────
       case 'criar-venda': {
