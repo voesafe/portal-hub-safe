@@ -9,9 +9,17 @@
 # so empacota a raiz do repositorio e publica.
 name: Publicar no GitHub Pages
 
+# ⚠️ DESARMADO em 2026-08-06. O Pages voltou para `Deploy from a branch`
+# (legacy) porque NENHUM deploy por Actions chegou a `success`: todos morriam
+# no teto de 10 min, que e o maximo do GitHub e nao da para aumentar.
+#
+# Com o Pages em legacy, este workflow so criaria deploys concorrentes com o
+# build da branch, entao ele nao roda mais em push: fica so no acionamento
+# manual, para quando valer a pena tentar de novo.
+#
+# ⚠️ Antes de rearmar o `push`, TROQUE o Source em Settings -> Pages para
+# `GitHub Actions`. Os dois modos ativos ao mesmo tempo brigam pelo mesmo site.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
