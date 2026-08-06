@@ -3,6 +3,51 @@
 // SAFE Escola de Aviação | SAFE Hub
 // ============================================================
 
+// ⚠️ O CPF fica na coluna Q, no FIM da aba, e não junto do nome, onde faria
+// mais sentido para quem lê a planilha. A aba VENDAS é lida e escrita por
+// POSIÇÃO em três lugares (`linhaParaVenda` no Utils.gs, o `appendRow` do
+// `criarVenda` e os `bruto[...]` do Marketing.gs): inserir coluna no meio
+// deslocaria mês e ano e desalinharia todas as linhas já gravadas. É a mesma
+// família da armadilha do `nth-child` no CSS do cadastro de alunos.
+var VENDAS_COL_CPF = 17;
+
+/**
+ * Só dígitos. É assim que o CPF é gravado e comparado, porque a mesma pessoa
+ * aparece ora com pontuação, ora sem, e a Planilha Alunos deduplica por CPF.
+ */
+function cpfSoDigitosVenda_(valor) {
+  return String(valor === null || valor === undefined ? '' : valor).replace(/\D/g, '');
+}
+
+/**
+ * Escreve o CPF como TEXTO na linha indicada.
+ *
+ * ⚠️ `setNumberFormat('@')` vem ANTES do `setValue`. CPF só de dígitos é lido
+ * pelo Sheets como número, e aí o zero da frente some: um CPF começando com
+ * zero (que existe e não é raro) viraria dez dígitos e deixaria de casar com a
+ * base de alunos, que deduplica justamente por esse campo. Sexta ocorrência
+ * dessa armadilha no projeto, depois do `alvo` no LOG da Escala CCO, da
+ * `DATA_NASCIMENTO`, do data URI do avatar, do saldo `5.8` das Horas INVA e
+ * dos comentários por instrutor.
+ */
+function gravarCpfVenda_(sheet, linha, valor) {
+  var celula = sheet.getRange(linha, VENDAS_COL_CPF);
+  celula.setNumberFormat('@');
+  celula.setValue(cpfSoDigitosVenda_(valor));
+}
+
+/**
+ * Garante o cabeçalho da coluna nova. A aba de produção já existe, então o
+ * `inicializarPlanilha` (que só cria aba do zero) nunca vai rodar de novo: sem
+ * isto, a coluna Q ficaria com dado e sem título, e quem abrisse a planilha não
+ * saberia o que é aquilo. Idempotente e barato.
+ */
+function garantirCabecalhoCpfVendas_(sheet) {
+  var celula = sheet.getRange(1, VENDAS_COL_CPF);
+  if (String(celula.getValue() || '').trim()) return;
+  celula.setValue('CPF');
+}
+
 function listarVendas(pac, mes, ano) {
   var sheet = getSheet(SHEETS.VENDAS);
   var data = sheet.getDataRange().getValues();
@@ -100,8 +145,12 @@ function criarVenda(dados) {
     dados.leadNovo   || 'Não',
     dados.quemComprou|| '',
     mes,
-    ano
+    ano,
+    ''   // CPF: escrito logo abaixo, como texto, por gravarCpfVenda_
   ]);
+
+  garantirCabecalhoCpfVendas_(sheet);
+  gravarCpfVenda_(sheet, sheet.getLastRow(), dados.cpf);
 
   return { id: id };
 }
@@ -142,6 +191,16 @@ function atualizarVenda(id, dados, pacSolicitante, perfilSolicitante) {
     sheet.getRange(row, 14).setValue(dados.quemComprou || '');
     sheet.getRange(row, 15).setValue(dataVenda.getMonth() + 1);
     sheet.getRange(row, 16).setValue(dataVenda.getFullYear());
+
+    // ⚠️ CPF vazio PRESERVA o que já está gravado, em vez de apagar. A edição
+    // não exige CPF (venda antiga foi feita quando o campo não existia), então
+    // campo em branco quer dizer "não mexi nisso", não "apague". Sobrescrever
+    // com vazio destruiria dado que ninguém pediu para destruir, inclusive na
+    // hipótese de o formulário deixar de mandar o campo por um defeito.
+    if (cpfSoDigitosVenda_(dados.cpf)) {
+      garantirCabecalhoCpfVendas_(sheet);
+      gravarCpfVenda_(sheet, row, dados.cpf);
+    }
 
     return true;
   }

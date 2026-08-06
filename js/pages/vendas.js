@@ -44,6 +44,7 @@ const CAMPOS_OBRIGATORIOS_VENDA = [
   { id: 'f-lead-novo',    rotulo: 'Lead Novo?' },
   { id: 'f-quem-comprou', rotulo: 'Quem Comprou' },
   { id: 'f-nome',         rotulo: 'Nome Completo' },
+  { id: 'f-cpf',          rotulo: 'CPF' },
   { id: 'f-sexo',         rotulo: 'Sexo' },
   { id: 'f-nascimento',   rotulo: 'Data de Nascimento' },
   { id: 'f-email',        rotulo: 'E-mail' },
@@ -64,6 +65,45 @@ const PACOTES_LEGADOS_CURSOS = {
   'Pacote Piloto Comercial/IFR MLTE Teórico + Prático': ['Piloto Comercial/IFR MLTE', 'Piloto Comercial/IFR Prático'],
   'Pacote INVA Teórico + Prático': ['INVA Teórico', 'INVA Prático']
 };
+
+// ── CPF ──────────────────────────────────────────────────────
+// Campo obrigatorio desde 2026-08-06. Ele identifica o aluno de forma estavel
+// (nome muda de grafia, e-mail muda de dono) e e a chave por onde a Planilha
+// Alunos deduplica, o que torna a venda casavel com o cadastro do CAVOK.
+
+function cpfSoDigitos(valor) {
+  return String(valor ?? '').replace(/\D/g, '');
+}
+
+// A pontuacao e enfeite de leitura: o que trafega e o que e gravado continua
+// sendo so digitos, senao a mesma pessoa entraria ora com ponto, ora sem, e
+// deixaria de casar consigo mesma.
+function cpfMascarado(valor) {
+  const d = cpfSoDigitos(valor).slice(0, 11);
+  if (d.length > 9) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
+  if (d.length > 6) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6)}`;
+  if (d.length > 3) return `${d.slice(0, 3)}.${d.slice(3)}`;
+  return d;
+}
+
+// Digito verificador. Campo obrigatorio que aceita qualquer coisa garante
+// preenchimento e nao dado, que e a mesma razao de o e-mail exigir @ e dominio.
+function cpfValido(valor) {
+  const c = cpfSoDigitos(valor);
+  if (c.length !== 11) return false;
+  // Os onze digitos iguais PASSAM na conta do verificador e nao sao CPF de
+  // ninguem. Sem esta linha, 111.111.111-11 entraria como valido.
+  if (/^(\d)\1{10}$/.test(c)) return false;
+
+  for (let corte = 9; corte < 11; corte++) {
+    let soma = 0;
+    for (let i = 0; i < corte; i++) soma += Number(c[i]) * (corte + 1 - i);
+    let dv = (soma * 10) % 11;
+    if (dv === 10) dv = 0;
+    if (dv !== Number(c[corte])) return false;
+  }
+  return true;
+}
 
 const Vendas = {
 
@@ -345,6 +385,17 @@ const Vendas = {
       if (!el) return;
       ['input', 'change'].forEach(evt => el.addEventListener(evt, () => this._desmarcarCampo(campo)));
     });
+
+    // Mascara do CPF enquanto digita. Reposiciona o cursor no fim de propósito:
+    // como o valor inteiro é reescrito, o cursor iria para o começo sozinho, e
+    // aí digitar o segundo bloco escreveria de trás para frente.
+    const campoCpf = document.getElementById('f-cpf');
+    campoCpf?.addEventListener('input', () => {
+      const formatado = cpfMascarado(campoCpf.value);
+      if (formatado === campoCpf.value) return;
+      campoCpf.value = formatado;
+      campoCpf.setSelectionRange(formatado.length, formatado.length);
+    });
   },
 
   // Devolve a lista de pendencias, na ordem da tela. Vazia = pode salvar.
@@ -374,6 +425,12 @@ const Vendas = {
       // Checagem de forma, nao de existencia: exige texto, @, dominio e ponto.
       // Campo obrigatorio que aceita "abc" garante preenchimento e nao dado.
       return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(dados.email.trim()) ? null : 'e-mail inválido';
+    }
+    if (id === 'f-cpf') {
+      const c = cpfSoDigitos(dados.cpf);
+      if (!c) return MOTIVO_VAZIO;
+      if (c.length !== 11) return 'precisa ter 11 dígitos';
+      return cpfValido(c) ? null : 'CPF inválido';
     }
     if (id === 'f-nascimento') {
       if (!dados.nascimento) return MOTIVO_VAZIO;
@@ -859,6 +916,7 @@ const Vendas = {
       ['Data', v => formatData(v.data)],
       ['PAC', v => v.pac || ''],
       ['Cliente', v => v.nome || ''],
+      ['CPF', v => cpfMascarado(v.cpf || '')],
       ['Sexo', v => v.sexo || ''],
       ['Idade/Nascimento', v => v.nascimento || v.idade || ''],
       ['Cidade', v => v.cidade || ''],
@@ -902,6 +960,9 @@ const Vendas = {
       document.getElementById('f-data').value         = venda.data        || '';
       document.getElementById('f-pac').value          = venda.pac         || '';
       document.getElementById('f-nome').value         = venda.nome        || '';
+      // Venda anterior à coluna Q vem sem CPF, e o campo fica vazio. A edição
+      // não exige o campo justamente por causa dela: ver CAMPOS_OBRIGATORIOS_EDICAO.
+      document.getElementById('f-cpf').value          = cpfMascarado(venda.cpf || '');
       document.getElementById('f-sexo').value         = venda.sexo        || '';
       document.getElementById('f-nascimento').value   = venda.nascimento  || venda.idade || '';
       // A UF gravada pode vir em caixa baixa ou com espaco; sem normalizar, o
@@ -916,7 +977,7 @@ const Vendas = {
       document.getElementById('f-lead-novo').value    = venda.leadNovo    || 'Não';
       document.getElementById('f-quem-comprou').value = venda.quemComprou || '';
     } else {
-      ['f-nome','f-nascimento','f-email','f-valor'].forEach(id => {
+      ['f-nome','f-cpf','f-nascimento','f-email','f-valor'].forEach(id => {
         const el = document.getElementById(id); if (el) el.value = '';
       });
       document.getElementById('f-data').value         = new Date().toISOString().split('T')[0];
@@ -980,6 +1041,8 @@ const Vendas = {
       data:        document.getElementById('f-data').value,
       pac:         Auth.eAdmin() ? document.getElementById('f-pac').value : Auth.getPac(),
       nome:        document.getElementById('f-nome').value,
+      // Só dígitos: a máscara é leitura, o dado é o número.
+      cpf:         cpfSoDigitos(document.getElementById('f-cpf').value),
       sexo:        document.getElementById('f-sexo').value,
       nascimento:  document.getElementById('f-nascimento').value,
       cidade:      document.getElementById('f-cidade').value,

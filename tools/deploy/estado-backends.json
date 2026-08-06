@@ -1,6 +1,6 @@
 {
   "hub": {
-    "empurradoEm": "2026-08-03T23:25:23.308Z",
+    "empurradoEm": "2026-08-06T12:48:37.154Z",
     "arquivos": {
       "AccessControl": "fd1eb522ca0aca3cbc5963356719f68c6a2e04d2c634f233d7b400fe8c76149c",
       "Aniversarios": "9721b0115a82953c3c53e6b94e589c9fe64a2cd051cf3dc43936bce43e0406b5",
@@ -22,8 +22,8 @@
       "Newzenler": "3ece52263d4ac5cc29a925b56b48d9c03bb2f98e923c1839d1f49b9f6e52a220",
       "Notams": "f7a6c0c558ddc2de5f2ae46309612c3554f6301296fe99bf6f747b83d9ff2ff2",
       "Rotaer": "dd9b9f6ab9ff1d90ac5515a285269c19f450e7e64d5f24b8a2ab7136999559c2",
-      "Utils": "c682239aec1d8f3e19f266d3c439e444b037ff1249a08c95085f069834834d28",
-      "Vendas": "313a4d09d883e90ef053d12457cf865c09ba5270cbd7b07a573b87242ac0440d",
+      "Utils": "36308b54794569a6b260dd1da9d37fb43c26e7b8eb64d85a56b2f65050984b17",
+      "Vendas": "e58a2ec22475a90bf92c897e20789cec0531a08974aa33e4de77b92d70e19464",
       "appsscript": "eda75aa6485dc21bacb094be0427a39e4e30fb6a6a99fa63afd5b25d4178640e"
     }
   },

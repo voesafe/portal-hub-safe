@@ -162,7 +162,11 @@ function linhaParaVenda(row) {
     leadNovo:    row[12],
     quemComprou: row[13],
     mes:         row[14],
-    ano:         row[15]
+    ano:         row[15],
+    // Coluna Q, acrescentada depois. Venda anterior a ela não tem a posição
+    // preenchida, e `row[16]` vem undefined: o `|| ''` é o que evita a tela
+    // mostrar "undefined" no campo. Ver VENDAS_COL_CPF no Vendas.gs.
+    cpf:         row[16] || ''
   };
 }
 
@@ -190,7 +194,8 @@ function inicializarPlanilha() {
     vendas.appendRow([
       'ID', 'DATA', 'PAC', 'NOME_COMPLETO', 'SEXO', 'IDADE',
       'CIDADE', 'ESTADO', 'ORIGEM_LEAD', 'CURSO_COMPRADO',
-      'EMAIL', 'VALOR', 'LEAD_NOVO', 'QUEM_COMPROU', 'MES', 'ANO'
+      'EMAIL', 'VALOR', 'LEAD_NOVO', 'QUEM_COMPROU', 'MES', 'ANO',
+      'CPF'
     ]);
   }
 

@@ -690,9 +690,9 @@
     "semantic_hash": "a08e8f04157e3af561e8ff5a475e4007"
   },
   "vendas.html": {
-    "mtime": 1785787999.007913,
-    "ast_hash": "510ddbe56983a698f01e0191f91d71b8",
-    "semantic_hash": "510ddbe56983a698f01e0191f91d71b8"
+    "mtime": 1786018336.1889477,
+    "ast_hash": "e366c38a208e9cd3f87f0913fd768614",
+    "semantic_hash": "e366c38a208e9cd3f87f0913fd768614"
   },
   "assets/icons/apple-touch-icon.png": {
     "mtime": 1783368312.3252013,
@@ -895,9 +895,9 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1785798886.5926247,
-    "ast_hash": "727eb13668423c113750df2272bb8916",
-    "semantic_hash": "727eb13668423c113750df2272bb8916"
+    "mtime": 1786018919.8687928,
+    "ast_hash": "8888895bf70d01a21af678fd53ef444e",
+    "semantic_hash": "8888895bf70d01a21af678fd53ef444e"
   },
   "notams.html": {
     "mtime": 1785787999.0065548,
@@ -1000,9 +1000,9 @@
     "semantic_hash": "a092bc94a029c44c746996fede6ecc0d"
   },
   "js/pages/vendas.js": {
-    "mtime": 1785786369.1570501,
-    "ast_hash": "21983de3c45a82a6ef4bb80123305b6e",
-    "semantic_hash": "21983de3c45a82a6ef4bb80123305b6e"
+    "mtime": 1786018443.7418597,
+    "ast_hash": "a49d3c2829aae15d1ea94dcdec8fa187",
+    "semantic_hash": "a49d3c2829aae15d1ea94dcdec8fa187"
   },
   "tools/admin-cli.js": {
     "mtime": 1780839955.3947942,
@@ -1035,48 +1035,48 @@
     "semantic_hash": "8d73dd588a9a7870905dd84bff4313af"
   },
   "tools/deploy/alvos.mjs": {
-    "mtime": 1785787850.0370574,
-    "ast_hash": "07731a4b7f69e463a0b0569b55c000b5",
-    "semantic_hash": "07731a4b7f69e463a0b0569b55c000b5"
+    "mtime": 1785799475.2242615,
+    "ast_hash": "2ff4c86dd7a18f6bb1e1f7ea844329cc",
+    "semantic_hash": "2ff4c86dd7a18f6bb1e1f7ea844329cc"
   },
   "tools/deploy/backend.mjs": {
-    "mtime": 1785798939.7344406,
-    "ast_hash": "8153c38549f09934778c392323cc809b",
-    "semantic_hash": "8153c38549f09934778c392323cc809b"
+    "mtime": 1785799475.2176604,
+    "ast_hash": "c33f1354b478ccc5d613e38376c21cc2",
+    "semantic_hash": "c33f1354b478ccc5d613e38376c21cc2"
   },
   "tools/deploy/bump.mjs": {
-    "mtime": 1785787980.6088033,
-    "ast_hash": "d0f4c9f1c01566efb46afdee31eac047",
-    "semantic_hash": "d0f4c9f1c01566efb46afdee31eac047"
+    "mtime": 1785799475.2132576,
+    "ast_hash": "0c22569279ffb56e908ede874cf01f52",
+    "semantic_hash": "0c22569279ffb56e908ede874cf01f52"
   },
   "tools/deploy/deploy.mjs": {
-    "mtime": 1785798630.9647598,
-    "ast_hash": "28a7327e32680a374ee816e3e5de63cf",
-    "semantic_hash": "28a7327e32680a374ee816e3e5de63cf"
+    "mtime": 1785799479.4189909,
+    "ast_hash": "40537934ece6c8cb63e4f520a36f11f3",
+    "semantic_hash": "40537934ece6c8cb63e4f520a36f11f3"
   },
   "tools/deploy/estado-backends.json": {
-    "mtime": 1785799010.8209362,
-    "ast_hash": "93da1627b84110ac5cb19cff45a5651b",
-    "semantic_hash": "93da1627b84110ac5cb19cff45a5651b"
+    "mtime": 1785799523.3100135,
+    "ast_hash": "27eb458b9f5912d830f6c5e38edb21a8",
+    "semantic_hash": "27eb458b9f5912d830f6c5e38edb21a8"
   },
   "tools/deploy/frontend.mjs": {
-    "mtime": 1785788154.480223,
-    "ast_hash": "3733078ca62809918799fb3d4fdb5060",
-    "semantic_hash": "3733078ca62809918799fb3d4fdb5060"
+    "mtime": 1785799475.230579,
+    "ast_hash": "6ba91b96e78df81ed8ed6e9392a3df29",
+    "semantic_hash": "6ba91b96e78df81ed8ed6e9392a3df29"
   },
   "tools/deploy/manutencao.mjs": {
-    "mtime": 1785798909.3263538,
-    "ast_hash": "07d050bba1762c0bb374830cfcbe231f",
-    "semantic_hash": "07d050bba1762c0bb374830cfcbe231f"
+    "mtime": 1785799484.064285,
+    "ast_hash": "a856a1fe3b7058a3bdf11ca76deb1381",
+    "semantic_hash": "a856a1fe3b7058a3bdf11ca76deb1381"
   },
   "tools/deploy/util.mjs": {
-    "mtime": 1785787870.1264274,
-    "ast_hash": "cd3f78848f1313cd6cfe145f34b4b4e4",
-    "semantic_hash": "cd3f78848f1313cd6cfe145f34b4b4e4"
+    "mtime": 1785799475.2210836,
+    "ast_hash": "6a24ee65750e32b33332f02e88ec7a8a",
+    "semantic_hash": "6a24ee65750e32b33332f02e88ec7a8a"
   },
   "tools/deploy/verificar-gs.mjs": {
-    "mtime": 1785787936.0036278,
-    "ast_hash": "8d9559d7650ce9ad004f8edbc8b8b0a5",
-    "semantic_hash": "8d9559d7650ce9ad004f8edbc8b8b0a5"
+    "mtime": 1785799475.236904,
+    "ast_hash": "45f9f7652c73a3837199528046135510",
+    "semantic_hash": "45f9f7652c73a3837199528046135510"
   }
 }

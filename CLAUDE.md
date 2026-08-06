@@ -822,6 +822,43 @@ A página abre já filtrada no **ano corrente** e com o painel de filtros **fech
 
 **Verificação:** 30 checagens rodando o `Marketing.gs` de verdade num Apps Script simulado (os dois lados do aniversário na data da compra, os três formatos da coluna de nascimento, idade fora de faixa, valor em texto BR, fuso, e a prova de que nome/e-mail/quem comprou não viajam). Mais 38 de RBAC (round-trip da matriz nos 8 cargos, quem vê e quem não vê, a rota fora das ações universais). Mais 68 no `marketingSexo_` e no recorte anônimo. Mais 293 no navegador nas quatro combinações (desktop e 390px × claro e escuro) com o Apps Script interceptado, cobrindo o filtro cruzado nos dois sentidos, o clique no gráfico filtrando e desfazendo, os chips, a troca de ano soltando o mês, a cobertura medida, o recorte vazio, o painel de filtros recolhido, o dado sujo da produção, o backend antigo sem normalização, o backend sem a rota, o acesso negado sem permissão e o bypass de superadmin. ⚠️ **Teste de comportamento não pega defeito de pixel:** o corte do rótulo passou nas 222 e só apareceu na captura de tela. **Ao mexer aqui, olhe a tela além de rodar o teste.**
 
+## API do Newzenler: escrita medida contra a API real, 2026-08-06
+
+Sondagem feita antes de desenhar o módulo de liberação de acesso ao portal do aluno. Motivo: o comercial fecha a venda e cadastra o aluno na Zenler, onde o **cadastro inicial aceita um curso só**; aluno de curso prático precisa estar em **quatro**, e hoje cada um é liberado à mão, entrando de novo no cadastro.
+
+Tudo abaixo foi **medido contra a API de produção**, não lido na documentação. A documentação da própria Zenler já mentiu neste projeto (o `completion_percentage`, que sempre volta zero), e a do DECEA sobre o `workinghour`.
+
+### O que a API faz
+
+- `POST /users` cria aluno. Obrigatórios: `first_name`, `last_name`, `email`, `password`, `commission`, `roles` (4 = Student). Devolve **201** e um id no formato `44752.6a747f55b0ece`, não um inteiro.
+- `POST /users/{user_id}/enroll` com `course_id` matricula em um curso. `POST /courses/{course_id}/enroll` com `users[]` faz o inverso.
+- `POST /users/{user_id}/unenroll`, `DELETE /users/{user_id}` (este devolveu 200 e apagou de verdade).
+- ⚠️ **Nenhum dos dois hosts redireciona.** `safe.newzenler.com/api/v1` (o que o Hub já usa) e `api.newzenler.com/api/v1` (o da documentação) respondem os dois, sem 3xx. O medo de o POST virar GET e o corpo se perder **não se aplica aqui**, mas manter `followRedirects: false` continua certo.
+
+### As quatro coisas que mudaram o desenho
+
+1. **A senha pode ser só dígitos.** O formulário da Zenler exige letra, número e caractere especial; **a API não**. `POST /users` com `52998224725` devolveu 201, e o **login no portal com essa senha funcionou** (confirmado pelo Victor em 2026-08-06). É o que viabiliza a senha padrão ser o CPF, e foi por isso que o CPF virou campo obrigatório da venda no mesmo dia.
+2. **A Zenler manda o e-mail de boas-vindas sozinha** quando o usuário nasce pela API (confirmado na caixa de entrada). O módulo **não precisa** mandar e-mail de acesso, o que elimina uma parte inteira dele. O template é configurado na Zenler, não aqui.
+3. ⚠️ **Matricular duas vezes é inofensivo, mas o corpo mente sobre o status.** A segunda tentativa devolve **HTTP 400** com `{"response_code": 200, "message": "error", "data": "User already enrolled to the given course"}`. **O `response_code` do corpo diz 200 num HTTP 400.** Quem confiar nesse campo vai ler recusa como sucesso. Decidir pelo status HTTP.
+4. ⚠️ **O `POST /users` estrangula por rajada, o `/enroll` não.** O `POST /users` devolveu **429 com `retry_after` de 4 a 5 segundos já na primeira chamada**, apesar do limite documentado de 1000 por minuto. Já **quatro `/enroll` seguidos, sem pausa nenhuma, passaram todos com 200 em 2,8 segundos**. Ou seja: criar aluno precisa de recuo, matricular em sequência não.
+
+### Bundle: existe, cascateia, e foi descartado assim mesmo
+
+- **`type` NÃO vem no objeto do curso** em `GET /courses` (volta `None` nos 54). O campo existe com outro nome, **`course_type`**, no `GET /courses/{id}`. Para separar bundle de curso, use `type` como **filtro** de consulta: `type=1` deu 53, `type=2` deu 1, `type=0` deu 54.
+- O único bundle é **"PP Pratico Completo" (230670)**, que alguém já criou agrupando Guia do Aluno (145022), Ground School MC01 (184036), Piloto Privado Prático MC01 (150339) e Loja SAFE (224126).
+- **Matricular no bundle CASCATEIA:** uma chamada só liberou os quatro cursos de dentro, medido antes e depois. O `GET /courses/{id}` **não lista** os cursos que o bundle contém.
+- ⚠️ **Mesmo assim o bundle não é o caminho, por decisão do Victor em 2026-08-06:** o pacote deve viver no Hub, não na Zenler. Assim a operação edita o pacote sem entrar no outro sistema, dá para ter pacote por família de curso sem criar bundle nenhum lá, e o Hub sabe em que o aluno foi matriculado, coisa que o bundle não conta.
+- ⚠️ **Deixar de usar não é apagar.** O bundle 230670 está `public: 1` e pode ter sido vendido. Apagar sem conferir pode desvincular quem entrou por ele.
+- **Consequência aceita:** com 4 chamadas em vez de 1, a matrícula **pode dar certo pela metade**. Guardar o estado **por curso**, com refazer só o que faltou, deixa de ser refinamento e passa a ser obrigatório, na mesma lição do módulo de aniversários (falha que não é persistida não existe).
+
+### Como a sondagem foi feita
+
+`apps-script/NewzenlerSonda.gs`, **temporário e já removido**, registrado em `MANUTENCAO_FUNCOES` e rodado por `tools/deploy/manutencao.mjs`. Alvo `victor.pinho+zenlerteste@voesafe.com` (o Google entrega na caixa normal, mas na Zenler é conta separada), apagado no fim.
+
+- ⚠️ **Não dá para sondar a API localmente:** extrair a `NEWZENLER_API_KEY` por `manutencao.mjs props hub --revelar=` é **bloqueado pelo classificador de segurança**, e com razão. O caminho é publicar a sonda no Apps Script, onde a chave já vive.
+- ⚠️ **Varredura dos 54 cursos não cabe numa execução.** Conferir em que cursos um aluno está exige uma consulta por curso (o filtro `email_is[]` é quebrado, já documentado), e 54 × 2 estoura o teto de 6 minutos do Apps Script. A sonda foi refeita para conferir só os cursos que interessavam.
+- Backend publicado do @54 ao @57 durante a sondagem, e o código temporário retirado depois.
+
 ## Conferir a interface antes de publicar (tools/preview.sh)
 
 `./tools/preview.sh` sobe o Hub em `localhost:8080` e abre o navegador. `--fundo` devolve o terminal e o servidor sobrevive ao fechamento dele; `--parar` encerra. **O login e os dados são os de produção**, com o código que ainda não subiu: o web app do Apps Script responde `Access-Control-Allow-Origin: *` e o POST usa `Content-Type: text/plain` de propósito, que é tipo "simples" e não dispara preflight de CORS. Não existe ambiente de homologação, e não é preciso: o frontend é estático e o backend é o mesmo dos dois lados.
@@ -972,5 +1009,20 @@ A validação era uma linha (`data`, `nome`, `curso` e `valor`) que reprovava co
 - **Venda antiga sem estado mas com cidade** mantém a cidade numa lista só dela, e o campo **não** fica desabilitado: desabilitado, o valor sumiria da tela.
 - **O `<select>` nativo foi escolhido por ser o que o Victor pediu** ("igual é de estados"), e a busca por digitação do próprio navegador dá conta no desktop. Em SP são 645 opções: se um dia isso incomodar no celular, o caminho é reusar o `curso-picker` desta mesma página, que já é um seletor com busca.
 - **Os dropdowns de FILTRO do topo não mudaram:** continuam montados a partir das vendas carregadas, que é o certo (filtrar por cidade onde não há venda nenhuma não serve para nada).
+
+### CPF obrigatório, desde 2026-08-06
+
+O CPF entrou como 14º campo obrigatório do cadastro novo. Ele identifica o aluno de forma estável (nome muda de grafia, e-mail muda de dono) e é a chave por onde a Planilha Alunos deduplica, o que torna a venda casável com o cadastro do CAVOK. Foi pedido pelo Victor como base para o módulo de liberação de acesso ao portal do aluno.
+
+- ⚠️⚠️ **A coluna vai para o FIM da aba (Q, `VENDAS_COL_CPF = 17`), não ao lado do nome, onde faria mais sentido para quem lê a planilha.** A aba VENDAS é lida e escrita por **posição** em três lugares: `linhaParaVenda` no [Utils.gs](apps-script/Utils.gs), o `appendRow` de `criarVenda` e os `bruto[...]` do [Marketing.gs](apps-script/Marketing.gs). Coluna no meio deslocaria `mes` e `ano` e desalinharia **todas as linhas já gravadas**. Mesma família da armadilha do `nth-child` no CSS do cadastro de alunos.
+- ⚠️ **`setNumberFormat('@')` ANTES do `setValue`** (`gravarCpfVenda_`). CPF só de dígitos é lido pelo Sheets como número e o zero da frente some. E isso não é hipótese: `012.345.678-90` **é um CPF válido de verdade** pelo dígito verificador, conferido na conta. Ele viraria dez dígitos e deixaria de casar com a base de alunos, que deduplica justamente por esse campo. Sexta ocorrência dessa armadilha no projeto, depois do `alvo` no LOG da Escala CCO, da `DATA_NASCIMENTO`, do data URI do avatar, do saldo `5.8` das Horas INVA e dos comentários por instrutor.
+- **Gravado só com dígitos; a máscara `000.000.000-00` é leitura.** A mesma pessoa entra ora com ponto, ora sem, e deixaria de casar consigo mesma.
+- ⚠️ **`cpfValido` recusa os onze dígitos iguais numa linha à parte.** `111.111.111-11` e companhia **passam** na conta do dígito verificador e não são CPF de ninguém. Sem essa linha, entrariam como válidos.
+- **A edição não exige CPF, só o cadastro novo** (fica fora de `CAMPOS_OBRIGATORIOS_EDICAO`, mesma lógica dos demais campos): venda antiga foi feita quando a coluna não existia, e travar a correção de um valor errado até alguém caçar o CPF de 2023 seria pior.
+- ⚠️ **Na edição, CPF vazio PRESERVA o que está gravado em vez de apagar.** Campo em branco quer dizer "não mexi nisso", não "apague", inclusive na hipótese de o formulário deixar de mandar o campo por um defeito.
+- **`garantirCabecalhoCpfVendas_` escreve o título da coluna Q.** A aba de produção já existe, então o `inicializarPlanilha` (que só cria aba do zero) nunca roda de novo: sem isso a coluna ficaria com dado e sem título.
+- O CPF entrou também no **CSV de exportação**, para o arquivo não omitir um campo que o formulário exige. Aumenta o dado sensível que circula por e-mail e WhatsApp, e é uma linha só caso se queira reverter.
+- ⚠️ **A ordem de publicação importa: BACKEND PRIMEIRO.** Frontend novo com backend velho faz o comercial digitar o CPF e o `criarVenda` antigo descartá-lo em silêncio. O contrário é inofensivo (o backend novo grava vazio na coluna Q).
+- **Verificação:** 21 checagens isoladas do validador (dígito verificador, onze iguais, zero à esquerda, comprimento, máscara progressiva) e **76 no navegador nas quatro combinações** (desktop e 390px × claro e escuro) com o Apps Script interceptado, cobrindo a posição na tela, a máscara ao digitar, a trava em 11 dígitos, o salvamento barrado sem CPF **sem disparar POST**, o formulário seguindo aberto atrás do aviso, os dois motivos de recusa, o payload chegando só com dígitos e com o zero à esquerda intacto, a edição de venda legada **não** sendo barrada e a venda com CPF abrindo mascarada. ⚠️ O corpo do POST é `{ action, dados }`, **aninhado**: asserção sobre payload precisa olhar `corpo.dados.x`, e não `corpo.x`.
 
 **Verificação:** 248 checagens no navegador nas quatro combinações (desktop e 390px × claro e escuro) com o Apps Script interceptado, mais 10 numa sessão de **consultor não admin**. Cobrem as 12 pendências na ordem da tela, o POST que não acontece com campo faltando, o formulário seguindo aberto atrás do aviso, o clique na pendência focando o campo, a marca sumindo ao preencher, e-mail sem `@`, nascimento futuro e valor zero barrados um a um, o payload chegando completo, a edição de venda incompleta **não** sendo barrada, a cidade fora do IBGE preservada, `SAO PAULO` casando com `São Paulo`, a contagem de cidades de SP/DF/RJ/MG, e Escape fechando só o aviso. ⚠️ **Teste de comportamento não pega defeito de pixel:** a etiqueta repetida doze vezes passava nas 248 e só apareceu na captura de tela.

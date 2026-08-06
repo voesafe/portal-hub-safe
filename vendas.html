@@ -273,6 +273,14 @@
         <input type="text" class="form-control" id="f-nome" placeholder="Nome completo do cliente">
       </div>
 
+      <!-- inputmode numeric abre o teclado de numeros no celular; maxlength 14
+           = 11 digitos + os 3 separadores da mascara. -->
+      <div class="form-group">
+        <label class="form-label">CPF *</label>
+        <input type="text" class="form-control" id="f-cpf" placeholder="000.000.000-00"
+               inputmode="numeric" autocomplete="off" maxlength="14">
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Sexo *</label>
@@ -353,7 +361,7 @@
 <script src="js/core/api.js?v=d8e3cee5"></script>
 <script src="js/core/auth.js?v=d0b4fdd9"></script>
 <script src="js/data/municipios-br.js?v=d876cc49"></script>
-<script src="js/pages/vendas.js?v=2cf835ae"></script>
+<script src="js/pages/vendas.js?v=a25d3046"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
