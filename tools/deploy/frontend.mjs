@@ -80,10 +80,20 @@ async function esperarPages(hashEsperado, limiteSegundos = 240) {
     await new Promise((r) => setTimeout(r, tentativa < 5 ? 5000 : 15000));
   }
   process.stdout.write('\n');
-  aviso(
-    `O Pages ainda nao serviu o hash novo em ${limiteSegundos}s. ` +
-      'O push foi feito; costuma ser so demora da publicacao.'
-  );
+
+  // ⚠️ Antes isto terminava com "costuma ser so demora da publicacao", e essa
+  // frase custou uma tarde em 2026-08-06: o build estava FALHANDO, o push dizia
+  // que deu certo, e a mensagem convidava a esperar em vez de investigar. Agora
+  // o deploy vai atras do motivo e o imprime.
+  aviso(`O Pages nao serviu o hash novo em ${limiteSegundos}s. Investigando...`);
+  try {
+    const r = await rodar('node', [path.join(RAIZ, 'tools/deploy/conferir.mjs')], { cwd: RAIZ });
+    if (r.saida) process.stdout.write(r.saida.endsWith('\n') ? r.saida : r.saida + '\n');
+  } catch {
+    nota('(nao consegui rodar a conferencia; rode `node tools/deploy/conferir.mjs` na mao)');
+  }
+  nota('Se o motivo for instabilidade do GitHub, repita o push. Para acompanhar:');
+  nota('  node tools/deploy/conferir.mjs --esperar');
   return false;
 }
 

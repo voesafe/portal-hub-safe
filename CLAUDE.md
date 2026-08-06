@@ -892,9 +892,32 @@ Nada foi apagado: nem o [progresso-alunos.html](progresso-alunos.html), nem o JS
 - Com a seção sem item nenhum, o `secaoSeTiver` devolve vazio e ela some inteira, sem cabeçalho órfão.
 - **Verificação:** 17 checagens em dois perfis (superadmin e um usuário comum que **tem** as permissões antigas), cobrindo o sumiço do menu nos dois, a seção inteira sumindo, o resto do menu intacto, a entrada não deletada, o `podeVer` falso para quem tem a permissão antiga e o acesso direto caindo em `acesso-negado.html`.
 
+## Conferir se produção está atualizada (tools/deploy/conferir.mjs), desde 2026-08-06
+
+```
+node tools/deploy/conferir.mjs              confere agora e sai (0 = em dia, 1 = defasado)
+node tools/deploy/conferir.mjs --esperar     insiste até sincronizar ou o build errar
+```
+
+Compara o `?v=` de **cada asset, página a página**, entre o repositório e o site no ar, e quando há defasagem vai atrás do **motivo**.
+
+- ⚠️ **A mensagem útil do Pages NÃO está na API de builds.** Ela só devolve `Page build failed.` sem detalhe nenhum. O motivo real mora nas **anotações do check-run** do job `pages build and deployment`, que é o que o e-mail de aviso do GitHub mostra. Em 2026-08-06 a mensagem era `Failed to resolve action download info` / `Service Unavailable`, ou seja, o runner nem conseguiu baixar as ações: instabilidade do GitHub, sem correção do nosso lado, tratada repetindo. `conferir.mjs` busca essas anotações sozinho.
+- ⚠️ **O `deploy.mjs front` terminava com "costuma ser só demora da publicação"**, e essa frase custou uma tarde: o build estava **falhando**, o `git push` dizia que deu certo, e a mensagem convidava a esperar em vez de investigar. Agora, no estouro do tempo, ele chama o `conferir.mjs` e imprime o motivo.
+- **Confere todos os assets, não uma sentinela.** O `esperarPages` olha só o `js/core/auth.js` do `inicio.html`; uma página cujo JS próprio ficasse para trás passaria batido. Medido: 242 assets em 23 páginas.
+- **Página que existe no repositório e não no ar é divergência**, não erro de rede: é exatamente o caso de uma página nova que não publicou.
+- ⚠️ **O cache-buster vai na URL da REQUISIÇÃO.** Sem ele o CDN do Pages devolve a cópia velha, e a conferência acusaria defasagem já resolvida ou, pior, silenciaria uma real.
+- ⚠️ **`--esperar` PARA de esperar quando o build erra.** Build que falhou não sincroniza sozinho, e ficar esperando é o comportamento que já enganou uma vez.
+- **Verificação:** rodado com produção em dia (saída 0, 242 assets), com um asset adulterado à mão (saída 1, aponta o arquivo e os dois hashes) e com uma página que não existe no ar (saída 1, lista a página e o 404). ⚠️ Ao medir código de saída depois de um pipe, o `$?` é do **último** comando do pipe, não do node: use `PIPESTATUS` ou não use pipe.
+
 ## O frontend passou a publicar por GitHub Actions, em 2026-08-06
 
-O Pages saiu do build automático da branch (`build_type: legacy`) para o workflow [.github/workflows/pages.yml](.github/workflows/pages.yml). **Não volte para o modo antigo.**
+⚠️ **REVERTIDO no mesmo dia: o Pages voltou para o build da branch (`legacy`), e é assim que está.** O workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) continua no repositório, **desarmado** (só `workflow_dispatch`). Para rearmá-lo, troque antes o Source em Settings → Pages para `GitHub Actions`: os dois modos ativos ao mesmo tempo disputam o mesmo site.
+
+⚠️ **A causa da crise NÃO era o modo de publicação, e a migração não a criou.** A primeira falha foi às 12:49 com o modo antigo ainda ativo. A mensagem real (`Failed to resolve action download info` / `Service Unavailable`) é instabilidade do GitHub, que atingiu os dois modos: no antigo como `duration: 0`, no novo como deploy preso em `deployment_queued` até estourar os 10 min, que é o **teto máximo** e não pode ser aumentado. Voltou a publicar sozinho quando a instabilidade passou.
+
+⚠️ **Correção de um erro que ficou registrado aqui antes:** os builds de **3 de agosto concluíram todos com sucesso** (cinco deles). A afirmação de que o site vinha servindo conteúdo defasado desde então estava **errada**; o problema começou em 6 de agosto.
+
+O ganho que sobrou da migração foi o diagnóstico: foi o log do Actions, mais as anotações do check-run, que revelaram a mensagem real. Isso virou o [tools/deploy/conferir.mjs](tools/deploy/conferir.mjs), descrito na seção acima.
 
 - ⚠️ **O modo antigo falhava sem dizer por quê.** A mensagem era literalmente `Page build failed.` com `duration: 0`, sem detalhe na API nem no painel. Falhou 5 vezes seguidas, e **o site vinha servindo conteúdo defasado desde 3 de agosto sem ninguém perceber**: o último build bem-sucedido foi o commit `8b46d6c`, e o `1dfccb0`, do mesmo dia, nunca publicou. **Esse é o risco real do modo antigo: ele falha em silêncio e o `git push` continua dizendo que deu certo.**
 - **O ganho do workflow é LOG.** Foi ele que mostrou a causa: o artefato do site subia certo (10,9 MB) e o deploy ficava em `deployment_queued` até estourar o tempo. Sem log, isso era indistinguível de erro nosso.
