@@ -71,6 +71,7 @@ var MANUTENCAO_FUNCOES = {
   portalInstalar:           'Cria as abas do Portal do Aluno e semeia os 3 pacotes. Idempotente.',
   portalSincronizarCursos:  'Traz os cursos da Zenler para a planilha, sem apagar a curadoria.',
   portalDiagnostico:        'So le. Confere se os cursos dos pacotes existem e estao ativos.',
+  portalAplicarAvulsos:     'ESCREVE. Reescreve a curadoria: so a lista oficial fica ativa.',
 };
 
 // ── Token ───────────────────────────────────────────────────

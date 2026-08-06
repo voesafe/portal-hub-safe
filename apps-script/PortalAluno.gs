@@ -533,3 +533,67 @@ function portalDiagnostico() {
   });
   return fora;
 }
+
+// ── Curadoria dos avulsos ───────────────────────────────────
+
+/**
+ * Lista dos cursos que podem ser liberados AVULSOS, definida pelo Victor em
+ * 2026-08-06. Tudo que nao estiver aqui fica com ATIVO = NAO.
+ *
+ * ⚠️ Isto e a semente de uma DECISAO, nao a decisao em si: depois de aplicada,
+ * quem manda e a coluna ATIVO da aba. Rodar `portalAplicarAvulsos` de novo
+ * REESCREVE a curadoria inteira e desfaz o que tiver sido ajustado na planilha,
+ * entao so rode ao redefinir a lista de proposito.
+ */
+var PORTAL_AVULSOS_OFICIAIS = [
+  229580,  // Preparatório Azul Internos
+  224126,  // Loja SAFE
+  145022,  // Guia do Aluno
+  184036,  // Ground School MC01
+  172586,  // Ground School P-Mentor
+  150339,  // Piloto Privado (Prático) - MC01
+  198994,  // Piloto Comercial (Prático) - MC01
+  175316,  // IFR (Prático)
+  152001,  // INVA (Prático) - MC01
+  170035,  // APT - Jeppesen
+  170178   // APT - Performance Weight and Balance
+];
+
+/**
+ * Marca ATIVO = SIM so nos cursos da lista oficial e NAO em todos os outros.
+ * Devolve o que ligou, o que desligou e o que da lista nao foi encontrado.
+ */
+function portalAplicarAvulsos() {
+  var aba = portalAba_(PORTAL_SHEETS.CURSOS, PORTAL_CURSOS_HEADERS, false);
+  if (!aba) throw new Error('Aba PORTAL_CURSOS não existe. Rode portalInstalar() antes.');
+
+  var dados = aba.getDataRange().getValues();
+  var oficiais = {};
+  PORTAL_AVULSOS_OFICIAIS.forEach(function(id) { oficiais[String(id)] = true; });
+
+  var vistos = {}, ligados = [], desligados = [], valores = [];
+  for (var i = 1; i < dados.length; i++) {
+    var id = String(dados[i][0] || '').trim();
+    var atualAtivo = String(dados[i][2] || '').toUpperCase() !== 'NAO';
+    var deveFicar = !!oficiais[id];
+    if (id) vistos[id] = true;
+
+    if (id && deveFicar && !atualAtivo)      ligados.push(id + ' :: ' + dados[i][1]);
+    if (id && !deveFicar && atualAtivo)      desligados.push(id + ' :: ' + dados[i][1]);
+
+    valores.push([id && deveFicar ? 'SIM' : 'NAO']);
+  }
+
+  if (valores.length) aba.getRange(2, 3, valores.length, 1).setValues(valores);
+
+  var naoAchados = PORTAL_AVULSOS_OFICIAIS
+    .filter(function(id) { return !vistos[String(id)]; })
+    .map(String);
+
+  return {
+    ativosAgora: PORTAL_AVULSOS_OFICIAIS.length - naoAchados.length,
+    ligados: ligados,
+    desligados: desligados,
+    naoEncontrados: naoAchados
+  };
+}

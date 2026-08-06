@@ -1,6 +1,6 @@
 {
   "hub": {
-    "empurradoEm": "2026-08-06T13:24:43.258Z",
+    "empurradoEm": "2026-08-06T14:26:47.227Z",
     "arquivos": {
       "AccessControl": "38fa45fdef6ada91e87a330abfad749556ee0beaf772a92da01149604e67c498",
       "Aniversarios": "9721b0115a82953c3c53e6b94e589c9fe64a2cd051cf3dc43936bce43e0406b5",
@@ -16,12 +16,12 @@
       "FechamentoHoras": "35347be8a1dd0048b43465d5be985c0fbb6e9860938f31333f9555328903ada8",
       "HeroAsset": "3b6e842f16696ad7d3fa1f5dcae0b4f5adb83edbb1bd23f8233e32ccb669c78f",
       "LogoAsset": "ac07c315050a31c9d28355cddb4a51bda4dbacc817c7fa474f80956a992aa1ab",
-      "Manutencao": "27648b1a89cb35b6077d94c0b1dffb1f0471a598c34652dbd8f397e439c1abad",
+      "Manutencao": "bd25d5cf0e13f6f2e77cfa66c2110193bb291cc6250dab28114c43782748cb8b",
       "Marketing": "013de4ffd41f695459cd26d34e84fd6a691fefc2dd1b02ad13a2c3da23c7879a",
       "Migracao": "b11dd2d27b8b76d76d144bdee96a5b4c58d93b63892aadbf91ebe6d8d49f9479",
       "Newzenler": "3ece52263d4ac5cc29a925b56b48d9c03bb2f98e923c1839d1f49b9f6e52a220",
       "Notams": "f7a6c0c558ddc2de5f2ae46309612c3554f6301296fe99bf6f747b83d9ff2ff2",
-      "PortalAluno": "c394fa3b47cd1067df87cdba720011e0bab68ff18715a0484d2edd5b93cb1357",
+      "PortalAluno": "9eb1c78f033fe99a13e0529807ece09c8aceea47e145699cda443b361c04c843",
       "Rotaer": "dd9b9f6ab9ff1d90ac5515a285269c19f450e7e64d5f24b8a2ab7136999559c2",
       "Utils": "36308b54794569a6b260dd1da9d37fb43c26e7b8eb64d85a56b2f65050984b17",
       "Vendas": "e58a2ec22475a90bf92c897e20789cec0531a08974aa33e4de77b92d70e19464",

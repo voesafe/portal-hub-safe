@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
   <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
-  <link rel="stylesheet" href="css/pages/portal-aluno.css?v=bb9e8396">
+  <link rel="stylesheet" href="css/pages/portal-aluno.css?v=1d1b5db0">
 </head>
 <body>
 
@@ -110,17 +110,34 @@
             <span class="pa-dica">Se já existir aluno com este e-mail, ele é reaproveitado em vez de criar outro.</span>
           </div>
 
+          <!-- ⚠️ Pacote e avulsos são DOIS controles separados. Antes eram um
+               só, com "Escolher cursos avulsos" como primeira opção de um
+               campo rotulado "Pacote": misturava duas coisas diferentes no
+               mesmo lugar e o rótulo mentia sobre o que estava ali dentro.
+               Os dois SOMAM: dá para levar um pacote e ainda acrescentar
+               avulsos, e a prévia mostra a união sem repetir curso. -->
           <div class="form-group">
             <label class="form-label" for="pa-pacote">Pacote</label>
             <select class="form-control" id="pa-pacote">
-              <option value="">Escolher cursos avulsos</option>
+              <option value="">Nenhum</option>
             </select>
           </div>
 
-          <div class="form-group" id="pa-avulsos-bloco" hidden>
-            <label class="form-label">Cursos</label>
-            <input type="text" class="form-control pa-busca" id="pa-busca" placeholder="Buscar curso" autocomplete="off">
-            <div class="pa-cursos" id="pa-cursos" role="group" aria-label="Cursos disponíveis"></div>
+          <div class="form-group">
+            <label class="form-label" id="pa-avulsos-label">Cursos avulsos</label>
+            <!-- Abre um painel com caixas de seleção em vez de ser um <select>
+                 nativo: aqui se escolhe VÁRIOS, e select nativo múltiplo obriga
+                 a segurar Ctrl, que ninguém descobre sozinho. -->
+            <div class="pa-picker" id="pa-picker">
+              <button type="button" class="form-control pa-picker-botao" id="pa-picker-botao"
+                      aria-haspopup="listbox" aria-expanded="false" aria-labelledby="pa-avulsos-label pa-picker-rotulo">
+                <span id="pa-picker-rotulo">Nenhum curso avulso</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="pa-picker-painel" id="pa-picker-painel" role="listbox" aria-multiselectable="true" hidden>
+                <div class="pa-cursos" id="pa-cursos"></div>
+              </div>
+            </div>
           </div>
 
           <div class="pa-preview" id="pa-preview" hidden>
@@ -205,6 +222,6 @@
 <script src="js/core/config.js?v=cac00e61"></script>
 <script src="js/core/auth.js?v=47cb2ebd"></script>
 <script src="js/core/api.js?v=43d13a41"></script>
-<script src="js/pages/portal-aluno.js?v=2a25521c"></script>
+<script src="js/pages/portal-aluno.js?v=e7c04eec"></script>
 </body>
 </html>

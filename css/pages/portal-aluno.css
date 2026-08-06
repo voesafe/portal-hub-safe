@@ -35,26 +35,43 @@
 }
 .pa-aviso svg { flex-shrink: 0; margin-top: 2px; }
 
-/* ── Lista de cursos avulsos ──────────────────────────────── */
-.pa-busca { margin-bottom: 8px; }
+/* ── Picker dos cursos avulsos ─────────────────────────────
+   Botão que abre um painel com caixas de seleção. Não é um <select>
+   nativo porque aqui se escolhe VÁRIOS, e o múltiplo nativo obriga a
+   segurar Ctrl, que ninguém descobre sozinho. */
+.pa-picker { position: relative; }
 
-.pa-cursos {
-  max-height: 320px;
-  overflow-y: auto;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 6px;
-  background: var(--surface-2);
+.pa-picker-botao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
 }
 
-.pa-grupo + .pa-grupo { margin-top: 10px; }
+.pa-picker-painel {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 10px 28px rgba(14, 20, 40, .16);
+  padding: 6px;
+}
+/* ⚠️ Sem esta linha o `display: block` acima ganha do atributo `hidden` e o
+   painel nasce aberto, cobrindo o resto do formulário. */
+.pa-picker-painel[hidden] { display: none; }
 
-.pa-grupo-nome {
-  font-size: .72rem;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  color: var(--text-muted);
-  padding: 6px 8px 4px;
+.pa-cursos {
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .pa-curso {
@@ -107,8 +124,6 @@
 .pa-curso-sumido { color: var(--ink-erro); }
 
 .pa-acoes { display: flex; justify-content: flex-end; }
-
-#pa-avulsos-bloco[hidden] { display: none; }
 
 /* ── Modal de confirmação ─────────────────────────────────── */
 .pa-conf-nome { font-size: 1rem; font-weight: 600; color: var(--text); margin: 0 0 2px; }

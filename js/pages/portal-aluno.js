@@ -16,7 +16,7 @@ const PortalAluno = {
   cursos: [],
   liberacoes: [],
   selecionados: new Set(),
-  busca: '',
+  pickerAberto: false,
   enviando: false,
   ultimaFalha: null,   // guarda o que faltou, para o botao de refazer
 
@@ -48,10 +48,18 @@ const PortalAluno = {
 
   _bind() {
     document.getElementById('pa-atualizar')?.addEventListener('click', () => this.carregar());
-    document.getElementById('pa-pacote')?.addEventListener('change', () => this.aoTrocarPacote());
-    document.getElementById('pa-busca')?.addEventListener('input', (e) => {
-      this.busca = e.target.value.trim().toLowerCase();
-      this.renderCursos();
+    document.getElementById('pa-pacote')?.addEventListener('change', () => this.renderPreview());
+
+    // Picker dos avulsos. O clique fora usa composedPath(): o painel e refeito
+    // por innerHTML durante o proprio despacho do evento, entao um closest()
+    // subiria uma arvore sem ele e o clique de dentro passaria por clique de
+    // fora, fechando o painel a cada marcacao.
+    const botao = document.getElementById('pa-picker-botao');
+    botao?.addEventListener('click', () => this.alternarPicker());
+    document.addEventListener('click', (e) => {
+      if (!this.pickerAberto) return;
+      if (e.composedPath().some(el => el.id === 'pa-picker')) return;
+      this.fecharPicker();
     });
     document.getElementById('pa-liberar')?.addEventListener('click', () => this.confirmar());
 
@@ -125,55 +133,39 @@ const PortalAluno = {
     const sel = document.getElementById('pa-pacote');
     if (!sel) return;
     const atual = sel.value;
-    sel.innerHTML = '<option value="">Escolher cursos avulsos</option>' +
+    sel.innerHTML = '<option value="">Nenhum</option>' +
       this.pacotes.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.nome)}</option>`).join('');
     if (atual && this.pacotes.some(p => p.id === atual)) sel.value = atual;
   },
 
-  aoTrocarPacote() {
-    const id = document.getElementById('pa-pacote').value;
-    const bloco = document.getElementById('pa-avulsos-bloco');
-    this.selecionados = new Set();
+  alternarPicker() { this.pickerAberto ? this.fecharPicker() : this.abrirPicker(); },
 
-    if (id) {
-      const p = this.pacotes.find(x => x.id === id);
-      // ⚠️ Curso que sumiu da planilha entra na selecao assim mesmo e aparece
-      // marcado na previa. Descartar em silencio faria o pacote liberar menos
-      // do que o nome dele promete, sem ninguem notar.
-      (p?.cursos || []).forEach(c => this.selecionados.add(String(c.id)));
-      if (bloco) bloco.hidden = true;
-    } else {
-      if (bloco) bloco.hidden = false;
-    }
-    this.renderCursos();
-    this.renderPreview();
+  abrirPicker() {
+    this.pickerAberto = true;
+    document.getElementById('pa-picker-painel').hidden = false;
+    document.getElementById('pa-picker-botao').setAttribute('aria-expanded', 'true');
+  },
+
+  fecharPicker() {
+    this.pickerAberto = false;
+    document.getElementById('pa-picker-painel').hidden = true;
+    document.getElementById('pa-picker-botao').setAttribute('aria-expanded', 'false');
   },
 
   renderCursos() {
     const box = document.getElementById('pa-cursos');
     if (!box) return;
 
-    const lista = this.cursos.filter(c =>
-      !this.busca || c.nome.toLowerCase().includes(this.busca));
-
-    if (!lista.length) {
-      box.innerHTML = '<p class="pa-vazio">Nenhum curso encontrado.</p>';
+    if (!this.cursos.length) {
+      box.innerHTML = '<p class="pa-vazio">Nenhum curso avulso disponível.</p>';
       return;
     }
 
-    // Agrupa so para a leitura. O grupo vem da planilha e nao decide nada.
-    const grupos = {};
-    lista.forEach(c => { (grupos[c.grupo] = grupos[c.grupo] || []).push(c); });
-
-    box.innerHTML = Object.keys(grupos).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(g => `
-      <div class="pa-grupo">
-        <div class="pa-grupo-nome">${escapeHtml(g)}</div>
-        ${grupos[g].map(c => `
-          <label class="pa-curso">
-            <input type="checkbox" value="${escapeHtml(c.id)}" ${this.selecionados.has(String(c.id)) ? 'checked' : ''}>
-            <span>${escapeHtml(c.nome)}</span>
-          </label>`).join('')}
-      </div>`).join('');
+    box.innerHTML = this.cursos.map(c => `
+      <label class="pa-curso">
+        <input type="checkbox" value="${escapeHtml(c.id)}" ${this.selecionados.has(String(c.id)) ? 'checked' : ''}>
+        <span>${escapeHtml(c.nome)}</span>
+      </label>`).join('');
 
     box.querySelectorAll('input[type=checkbox]').forEach(cb => {
       cb.addEventListener('change', () => {
@@ -186,15 +178,24 @@ const PortalAluno = {
 
   // Nomes do que vai ser matriculado, na ordem do pacote quando houver.
   cursosEscolhidos() {
+    const fora = [];
+    const jaTem = new Set();
+    const por = (id, nome, existe) => {
+      if (jaTem.has(String(id))) return;   // pacote e avulso podem repetir curso
+      jaTem.add(String(id));
+      fora.push({ id: String(id), nome, existe });
+    };
+
     const idPacote = document.getElementById('pa-pacote')?.value;
     if (idPacote) {
       const p = this.pacotes.find(x => x.id === idPacote);
-      return (p?.cursos || []).map(c => ({ id: String(c.id), nome: c.nome, existe: c.existe !== false }));
+      (p?.cursos || []).forEach(c => por(c.id, c.nome, c.existe !== false));
     }
-    return [...this.selecionados].map(id => {
+    [...this.selecionados].forEach(id => {
       const c = this.cursos.find(x => String(x.id) === String(id));
-      return { id: String(id), nome: c ? c.nome : `curso ${id}`, existe: !!c };
+      por(id, c ? c.nome : `curso ${id}`, !!c);
     });
+    return fora;
   },
 
   renderPreview() {
@@ -203,6 +204,7 @@ const PortalAluno = {
     const n = document.getElementById('pa-preview-n');
     const escolhidos = this.cursosEscolhidos();
 
+    this.atualizarRotuloPicker();
     if (!escolhidos.length) { if (box) box.hidden = true; return; }
     if (box) box.hidden = false;
     if (n) n.textContent = String(escolhidos.length);
@@ -211,6 +213,17 @@ const PortalAluno = {
         `<li class="${c.existe ? '' : 'pa-curso-sumido'}">${escapeHtml(c.nome)}${c.existe ? '' : ' (não encontrado na lista)'}</li>`
       ).join('');
     }
+  },
+
+  // O botao precisa dizer o que esta escolhido: painel fechado sem resumo
+  // esconde a selecao e a pessoa nao sabe se marcou algo.
+  atualizarRotuloPicker() {
+    const el = document.getElementById('pa-picker-rotulo');
+    if (!el) return;
+    const n = this.selecionados.size;
+    el.textContent = n === 0 ? 'Nenhum curso avulso'
+                   : n === 1 ? '1 curso avulso'
+                   : `${n} cursos avulsos`;
   },
 
   // ── Liberação ────────────────────────────────────────────
