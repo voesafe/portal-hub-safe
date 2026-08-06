@@ -892,6 +892,17 @@ Nada foi apagado: nem o [progresso-alunos.html](progresso-alunos.html), nem o JS
 - Com a seção sem item nenhum, o `secaoSeTiver` devolve vazio e ela some inteira, sem cabeçalho órfão.
 - **Verificação:** 17 checagens em dois perfis (superadmin e um usuário comum que **tem** as permissões antigas), cobrindo o sumiço do menu nos dois, a seção inteira sumindo, o resto do menu intacto, a entrada não deletada, o `podeVer` falso para quem tem a permissão antiga e o acesso direto caindo em `acesso-negado.html`.
 
+## O frontend passou a publicar por GitHub Actions, em 2026-08-06
+
+O Pages saiu do build automático da branch (`build_type: legacy`) para o workflow [.github/workflows/pages.yml](.github/workflows/pages.yml). **Não volte para o modo antigo.**
+
+- ⚠️ **O modo antigo falhava sem dizer por quê.** A mensagem era literalmente `Page build failed.` com `duration: 0`, sem detalhe na API nem no painel. Falhou 5 vezes seguidas, e **o site vinha servindo conteúdo defasado desde 3 de agosto sem ninguém perceber**: o último build bem-sucedido foi o commit `8b46d6c`, e o `1dfccb0`, do mesmo dia, nunca publicou. **Esse é o risco real do modo antigo: ele falha em silêncio e o `git push` continua dizendo que deu certo.**
+- **O ganho do workflow é LOG.** Foi ele que mostrou a causa: o artefato do site subia certo (10,9 MB) e o deploy ficava em `deployment_queued` até estourar o tempo. Sem log, isso era indistinguível de erro nosso.
+- ⚠️ **`cancel-in-progress: true`, ao contrário do workflow padrão do GitHub.** Um run ficou preso no passo de publicar (tinha começado **antes** de a fonte virar `workflow`, então tentava publicar num modo que ainda não existia). Com `false`, todo push seguinte ficava **na fila atrás do run morto**, e sem direito de admin não havia como cancelar. Como a publicação aqui é sempre a árvore inteira, o run mais recente substituir o anterior é o certo de qualquer forma.
+- **O que foi descartado na investigação**, para não refazer: artefato dentro do limite, branch `main` liberada na política do ambiente, certificado HTTPS aprovado, domínio verificado, repositório com 29 MB, sem symlink, sem nome de arquivo inválido, `.nojekyll` versionado, sem sintaxe Liquid em markdown, e nenhum incidente aberto no GitHub.
+- ⚠️ **Trocar a fonte em Settings → Pages exige admin, e o token do `gh` aqui não tem** (`POST /pages/builds` e `PUT /pages` devolvem 404; cancelar run devolve 403). Foi passo humano do Victor.
+- O `tools/deploy/deploy.mjs front` continua igual: ele empurra e espera o Pages servir o hash novo. Quem publica agora é o workflow.
+
 ## Conferir a interface antes de publicar (tools/preview.sh)
 
 `./tools/preview.sh` sobe o Hub em `localhost:8080` e abre o navegador. `--fundo` devolve o terminal e o servidor sobrevive ao fechamento dele; `--parar` encerra. **O login e os dados são os de produção**, com o código que ainda não subiu: o web app do Apps Script responde `Access-Control-Allow-Origin: *` e o POST usa `Content-Type: text/plain` de propósito, que é tipo "simples" e não dispara preflight de CORS. Não existe ambiente de homologação, e não é preciso: o frontend é estático e o backend é o mesmo dos dois lados.
