@@ -52,25 +52,30 @@
   color: var(--text);
 }
 
+/* ⚠️ O painel OCUPA ESPAÇO no formulário, não flutua por cima.
+   Flutuando (`position: absolute`) ele era cortado: `.card { overflow: hidden }`
+   vive no layout.css e vale para as 22 páginas, então o painel de 314px sumia
+   na borda do card e só apareciam os dois primeiros cursos. Mexer naquela regra
+   para resolver isto aqui arriscaria as outras 21 telas.
+   Ocupando espaço, o card cresce junto e não existe o que cortar. O custo é o
+   conteúdo abaixo descer enquanto está aberto, que é previsível e reversível. */
 .pa-picker-painel {
   display: block;
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
+  margin-top: 6px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--surface);
-  box-shadow: 0 10px 28px rgba(14, 20, 40, .16);
+  background: var(--surface-2);
   padding: 6px;
 }
 /* ⚠️ Sem esta linha o `display: block` acima ganha do atributo `hidden` e o
    painel nasce aberto, cobrindo o resto do formulário. */
 .pa-picker-painel[hidden] { display: none; }
 
+/* Alto o bastante para os cursos de hoje caberem sem rolagem interna: rolar
+   dentro de um painel que já está dentro da página é duas rolagens para a mesma
+   lista. O teto continua existindo como rede, para o dia em que a lista crescer. */
 .pa-cursos {
-  max-height: 300px;
+  max-height: 460px;
   overflow-y: auto;
 }
 
