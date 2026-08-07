@@ -34,6 +34,18 @@ const PortalAluno = {
   // o aluno nao existe quando ele so ficou de fora do corte.
   LIMITE_LISTA: 80,
 
+  // ── Autocompletar a partir das vendas ────────────────────
+  vendas: [],            // vendas dos ultimos N dias, ja no navegador
+  vendasDias: 90,
+  sugestoes: [],
+  sugestaoAberta: false,
+  sugestaoAtiva: -1,     // item destacado pelas setas do teclado
+  campoSugestao: null,   // 'pa-nome' ou 'pa-email'
+  vendaEscolhida: null,  // marca que o formulario veio de uma venda
+  buscandoVenda: false,
+  MIN_LETRAS: 3,
+  LIMITE_SUGESTOES: 8,
+
   async init() {
     Auth.proteger();
     Auth.protegerPagina('portal-aluno.html', 'Portal do Aluno');
@@ -103,7 +115,57 @@ const PortalAluno = {
       if (abertos.length) abertos[abertos.length - 1].classList.remove('open');
     });
 
+    this._bindAutocompletar();
     this._bindAlunos();
+  },
+
+  _bindAutocompletar() {
+    ['pa-nome', 'pa-email'].forEach(id => {
+      const campo = document.getElementById(id);
+      if (!campo) return;
+      campo.setAttribute('role', 'combobox');
+      campo.setAttribute('aria-autocomplete', 'list');
+      campo.setAttribute('aria-expanded', 'false');
+      campo.setAttribute('aria-controls', 'pa-sugestoes');
+      campo.setAttribute('autocomplete', 'off');
+      campo.addEventListener('input', () => this.aoDigitarCampo(id));
+      campo.addEventListener('keydown', (e) => this.aoTeclarCampo(e));
+      // Reabre ao voltar ao campo, se o texto ainda casa: quem clicou fora
+      // sem querer não deveria ter que apagar uma letra para ver de novo.
+      campo.addEventListener('focus', () => {
+        if (this.vendaEscolhida) return;
+        this.aoDigitarCampo(id);
+      });
+    });
+
+    // ⚠️ Delegação com composedPath(), não closest(): o painel é refeito por
+    // innerHTML durante o próprio despacho, então no clique de um item o alvo
+    // já saiu do documento e o closest subiria uma árvore sem o painel. Mesma
+    // armadilha do picker de cursos, logo acima.
+    document.getElementById('pa-sugestoes')?.addEventListener('mousedown', (e) => {
+      // mousedown, e não click: o blur do campo chega antes do click e
+      // fecharia o painel debaixo do dedo.
+      const item = e.target.closest('[data-venda]');
+      if (item) { e.preventDefault(); this.escolherVenda(item.dataset.venda); return; }
+      if (e.target.closest('#pa-sug-buscar')) { e.preventDefault(); this.buscarEmTodasAsVendas(); }
+    });
+
+    document.addEventListener('mousedown', (e) => {
+      if (!this.sugestaoAberta) return;
+      const caminho = e.composedPath();
+      if (caminho.some(el => el.id === 'pa-sugestoes' || el.id === this.campoSugestao)) return;
+      this.fecharSugestoes();
+    });
+
+    document.getElementById('pa-vinculo')?.addEventListener('click', (e) => {
+      if (e.target.closest('#pa-vinculo-limpar')) { this.limparVinculoVenda(); return; }
+      if (e.target.closest('#pa-vinculo-ficha')) {
+        const email = this.vendaEscolhida?.email;
+        if (!email) return;
+        this.trocarAba('alunos');
+        this.abrirAluno(email);
+      }
+    });
   },
 
   _bindAlunos() {
@@ -175,6 +237,10 @@ const PortalAluno = {
       this.alunos = d.alunos || [];
       this.nomesCursos = d.nomesCursos || {};
       this.sincronia = d.sincronia || null;
+      // Backend antigo não manda `vendas`: o autocompletar simplesmente não
+      // sugere nada e o formulário continua sendo preenchido à mão, como era.
+      this.vendas = d.vendas || [];
+      this.vendasDias = d.vendasDias || 90;
       this.renderPacotes();
       this.renderCursos();
       this.renderPreview();
@@ -716,6 +782,249 @@ const PortalAluno = {
       this.enviando = false;
       this.removendo = null;
       if (btn) { btn.disabled = false; btn.textContent = 'Remover matrícula'; }
+    }
+  },
+
+  // ── Autocompletar a partir das vendas ────────────────────
+
+  // Acento escrito por escape (\u0300-\u036f), e não colado literalmente: o
+  // intervalo de marcas de combinação é invisível no editor, e um caractere
+  // perdido numa cópia deixaria a classe casando outra coisa em silêncio.
+  _normalizar(t) {
+    return String(t ?? '').toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\s+/g, ' ').trim();
+  },
+
+  /** O aluno dessa venda já tem acesso? Casa por e-mail, como o resto do módulo. */
+  jaTemAcesso(email) {
+    const alvo = String(email || '').trim().toLowerCase();
+    return this.alunos.find(a => String(a.e || '').toLowerCase() === alvo) || null;
+  },
+
+  /**
+   * ⚠️ Busca por PEDAÇO, não por prefixo: quem digita "souza" está procurando
+   * pelo sobrenome, e casar só o começo do nome não acharia "Maria Souza".
+   * O CPF só entra quando o termo tem dígito, senão letras soltas casariam
+   * com qualquer CPF por coincidência de posição.
+   */
+  filtrarVendas(termo) {
+    const t = this._normalizar(termo);
+    if (t.length < this.MIN_LETRAS) return [];
+    const digitos = t.replace(/\D/g, '');
+    return this.vendas.filter(v => {
+      if (this._normalizar(v.nome).includes(t)) return true;
+      if (String(v.email || '').includes(t)) return true;
+      return digitos.length >= this.MIN_LETRAS && String(v.cpf || '').includes(digitos);
+    }).slice(0, this.LIMITE_SUGESTOES);
+  },
+
+  aoDigitarCampo(campoId) {
+    const campo = document.getElementById(campoId);
+    if (!campo) return;
+    // Digitar à mão desfaz o vínculo com a venda: o que está no formulário
+    // deixou de ser o que veio dela, e manter a marca mentiria.
+    if (this.vendaEscolhida) this.limparVinculoVenda();
+    this.campoSugestao = campoId;
+    this.sugestoes = this.filtrarVendas(campo.value);
+    this.sugestaoAtiva = -1;
+    this.renderSugestoes(campo.value);
+  },
+
+  renderSugestoes(termo = '') {
+    const cx = document.getElementById('pa-sugestoes');
+    if (!cx) return;
+
+    const t = String(termo || '').trim();
+    if (t.length < this.MIN_LETRAS) { this.fecharSugestoes(); return; }
+
+    // ⚠️ Sem resultado NÃO é beco sem saída: a janela de 90 dias é o motivo
+    // mais provável, e sem esta saída a pessoa concluiria que a venda não
+    // existe. É o buraco silencioso que a busca completa fecha.
+    if (!this.sugestoes.length) {
+      cx.innerHTML = `
+        <div class="pa-sug-vazio">
+          <span>Nenhuma venda dos últimos ${this.vendasDias} dias casa com <strong>${escapeHtml(t)}</strong>.</span>
+          <button type="button" class="btn btn-ghost pa-sug-buscar" id="pa-sug-buscar"
+                  ${this.buscandoVenda ? 'disabled' : ''}>
+            ${this.buscandoVenda ? 'Buscando...' : 'Buscar em todas as vendas'}
+          </button>
+        </div>`;
+      this.abrirSugestoes();
+      return;
+    }
+
+    cx.innerHTML = this.sugestoes.map((v, i) => {
+      const tem = this.jaTemAcesso(v.email);
+      const pacote = this.pacotes.find(p => p.id === v.pacoteSugerido);
+      return `
+        <button type="button" class="pa-sug${i === this.sugestaoAtiva ? ' is-ativa' : ''}"
+                data-venda="${escapeHtml(v.id)}" role="option">
+          <span class="pa-sug-nome">${escapeHtml(v.nome)}</span>
+          <span class="pa-sug-email">${escapeHtml(v.email)}</span>
+          <span class="pa-sug-meta">
+            ${escapeHtml(this._data(v.data))} · ${escapeHtml(v.curso || 'sem curso')}
+            ${pacote ? ` · <span class="pa-sug-pac">${escapeHtml(pacote.nome)}</span>` : ''}
+          </span>
+          ${tem ? `<span class="pa-sug-tem">já tem acesso (${tem.c.length} ${tem.c.length === 1 ? 'curso' : 'cursos'})</span>` : ''}
+        </button>`;
+    }).join('');
+    this.abrirSugestoes();
+  },
+
+  abrirSugestoes() {
+    const cx = document.getElementById('pa-sugestoes');
+    if (!cx) return;
+    cx.hidden = false;
+    this.sugestaoAberta = true;
+    const campo = this.campoSugestao && document.getElementById(this.campoSugestao);
+    campo?.setAttribute('aria-expanded', 'true');
+    // Ancorado ao campo que está sendo digitado, não a um lugar fixo: são
+    // dois campos possíveis e o painel precisa nascer embaixo do certo.
+    if (campo) {
+      const grupo = campo.closest('.form-group');
+      if (grupo && cx.parentElement !== grupo) grupo.appendChild(cx);
+    }
+  },
+
+  fecharSugestoes() {
+    const cx = document.getElementById('pa-sugestoes');
+    if (cx) cx.hidden = true;
+    this.sugestaoAberta = false;
+    this.sugestaoAtiva = -1;
+    ['pa-nome', 'pa-email'].forEach(id =>
+      document.getElementById(id)?.setAttribute('aria-expanded', 'false'));
+  },
+
+  /**
+   * Setas navegam, Enter escolhe, Escape fecha.
+   *
+   * ⚠️ O Enter só é interceptado com um item DESTACADO. Sem isso, quem digita
+   * o nome inteiro e aperta Enter para seguir adiante escolheria a primeira
+   * sugestão sem querer, e o formulário trocaria de aluno debaixo dele.
+   */
+  aoTeclarCampo(evento) {
+    if (!this.sugestaoAberta || !this.sugestoes.length) return;
+    const max = this.sugestoes.length - 1;
+
+    if (evento.key === 'ArrowDown' || evento.key === 'ArrowUp') {
+      evento.preventDefault();
+      const passo = evento.key === 'ArrowDown' ? 1 : -1;
+      this.sugestaoAtiva = Math.max(-1, Math.min(max, this.sugestaoAtiva + passo));
+      this.renderSugestoes(document.getElementById(this.campoSugestao)?.value || '');
+      return;
+    }
+    if (evento.key === 'Enter' && this.sugestaoAtiva >= 0) {
+      evento.preventDefault();
+      this.escolherVenda(this.sugestoes[this.sugestaoAtiva].id);
+      return;
+    }
+    if (evento.key === 'Escape') { evento.preventDefault(); this.fecharSugestoes(); }
+  },
+
+  /** Preenche o formulário com a venda escolhida. */
+  escolherVenda(vendaId) {
+    const v = this.sugestoes.find(x => String(x.id) === String(vendaId));
+    if (!v) return;
+
+    const por = (id, valor) => { const el = document.getElementById(id); if (el) el.value = valor; };
+    por('pa-nome', v.nome);
+    por('pa-email', v.email);
+    por('pa-cpf', v.cpf ? this._mascaraCpf(v.cpf) : '');
+
+    // O pacote é PRÉ-MARCADO, não imposto: fica visível no seletor e a pessoa
+    // troca se quiser. Curso sem correspondência não escolhe nada.
+    const sel = document.getElementById('pa-pacote');
+    if (sel) sel.value = (v.pacoteSugerido && this.pacotes.some(p => p.id === v.pacoteSugerido))
+      ? v.pacoteSugerido : '';
+
+    this.vendaEscolhida = v;
+    this.fecharSugestoes();
+    this.renderPreview();
+    this.renderVinculoVenda();
+  },
+
+  limparVinculoVenda() {
+    this.vendaEscolhida = null;
+    this.renderVinculoVenda();
+  },
+
+  /**
+   * A tarja que diz de onde os dados vieram, e o que a venda não resolve.
+   *
+   * ⚠️ Ela não é enfeite: sem ela, campos preenchidos sozinhos parecem
+   * digitados, e ninguém confere um dado que acredita ter escrito. É aqui que
+   * aparecem os dois casos que exigem decisão humana, o curso sem pacote e o
+   * aluno que já tem acesso.
+   */
+  renderVinculoVenda() {
+    const cx = document.getElementById('pa-vinculo');
+    if (!cx) return;
+    const v = this.vendaEscolhida;
+    if (!v) { cx.hidden = true; cx.innerHTML = ''; return; }
+
+    const tem = this.jaTemAcesso(v.email);
+    const pacote = this.pacotes.find(p => p.id === v.pacoteSugerido);
+    const avisos = [];
+
+    if (tem) {
+      avisos.push(`<div class="pa-vinculo-aviso is-atencao">
+        Esse e-mail <strong>já tem acesso</strong>, com ${tem.c.length} ${tem.c.length === 1 ? 'curso' : 'cursos'}.
+        Liberar de novo só acrescenta o que faltar.
+        <button type="button" class="pa-vinculo-link" id="pa-vinculo-ficha">ver a ficha dele</button>
+      </div>`);
+    }
+    if (!pacote) {
+      avisos.push(`<div class="pa-vinculo-aviso">
+        O curso vendido (<strong>${escapeHtml(v.curso || 'não informado')}</strong>) não tem pacote
+        correspondente no Portal. Escolha o pacote ou os cursos avulsos à mão.
+      </div>`);
+    }
+    if (!v.cpf) {
+      avisos.push(`<div class="pa-vinculo-aviso">
+        Essa venda não tem CPF gravado, e ele é a senha do primeiro acesso.
+        Preencha à mão se o aluno ainda não existir na Zenler.
+      </div>`);
+    }
+
+    cx.innerHTML = `
+      <div class="pa-vinculo-topo">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <span>Preenchido pela venda de <strong>${escapeHtml(this._data(v.data))}</strong>${
+          pacote ? `, com o pacote <strong>${escapeHtml(pacote.nome)}</strong> sugerido` : ''}.</span>
+        <button type="button" class="pa-vinculo-link" id="pa-vinculo-limpar">limpar</button>
+      </div>
+      ${avisos.join('')}`;
+    cx.hidden = false;
+  },
+
+  /** Busca completa, para quem comprou fora da janela que veio com a página. */
+  async buscarEmTodasAsVendas() {
+    if (this.buscandoVenda) return;
+    const campo = this.campoSugestao && document.getElementById(this.campoSugestao);
+    const termo = String(campo?.value || '').trim();
+    if (termo.length < this.MIN_LETRAS) return;
+
+    this.buscandoVenda = true;
+    this.renderSugestoes(termo);
+    try {
+      const res = await API.buscarVendaPortal(termo);
+      if (!res.ok) {
+        toast(res.error || 'Não foi possível buscar.', 'error', 5000);
+        return;
+      }
+      const d = res.data || {};
+      this.sugestoes = (d.vendas || []).slice(0, this.LIMITE_SUGESTOES);
+      this.sugestaoAtiva = -1;
+      if (!this.sugestoes.length) {
+        toast('Nenhuma venda encontrada com esse termo.', 'warning', 5000);
+      } else if (d.cortado) {
+        toast(`${d.total} vendas casaram. Mostrando as ${this.LIMITE_SUGESTOES} primeiras: refine a busca.`,
+              'warning', 6000);
+      }
+    } finally {
+      this.buscandoVenda = false;
+      this.renderSugestoes(termo);
     }
   },
 

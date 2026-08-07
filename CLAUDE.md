@@ -951,6 +951,34 @@ Terceira entrega do módulo. Remover matrícula tira **um curso**; excluir apaga
 - **Falha não limpa o cache** e a linha de erro também vai para o histórico. **Sem otimista**: fingir sucesso mostraria o aluno sumindo da lista numa exclusão que não aconteceu.
 - ⚠️ **`.pa-perigo[hidden]{display:none}` é obrigatório**, décima primeira ocorrência dessa armadilha no projeto: a regra base é `display: flex` e ganha do atributo, então sem ela a zona de perigo apareceria para quem não tem a permissão.
 
+### Autocompletar o cadastro a partir das vendas, desde 2026-08-07
+
+O formulário de liberar acesso passou a sugerir alunos vindos da aba `VENDAS`. Digitar 3 letras no **Nome** ou no **E-mail** oferece quem já comprou; escolhendo, preenche nome, CPF e e-mail e **pré-marca o pacote** pelo curso vendido.
+
+- ⚠️⚠️ **A chave de casamento é o E-MAIL, não o CPF, e isso contraria a intuição.** O pedido original foi "digita o CPF e puxa o resto". Só que o CPF **virou obrigatório na venda em 2026-08-06**, então toda venda anterior tem a coluna vazia: buscar por CPF acharia quase ninguém hoje, e falharia justamente com o aluno que comprou mês passado. O e-mail existe em toda venda antiga, é o identificador do aluno na Zenler e é por ele que o Portal já sabe quem tem acesso. **O CPF é dado a levar (vira a senha do primeiro acesso), não chave de busca.**
+- ⚠️ **A correspondência curso → pacote vive na PLANILHA** (coluna `CURSOS_VENDA` na aba `PORTAL_PACOTES`), não no código: a escola cria e renomeia curso sem avisar, e assim a operação acerta sem deploy. A semente traz **só o evidente** (Piloto Privado Prático, Piloto Comercial/IFR Prático, INVA Prático). Os teóricos ficam de fora de propósito, porque os três pacotes são práticos.
+- ⚠️⚠️ **O casamento é por igualdade do nome normalizado, NUNCA por pedaço de texto.** "Piloto Privado Teórico" **contém** "Piloto Privado", e uma busca por substring o mandaria para o pacote **prático**, matriculando no curso errado quem comprou só o teórico. Há teste para os dois sentidos. Venda com vários cursos (gravados unidos por `" + "`) casa por qualquer um deles.
+- ⚠️ **Curso sem pacote correspondente NÃO escolhe nada, e a tela diz isso por escrito.** Vários itens vendidos nem são curso do Portal (Alojamento, Horas de Voo, Voo de Incentivo, PLA AZUL). Sugerir por aproximação seria pior que não sugerir.
+- ⚠️ **A tarja "preenchido pela venda" não é enfeite:** sem ela, campo preenchido sozinho parece digitado, e **ninguém confere um dado que acredita ter escrito**. É nela que aparecem os três casos que exigem decisão humana: curso sem pacote, venda sem CPF e aluno que já tem acesso. Digitar à mão desfaz o vínculo, senão a marca mentiria sobre a origem do que está no campo.
+- **Escopo igual ao da tela de Vendas** (`perfilEhAdmin ? null : usuario.pac`), de propósito: criar uma segunda política de privacidade no Hub para a mesma pergunta é como as duas envelhecem diferente.
+- ⚠️ **Recorte magro: valor da venda, quem comprou e origem do lead NÃO saem do servidor.** Só nome, e-mail, CPF, curso e data, que é o que a tela usa. Mesma regra do módulo de Marketing, e há teste conferindo que os campos extras não viajam.
+- **Venda sem e-mail e nome inválido são descartados**, este último pelo mesmo filtro dos Aniversários: a base real já teve "INATIVO" com o e-mail de uma pessoa de verdade, e sugerir isso criaria uma conta na Zenler chamada "Inativo". Mesma pessoa com duas vendas aparece uma vez, com a mais recente.
+- ⚠️ **A janela de 90 dias seria um buraco SILENCIOSO numa busca por nome.** Na fila que foi descartada ela era um recorte de trabalho; aqui, quem comprou há oito meses simplesmente não apareceria, e a leitura natural é "essa pessoa não tem venda". Por isso o "buscar em todas as vendas" (rota `portal-aluno-venda`), que consulta o servidor sob demanda e cobre a base inteira, com teto de 40 e aviso quando corta.
+- ⚠️ **O Enter só é interceptado com um item DESTACADO pelas setas.** Sem isso, quem digita o nome inteiro e aperta Enter para seguir escolheria a primeira sugestão sem querer, e o formulário trocaria de aluno debaixo dele.
+- ⚠️ **O clique fora usa `composedPath()` e o item usa `mousedown`, não `click`.** O painel é refeito por `innerHTML` durante o próprio despacho (mesma armadilha do picker de cursos), e o `blur` do campo chega antes do `click`, fechando o painel debaixo do dedo.
+- ⚠️ **`.pa-sugestoes[hidden]{display:none}` é obrigatório**, décima segunda ocorrência dessa armadilha no projeto.
+- ⚠️ **Defeito de cor que só a captura pegou: o aviso âmbar saía VERDE-OLIVA.** Os tints do tema são `rgba` de propósito, para assentarem sobre a superfície de baixo; aqui a superfície de baixo é a tarja **verde**, então o âmbar translúcido misturava com ela e o aviso perdia justamente a cor que o faz ser um aviso. Resolvido com uma camada opaca embaixo (`linear-gradient(tint, tint), var(--surface)`), que funciona nos dois modos por serem tokens. **Ao pôr bloco de estado dentro de outro bloco colorido, componha sobre superfície opaca.**
+
+#### ⚠️ Passo obrigatório em produção: `portalAplicarCursosVenda`
+
+`portalAba_` **só escreve o cabeçalho quando CRIA a aba**, e a aba de pacotes já existe em produção com 5 colunas. Publicar o código sozinho não faz a coluna nascer: `dados[i][5]` vem `undefined`, a lista de cursos de venda fica vazia e **o pacote nunca é sugerido**. O autocompletar preencheria nome, CPF e e-mail e pareceria funcionando pela metade, **sem nenhum erro na tela**, que é o modo de falha mais difícil de perceber.
+
+```
+node tools/deploy/manutencao.mjs rodar hub portalAplicarCursosVenda
+```
+
+É idempotente e **nunca sobrescreve linha que já tenha valor**, porque a correspondência é da operação. O retorno lista o que foi preenchido, o que já tinha valor e os pacotes sem correspondência, que nunca serão sugeridos.
+
 #### ⚠️ Bug pré-existente corrigido junto: permissão fora da matriz era apagada em silêncio
 
 `RBAC_MODULOS` ([admin.js](js/pages/admin.js)) não cobre todo o catálogo, e não deve mesmo: **4 permissões ficam fora** (`aniversarios.visualizar`, `aniversarios.reenviar`, `usuarios.forcar_relogin_global`, `usuarios.alterar_superadmin`), agora 5 com `portal_aluno.excluir`. O salvamento reescrevia as avulsas a partir da matriz, então **conceder uma dessas no Controle de Acesso e depois editar a pessoa na tela de Usuários (para trocar um telefone, por exemplo) revogava a concessão**, sem aviso.

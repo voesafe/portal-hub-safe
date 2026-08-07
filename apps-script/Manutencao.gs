@@ -71,6 +71,7 @@ var MANUTENCAO_FUNCOES = {
   portalInstalar:           'Cria as abas do Portal do Aluno e semeia os 3 pacotes. Idempotente.',
   portalSincronizarCursos:  'Traz os cursos da Zenler para a planilha, sem apagar a curadoria.',
   portalDiagnostico:        'So le. Confere se os cursos dos pacotes existem e estao ativos.',
+  portalAplicarCursosVenda: 'Cria a coluna CURSOS_VENDA e semeia a correspondencia curso da venda -> pacote. Idempotente, nao sobrescreve o que ja tem valor.',
   portalAplicarAvulsos:     'ESCREVE. Reescreve a curadoria: so a lista oficial fica ativa.',
   sincronizarMatriculasPortal:   'ESCREVE o cache. Varre a Zenler e regrava quem esta em que curso.',
   portalInstalarTriggerMatriculas: 'Instala o gatilho diario (04h) da sincronia de matriculas.',

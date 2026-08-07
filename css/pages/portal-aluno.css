@@ -396,6 +396,118 @@
   font-size: .82rem;
 }
 
+/* ── Autocompletar a partir das vendas ────────────────────────
+   O painel flutua sobre o formulário: em fluxo, ele empurraria os campos de
+   baixo a cada tecla, e o formulário inteiro pularia enquanto se digita. */
+.pa-sugestoes {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .16);
+}
+/* ⚠️ Décima segunda ocorrência desta armadilha no projeto: a regra base tem
+   `display`/`position` e ganha do atributo `hidden`. Sem isto o painel fica
+   sempre visível, vazio, cobrindo o campo de baixo. */
+.pa-sugestoes[hidden] { display: none; }
+
+/* O ancestral posicionado do painel. Sem isto ele se ancora no card e cai
+   longe do campo que está sendo digitado. */
+.pa-form .form-group { position: relative; }
+
+.pa-sug {
+  display: grid;
+  width: 100%;
+  gap: 1px;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.pa-sug:last-child { border-bottom: 0; }
+.pa-sug:hover,
+.pa-sug.is-ativa { background: var(--surface-2); }
+.pa-sug-nome  { font-size: .88rem; font-weight: 600; color: var(--text); }
+.pa-sug-email { font-size: .78rem; color: var(--text-2); }
+.pa-sug-meta  { font-size: .74rem; color: var(--text-muted); }
+.pa-sug-pac   { color: var(--ink-info); font-weight: 600; }
+.pa-sug-tem {
+  justify-self: start;
+  margin-top: 3px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--tint-aviso);
+  color: var(--ink-aviso);
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.pa-sug-vazio {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 12px;
+  font-size: .8rem;
+  color: var(--text-2);
+}
+
+/* ── Tarja "preenchido pela venda" ───────────────────────────── */
+.pa-vinculo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 11px 13px;
+  border-radius: 9px;
+  background: var(--tint-ok);
+  color: var(--ink-ok);
+  font-size: .82rem;
+}
+.pa-vinculo[hidden] { display: none; }
+.pa-vinculo-topo { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pa-vinculo-topo svg { flex-shrink: 0; }
+.pa-vinculo-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+/* Os avisos vivem DENTRO da tarja verde, então precisam de fundo próprio para
+   não lerem como parte do "deu tudo certo". */
+.pa-vinculo-aviso {
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: .78rem;
+  line-height: 1.45;
+}
+/* ⚠️ Os tints do tema são rgba de propósito, para assentarem sobre a
+   superfície de baixo. Aqui a superfície de baixo é a tarja VERDE, então o
+   âmbar translúcido misturava com ela e saía verde-oliva: o aviso de atenção
+   perdia justamente a cor que o faz ser um aviso. Medido na captura, não no
+   código. A camada opaca embaixo é o que devolve o âmbar de verdade, e
+   continua funcionando nos dois modos porque as duas pontas são tokens. */
+.pa-vinculo-aviso.is-atencao {
+  color: var(--ink-aviso);
+  background: linear-gradient(var(--tint-aviso), var(--tint-aviso)), var(--surface);
+}
+
 /* ── Zona de perigo: excluir o aluno ──────────────────────────
    Separada por régua e no fim da ficha de propósito: é a ação mais grave da
    tela e não pode disputar espaço com o que se faz todo dia. */

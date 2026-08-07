@@ -32,7 +32,11 @@ var PORTAL_SHEETS = {
 var PORTAL_CURSOS_HEADERS = ['ID', 'NOME', 'ATIVO', 'GRUPO', 'ATUALIZADO_EM'];
 var PORTAL_MATRICULAS_HEADERS = ['EMAIL', 'NOME', 'CURSO_ID', 'STATUS', 'MATRICULADO_EM'];
 var PORTAL_MATRICULAS_PROP = 'PORTAL_MATRICULAS_SINC';
-var PORTAL_PACOTES_HEADERS = ['ID', 'NOME', 'CURSOS', 'ATIVO', 'ORDEM'];
+// CURSOS_VENDA e a correspondencia com o campo Curso da aba VENDAS, usada para
+// sugerir o pacote quando o cadastro vem de uma venda. Fica na PLANILHA, e nao
+// no codigo, porque a escola cria e renomeia curso sem avisar ninguem: assim a
+// operacao acerta a correspondencia sem deploy. Vazio = nunca sugerido.
+var PORTAL_PACOTES_HEADERS = ['ID', 'NOME', 'CURSOS', 'ATIVO', 'ORDEM', 'CURSOS_VENDA'];
 var PORTAL_LIBERACOES_HEADERS = [
   'ID', 'DATA', 'AUTOR', 'ALUNO_NOME', 'ALUNO_EMAIL', 'ALUNO_CPF',
   'ZENLER_USER_ID', 'PACOTE', 'CURSO_ID', 'CURSO_NOME', 'STATUS', 'DETALHE'
@@ -41,11 +45,30 @@ var PORTAL_LIBERACOES_HEADERS = [
 // Semente dos pacotes, definida pelo Victor em 2026-08-06. Serve so para a
 // primeira criacao da aba: depois disso a planilha manda, e reescrever daqui
 // desfaria a edicao da operacao.
+//
+// ⚠️ A ultima coluna (CURSOS_VENDA) traz SO a correspondencia evidente, aquela
+// em que o nome do curso vendido e o do pacote dizem a mesma coisa. Curso de
+// venda que nao esta em nenhuma linha simplesmente nao sugere pacote, e a tela
+// diz isso: sugerir por aproximacao matricularia o aluno no curso errado, que
+// e pior que nao sugerir nada. Os teoricos ficam de fora de proposito, porque
+// os tres pacotes daqui sao praticos.
 var PORTAL_PACOTES_SEMENTE = [
-  ['pp_pratico',  'PP Prático Completo',      '145022,184036,150339,224126',               'SIM', 1],
-  ['pc_ifr',      'PC IFR Prático Completo',  '145022,184036,172586,198994,175316,224126', 'SIM', 2],
-  ['inva',        'INVA Completo',            '145022,184036,152001,224126',               'SIM', 3]
+  ['pp_pratico',  'PP Prático Completo',      '145022,184036,150339,224126',               'SIM', 1,
+   'Piloto Privado Prático'],
+  ['pc_ifr',      'PC IFR Prático Completo',  '145022,184036,172586,198994,175316,224126', 'SIM', 2,
+   'Piloto Comercial/IFR Prático'],
+  ['inva',        'INVA Completo',            '145022,184036,152001,224126',               'SIM', 3,
+   'INVA Prático']
 ];
+
+// Janela do autocompletar instantaneo. As vendas desse periodo viajam junto com
+// a pagina; fora dela, a busca sob demanda cobre a base inteira.
+var PORTAL_VENDAS_DIAS = 90;
+
+// A venda grava varios cursos numa string so, unidos por " + " (ver
+// atualizarCursoHidden no vendas.js). Sem separar, "Piloto Privado Teórico +
+// Piloto Privado Prático" nao casaria com nada.
+var PORTAL_VENDA_SEP_CURSOS = /\s*\+\s*/;
 
 // Cursos que nao devem aparecer na tela. COLT e Cessna porque a escola nao tem
 // mais essas aeronaves; as turmas de 2025 porque ja passaram e turma velha na
@@ -170,7 +193,13 @@ function portalLerPacotes_() {
       id: id,
       nome: String(dados[i][1] || ''),
       cursos: cursos,
-      ordem: Number(dados[i][4] || 999)
+      ordem: Number(dados[i][4] || 999),
+      // Coluna acrescentada depois: pacote gravado antes dela vem sem a
+      // posicao, e `dados[i][5]` chega undefined.
+      cursosVenda: String(dados[i][5] || '')
+        .split(',')
+        .map(function(x) { return String(x).trim(); })
+        .filter(function(x) { return x; })
     });
   }
   return fora.sort(function(a, b) { return a.ordem - b.ordem; });
@@ -461,7 +490,12 @@ function portalRemoverTriggerMatriculas() {
 
 // ── Leitura para a tela ─────────────────────────────────────
 
-function listarPortalAluno() {
+/**
+ * @param {string|null} pacVendas consultor cujas vendas alimentam o
+ *   autocompletar. `null` vê todas (admin). Segue a MESMA regra da tela de
+ *   Vendas, para não existir uma segunda política de privacidade no Hub.
+ */
+function listarPortalAluno(pacVendas) {
   var cursos  = portalLerCursos_();
   var pacotes = portalLerPacotes_();
 
@@ -498,7 +532,164 @@ function listarPortalAluno() {
     // chamada, entao buscar os cursos do aluno ao clicar nele custaria uma
     // espera visivel a cada clique. Mesma decisao do modulo de Marketing.
     alunos: portalLerMatriculas_(),
-    sincronia: portalUltimaSincronia_()
+    sincronia: portalUltimaSincronia_(),
+    // Vendas recentes para o autocompletar, na mesma resposta: uma rota so
+    // para elas custaria outra espera de ~10s antes de a tela poder sugerir
+    // qualquer coisa. Fora da janela, a rota de busca cobre o resto.
+    // ⚠️ Dentro de try/catch porque isto e conveniencia de digitacao: um erro
+    // ao ler a aba VENDAS nao pode derrubar a pagina que existe para liberar
+    // acesso. Mesma decisao da tarja de horario nos NOTAMs.
+    vendas: (function() {
+      try {
+        var lista = portalVendasCasaveis_(pacVendas || null, PORTAL_VENDAS_DIAS);
+        return lista.map(function(v) {
+          v.pacoteSugerido = portalSugerirPacote_(v.curso, pacotes);
+          return v;
+        });
+      } catch (e) {
+        return [];
+      }
+    })(),
+    vendasDias: PORTAL_VENDAS_DIAS
+  };
+}
+
+// ── Vendas como fonte do cadastro ───────────────────────────
+
+/**
+ * Recorte MAGRO de uma venda, para o autocompletar.
+ *
+ * ⚠️ So sai daqui o que a tela de liberar acesso precisa digitar: nome, CPF,
+ * e-mail e o curso (que sugere o pacote). **O VALOR DA VENDA NAO SAI**, nem
+ * quem comprou, nem origem do lead: nada disso ajuda a criar o aluno, e a
+ * regra da casa e nao trafegar dado que a tela nao usa. Mesma decisao do
+ * recorte do modulo de Marketing.
+ */
+function portalVendaRecorte_(v) {
+  return {
+    id:    String(v.id || ''),
+    nome:  String(v.nome || '').trim(),
+    email: String(v.email || '').trim().toLowerCase(),
+    cpf:   String(v.cpf || '').replace(/\D/g, ''),
+    curso: String(v.curso || '').trim(),
+    data:  String(v.data || '')
+  };
+}
+
+/**
+ * Vendas casaveis, ja deduplicadas por e-mail.
+ *
+ * ⚠️ Venda SEM e-mail e descartada: o e-mail e a chave que casa a venda com o
+ * aluno na Zenler (o CPF nao existe do lado de la, e so virou obrigatorio na
+ * venda em 2026-08-06, entao quase nenhuma venda antiga o tem).
+ *
+ * ⚠️ Nome invalido e descartado pelo mesmo filtro dos Aniversarios: o campo
+ * NOME e usado como marcador de status por gente do cadastro, e a base real
+ * ja teve "INATIVO" com o e-mail de uma pessoa de verdade. Sugerir isso aqui
+ * criaria uma conta na Zenler chamada "Inativo".
+ *
+ * @param {string|null} pac  filtro de consultor; null vê todas
+ * @param {number|null} dias janela em dias; null não limita
+ */
+function portalVendasCasaveis_(pac, dias) {
+  var aba = getSheet(SHEETS.VENDAS);
+  var dados = aba.getDataRange().getValues();
+
+  var limite = null;
+  if (dias) {
+    var d = new Date();
+    d.setDate(d.getDate() - Number(dias));
+    limite = Utilities.formatDate(d, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  }
+
+  var porEmail = {};
+  for (var i = 1; i < dados.length; i++) {
+    var row = dados[i];
+    if (!row[0]) continue;
+    if (pac && String(row[2]).toLowerCase() !== String(pac).toLowerCase()) continue;
+
+    var v = portalVendaRecorte_(linhaParaVenda(row));
+    if (!v.email || v.email.indexOf('@') === -1) continue;
+    if (limite && v.data && v.data < limite) continue;
+    if (limite && !v.data) continue;
+
+    try { if (aniversariosNomeSuspeito_(v.nome)) continue; } catch (e) {}
+
+    // Mesma pessoa com duas vendas aparece UMA vez, com a mais recente: duas
+    // linhas iguais na sugestao so fazem a pessoa parar para escolher entre
+    // coisas que levam ao mesmo cadastro.
+    var ja = porEmail[v.email];
+    if (!ja || String(v.data) > String(ja.data)) porEmail[v.email] = v;
+  }
+
+  var fora = [];
+  Object.keys(porEmail).forEach(function(k) { fora.push(porEmail[k]); });
+  return fora.sort(function(a, b) { return String(b.data).localeCompare(String(a.data)); });
+}
+
+/**
+ * Qual pacote o curso vendido sugere. Devolve o id, ou '' quando nao ha
+ * correspondencia, que e um resultado legitimo e a tela mostra por escrito.
+ *
+ * ⚠️ Casa por igualdade do nome normalizado, NUNCA por pedaco de texto:
+ * "Piloto Privado Teórico" contem "Piloto Privado" e viraria o pacote pratico,
+ * matriculando no curso errado quem comprou so o teorico.
+ */
+function portalSugerirPacote_(cursoVenda, pacotes) {
+  var partes = String(cursoVenda || '').split(PORTAL_VENDA_SEP_CURSOS)
+    .map(function(x) { return portalNormalizarCurso_(x); })
+    .filter(function(x) { return x; });
+  if (!partes.length) return '';
+
+  for (var i = 0; i < pacotes.length; i++) {
+    var alvos = (pacotes[i].cursosVenda || []).map(portalNormalizarCurso_);
+    for (var k = 0; k < partes.length; k++) {
+      if (alvos.indexOf(partes[k]) !== -1) return pacotes[i].id;
+    }
+  }
+  return '';
+}
+
+/**
+ * Caixa, acento e pontuacao nao podem decidir correspondencia.
+ *
+ * ⚠️ Reusa o normalizador do Cadastro de Alunos de proposito: ele ja reduz
+ * "Piloto Comercial/IFR Prático" e "PILOTO COMERCIAL IFR PRATICO" ao mesmo
+ * texto, e escrever outro aqui criaria duas regras que envelheceriam
+ * separadas para a mesma pergunta.
+ */
+function portalNormalizarCurso_(t) {
+  return normalizarTextoCadastroAluno_(t);
+}
+
+/**
+ * Busca completa sob demanda, para o aluno que comprou fora da janela.
+ *
+ * ⚠️ Existe porque a janela de 90 dias, numa busca por nome, seria um buraco
+ * SILENCIOSO: quem comprou ha oito meses simplesmente nao apareceria, e a
+ * leitura natural seria "essa pessoa nao tem venda".
+ */
+function buscarVendaPortal(dados, pac) {
+  var termo = String((dados && dados.termo) || '').trim().toLowerCase();
+  if (termo.length < 3) throw new Error('Digite ao menos 3 letras para buscar.');
+
+  var pacotes = portalLerPacotes_();
+  var achados = portalVendasCasaveis_(pac, null).filter(function(v) {
+    return v.nome.toLowerCase().indexOf(termo) !== -1 ||
+           v.email.indexOf(termo) !== -1 ||
+           (v.cpf && v.cpf.indexOf(termo.replace(/\D/g, '')) !== -1 && /\d/.test(termo));
+  });
+
+  // Teto para a resposta nao virar a base inteira quando alguem buscar "a".
+  var LIMITE = 40;
+  var total = achados.length;
+  return {
+    vendas: achados.slice(0, LIMITE).map(function(v) {
+      v.pacoteSugerido = portalSugerirPacote_(v.curso, pacotes);
+      return v;
+    }),
+    total: total,
+    cortado: total > LIMITE
   };
 }
 
@@ -1054,6 +1245,59 @@ function exigirPortalAlunoExcluir(token) {
   if (usuarioEhSuperadmin(usuario)) return usuario;
   if (usuarioTemPermissao(usuario, 'portal_aluno.excluir')) return usuario;
   throw new Error('Sem permissão para excluir aluno da Zenler.');
+}
+
+/**
+ * Cria a coluna CURSOS_VENDA na aba de pacotes e semeia a correspondencia.
+ *
+ * ⚠️ EXISTE PORQUE `portalAba_` SO ESCREVE O CABECALHO QUANDO CRIA A ABA. A
+ * aba de pacotes ja existe em producao com 5 colunas, entao publicar o codigo
+ * novo sozinho nao faria a coluna nascer: `dados[i][5]` viria undefined, a
+ * lista de cursos de venda ficaria vazia e **o pacote nunca seria sugerido**.
+ * O autocompletar preencheria nome, CPF e e-mail e pareceria funcionando pela
+ * metade, sem nenhum erro na tela.
+ *
+ * ⚠️ NUNCA sobrescreve linha que ja tenha valor: a correspondencia e da
+ * operacao, e reescrever daqui desfaria o ajuste feito na planilha. Rodar de
+ * novo e inofensivo.
+ *
+ * Roda por `node tools/deploy/manutencao.mjs rodar hub portalAplicarCursosVenda`.
+ */
+function portalAplicarCursosVenda() {
+  var aba = portalAba_(PORTAL_SHEETS.PACOTES, PORTAL_PACOTES_HEADERS, true);
+  var col = PORTAL_PACOTES_HEADERS.indexOf('CURSOS_VENDA') + 1;
+
+  // Cabecalho da coluna nova, se a aba nasceu antes dela.
+  var cab = aba.getRange(1, col).getDisplayValue();
+  if (String(cab).trim() !== 'CURSOS_VENDA') {
+    aba.getRange(1, col).setValue('CURSOS_VENDA');
+  }
+
+  var semente = {};
+  PORTAL_PACOTES_SEMENTE.forEach(function(p) { semente[String(p[0])] = String(p[5] || ''); });
+
+  var ultima = aba.getLastRow();
+  var mexidos = [], jaTinha = [], semSemente = [];
+  for (var i = 2; i <= ultima; i++) {
+    var id = String(aba.getRange(i, 1).getDisplayValue() || '').trim();
+    if (!id) continue;
+    var atual = String(aba.getRange(i, col).getDisplayValue() || '').trim();
+    if (atual) { jaTinha.push(id + ' = ' + atual); continue; }
+    if (!semente[id]) { semSemente.push(id); continue; }
+    // Texto, para o Sheets nao tentar interpretar nome de curso com barra.
+    aba.getRange(i, col).setNumberFormat('@');
+    aba.getRange(i, col).setValue(semente[id]);
+    mexidos.push(id + ' = ' + semente[id]);
+  }
+
+  return {
+    preenchidos: mexidos,
+    jaTinhamValor: jaTinha,
+    semCorrespondenciaNaSemente: semSemente,
+    aviso: semSemente.length
+      ? 'Estes pacotes ficaram sem correspondência e nunca serão sugeridos. Preencha na planilha se for o caso.'
+      : ''
+  };
 }
 
 /**

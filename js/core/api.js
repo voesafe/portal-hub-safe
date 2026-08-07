@@ -203,6 +203,8 @@ const API = {
   async liberarPortalAluno(dados) { return this.post('liberar-portal-aluno', dados); },
   async removerMatriculaPortal(dados) { return this.post('remover-matricula-portal', dados); },
   async excluirAlunoPortal(dados) { return this.post('excluir-aluno-portal', dados); },
+  // Busca sob demanda, sem cache: o resultado depende do termo digitado.
+  async buscarVendaPortal(termo) { return this.get('portal-aluno-venda', { termo }, false); },
   async sincronizarMatriculasPortal() { return this.post('sincronizar-matriculas-portal', {}); },
 
   async getAniversarios(mes) { return this.get('aniversarios', mes ? { mes } : {}, false); },

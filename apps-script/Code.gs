@@ -56,8 +56,22 @@ function doGet(e) {
       }
 
       case 'portal-aluno': {
-        exigirPortalAlunoVer(token);
-        return jsonSuccess(listarPortalAluno());
+        var uPortalVer = exigirPortalAlunoVer(token);
+        // Mesma regra da tela de Vendas: quem não é admin só enxerga as
+        // próprias vendas no autocompletar. Sem segunda política no Hub.
+        var perfilPortal = usuarioEhSuperadmin(uPortalVer) ? 'master' : uPortalVer.perfil;
+        var pacPortal = perfilEhAdmin(perfilPortal) ? null : uPortalVer.pac;
+        return jsonSuccess(listarPortalAluno(pacPortal));
+      }
+
+      // Busca completa de venda, para o aluno que comprou fora da janela de 90
+      // dias que já viaja com a página. Atrás de quem pode liberar, porque só
+      // serve para preencher o cadastro.
+      case 'portal-aluno-venda': {
+        var uBuscaV = exigirPortalAlunoLiberar(token);
+        var perfilBuscaV = usuarioEhSuperadmin(uBuscaV) ? 'master' : uBuscaV.perfil;
+        var pacBuscaV = perfilEhAdmin(perfilBuscaV) ? null : uBuscaV.pac;
+        return jsonSuccess(buscarVendaPortal({ termo: p.termo || '' }, pacBuscaV));
       }
 
       case 'faturamento': {
