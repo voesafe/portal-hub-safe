@@ -16,6 +16,10 @@ const PortalAluno = {
   cursos: [],
   liberacoes: [],
   selecionados: new Set(),
+  // Cursos do PACOTE que a pessoa tirou na prévia. Fica separado de
+  // `selecionados` porque são coisas opostas: um marca o que entra a mais, o
+  // outro tira o que o pacote traz por padrão.
+  removidos: new Set(),
   pickerAberto: false,
   enviando: false,
   ultimaFalha: null,   // guarda o que faltou, para o botao de refazer
@@ -74,7 +78,21 @@ const PortalAluno = {
 
   _bind() {
     document.getElementById('pa-atualizar')?.addEventListener('click', () => this.carregar());
-    document.getElementById('pa-pacote')?.addEventListener('change', () => this.renderPreview());
+    // ⚠️ Trocar de pacote ZERA as remoções: o que foi tirado do PP Prático não
+    // tem sentido no PC IFR, e manter faria o pacote novo nascer furado por
+    // uma decisão tomada sobre outro.
+    document.getElementById('pa-pacote')?.addEventListener('change', () => {
+      this.removidos.clear();
+      this.renderPreview();
+    });
+
+    // Delegação: a lista da prévia é refeita a cada mudança, então listener
+    // por item morreria no primeiro render.
+    document.getElementById('pa-preview')?.addEventListener('click', (e) => {
+      const x = e.target.closest('[data-tirar]');
+      if (x) { this.removerDaPrevia(x.dataset.tirar); return; }
+      if (e.target.closest('#pa-prev-restaurar')) this.restaurarPacote();
+    });
 
     // Picker dos avulsos. O clique fora usa composedPath(): o painel e refeito
     // por innerHTML durante o proprio despacho do evento, entao um closest()
@@ -328,13 +346,50 @@ const PortalAluno = {
     const idPacote = document.getElementById('pa-pacote')?.value;
     if (idPacote) {
       const p = this.pacotes.find(x => x.id === idPacote);
-      (p?.cursos || []).forEach(c => por(c.id, c.nome, c.existe !== false));
+      // O que foi tirado na prévia não entra. Só o pacote é filtrado aqui: o
+      // avulso "removido" é desmarcado no seletor na hora, então nem chega.
+      (p?.cursos || []).forEach(c => {
+        if (this.removidos.has(String(c.id))) return;
+        por(c.id, c.nome, c.existe !== false);
+      });
     }
     [...this.selecionados].forEach(id => {
       const c = this.cursos.find(x => String(x.id) === String(id));
       por(id, c ? c.nome : `curso ${id}`, !!c);
     });
     return fora;
+  },
+
+  /** Os cursos que o pacote escolhido traz, com ou sem remoção. */
+  cursosDoPacote() {
+    const id = document.getElementById('pa-pacote')?.value;
+    if (!id) return [];
+    return (this.pacotes.find(x => x.id === id)?.cursos) || [];
+  },
+
+  /**
+   * Tira um curso da prévia.
+   *
+   * ⚠️ Avulso e curso de pacote saem por caminhos DIFERENTES, e é isso que
+   * mantém a prévia e o seletor dizendo a mesma coisa: o avulso é desmarcado
+   * na origem, senão ele continuaria marcado no seletor e voltaria à prévia
+   * no próximo render. O curso do pacote, que não tem origem marcável, vai
+   * para a lista de removidos.
+   */
+  removerDaPrevia(cursoId) {
+    const id = String(cursoId);
+    if (this.selecionados.has(id)) {
+      this.selecionados.delete(id);
+      this.renderCursos();
+    } else {
+      this.removidos.add(id);
+    }
+    this.renderPreview();
+  },
+
+  restaurarPacote() {
+    this.removidos.clear();
+    this.renderPreview();
   },
 
   renderPreview() {
@@ -344,14 +399,48 @@ const PortalAluno = {
     const escolhidos = this.cursosEscolhidos();
 
     this.atualizarRotuloPicker();
-    if (!escolhidos.length) { if (box) box.hidden = true; return; }
+    const tirados = this.tiradosDoPacote();
+
+    // ⚠️ A prévia continua aparecendo quando sobra ZERO curso, desde que haja
+    // pacote escolhido: some-la esconderia o "restaurar" junto e deixaria a
+    // pessoa sem saída depois de tirar o último, com a tela igual à de quem
+    // não escolheu nada. Sem pacote e sem avulso, aí sim ela some.
+    if (!escolhidos.length && !tirados.length) { if (box) box.hidden = true; return; }
     if (box) box.hidden = false;
     if (n) n.textContent = String(escolhidos.length);
+
     if (lista) {
-      lista.innerHTML = escolhidos.map(c =>
-        `<li class="${c.existe ? '' : 'pa-curso-sumido'}">${escapeHtml(c.nome)}${c.existe ? '' : ' (não encontrado na lista)'}</li>`
-      ).join('');
+      lista.innerHTML = escolhidos.map(c => `
+        <li class="${c.existe ? '' : 'pa-curso-sumido'}">
+          <span class="pa-prev-nome">${escapeHtml(c.nome)}${c.existe ? '' : ' (não encontrado na lista)'}</span>
+          <button type="button" class="pa-prev-x" data-tirar="${escapeHtml(String(c.id))}"
+                  aria-label="Tirar ${escapeHtml(c.nome)} desta liberação" title="Tirar da liberação">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </li>`).join('');
     }
+
+    const rodape = document.getElementById('pa-preview-tirados');
+    if (rodape) {
+      if (!tirados.length) { rodape.hidden = true; rodape.innerHTML = ''; }
+      else {
+        const nomes = tirados.map(c => escapeHtml(c.nome)).join(', ');
+        rodape.innerHTML =
+          `<span>Fora do pacote: <strong>${nomes}</strong>.</span>
+           <button type="button" class="pa-prev-restaurar" id="pa-prev-restaurar">restaurar o pacote completo</button>`;
+        rodape.hidden = false;
+      }
+    }
+
+    // Sem curso nenhum não há o que liberar. O guarda de verdade continua
+    // sendo a validação do envio; isto só evita o clique inútil.
+    const btn = document.getElementById('pa-liberar');
+    if (btn) btn.disabled = !escolhidos.length;
+  },
+
+  /** Cursos do pacote que a pessoa tirou, para o rodapé e o rótulo. */
+  tiradosDoPacote() {
+    return this.cursosDoPacote().filter(c => this.removidos.has(String(c.id)));
   },
 
   // O botao precisa dizer o que esta escolhido: painel fechado sem resumo
@@ -372,9 +461,30 @@ const PortalAluno = {
       nome:  document.getElementById('pa-nome').value.trim(),
       email: document.getElementById('pa-email').value.trim(),
       cpf:   this._soDigitos(document.getElementById('pa-cpf').value),
-      pacote: document.getElementById('pa-pacote').value || '',
+      pacote: this._rotuloPacote(),
       cursos: this.cursosEscolhidos().map(c => c.id)
     };
+  },
+
+  /**
+   * O que o histórico vai registrar como "pacote".
+   *
+   * ⚠️ Com curso removido, gravar só o nome do pacote diria que o aluno
+   * recebeu o pacote INTEIRO, que é o oposto do que aconteceu. O registro tem
+   * uma linha por curso, então o detalhe não se perde, mas quem lê a coluna
+   * de pacote na tela lê o rótulo, não as linhas.
+   *
+   * O backend grava este campo como texto puro e nunca o usa para resolver
+   * curso nenhum (quem manda é `dados.cursos`), então marcar aqui é seguro.
+   */
+  _rotuloPacote() {
+    const id = document.getElementById('pa-pacote')?.value || '';
+    if (!id) return '';
+    const p = this.pacotes.find(x => x.id === id);
+    const nome = p ? p.nome : id;
+    const total = (p?.cursos || []).length;
+    const dentro = total - this.tiradosDoPacote().length;
+    return dentro < total ? `${nome} (${dentro} de ${total})` : nome;
   },
 
   _pendencias(d) {
@@ -937,6 +1047,11 @@ const PortalAluno = {
     const sel = document.getElementById('pa-pacote');
     if (sel) sel.value = (v.pacoteSugerido && this.pacotes.some(p => p.id === v.pacoteSugerido))
       ? v.pacoteSugerido : '';
+    // ⚠️ Atribuir `.value` por código NÃO dispara `change`, então o listener
+    // que zera as remoções não roda aqui. Sem esta linha, escolher outra venda
+    // traria o pacote novo já furado pelo que foi tirado do anterior. Mesma
+    // armadilha do `atualizarCursoHidden` em Vendas.
+    this.removidos.clear();
 
     this.vendaEscolhida = v;
     this.fecharSugestoes();

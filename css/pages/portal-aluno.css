@@ -396,6 +396,86 @@
   font-size: .82rem;
 }
 
+/* ── Ajuste fino na prévia: tirar curso da liberação ──────────
+   ⚠️ Escopado só à lista da PRÉVIA. As mesmas regras de `li` valem para
+   `.pa-conf-lista` e `.pa-res-lista` (confirmação e resultado), que não têm X
+   e continuam com o marcador nativo. */
+.pa-preview-lista { list-style: none; padding-left: 0; }
+.pa-preview-lista li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 0;
+}
+/* O bullet é desenhado porque `display: flex` no <li> suprime o marcador
+   nativo, e sem ele a lista perde a leitura de lista. */
+.pa-preview-lista li::before {
+  content: '';
+  flex: 0 0 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+/* ⚠️ SEM `flex: 1`: com ele o nome estica e joga o X para a ponta direita do
+   card, a mais de mil pixels do curso a que pertence no desktop. O botão tem
+   que ficar junto do que ele remove, e é isso que o deixa alcançável sem
+   procurar. Só apareceu na captura de tela. */
+.pa-prev-nome { min-width: 0; }
+
+.pa-prev-x {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.pa-prev-x:hover {
+  border-color: var(--border);
+  background: var(--tint-erro);
+  color: var(--ink-erro);
+}
+/* Sem hover no toque o botão ficaria invisível até ser tocado. */
+@media (hover: none) {
+  .pa-prev-x { color: var(--text-2); border-color: var(--border); }
+}
+
+.pa-preview-tirados {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--border);
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+/* ⚠️ Décima terceira ocorrência desta armadilha no projeto: `display: flex`
+   ganha do atributo `hidden`, e o caso comum é este rodapé escondido. */
+.pa-preview-tirados[hidden] { display: none; }
+
+.pa-prev-restaurar {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  /* `--ink-info` e não `--blue`: o par de tinta dos blocos de estado é feito
+     para ter contraste de texto nos dois modos, e o azul da paleta é claro
+     demais sobre a superfície clara. */
+  color: var(--ink-info);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* ── Autocompletar a partir das vendas ────────────────────────
    O painel flutua sobre o formulário: em fluxo, ele empurraria os campos de
    baixo a cada tecla, e o formulário inteiro pularia enquanto se digita. */
