@@ -795,6 +795,134 @@ function removerMatriculaPortal(dados, autor) {
   }
 }
 
+// ── Exclusao do aluno inteiro ───────────────────────────────
+
+/**
+ * Apaga a CONTA do aluno na Zenler: login, todas as matriculas, todo o
+ * progresso e os certificados. Nao ha desfazer, e nao ha lixeira.
+ *
+ * ⚠️ VALE AQUI A LICAO DO UNENROLL, NAO A DO ENROLL. Medido em 2026-08-06 que
+ * o `/unenroll` responde HTTP 200 com uma PAGINA HTML de erro quando o
+ * argumento nao existe, enquanto o `/enroll` devolve JSON limpo. Ou seja,
+ * nesta familia de rotas 200 pode ser fracasso. Como a resposta boa medida do
+ * DELETE e um JSON com "User deleted successfully", o sucesso aqui exige
+ * corpo JSON reconhecivel: um 200 com HTML e tratado como falha, senao a tela
+ * diria que o aluno foi apagado com ele ainda ativo no portal.
+ */
+function portalExcluirAluno_(userId) {
+  var res = portalFetch_('delete', '/users/' + userId, null);
+
+  var corpo = res.corpo;
+  var ehObjeto = corpo && typeof corpo === 'object';
+
+  if (res.status >= 200 && res.status < 300) {
+    var msg = ehObjeto ? String(corpo.message || '') : '';
+    var dado = ehObjeto ? String(corpo.data || '') : '';
+    if (msg.toLowerCase() === 'success' || /deleted successfully/i.test(dado) || /deleted successfully/i.test(msg)) {
+      return { ok: true, detalhe: 'aluno excluído da Zenler' };
+    }
+    return { ok: false, detalhe: 'A Zenler respondeu com uma página de erro. O aluno NÃO foi excluído.' };
+  }
+
+  return { ok: false, detalhe: portalMensagem_(res) };
+}
+
+/**
+ * ⚠️ Busca EXATA por e-mail, no nosso lado: o `search` da Zenler casa pedaco
+ * de e-mail, e aqui casar aproximado apagaria a conta da pessoa errada, que e
+ * a pior coisa que este modulo pode fazer.
+ *
+ * ⚠️ `LockService` porque a exclusao concorre com a liberacao e com a
+ * remocao de matricula: as tres mexem no mesmo aluno e no mesmo cache.
+ */
+function excluirAlunoPortal(dados, autor) {
+  var email = String((dados && dados.email) || '').trim().toLowerCase();
+  if (!email) throw new Error('E-mail do aluno é obrigatório.');
+
+  // A tela pede o e-mail digitado para confirmar. Conferir de novo aqui e
+  // barato, e esconder o botao nao impede ninguem de chamar a rota na mao.
+  var confirmacao = String((dados && dados.confirmacao) || '').trim().toLowerCase();
+  if (confirmacao !== email) {
+    throw new Error('A confirmação não bate com o e-mail do aluno.');
+  }
+
+  var trava = LockService.getScriptLock();
+  if (!trava.tryLock(25000)) {
+    throw new Error('Outra operação está em andamento. Tente de novo em alguns segundos.');
+  }
+
+  try {
+    var usuario = portalBuscarPorEmail_(email);
+    if (!usuario) throw new Error('Esse e-mail não existe na Zenler.');
+
+    // Contado ANTES de apagar: depois nao ha mais o que contar, e o historico
+    // precisa dizer o tamanho do que foi perdido.
+    var quantos = portalContarMatriculasCache_(email);
+
+    var r = portalExcluirAluno_(usuario.id);
+
+    if (r.ok) {
+      try { portalCacheRemoverAluno_(email); } catch (e) {}
+    }
+
+    portalGravarLiberacao_({
+      autor: autor || '',
+      nome: String((dados && dados.nome) || ''),
+      email: email,
+      cpf: '',
+      usuarioId: usuario.id,
+      pacote: 'EXCLUSÃO DO ALUNO',
+      resultados: [{
+        id: '',
+        nome: quantos + ' matrícula(s) na Zenler',
+        status: r.ok ? 'EXCLUÍDO' : 'ERRO',
+        detalhe: r.detalhe
+      }]
+    });
+
+    if (!r.ok) throw new Error(r.detalhe);
+
+    return { email: email, usuarioId: usuario.id, matriculas: quantos, detalhe: r.detalhe };
+  } finally {
+    trava.releaseLock();
+  }
+}
+
+/** Quantas matriculas o cache conhece para esse aluno. So le. */
+function portalContarMatriculasCache_(email) {
+  var aba = portalAba_(PORTAL_SHEETS.MATRICULAS, PORTAL_MATRICULAS_HEADERS, false);
+  if (!aba) return 0;
+  var ultima = aba.getLastRow();
+  if (ultima < 2) return 0;
+  var dados = aba.getRange(2, 1, ultima - 1, 1).getDisplayValues();
+  var alvo = String(email).trim().toLowerCase();
+  var n = 0;
+  dados.forEach(function (l) { if (String(l[0]).trim().toLowerCase() === alvo) n++; });
+  return n;
+}
+
+/** ⚠️ Apaga de baixo para cima: deletar linha desloca as de baixo. */
+function portalCacheRemoverAluno_(email) {
+  var trava = LockService.getScriptLock();
+  if (!trava.tryLock(20000)) return;
+  try {
+    var aba = portalAba_(PORTAL_SHEETS.MATRICULAS, PORTAL_MATRICULAS_HEADERS, false);
+    if (!aba) return;
+    var ultima = aba.getLastRow();
+    if (ultima < 2) return;
+
+    var dados = aba.getRange(2, 1, ultima - 1, 1).getDisplayValues();
+    var alvo = String(email).trim().toLowerCase();
+    var apagar = [];
+    for (var i = 0; i < dados.length; i++) {
+      if (String(dados[i][0]).trim().toLowerCase() === alvo) apagar.push(i + 2);
+    }
+    for (var k = apagar.length - 1; k >= 0; k--) aba.deleteRow(apagar[k]);
+  } finally {
+    trava.releaseLock();
+  }
+}
+
 function portalMensagem_(res) {
   var c = res.corpo;
   if (c && typeof c === 'object') {
@@ -910,6 +1038,22 @@ function exigirPortalAlunoRemover(token) {
   if (usuarioEhSuperadmin(usuario)) return usuario;
   if (usuarioTemPermissao(usuario, 'portal_aluno.remover')) return usuario;
   throw new Error('Sem permissão para remover matrícula do portal do aluno.');
+}
+
+/**
+ * Excluir e permissao SEPARADA de remover, e de proposito em NENHUM cargo
+ * padrao: remover tira um curso, excluir apaga a pessoa da Zenler inteira,
+ * com o progresso de todos os cursos junto. So superadmin passa, por bypass.
+ *
+ * ⚠️ O guarda do servidor e o que vale. A tela esconde o botao de quem nao
+ * tem a permissao, mas esconder botao nao impede ninguem de chamar a rota.
+ */
+function exigirPortalAlunoExcluir(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (usuarioEhSuperadmin(usuario)) return usuario;
+  if (usuarioTemPermissao(usuario, 'portal_aluno.excluir')) return usuario;
+  throw new Error('Sem permissão para excluir aluno da Zenler.');
 }
 
 /**

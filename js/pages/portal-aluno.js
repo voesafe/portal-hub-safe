@@ -132,6 +132,12 @@ const PortalAluno = {
     document.getElementById('pa-remover-close')?.addEventListener('click', () => fecharModal('pa-remover'));
     document.getElementById('pa-remover-cancelar')?.addEventListener('click', () => fecharModal('pa-remover'));
     document.getElementById('pa-remover-confirmar')?.addEventListener('click', () => this.remover());
+
+    document.getElementById('pa-excluir-abrir')?.addEventListener('click', () => this.confirmarExclusao());
+    document.getElementById('pa-excluir-close')?.addEventListener('click', () => fecharModal('pa-excluir'));
+    document.getElementById('pa-excluir-cancelar')?.addEventListener('click', () => fecharModal('pa-excluir'));
+    document.getElementById('pa-excluir-confirmar')?.addEventListener('click', () => this.excluir());
+    document.getElementById('pa-excluir-email')?.addEventListener('input', () => this.conferirConfirmacao());
   },
 
   // ── Abas ─────────────────────────────────────────────────
@@ -431,6 +437,9 @@ const PortalAluno = {
 
   podeRemover() { return Auth.temPermissao('portal_aluno.remover'); },
   podeLiberar() { return Auth.podeEditar('portal-aluno.html'); },
+  // Permissão separada de remover, e de propósito em nenhum cargo padrão:
+  // remover tira um curso, excluir apaga a pessoa da Zenler inteira.
+  podeExcluir() { return Auth.temPermissao('portal_aluno.excluir'); },
 
   renderSincronia() {
     const el = document.getElementById('pa-sinc-quando');
@@ -512,6 +521,9 @@ const PortalAluno = {
     // Só quem pode liberar vê o bloco de acrescentar.
     const add = document.getElementById('pa-add');
     if (add) add.hidden = !this.podeLiberar();
+
+    const perigo = document.getElementById('pa-perigo');
+    if (perigo) perigo.hidden = !this.podeExcluir();
 
     this.renderCursosDoAluno();
     this.renderAdd();
@@ -704,6 +716,93 @@ const PortalAluno = {
       this.enviando = false;
       this.removendo = null;
       if (btn) { btn.disabled = false; btn.textContent = 'Remover matrícula'; }
+    }
+  },
+
+  // ── Excluir o aluno inteiro ──────────────────────────────
+
+  confirmarExclusao() {
+    const a = this.alunoAberto;
+    if (!a || !this.podeExcluir()) return;
+
+    const n = a.c.length;
+    document.getElementById('pa-excluir-corpo').innerHTML = `
+      <p class="pa-conf-nome">${escapeHtml(a.n || a.e)}</p>
+      <p class="pa-conf-sub">${escapeHtml(a.e)}</p>
+      <p class="pa-rem-curso">Apaga a conta inteira na Zenler, com <strong>${n} ${n === 1 ? 'matrícula' : 'matrículas'}</strong>.</p>
+      <p class="pa-rem-aviso">O login, o progresso de todos os cursos e os certificados são apagados junto. Isto não tem como ser desfeito, e recriar o aluno depois não traz nada de volta.</p>`;
+
+    const campo = document.getElementById('pa-excluir-email');
+    if (campo) campo.value = '';
+    this.conferirConfirmacao();
+    abrirModal('pa-excluir');
+    // Foca depois de o modal abrir, senão o campo ainda não é focável.
+    setTimeout(() => campo?.focus(), 60);
+  },
+
+  /**
+   * O botão só habilita com o e-mail exato. A comparação ignora caixa e
+   * espaço nas pontas, que é o que o gestor de senhas ou o toque no celular
+   * costumam acrescentar, e não muda quem é o alvo.
+   */
+  conferirConfirmacao() {
+    const a = this.alunoAberto;
+    const campo = document.getElementById('pa-excluir-email');
+    const btn = document.getElementById('pa-excluir-confirmar');
+    const dica = document.getElementById('pa-excluir-dica');
+    if (!btn) return false;
+
+    const digitado = String(campo?.value || '').trim().toLowerCase();
+    const bate = !!a && digitado === String(a.e || '').trim().toLowerCase();
+    btn.disabled = !bate;
+    // A dica só aparece depois de a pessoa começar a digitar: campo vazio com
+    // aviso vermelho acusa erro que ninguém cometeu ainda.
+    if (dica) dica.hidden = bate || !digitado;
+    return bate;
+  },
+
+  async excluir() {
+    const a = this.alunoAberto;
+    if (this.enviando || !a) return;
+    // Guarda repetido: esconder e desabilitar são dicas de tela, e o botão
+    // pode ser habilitado por fora. Quem decide de verdade é o backend, que
+    // confere a permissão e a confirmação de novo.
+    if (!this.podeExcluir() || !this.conferirConfirmacao()) return;
+
+    const btn = document.getElementById('pa-excluir-confirmar');
+    this.enviando = true;
+    if (btn) { btn.disabled = true; btn.textContent = 'Excluindo...'; }
+
+    try {
+      const res = await API.excluirAlunoPortal({
+        email: a.e,
+        nome: a.n,
+        confirmacao: a.e
+      });
+
+      if (res.indeterminado) {
+        fecharModal('pa-excluir');
+        fecharModal('pa-aluno');
+        toast('Não deu para confirmar o resultado. Recarregue e confira se o aluno ainda aparece.', 'warning', 7000);
+        await this.carregar();
+        return;
+      }
+      if (!res.ok) {
+        toast(res.error || 'Não foi possível excluir o aluno.', 'error', 6000);
+        return;
+      }
+
+      fecharModal('pa-excluir');
+      fecharModal('pa-aluno');
+      toast(`${a.n || a.e} foi excluído da Zenler.`, 'success');
+      this.alunoAberto = null;
+      await this.carregar();
+    } finally {
+      this.enviando = false;
+      if (btn) { btn.textContent = 'Excluir aluno'; }
+      // Reavalia em vez de habilitar direto: com o modal ainda aberto por uma
+      // falha, o botão só deve voltar se o e-mail digitado continuar batendo.
+      this.conferirConfirmacao();
     }
   },
 

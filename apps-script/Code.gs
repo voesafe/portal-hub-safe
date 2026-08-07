@@ -239,6 +239,15 @@ function doPost(e) {
         return jsonSuccess(removerMatriculaPortal(dados, autorRem));
       }
 
+      // Guarda MAIS restrito ainda: aqui não é um curso, é a conta inteira do
+      // aluno na Zenler, com o progresso de todos os cursos. Ver o
+      // exigirPortalAlunoExcluir, que é permissão de nenhum cargo padrão.
+      case 'excluir-aluno-portal': {
+        var uExc = exigirPortalAlunoExcluir(token);
+        var autorExc = (uExc.nome || '') + (uExc.email ? ' (' + uExc.email + ')' : '');
+        return jsonSuccess(excluirAlunoPortal(dados, autorExc));
+      }
+
       // Sincronizar é ida à Zenler mais regravação da planilha, então fica
       // atrás de quem já pode liberar, e não de quem só visualiza.
       case 'sincronizar-matriculas-portal': {

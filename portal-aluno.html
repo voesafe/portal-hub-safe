@@ -288,6 +288,17 @@
         <div class="pa-add-previa" id="pa-add-previa" hidden></div>
         <button class="btn btn-primary pa-add-btn" id="pa-add-btn" type="button" disabled>Matricular nos cursos escolhidos</button>
       </div>
+
+      <!-- Fica no FIM da ficha, separado por uma régua, e não ao lado do nome:
+           é a ação mais grave da tela e não pode disputar espaço com o que se
+           faz todo dia. Só aparece para quem tem `portal_aluno.excluir`. -->
+      <div class="pa-perigo" id="pa-perigo" hidden>
+        <div class="pa-perigo-txt">
+          <strong>Excluir este aluno da Zenler</strong>
+          <span>Apaga a conta inteira: login, todas as matrículas, o progresso e os certificados. Não tem desfazer.</span>
+        </div>
+        <button class="btn btn-danger pa-perigo-btn" id="pa-excluir-abrir" type="button">Excluir aluno</button>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" id="pa-aluno-fechar" type="button">Fechar</button>
@@ -310,6 +321,31 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" id="pa-remover-cancelar" type="button">Cancelar</button>
       <button class="btn btn-danger" id="pa-remover-confirmar" type="button">Remover matrícula</button>
+    </div>
+  </div>
+</div>
+
+<!-- Exclusão do aluno inteiro. ⚠️ O botão nasce DESABILITADO e só habilita
+     quando o e-mail digitado bate com o do aluno. É uma ação sem desfazer, e
+     a ficha do aluno errado está a um clique de distância na lista. -->
+<div class="modal-overlay" id="pa-excluir">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3 style="font-size:1.05rem">Excluir aluno da Zenler</h3>
+      <button class="modal-close" id="pa-excluir-close" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="pa-excluir-corpo"></div>
+      <label class="form-label" for="pa-excluir-email">Para confirmar, digite o e-mail do aluno</label>
+      <input class="form-control" id="pa-excluir-email" type="text" autocomplete="off"
+             spellcheck="false" placeholder="e-mail do aluno">
+      <p class="pa-excluir-dica" id="pa-excluir-dica" hidden>O e-mail digitado não bate.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="pa-excluir-cancelar" type="button">Cancelar</button>
+      <button class="btn btn-danger" id="pa-excluir-confirmar" type="button" disabled>Excluir aluno</button>
     </div>
   </div>
 </div>

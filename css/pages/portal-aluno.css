@@ -396,6 +396,34 @@
   font-size: .82rem;
 }
 
+/* ── Zona de perigo: excluir o aluno ──────────────────────────
+   Separada por régua e no fim da ficha de propósito: é a ação mais grave da
+   tela e não pode disputar espaço com o que se faz todo dia. */
+.pa-perigo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+/* ⚠️ Décima primeira ocorrência desta armadilha no projeto: `display: flex`
+   ganha do atributo `hidden`, então sem esta regra a zona de perigo apareceria
+   para todo mundo, inclusive para quem não tem a permissão de excluir. */
+.pa-perigo[hidden] { display: none; }
+
+.pa-perigo-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pa-perigo-txt strong { font-size: .88rem; color: var(--text); font-weight: 600; }
+.pa-perigo-txt span { font-size: .78rem; color: var(--text-muted); line-height: 1.45; }
+.pa-perigo-btn { flex-shrink: 0; margin-left: auto; }
+
+.pa-excluir-dica {
+  margin: 8px 0 0;
+  font-size: .78rem;
+  color: var(--ink-erro);
+}
+.pa-excluir-dica[hidden] { display: none; }
+
 /* Rótulo só para leitor de tela. Fica aqui, e não no layout.css, para não
    obrigar a bumpar o CSS compartilhado nos 22 HTML por causa de uma classe. */
 .sr-only {
@@ -434,4 +462,9 @@
   .pa-aluno-curso { flex-wrap: wrap; row-gap: 2px; }
   .pa-ac-x { order: 2; }
   .pa-ac-meta { order: 3; flex-basis: 100%; }
+  /* O botão ao lado do texto sobra ~90px numa tela de 390px e espreme a
+     explicação em cinco linhas. Empilhado, o texto respira e o alvo de toque
+     fica com a largura toda. */
+  .pa-perigo { flex-direction: column; align-items: stretch; }
+  .pa-perigo-btn { margin-left: 0; width: 100%; }
 }

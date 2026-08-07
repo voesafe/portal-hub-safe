@@ -76,6 +76,11 @@ var ACCESS_PERMISSIONS = [
   ['portal_aluno.visualizar', 'Portal do Aluno', 'Ver acessos e liberações'],
   ['portal_aluno.liberar', 'Portal do Aluno', 'Liberar acesso ao portal'],
   ['portal_aluno.remover', 'Portal do Aluno', 'Remover matrícula de um curso'],
+  // ⚠️ De propósito em NENHUM cargo padrão: excluir apaga a CONTA INTEIRA do
+  // aluno na Zenler (login, todas as matrículas, todo o progresso), e isso não
+  // volta. Só superadmin enxerga, por bypass; liberar a alguém é um clique no
+  // Controle de Acesso, sem tocar em código. Mesma decisão dos Aniversários.
+  ['portal_aluno.excluir', 'Portal do Aluno', 'Excluir o aluno da Zenler'],
   ['progresso_alunos.visualizar', 'Progresso de Alunos', 'Visualizar progresso'],
   ['progresso_alunos.buscar_aluno', 'Progresso de Alunos', 'Buscar aluno'],
   ['progresso_alunos.visualizar_detalhe', 'Progresso de Alunos', 'Visualizar detalhe'],

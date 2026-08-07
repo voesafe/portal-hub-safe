@@ -84,6 +84,31 @@ const RBAC_MODULOS = [
     ver: ['planilha_admin.abrir'] }
 ];
 
+// ⚠️ Tudo que a matriz sabe representar. O que fica FORA dela não pode ser
+// decidido por esta tela, e por isso precisa ser PRESERVADO no salvamento.
+//
+// Existem permissões assim de propósito: `aniversarios.*` e
+// `portal_aluno.excluir` estão em nenhum cargo padrão e são concedidas à mão
+// no Controle de Acesso. Sem esta lista, salvar um usuário na tela de Usuários
+// reescrevia as avulsas a partir da matriz e apagava essas concessões em
+// silêncio: quem tinha aniversários passava a não ter, sem ninguém pedir.
+// É o mesmo estrago que a ausência de um módulo em RBAC_MODULOS causa, por
+// outro caminho, e aqui não dá para resolver acrescentando módulo, porque a
+// permissão não deve aparecer como interruptor de cargo.
+const RBAC_PERMS_CONHECIDAS = (() => {
+  const conjunto = new Set(RBAC_PERMS_BASE);
+  const juntar = campo => {
+    if (!campo) return;
+    if (Array.isArray(campo)) campo.forEach(p => conjunto.add(p));
+    else {
+      (campo.proprias || []).forEach(p => conjunto.add(p));
+      (campo.todas || []).forEach(p => conjunto.add(p));
+    }
+  };
+  RBAC_MODULOS.forEach(m => { juntar(m.ver); juntar(m.editar); });
+  return conjunto;
+})();
+
 const Admin = {
   usuarios: [],
   contagemEmails: new Map(),
@@ -542,6 +567,34 @@ const Admin = {
     return out;
   },
 
+  /**
+   * Devolve as exceções que o usuário já tem e que a matriz não representa,
+   * para o salvamento não as apagar.
+   *
+   * ⚠️ Sem isto, conceder `aniversarios.visualizar` a alguém no Controle de
+   * Acesso e depois editar essa pessoa aqui (para trocar o telefone, por
+   * exemplo) revogava a concessão em silêncio: o salvamento reescreve as
+   * avulsas a partir da matriz, e o que ela não conhece some. Cadastro novo
+   * não tem o que preservar, então a função sai cedo.
+   *
+   * Muta os arrays recebidos de propósito, que é como o chamador os usa.
+   */
+  preservarExcecoesForaDaMatriz(avulsas, negadas) {
+    if (!this.editandoId) return;
+    const usuario = this.usuarios.find(item => String(item.id) === String(this.editandoId));
+    if (!usuario) return;
+
+    const guardar = (origem, destino) => {
+      (origem || []).forEach(p => {
+        const perm = String(p);
+        if (RBAC_PERMS_CONHECIDAS.has(perm)) return;
+        if (destino.indexOf(perm) === -1) destino.push(perm);
+      });
+    };
+    guardar(usuario.permissoesAvulsas, avulsas);
+    guardar(usuario.permissoesNegadas, negadas);
+  },
+
   // Permissões dos grupos (cargos) do usuário, via dados do backend.
   permsDoGrupo(grupoId) {
     const g = (this.controleAcesso.grupos || []).find(item => String(item.id) === String(grupoId));
@@ -835,7 +888,11 @@ const Admin = {
       const base = new Set(this.permsDoGrupo(this.cargoAtual));
       grupos = this.cargoAtual ? [this.cargoAtual] : [];
       avulsas = [...desejado].filter(p => !base.has(p));
-      negadas = [...base].filter(p => !desejado.has(p));
+      // Só nega o que a matriz sabe representar. Uma permissão fora dela nunca
+      // aparece em `desejado`, então entraria em negadas por omissão, e o
+      // cargo perderia acesso que ninguém pediu para tirar.
+      negadas = [...base].filter(p => !desejado.has(p) && RBAC_PERMS_CONHECIDAS.has(p));
+      this.preservarExcecoesForaDaMatriz(avulsas, negadas);
     } else if (origem === 'hub') {
       // Superadmin ignora tudo; limpa vínculos.
       grupos = []; avulsas = []; negadas = [];
