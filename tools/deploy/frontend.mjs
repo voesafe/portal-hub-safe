@@ -15,6 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { RAIZ } from './alvos.mjs';
 import { bumpar, relatarBump } from './bump.mjs';
+import { comparar } from './conferir.mjs';
 import {
   Recusa, rodar, rodarOuFalhar, anunciar, titulo, ok, aviso, erro, nota, cinza,
 } from './util.mjs';
@@ -117,8 +118,37 @@ export async function publicarFrontend(opcoes = {}) {
 
   const pendentes = await mudancas();
   if (!pendentes.length) {
-    ok('Nada a publicar: arvore limpa e cache-bust em dia.');
-    return { publicado: false };
+    // ⚠️ Arvore limpa NAO quer dizer que producao esta em dia. O caso que
+    // faltava aqui: o push deu certo e o BUILD do Pages e que falhou, entao
+    // nao ha nada a commitar e este comando nao tinha como repetir a
+    // publicacao. Foi o que aconteceu no incidente do GitHub de 2026-08-06,
+    // e a saida "Nada a publicar" convidava a concluir que estava tudo certo.
+    const cmp = await comparar();
+    const defasados = [...cmp.divergentes, ...cmp.ausentes];
+    if (!defasados.length) {
+      ok('Nada a publicar: arvore limpa e producao em dia.');
+      return { publicado: false };
+    }
+
+    aviso(`Arvore limpa, mas producao esta ${defasados.length} asset(s) atras.`);
+    nota('O codigo ja foi empurrado; quem falhou foi o build do Pages.');
+    if (opcoes.seco) {
+      aviso('Ensaio (--seco): nao repetiria a publicacao agora.');
+      return { publicado: false, ensaio: true };
+    }
+    // Commit vazio e o unico jeito de pedir um build novo sem direito de
+    // admin no repositorio (`gh run rerun` exige admin).
+    const msgRepetir = opcoes.msg || 'chore: nova tentativa de publicacao';
+    anunciar('git', ['commit', '--allow-empty', '-m', msgRepetir], RAIZ);
+    const rcv = await git(['commit', '--allow-empty', '-m', msgRepetir]);
+    if (rcv.codigo !== 0) throw new Recusa(`git commit falhou:\n${rcv.saida || rcv.erroSaida}`);
+    anunciar('git', ['push', 'origin', BRANCH], RAIZ);
+    await rodarOuFalhar('git', ['push', 'origin', BRANCH], { cwd: RAIZ });
+    ok('Build novo pedido por commit vazio.');
+
+    const h = hashSentinela();
+    const pub = opcoes.semEspera ? null : await esperarPages(h);
+    return { publicado: true, repeticao: true, hashSentinela: h, pagesConfirmado: pub };
   }
 
   console.log(`    ${cinza('vai commitar:')}`);

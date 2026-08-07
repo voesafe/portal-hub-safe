@@ -58,7 +58,7 @@ async function buscar(pagina) {
   return { html: await res.text() };
 }
 
-async function comparar() {
+export async function comparar() {
   const paginas = paginasLocais();
   const divergentes = [];
   const ausentes = [];
@@ -153,6 +153,15 @@ function relatar(r) {
 }
 
 // ── Execucao ────────────────────────────────────────────────
+//
+// ⚠️ Este bloco so roda quando o arquivo E o executado. Sem esta guarda,
+// importar `comparar` daqui (o deploy do frontend faz isso) dispararia a
+// conferencia inteira e o `process.exit` no meio do deploy.
+
+const ehCli = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (ehCli) await principal();
+
+async function principal() {
 
 const args = process.argv.slice(2);
 const flagEsperar = args.find((a) => a.startsWith('--esperar'));
@@ -201,3 +210,5 @@ if (!emDia) {
 }
 
 process.exit(emDia ? 0 : 1);
+
+}

@@ -964,7 +964,25 @@ Compara o `?v=` de **cada asset, página a página**, entre o repositório e o s
 - **Página que existe no repositório e não no ar é divergência**, não erro de rede: é exatamente o caso de uma página nova que não publicou.
 - ⚠️ **O cache-buster vai na URL da REQUISIÇÃO.** Sem ele o CDN do Pages devolve a cópia velha, e a conferência acusaria defasagem já resolvida ou, pior, silenciaria uma real.
 - ⚠️ **`--esperar` PARA de esperar quando o build erra.** Build que falhou não sincroniza sozinho, e ficar esperando é o comportamento que já enganou uma vez.
-- **Verificação:** rodado com produção em dia (saída 0, 242 assets), com um asset adulterado à mão (saída 1, aponta o arquivo e os dois hashes) e com uma página que não existe no ar (saída 1, lista a página e o 404). ⚠️ Ao medir código de saída depois de um pipe, o `$?` é do **último** comando do pipe, não do node: use `PIPESTATUS` ou não use pipe.
+- **Verificação:** rodado com produção em dia (saída 0, 242 assets), com um asset adulterado à mão (saída 1, aponta o arquivo e os dois hashes) e com uma página que não existe no ar (saída 1, lista a página e o 404). ⚠️ Ao medir código de saída depois de um pipe, o `$?` é do **último** comando do pipe, não do node: use `PIPESTATUS` ou não use pipe. **Essa armadilha mordeu de novo em 2026-08-06**, com `conferir.mjs --esperar | tail`: o `tail` devolveu 0 e a espera pareceu ter terminado bem quando tinha desistido ainda em `building`.
+
+#### ⚠️ `building` na API do Pages pode ser um build MORTO, não um build em andamento
+
+Medido em 2026-08-07, com a publicação parada desde a véspera. `GET /pages/builds/latest` respondia `status: building` havia **18 horas**, com `created_at` igual a `updated_at`, enquanto o run correspondente no Actions já tinha **terminado em falha** no minuto seguinte ao push. A API do Pages ficou com o estado obsoleto e nunca o corrigiu.
+
+- **O engano é caro porque `building` parece progresso**, e o `--esperar` só desiste quando o estado é `errored`. Diante de `building`, **confira a idade do build**: alguns minutos é normal, algumas horas é build morto. `gh run list` é a fonte que diz a verdade, não `/pages/builds`.
+- **A mensagem real desta vez foi `The job was not acquired by Runner of type hosted even after multiple attempts`**, nas anotações do check-run `build`. É a mesma família do `Service Unavailable` de 06/08: o GitHub não alocou runner. Sem correção do nosso lado, tratamento é repetir.
+- ⚠️ **Enquanto o build morto existia, o commit vazio de nova tentativa NÃO gerou build próprio** (o `/pages/builds` continuou preso no commit anterior). Ou seja, a repetição feita no mesmo dia não teve efeito, e só funcionou no dia seguinte, com a instabilidade passada. **Antes de repetir, olhe `githubstatus.com`**: com incidente aberto, repetir só empilha tentativa.
+- **A retomada foi um `git commit --allow-empty` mais push**, e o build seguinte levou 24 segundos. `gh run rerun` continua indisponível (`Must have admin rights to Repository`).
+
+### `deploy front` passou a saber REPETIR, desde 2026-08-06
+
+⚠️ **Árvore limpa não quer dizer produção em dia.** Quando o `git push` dá certo e quem falha é o **build** do Pages, não há nada a commitar, e o `deploy.mjs front` respondia `Nada a publicar: arvore limpa e cache-bust em dia` e saía com ar de sucesso. Ou seja, justamente no caso em que a publicação precisa ser repetida, o comando de publicar não fazia nada e ainda dava a impressão de que estava tudo certo.
+
+Agora, com a árvore limpa, ele chama `comparar()` antes de desistir. Se produção estiver atrás, ele **pede um build novo por commit vazio** e espera o Pages. ⚠️ Commit vazio é o único caminho sem direito de admin no repositório: `gh run rerun` responde `Must have admin rights to Repository`.
+
+- **`comparar` virou export do [conferir.mjs](tools/deploy/conferir.mjs)**, para o deploy não duplicar a conta dos assets. ⚠️ O corpo do CLI foi embrulhado numa função guardada por `process.argv[1] === import.meta.url`: sem essa guarda, **importar** o módulo dispararia a conferência inteira e o `process.exit` no meio do deploy.
+- `--seco` diz que repetiria e não repete.
 
 ## O frontend passou a publicar por GitHub Actions, em 2026-08-06
 
