@@ -990,6 +990,14 @@ Compara o `?v=` de **cada asset, página a página**, entre o repositório e o s
 - ⚠️ **`--esperar` PARA de esperar quando o build erra.** Build que falhou não sincroniza sozinho, e ficar esperando é o comportamento que já enganou uma vez.
 - **Verificação:** rodado com produção em dia (saída 0, 242 assets), com um asset adulterado à mão (saída 1, aponta o arquivo e os dois hashes) e com uma página que não existe no ar (saída 1, lista a página e o 404). ⚠️ Ao medir código de saída depois de um pipe, o `$?` é do **último** comando do pipe, não do node: use `PIPESTATUS` ou não use pipe. **Essa armadilha mordeu de novo em 2026-08-06**, com `conferir.mjs --esperar | tail`: o `tail` devolveu 0 e a espera pareceu ter terminado bem quando tinha desistido ainda em `building`.
 
+#### ⚠️ O "GitHub Pages publicou" do `deploy front` é uma SENTINELA, e ela mente quando o `auth.js` não muda
+
+Medido em 2026-08-07, publicando a exclusão de aluno. O `deploy.mjs front` espera pelo `js/core/auth.js` do `inicio.html` e anunciou **`front: no ar`**; o `conferir.mjs` rodado logo em seguida achou **4 assets ainda atrasados** (`api.js`, `admin.js`, `portal-aluno.js`, `portal-aluno.css`). O motivo é simples e vai repetir: como o `?v=` é o hash do conteúdo, **entrega que não toca no `auth.js` deixa a sentinela idêntica antes e depois**, então ela casa na primeira tentativa e a espera termina sem ter esperado nada.
+
+- **Não é o mesmo furo já documentado** ("confere todos os assets, não uma sentinela"), que era sobre uma página ficar para trás. Aqui a sentinela nem chega a ser um sinal: ela já estava publicada antes do push.
+- **Depois de `deploy front`, rode `node tools/deploy/conferir.mjs --esperar`** enquanto o deploy não passar a esperar por um asset que realmente mudou. Foi o que sincronizou de fato desta vez.
+- ⚠️ **A janela é real, não teórica:** entre o anúncio falso e a publicação de verdade, a página serve JS velho com HTML novo, que é justamente a combinação que o `?v=` existe para evitar.
+
 #### ⚠️ `building` na API do Pages pode ser um build MORTO, não um build em andamento
 
 Medido em 2026-08-07, com a publicação parada desde a véspera. `GET /pages/builds/latest` respondia `status: building` havia **18 horas**, com `created_at` igual a `updated_at`, enquanto o run correspondente no Actions já tinha **terminado em falha** no minuto seguinte ao push. A API do Pages ficou com o estado obsoleto e nunca o corrigiu.
