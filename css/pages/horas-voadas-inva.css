@@ -358,32 +358,64 @@
   margin-top: 8px;
 }
 
-/* ── Cadastro inline de instrutor de solo ─────────────────────
-   Sem saldo inicial, sem etiqueta pré-selecionada: é só nome e base, então
-   uma barra dentro do próprio card resolve, sem precisar de uma view de
-   cadastro separada como a dos instrutores de voo. */
-.hi-solo-add-card {
-  margin-bottom: 12px;
+/* ── Sub-abas Instrutores de Voo / Instrutores de Solo ─────────
+   Um nível abaixo das abas de página (.horas-inva-tabs): ficam DENTRO do
+   card "Instrutores por base", para não competir com a navegação de
+   topo. Mesma mecânica de aba (só uma .hi-subview visível por vez), em
+   escala menor. Cadastro de cada mundo agora é uma view de página própria
+   (#cadastro-voo / #cadastro-solo), simétrica, em vez de um form solto
+   aqui dentro. */
+.hi-subtabs {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  overflow-x: auto;
 }
 
-.hi-solo-add {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.hi-solo-add-nome {
-  flex: 1 1 240px;
-  min-width: 0;
-}
-
-.hi-solo-add-base {
-  flex: 0 0 200px;
-}
-
-.hi-solo-add .btn {
+.hi-subtab {
   flex: 0 0 auto;
+  padding: 7px 13px;
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: .76rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.hi-subtab:hover {
+  color: var(--text);
+  background: var(--surface-3);
+}
+
+.hi-subtab.active {
+  color: var(--text-on-brand);
+  background: var(--brand-surface);
+}
+
+.hi-subview {
+  display: none;
+}
+
+.hi-subview.active {
+  display: block;
+  animation: horasInvaEntrada .2s ease-out;
+}
+
+.hi-subview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.hi-subview-toolbar .hi-prioridade {
+  flex: 1;
+  margin-bottom: 0;
 }
 
 /* ── Instrutores por base (arrastar entre SJK e CPQ) ────────── */
@@ -1388,14 +1420,13 @@ body.hi-arrastando {
     justify-content: center;
   }
 
-  .hi-solo-add-nome,
-  .hi-solo-add-base {
-    flex-basis: 100%;
+  .hi-subview-toolbar {
+    align-items: stretch;
+    flex-direction: column;
   }
 
-  .hi-solo-add .btn {
+  .hi-subview-toolbar .horas-inva-search {
     width: 100%;
-    justify-content: center;
   }
 
   /* Punho, nome, horas e o botao de liberar nao cabem numa linha de ~350px:

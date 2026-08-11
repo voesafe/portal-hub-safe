@@ -153,6 +153,22 @@ const HorasVoadasInva = {
     });
   },
 
+  /**
+   * Mesma mecânica de mudarView, uma camada abaixo: troca entre "Instrutores
+   * de Voo" e "Instrutores de Solo" DENTRO do card "Instrutores por base",
+   * sem tocar em qual aba de nível superior (Dashboard/Cadastrar) está ativa.
+   */
+  mudarSubView(id) {
+    document.querySelectorAll('.hi-subtab').forEach(tab => {
+      const ativo = tab.dataset.subview === id;
+      tab.classList.toggle('active', ativo);
+      tab.setAttribute('aria-selected', String(ativo));
+    });
+    document.querySelectorAll('.hi-subview').forEach(view => {
+      view.classList.toggle('active', view.id === `hi-subview-${id}`);
+    });
+  },
+
   // ── Leitura do instrutor ────────────────────────────────────
 
   horasDe(instrutor) {
@@ -1878,6 +1894,9 @@ const HorasVoadasInva = {
     document.querySelectorAll('.horas-inva-tab').forEach(tab => {
       tab.addEventListener('click', () => this.mudarView(tab.dataset.view));
     });
+    document.querySelectorAll('.hi-subtab').forEach(tab => {
+      tab.addEventListener('click', () => this.mudarSubView(tab.dataset.subview));
+    });
     document.getElementById('btn-atualizar').addEventListener(
       'click',
       () => this.carregarDados(true)
@@ -2176,15 +2195,24 @@ const HorasVoadasInva = {
   },
 
   /**
-   * Some enquanto o backend publicado nao manda `dataSolo`: aba que abre e
-   * nao salva nada e pior do que aba que nao aparece. O frontend sobe pelo
-   * GitHub Pages e o backend por clasp, em momentos diferentes.
+   * Some enquanto o backend publicado nao manda `dataSolo`: aba/sub-aba que
+   * abre e nao salva nada e pior do que aba que nao aparece. O frontend sobe
+   * pelo GitHub Pages e o backend por clasp, em momentos diferentes. Dois
+   * lugares escondem: a aba de nivel superior "Cadastrar Instrutor de Solo"
+   * e a sub-aba "Instrutores de Solo" dentro de Instrutores por base.
    */
   aplicarSuporteSolo() {
-    const tab = document.querySelector('.horas-inva-tab[data-view="solo"]');
-    if (tab) tab.hidden = !this.solo.suportado;
-    if (!this.solo.suportado && document.getElementById('solo')?.classList.contains('active')) {
-      this.mudarView('dashboard');
+    const tabCadastro = document.querySelector('.horas-inva-tab[data-view="cadastro-solo"]');
+    if (tabCadastro) tabCadastro.hidden = !this.solo.suportado;
+    const subtabSolo = document.querySelector('.hi-subtab[data-subview="solo"]');
+    if (subtabSolo) subtabSolo.hidden = !this.solo.suportado;
+    if (!this.solo.suportado) {
+      if (document.getElementById('cadastro-solo')?.classList.contains('active')) {
+        this.mudarView('dashboard');
+      }
+      if (document.getElementById('hi-subview-solo')?.classList.contains('active')) {
+        this.mudarSubView('voo');
+      }
     }
   },
 
@@ -3054,6 +3082,11 @@ const HorasVoadasInva = {
       }
       formulario?.reset();
       toast('Instrutor de solo cadastrado com sucesso.', 'success');
+      // Mesmo destino do cadastro de voo: volta pro Dashboard, e já na
+      // sub-aba certa, senão a pessoa cadastra e não vê onde o novo
+      // instrutor caiu sem um clique extra.
+      this.mudarView('dashboard');
+      this.mudarSubView('solo');
       await this.carregarDados();
     } catch (erro) {
       console.error('[Cadastro de instrutor de solo]', erro);
@@ -3067,6 +3100,10 @@ const HorasVoadasInva = {
     document.getElementById('form-instrutor-solo').addEventListener(
       'submit',
       evento => this.cadastrarSolo(evento)
+    );
+    document.getElementById('btn-cancelar-cadastro-solo').addEventListener(
+      'click',
+      () => this.mudarView('dashboard')
     );
     document.getElementById('busca-instrutor-solo').addEventListener('input', evento => {
       this.solo.filtro = evento.target.value;
