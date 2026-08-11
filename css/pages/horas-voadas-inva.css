@@ -160,44 +160,42 @@
 }
 
 /* ── Etiquetas: paleta ──────────────────────────────────────────
-   Cada cor e um par fundo/texto por modo, e o par e escolhido aqui, no
-   CSS, justamente porque o backend guarda so a CHAVE da cor. Cor livre
-   digitada por quem cria a etiqueta sairia ilegivel num dos dois modos, e
-   a pessoa nao veria isso na hora de escolher.
-   O fundo e rgba de proposito: assenta sobre a superficie de baixo em vez
-   de impor a sua, entao a mesma regra serve no claro e no escuro. */
+   Desde 2026-08-11 o fundo é a própria cor SÓLIDA, não mais um tint
+   translúcido: o pedido do Victor foi "cores normais que chamem atenção",
+   no molde do Trello de verdade, em vez do tom pastel que tinha antes. Cada
+   par bg/fg foi escolhido e MEDIDO (contraste ≥ 4.5:1) para o texto sobre
+   aquela cor específica — por isso o par é fixo e independente de tema: uma
+   cor sólida não precisa reagir a claro/escuro, só o texto que vai por
+   cima dela, e esse texto já foi calibrado por cor. Ampliada de 10 para 20
+   chaves; as 10 antigas mantiveram a mesma identidade (verde é verde,
+   vermelho é vermelho), só o desenho ficou mais vívido. */
 .hi-chip,
 .hi-pop-marcar,
 .hi-pop-cor {
-  --et-bg: rgba(120,132,150,.16);
-  --et-fg: #47526b;
-  --et-solida: #788496;
+  --et-bg: #788496;
+  --et-fg: #14181f;
 }
 
-.cor-verde    { --et-bg: rgba(39,174,96,.16);  --et-fg: #1a7a44; --et-solida: #27ae60; }
-.cor-limao    { --et-bg: rgba(126,188,44,.18); --et-fg: #4f7414; --et-solida: #7ebc2c; }
-.cor-amarelo  { --et-bg: rgba(233,196,32,.20); --et-fg: #7d6408; --et-solida: #e9c420; }
-.cor-laranja  { --et-bg: rgba(243,156,18,.18); --et-fg: #8b5b08; --et-solida: #f39c12; }
-.cor-vermelho { --et-bg: rgba(214,69,65,.16);  --et-fg: #a32e2a; --et-solida: #d64541; }
-.cor-rosa     { --et-bg: rgba(212,84,150,.16); --et-fg: #a33470; --et-solida: #d45496; }
-.cor-roxo     { --et-bg: rgba(142,94,206,.16); --et-fg: #6a3fa8; --et-solida: #8e5ece; }
-.cor-azul     { --et-bg: rgba(52,120,198,.16); --et-fg: #245a99; --et-solida: #3478c6; }
-.cor-ceu      { --et-bg: rgba(91,174,226,.18); --et-fg: #176b91; --et-solida: #5baee2; }
-.cor-cinza    { --et-bg: rgba(120,132,150,.16); --et-fg: #47526b; --et-solida: #788496; }
-
-/* No escuro o fundo translucido continua servindo, mas o texto precisa
-   clarear: os tons acima foram escolhidos para contraste sobre branco e
-   ficariam ilegiveis sobre a superficie escura. */
-:root[data-theme="dark"] .cor-verde    { --et-fg: #6ee7a4; }
-:root[data-theme="dark"] .cor-limao    { --et-fg: #b7e06a; }
-:root[data-theme="dark"] .cor-amarelo  { --et-fg: #f0d75f; }
-:root[data-theme="dark"] .cor-laranja  { --et-fg: #f7bb62; }
-:root[data-theme="dark"] .cor-vermelho { --et-fg: #f28e8a; }
-:root[data-theme="dark"] .cor-rosa     { --et-fg: #f094c2; }
-:root[data-theme="dark"] .cor-roxo     { --et-fg: #c4a2f0; }
-:root[data-theme="dark"] .cor-azul     { --et-fg: #8ab6ea; }
-:root[data-theme="dark"] .cor-ceu      { --et-fg: #9ed3f2; }
-:root[data-theme="dark"] .cor-cinza    { --et-fg: #b0bacb; }
+.cor-verde    { --et-bg: #27ae60; --et-fg: #14181f; }
+.cor-limao    { --et-bg: #7ebc2c; --et-fg: #14181f; }
+.cor-amarelo  { --et-bg: #e9c420; --et-fg: #14181f; }
+.cor-mostarda { --et-bg: #c99a1e; --et-fg: #14181f; }
+.cor-laranja  { --et-bg: #f39c12; --et-fg: #14181f; }
+.cor-coral    { --et-bg: #e8674a; --et-fg: #14181f; }
+.cor-vermelho { --et-bg: #c8413d; --et-fg: #ffffff; }
+.cor-vinho    { --et-bg: #8e2f45; --et-fg: #ffffff; }
+.cor-rosa     { --et-bg: #d45496; --et-fg: #14181f; }
+.cor-fucsia   { --et-bg: #b23a86; --et-fg: #ffffff; }
+.cor-roxo     { --et-bg: #8e5ece; --et-fg: #ffffff; }
+.cor-indigo   { --et-bg: #4a55c4; --et-fg: #ffffff; }
+.cor-azul     { --et-bg: #3478c6; --et-fg: #ffffff; }
+.cor-marinho  { --et-bg: #274b7a; --et-fg: #ffffff; }
+.cor-ceu      { --et-bg: #5baee2; --et-fg: #14181f; }
+.cor-turquesa { --et-bg: #159a90; --et-fg: #14181f; }
+.cor-oliva    { --et-bg: #6d6f28; --et-fg: #ffffff; }
+.cor-marrom   { --et-bg: #8a5a3c; --et-fg: #ffffff; }
+.cor-preto    { --et-bg: #2b2f3a; --et-fg: #ffffff; }
+.cor-cinza    { --et-bg: #788496; --et-fg: #14181f; }
 
 .hi-chip {
   display: inline-flex;
@@ -218,8 +216,14 @@
 }
 
 /* O "+" que abre o popover. Nasce discreto e so ganha contorno no hover,
-   senao competiria com os proprios chips em cada linha da lista. */
-.hi-etiquetas-abrir {
+   senao competiria com os proprios chips em cada linha da lista.
+   .hi-etiquetas-abrir-solo é a mesma peça visual para os instrutores de
+   solo — classe PRÓPRIA (não a mesma), porque marcarGatilhoAtivo (mundo de
+   voo) faz document.querySelectorAll('.hi-etiquetas-abrir') sem escopo, e
+   as duas listas vivem no mesmo documento (a aba escondida é display:none,
+   não removida do DOM). */
+.hi-etiquetas-abrir,
+.hi-etiquetas-abrir-solo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -236,7 +240,9 @@
 }
 
 .hi-etiquetas-abrir:hover,
-.hi-etiquetas-abrir.is-aberto {
+.hi-etiquetas-abrir.is-aberto,
+.hi-etiquetas-abrir-solo:hover,
+.hi-etiquetas-abrir-solo.is-aberto {
   border-style: solid;
   border-color: var(--blue);
   color: var(--blue);
@@ -246,8 +252,10 @@
 /* ── Botão de comentários (ao lado do "+" das etiquetas) ────────
    Vazado enquanto não há recado, para não competir com os chips em cada
    linha; cheio e com o número quando há, que é o estado que a operação
-   precisa enxergar sem abrir nada. */
-.hi-coment {
+   precisa enxergar sem abrir nada. .hi-coment-solo é a mesma peça para os
+   instrutores de solo, mesma razão da classe própria acima. */
+.hi-coment,
+.hi-coment-solo {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -262,19 +270,23 @@
   transition: var(--transition);
 }
 
-.hi-coment svg {
+.hi-coment svg,
+.hi-coment-solo svg {
   flex: 0 0 12px;
 }
 
 .hi-coment:hover,
-.hi-coment.is-aberto {
+.hi-coment.is-aberto,
+.hi-coment-solo:hover,
+.hi-coment-solo.is-aberto {
   border-style: solid;
   border-color: var(--blue);
   color: var(--blue);
   background: var(--brand-surface);
 }
 
-.hi-coment.tem {
+.hi-coment.tem,
+.hi-coment-solo.tem {
   padding: 0 7px 0 5px;
   border-style: solid;
   border-color: transparent;
@@ -285,7 +297,9 @@
 /* Com recado, o hover só contorna: trocar o fundo faria a pílula piscar de
    cor toda vez que o ponteiro cruzasse a linha. */
 .hi-coment.tem:hover,
-.hi-coment.tem.is-aberto {
+.hi-coment.tem.is-aberto,
+.hi-coment-solo.tem:hover,
+.hi-coment-solo.tem.is-aberto {
   border-color: var(--blue);
   color: var(--ink-info);
   background: var(--tint-info);
@@ -342,6 +356,34 @@
   justify-content: flex-end;
   gap: 10px;
   margin-top: 8px;
+}
+
+/* ── Cadastro inline de instrutor de solo ─────────────────────
+   Sem saldo inicial, sem etiqueta pré-selecionada: é só nome e base, então
+   uma barra dentro do próprio card resolve, sem precisar de uma view de
+   cadastro separada como a dos instrutores de voo. */
+.hi-solo-add-card {
+  margin-bottom: 12px;
+}
+
+.hi-solo-add {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hi-solo-add-nome {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.hi-solo-add-base {
+  flex: 0 0 200px;
+}
+
+.hi-solo-add .btn {
+  flex: 0 0 auto;
 }
 
 /* ── Instrutores por base (arrastar entre SJK e CPQ) ────────── */
@@ -919,8 +961,12 @@ body.hi-arrastando {
   transition: var(--transition);
 }
 
+/* Anel na cor do TEXTO, nao do fundo: com fundo solido, um anel na mesma
+   cor do fundo desapareceria contra ele. --et-fg ja contrasta com --et-bg
+   por definicao (e o par calibrado), entao reusa-lo aqui garante um anel
+   visivel nos dois casos (fundo claro ou escuro). */
 .hi-pop-marcar:hover {
-  box-shadow: inset 0 0 0 1.5px var(--et-solida);
+  box-shadow: inset 0 0 0 1.5px var(--et-fg);
 }
 
 /* ⚠️ Aqui o nome QUEBRA em vez de cortar, ao contrário do chip na linha do
@@ -1045,7 +1091,7 @@ body.hi-arrastando {
 .hi-pop-cor {
   height: 30px;
   border-radius: var(--radius-sm);
-  background: var(--et-solida);
+  background: var(--et-bg);
   transition: var(--transition);
 }
 
@@ -1235,14 +1281,19 @@ body.hi-arrastando {
    o teto de 190px do .hi-chip cortava os nomes longos. Sem o teto, o chip
    ocupa a largura que precisar e o container quebra para a linha seguinte;
    só quebra o texto quando nem uma faixa inteira comporta. */
+/* ⚠️ Cor do TEXTO por fora do .hi-chip aqui: com --et-bg virando cor solida
+   (2026-08-11), herdar `color: var(--et-fg)` do .hi-chip sem fundo nenhum
+   deixaria etiqueta escura (azul, roxo, vinho...) com texto BRANCO sobre a
+   superficie clara do card, ilegivel. Vazado enquanto nao marcado (cheio
+   nos dois estados nao daria para saber o que ja foi escolhido), e por
+   isso o texto usa a cor neutra do tema, nao o par calibrado da etiqueta. */
 .hi-chip-toggle {
   max-width: 100%;
   padding: 6px 12px;
+  color: var(--text-2);
   font-size: .7rem;
   white-space: normal;
   overflow-wrap: break-word;
-  /* Vazado enquanto nao marcado: cheio nos dois estados nao daria para
-     saber o que ja foi escolhido. */
   background: transparent;
   box-shadow: inset 0 0 0 1.5px var(--et-bg);
   opacity: .72;
@@ -1253,9 +1304,13 @@ body.hi-arrastando {
   opacity: 1;
 }
 
+/* Marcado, o chip fica cheio e a cor do texto volta a ser a do par
+   calibrado (--et-fg): a mesma logica do .hi-pop-marcar, o anel usa --et-fg
+   em vez do fundo, senao desapareceria contra o proprio fundo solido. */
 .hi-chip-toggle.is-marcada {
+  color: var(--et-fg);
   background: var(--et-bg);
-  box-shadow: inset 0 0 0 1.5px var(--et-solida);
+  box-shadow: inset 0 0 0 1.5px var(--et-fg);
   opacity: 1;
 }
 
@@ -1330,6 +1385,16 @@ body.hi-arrastando {
   }
 
   .horas-inva-form-actions .btn {
+    justify-content: center;
+  }
+
+  .hi-solo-add-nome,
+  .hi-solo-add-base {
+    flex-basis: 100%;
+  }
+
+  .hi-solo-add .btn {
+    width: 100%;
     justify-content: center;
   }
 

@@ -205,7 +205,7 @@ const Auth = {
     'fechamento-horas.html': 'Fechamento de Horas',
     'escala-cco.html': 'Escala CCO',
     'escala-pav.html': 'Escala PAV de Base',
-    'horas-voadas-inva.html': 'Horas Voadas INVA Mês',
+    'horas-voadas-inva.html': 'Instrutores',
     'portal-aluno.html': 'Portal do Aluno',
     'progresso-alunos.html': 'Progresso de Alunos',
     'cadastro-alunos.html': 'Cadastro de Aluno',
@@ -398,7 +398,7 @@ const Auth = {
 
   protegerEscalaCco()       { return this.protegerPagina('escala-cco.html', 'Escala CCO'); },
   protegerEscalaPav()       { return this.protegerPagina('escala-pav.html', 'Escala PAV de Base'); },
-  protegerHorasVoadasInva() { return this.protegerPagina('horas-voadas-inva.html', 'Horas Voadas INVA Mês'); },
+  protegerHorasVoadasInva() { return this.protegerPagina('horas-voadas-inva.html', 'Instrutores'); },
   protegerSafeMinions()     { return this.protegerPagina('safe-minions.html', 'SAFE MINIONS'); },
   protegerProgressoAlunos() { return this.protegerPagina('progresso-alunos.html', 'Progresso de Alunos'); },
   protegerCadastroAlunos()  { return this.protegerPagina('cadastro-alunos.html', 'Cadastro de Aluno'); },
@@ -565,7 +565,7 @@ const Auth = {
     secoes.push(secaoSeTiver('escala', 'Escala', 'escala', [
       { pagina: 'escala-cco.html', label: 'Escala CCO', icone: 'escala' },
       { pagina: 'escala-pav.html', label: 'Escala PAV de Base', icone: 'escala' },
-      { pagina: 'horas-voadas-inva.html', label: 'Horas Voadas INVA Mês', icone: 'horas' },
+      { pagina: 'horas-voadas-inva.html', label: 'Instrutores', icone: 'horas' },
       { pagina: 'notams.html', label: 'NOTAMs', icone: 'notam' }
     ], ['escala-cco.html', 'escala-pav.html', 'horas-voadas-inva.html', 'notams.html']));
 

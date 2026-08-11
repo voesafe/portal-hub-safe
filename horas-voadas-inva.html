@@ -20,14 +20,14 @@
       } catch (e) {}
     })();
   </script>
-  <title>Horas Voadas INVA Mês — SAFE Hub</title>
+  <title>Instrutores — SAFE Hub</title>
   <link rel="manifest" href="manifest.webmanifest?v=d836cf66">
   <meta name="theme-color" content="#19213f">
   <link rel="icon" type="image/png" href="favicon.png?v=91131805">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
   <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
-  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=26d447fc">
+  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=b1ae0169">
 </head>
 <body>
 <div class="app-shell">
@@ -60,8 +60,8 @@
           <span></span><span></span><span></span>
         </button>
         <div class="topbar-context">
-          <div class="topbar-title">Horas Voadas INVA Mês</div>
-          <div class="topbar-subtitle">Instrutores e horas sincronizadas com o CAVOK</div>
+          <div class="topbar-title">Instrutores</div>
+          <div class="topbar-subtitle">Instrutores de voo (horas do CAVOK) e de solo</div>
         </div>
       </div>
       <div class="topbar-right">
@@ -77,6 +77,9 @@
         </button>
         <button class="horas-inva-tab" type="button" role="tab" aria-selected="false" data-view="cadastro">
           Cadastrar instrutor
+        </button>
+        <button class="horas-inva-tab" type="button" role="tab" aria-selected="false" data-view="solo">
+          Instrutores de Solo
         </button>
       </div>
 
@@ -356,6 +359,113 @@
         </article>
       </section>
 
+      <section class="horas-inva-view" id="solo">
+        <article class="card hi-solo-add-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Novo instrutor de solo</h2>
+              <p class="horas-inva-card-subtitle">
+                Sem CAVOK e sem liberação por OPR: só cadastro, etiquetas, base e prioridade.
+              </p>
+            </div>
+          </div>
+          <form class="hi-solo-add" id="form-instrutor-solo">
+            <div class="form-group hi-solo-add-nome">
+              <label class="form-label" for="instrutor-solo-nome">Nome completo</label>
+              <input class="form-control" type="text" id="instrutor-solo-nome" required placeholder="Ex.: Maria Silva">
+            </div>
+            <div class="form-group hi-solo-add-base">
+              <label class="form-label" for="instrutor-solo-base">Base</label>
+              <select class="form-control" id="instrutor-solo-base" required>
+                <option value="SJK">SJK · São José dos Campos</option>
+                <option value="CPQ">CPQ · Campinas</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Adicionar instrutor</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-header horas-inva-table-header">
+            <div>
+              <h2 class="card-title">Instrutores de solo por base</h2>
+              <p class="horas-inva-card-subtitle">
+                Cadastro, etiquetas e prioridade de acionamento. Sem hora voada e sem liberação por OPR.
+              </p>
+            </div>
+            <input class="form-control horas-inva-search" id="busca-instrutor-solo" type="search" placeholder="Buscar instrutor de solo">
+          </div>
+
+          <p class="hi-prioridade">
+            A ordem que aparece na lista é a ordem de prioridade de acionamento.
+          </p>
+
+          <p class="hi-ajuda">
+            <span>
+              Arraste o instrutor pelo punho para mudar a posição dele na fila ou para
+              levá-lo à outra base. Com o punho em foco, as setas <strong>↑</strong> e
+              <strong>↓</strong> movem um degrau. No celular, um toque no punho move
+              para a outra base. O <strong>+</strong> ao lado do nome abre as etiquetas
+              e o balão abre os comentários.
+            </span>
+          </p>
+
+          <div class="hi-bases" id="hi-bases-solo">
+            <section class="hi-base" data-drop-base="SJK" aria-label="Base SJK, instrutores de solo">
+              <header class="hi-base-header">
+                <div>
+                  <h3 class="hi-base-nome">SJK <span>São José dos Campos</span></h3>
+                  <p class="hi-base-sub"><span id="hi-contador-SJK-solo">—</span></p>
+                </div>
+                <div class="hi-ordenar">
+                  <button class="hi-ordenar-btn" type="button" data-ordenar-solo="SJK"
+                    aria-haspopup="true" aria-expanded="false" aria-label="Ordenar a base SJK">
+                    <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+                      <path d="M2 4h12M4 8h8M6 12h4" fill="none" stroke="currentColor"
+                        stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                  <div class="hi-ordenar-menu" data-menu-solo="SJK" role="menu" hidden>
+                    <button type="button" role="menuitemradio" data-ordem="prioridade">Prioridade de acionamento</button>
+                    <button type="button" role="menuitemradio" data-ordem="alfabetica">Ordem alfabética</button>
+                  </div>
+                </div>
+              </header>
+              <p class="hi-vista-aviso" id="hi-vista-SJK-solo" hidden></p>
+              <ul class="hi-lista" id="hi-lista-SJK-solo">
+                <li class="hi-vazio">Carregando dados...</li>
+              </ul>
+            </section>
+
+            <section class="hi-base" data-drop-base="CPQ" aria-label="Base CPQ, instrutores de solo">
+              <header class="hi-base-header">
+                <div>
+                  <h3 class="hi-base-nome">CPQ <span>Campinas</span></h3>
+                  <p class="hi-base-sub"><span id="hi-contador-CPQ-solo">—</span></p>
+                </div>
+                <div class="hi-ordenar">
+                  <button class="hi-ordenar-btn" type="button" data-ordenar-solo="CPQ"
+                    aria-haspopup="true" aria-expanded="false" aria-label="Ordenar a base CPQ">
+                    <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+                      <path d="M2 4h12M4 8h8M6 12h4" fill="none" stroke="currentColor"
+                        stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                  <div class="hi-ordenar-menu" data-menu-solo="CPQ" role="menu" hidden>
+                    <button type="button" role="menuitemradio" data-ordem="prioridade">Prioridade de acionamento</button>
+                    <button type="button" role="menuitemradio" data-ordem="alfabetica">Ordem alfabética</button>
+                  </div>
+                </div>
+              </header>
+              <p class="hi-vista-aviso" id="hi-vista-CPQ-solo" hidden></p>
+              <ul class="hi-lista" id="hi-lista-CPQ-solo">
+                <li class="hi-vazio">Carregando dados...</li>
+              </ul>
+            </section>
+          </div>
+        </article>
+      </section>
+
       <!-- Popover de etiquetas. Fica FORA das listas de propósito: elas são
            remontadas por innerHTML a cada render, e aqui dentro ele seria
            destruído aberto no meio da edição. O JS posiciona (é fixed). -->
@@ -366,6 +476,14 @@
            faria uma reabrir a outra. Fica fora das listas pelo mesmo motivo. -->
       <div class="hi-pop hi-pop-coment" id="hi-pop-coment" role="dialog"
         aria-label="Comentários do instrutor" hidden></div>
+
+      <!-- Mesma dupla de popovers, para os instrutores de solo. Elemento
+           PRÓPRIO, não reaproveitado: o de voo pode estar aberto na outra
+           aba e as duas máquinas de estado (this.pop / this.solo.pop) não
+           podem disputar o mesmo nó. -->
+      <div class="hi-pop" id="hi-pop-solo" role="dialog" aria-label="Etiquetas do instrutor de solo" hidden></div>
+      <div class="hi-pop hi-pop-coment" id="hi-pop-coment-solo" role="dialog"
+        aria-label="Comentários do instrutor de solo" hidden></div>
 
       <div class="modal-overlay" id="modal-liberacao">
         <div class="modal hi-modal" role="dialog" aria-modal="true" aria-labelledby="liberacao-titulo">
@@ -407,7 +525,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="js/core/config.js?v=e18544d3"></script>
 <script src="js/core/api.js?v=46dc9509"></script>
-<script src="js/core/auth.js?v=47cb2ebd"></script>
-<script src="js/pages/horas-voadas-inva.js?v=7a5bfd81"></script>
+<script src="js/core/auth.js?v=e545a3e5"></script>
+<script src="js/pages/horas-voadas-inva.js?v=eb9b9304"></script>
 </body>
 </html>

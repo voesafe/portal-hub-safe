@@ -26,18 +26,30 @@ const HorasVoadasInva = {
   TEXTO_MAX: 1000,
   // Etiquetas marcadas no formulario de cadastro, antes de o instrutor existir.
   etiquetasNovoInstrutor: [],
-  // Paleta fechada. A chave viaja para o backend, o tom vem do CSS, que
-  // afina cada cor no claro e no escuro. Cor livre sairia ilegivel num deles.
+  // Paleta fechada, compartilhada pelos instrutores de voo e de solo: a cor
+  // e infraestrutura visual (o catalogo de etiquetas de cada um e que e
+  // separado). A chave viaja para o backend, o tom vem do CSS. Ampliada de
+  // 10 para 20 em 2026-08-11, cores solidas em vez de tom pastel.
   CORES: [
     { chave: 'verde', nome: 'Verde' },
     { chave: 'limao', nome: 'Limão' },
     { chave: 'amarelo', nome: 'Amarelo' },
+    { chave: 'mostarda', nome: 'Mostarda' },
     { chave: 'laranja', nome: 'Laranja' },
+    { chave: 'coral', nome: 'Coral' },
     { chave: 'vermelho', nome: 'Vermelho' },
+    { chave: 'vinho', nome: 'Vinho' },
     { chave: 'rosa', nome: 'Rosa' },
+    { chave: 'fucsia', nome: 'Fúcsia' },
     { chave: 'roxo', nome: 'Roxo' },
+    { chave: 'indigo', nome: 'Índigo' },
     { chave: 'azul', nome: 'Azul' },
+    { chave: 'marinho', nome: 'Marinho' },
     { chave: 'ceu', nome: 'Céu' },
+    { chave: 'turquesa', nome: 'Turquesa' },
+    { chave: 'oliva', nome: 'Oliva' },
+    { chave: 'marrom', nome: 'Marrom' },
+    { chave: 'preto', nome: 'Preto' },
     { chave: 'cinza', nome: 'Cinza' }
   ],
   COR_PADRAO: 'cinza',
@@ -67,6 +79,28 @@ const HorasVoadasInva = {
   // punho logo depois. Sem esta trava, um arraste bem-sucedido moveria de
   // novo pelo click e o instrutor voltaria para a base de origem.
   ignorarCliqueDoPunho: false,
+
+  // ── Instrutores de solo (2026-08-11) ─────────────────────────
+  // Mundo separado, com estado PRÓPRIO (nunca misturado com o de voo
+  // acima): sem hora voada, sem CAVOK, sem OPR, sem flag de 100h. Ver o
+  // bloco grande "INSTRUTORES DE SOLO" mais abaixo no arquivo.
+  solo: {
+    instrutores: [],
+    // Catalogo PROPRIO (decisão do Victor): a cor (this.CORES, acima) é
+    // infraestrutura visual compartilhada, mas a etiqueta em si não —
+    // misturar com CLT/Eventual/LIBERADO IFR AVIÃO ofereceria, num
+    // seletor, etiqueta que não serve para o outro mundo.
+    etiquetas: [],
+    // Some a aba enquanto o backend publicado não manda `dataSolo`: aba
+    // que abre e não salva nada é peor do que aba que não aparece.
+    suportado: false,
+    filtro: '',
+    ordens: { SJK: 'prioridade', CPQ: 'prioridade' },
+    pop: { instrutor: null, painel: 'lista', editando: null, cor: 'verde', busca: '' },
+    popComent: { instrutor: null, salvando: false, rascunhos: {} },
+    arraste: null,
+    ignorarCliqueDoPunho: false
+  },
 
   escape(valor) {
     // Escapa tambem as aspas: o retorno entra em atributo (data-nome, title),
@@ -436,11 +470,15 @@ const HorasVoadasInva = {
 
   escolherCorPop(cor) {
     this.pop.cor = this.corValida(cor);
-    const previa = document.querySelector('[data-pop-previa]');
+    // Escopado a #hi-pop: desde que os instrutores de solo ganharam popover
+    // próprio (com o mesmo [data-pop-previa]/.hi-pop-cor, escondido mas no
+    // mesmo documento), uma busca sem escopo aqui pintaria os dois.
+    const pop = document.getElementById('hi-pop');
+    const previa = pop.querySelector('[data-pop-previa]');
     if (previa) {
       previa.className = `hi-chip cor-${this.pop.cor}`;
     }
-    document.querySelectorAll('.hi-pop-cor').forEach(botao => {
+    pop.querySelectorAll('.hi-pop-cor').forEach(botao => {
       const ativa = botao.dataset.cor === this.pop.cor;
       botao.classList.toggle('is-ativa', ativa);
       botao.setAttribute('aria-pressed', String(ativa));
@@ -994,9 +1032,11 @@ const HorasVoadasInva = {
     this.aplicarOrdem(base, fila);
     // O innerHTML da lista destroi o botao que estava com o foco: sem
     // devolve-lo, a segunda seta teria que ser precedida de um tab.
+    // Escopado a #hi-bases: sem isso, um instrutor de solo com o mesmo
+    // nome de um instrutor de voo poderia levar o foco embora.
     requestAnimationFrame(() => {
       document.querySelector(
-        `.hi-item[data-nome="${CSS.escape(nome)}"] .hi-punho`
+        `#hi-bases .hi-item[data-nome="${CSS.escape(nome)}"] .hi-punho`
       )?.focus();
     });
   },
@@ -1711,6 +1751,20 @@ const HorasVoadasInva = {
         : [];
       this.renderizarTudo();
       if (this.popAberto()) this.renderizarPop();
+
+      // Instrutores de solo viajam na MESMA resposta (ver o backend). A aba
+      // so aparece quando `dataSolo` existe: backend antigo nao manda o
+      // campo, e uma aba visivel sem o back correspondente e pior que aba
+      // escondida.
+      this.solo.suportado = Array.isArray(resultado.dataSolo);
+      this.solo.instrutores = this.solo.suportado ? resultado.dataSolo : [];
+      this.solo.etiquetas = Array.isArray(resultado.meta?.etiquetasSolo)
+        ? resultado.meta.etiquetasSolo
+        : [];
+      this.aplicarSuporteSolo();
+      this.renderizarTudoSolo();
+      if (this.popAbertoSolo()) this.renderizarPopSolo();
+
       document.getElementById('ultima-atualizacao').textContent =
         `Atualizado em ${new Date().toLocaleString('pt-BR')}.`;
       if (mostrarToast) toast('Dados atualizados.', 'success');
@@ -1720,6 +1774,10 @@ const HorasVoadasInva = {
         const lista = document.getElementById(`hi-lista-${base}`);
         if (lista) {
           lista.innerHTML = '<li class="hi-vazio">Não foi possível carregar os dados.</li>';
+        }
+        const listaSolo = document.getElementById(`hi-lista-${base}-solo`);
+        if (listaSolo) {
+          listaSolo.innerHTML = '<li class="hi-vazio">Não foi possível carregar os dados.</li>';
         }
       });
       toast(erro.message || 'Erro ao carregar horas voadas.', 'error', 5000);
@@ -2069,6 +2127,1111 @@ const HorasVoadasInva = {
     });
   },
 
+  // ============================================================
+  // INSTRUTORES DE SOLO (2026-08-11)
+  //
+  // Mundo separado dos instrutores de voo: sem hora voada, sem CAVOK, sem
+  // liberacao por OPR, sem flag de 100h (nada de hora e contabilizada para
+  // eles). O que sobra em comum e exatamente o que esta secao reusa: a
+  // paleta de cores (this.CORES/this.paletaHtml/this.corValida), o
+  // posicionamento de popover (this.posicionarPopover) e os comentarios
+  // genericos (this.comentariosDe/this.comentarioHtml/this.autorAtual). O
+  // catalogo de ETIQUETAS e proprio (this.solo.etiquetas), por pedido do
+  // Victor: misturar com CLT/Eventual/LIBERADO IFR AVIAO ofereceria, num
+  // seletor, etiqueta que nao serve para o outro mundo.
+  //
+  // ⚠️ Todo elemento clicavel da linha usa CLASSE ou ATRIBUTO exclusivos
+  // deste mundo (.hi-etiquetas-abrir-solo, .hi-coment-solo, data-*-solo),
+  // nunca os mesmos das linhas de voo: os seletores de voo em
+  // marcarGatilhoAtivo/marcarGatilhoComentAtivo/pintarMenusOrdem sao
+  // GLOBAIS (document.querySelectorAll sem escopo), e as duas listas vivem
+  // no mesmo documento (a aba escondida e display:none, nao removida do
+  // DOM). Reusar o mesmo atributo faria abrir o seletor de cor de um mundo
+  // tambem pintar o do outro.
+  // ============================================================
+
+  baseDoInstrutorSolo(instrutor) {
+    const base = String(instrutor.base || '').trim().toUpperCase();
+    return this.bases.includes(base) ? base : this.bases[0];
+  },
+
+  etiquetaPorIdSolo(id) {
+    return this.solo.etiquetas.find(e => e.id === id) || null;
+  },
+
+  etiquetasDoSolo(instrutor) {
+    const ids = Array.isArray(instrutor?.etiquetas) ? instrutor.etiquetas : [];
+    return this.solo.etiquetas.filter(e => ids.includes(e.id)).map(e => e.id);
+  },
+
+  temEtiquetaSolo(instrutor, id) {
+    return this.etiquetasDoSolo(instrutor).includes(id);
+  },
+
+  /** chipEtiqueta e generico (so le etiqueta.cor/etiqueta.nome): reusado tal e qual. */
+  chipsDoInstrutorSolo(instrutor) {
+    return this.etiquetasDoSolo(instrutor)
+      .map(id => this.chipEtiqueta(this.etiquetaPorIdSolo(id)))
+      .join('');
+  },
+
+  /**
+   * Some enquanto o backend publicado nao manda `dataSolo`: aba que abre e
+   * nao salva nada e pior do que aba que nao aparece. O frontend sobe pelo
+   * GitHub Pages e o backend por clasp, em momentos diferentes.
+   */
+  aplicarSuporteSolo() {
+    const tab = document.querySelector('.horas-inva-tab[data-view="solo"]');
+    if (tab) tab.hidden = !this.solo.suportado;
+    if (!this.solo.suportado && document.getElementById('solo')?.classList.contains('active')) {
+      this.mudarView('dashboard');
+    }
+  },
+
+  // ── Popover de etiquetas de solo (molde Trello) ──────────────
+
+  popAbertoSolo() {
+    return !!this.solo.pop.instrutor;
+  },
+
+  gatilhoDoPopSolo() {
+    if (!this.solo.pop.instrutor) return null;
+    return document.querySelector(
+      `.hi-etiquetas-abrir-solo[data-etiquetas-solo="${CSS.escape(this.solo.pop.instrutor)}"]`
+    );
+  },
+
+  posicionarPopSolo() {
+    this.posicionarPopover(document.getElementById('hi-pop-solo'), this.gatilhoDoPopSolo());
+  },
+
+  abrirPopSolo(nome) {
+    if (this.solo.pop.instrutor === nome) { this.fecharPopSolo(); return; }
+    this.solo.pop.instrutor = nome;
+    this.solo.pop.painel = 'lista';
+    this.solo.pop.editando = null;
+    this.solo.pop.busca = '';
+    this.renderizarPopSolo();
+    this.posicionarPopSolo();
+    const pop = document.getElementById('hi-pop-solo');
+    pop.hidden = false;
+    pop.querySelector('.hi-pop-busca')?.focus();
+    this.marcarGatilhoAtivoSolo();
+  },
+
+  fecharPopSolo() {
+    this.solo.pop.instrutor = null;
+    this.solo.pop.editando = null;
+    document.getElementById('hi-pop-solo').hidden = true;
+    this.marcarGatilhoAtivoSolo();
+  },
+
+  marcarGatilhoAtivoSolo() {
+    document.querySelectorAll('.hi-etiquetas-abrir-solo').forEach(botao => {
+      const ativo = botao.dataset.etiquetasSolo === this.solo.pop.instrutor;
+      botao.classList.toggle('is-aberto', ativo);
+      botao.setAttribute('aria-expanded', String(ativo));
+    });
+  },
+
+  renderizarPopSolo() {
+    const pop = document.getElementById('hi-pop-solo');
+    const instrutor = this.solo.instrutores.find(i => i.nome === this.solo.pop.instrutor);
+    const editando = this.solo.pop.editando
+      ? this.etiquetaPorIdSolo(this.solo.pop.editando)
+      : null;
+
+    if (this.solo.pop.painel === 'editar') {
+      pop.innerHTML = `
+        <div class="hi-pop-head">
+          <button class="hi-pop-icone" type="button" data-pop-solo="voltar" aria-label="Voltar">&#8592;</button>
+          <span class="hi-pop-titulo">${editando ? 'Editar etiqueta' : 'Criar etiqueta'}</span>
+          <button class="hi-pop-icone" type="button" data-pop-solo="fechar" aria-label="Fechar">&times;</button>
+        </div>
+        <form class="hi-pop-body" data-pop-solo-form="etiqueta">
+          <div class="hi-pop-previa">
+            <span class="hi-chip cor-${this.corValida(this.solo.pop.cor)}" data-pop-solo-previa>
+              ${this.escape(editando ? editando.nome : 'Nova etiqueta')}
+            </span>
+          </div>
+          <label class="hi-pop-rotulo" for="hi-pop-solo-nome">Nome</label>
+          <input class="form-control hi-pop-nome" id="hi-pop-solo-nome" type="text"
+            maxlength="${this.NOME_MAX}" autocomplete="off"
+            value="${this.escape(editando ? editando.nome : '')}"
+            placeholder="Ex.: LIBERADO GROUND SCHOOL">
+          <span class="hi-pop-rotulo">Cor</span>
+          <div class="hi-pop-paleta">${this.paletaHtml(this.corValida(this.solo.pop.cor))}</div>
+          <div class="hi-pop-acoes">
+            ${editando
+              ? `<button class="btn btn-ghost hi-pop-excluir" type="button" data-pop-solo="excluir">Excluir</button>`
+              : ''}
+            <button class="btn btn-primary" type="submit" data-pop-solo="salvar">
+              ${editando ? 'Salvar' : 'Criar'}
+            </button>
+          </div>
+        </form>
+      `;
+      pop.querySelector('.hi-pop-nome')?.focus();
+      return;
+    }
+
+    const termo = this.solo.pop.busca.trim().toLocaleLowerCase('pt-BR');
+    const visiveis = this.solo.etiquetas.filter(
+      e => String(e.nome).toLocaleLowerCase('pt-BR').includes(termo)
+    );
+
+    let lista = '';
+    if (!this.solo.etiquetas.length) {
+      lista = `<li class="hi-pop-vazio">Nenhuma etiqueta ainda. Crie a primeira abaixo.</li>`;
+    } else if (!visiveis.length) {
+      lista = `<li class="hi-pop-vazio">Nenhuma etiqueta com esse nome.</li>`;
+    } else {
+      lista = visiveis.map(etiqueta => {
+        const marcada = instrutor && this.temEtiquetaSolo(instrutor, etiqueta.id);
+        return `
+          <li class="hi-pop-item">
+            <button class="hi-pop-marcar cor-${this.corValida(etiqueta.cor)}${marcada ? ' is-marcada' : ''}"
+              type="button" role="checkbox" aria-checked="${!!marcada}"
+              data-pop-solo="alternar" data-id="${this.escape(etiqueta.id)}">
+              <span class="hi-pop-marcar-nome">${this.escape(etiqueta.nome)}</span>
+              <span class="hi-pop-check" aria-hidden="true"></span>
+            </button>
+            <button class="hi-pop-lapis" type="button" data-pop-solo="editar"
+              data-id="${this.escape(etiqueta.id)}"
+              aria-label="Editar a etiqueta ${this.escape(etiqueta.nome)}">
+              <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+                <path d="M11.5 2.5l2 2L6 12l-2.6.6L4 10l7.5-7.5z" fill="none"
+                  stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </li>
+        `;
+      }).join('');
+    }
+
+    pop.innerHTML = `
+      <div class="hi-pop-head">
+        <span class="hi-pop-titulo">Etiquetas</span>
+        <button class="hi-pop-icone" type="button" data-pop-solo="fechar" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="hi-pop-body">
+        <p class="hi-pop-alvo">${this.escape(this.solo.pop.instrutor || '')}</p>
+        ${this.solo.etiquetas.length > 5
+          ? `<input class="form-control hi-pop-busca" type="search" autocomplete="off"
+              placeholder="Buscar etiqueta" value="${this.escape(this.solo.pop.busca)}"
+              aria-label="Buscar etiqueta">`
+          : ''}
+        <ul class="hi-pop-lista">${lista}</ul>
+        <button class="hi-pop-criar" type="button" data-pop-solo="criar">
+          <span aria-hidden="true">+</span> Criar nova etiqueta
+        </button>
+      </div>
+    `;
+  },
+
+  abrirPainelEtiquetaSolo(id) {
+    const etiqueta = id ? this.etiquetaPorIdSolo(id) : null;
+    this.solo.pop.painel = 'editar';
+    this.solo.pop.editando = etiqueta ? etiqueta.id : null;
+    this.solo.pop.cor = etiqueta ? this.corValida(etiqueta.cor) : 'verde';
+    this.renderizarPopSolo();
+    this.posicionarPopSolo();
+  },
+
+  voltarParaListaSolo() {
+    this.solo.pop.painel = 'lista';
+    this.solo.pop.editando = null;
+    this.renderizarPopSolo();
+    this.posicionarPopSolo();
+  },
+
+  escolherCorPopSolo(cor) {
+    this.solo.pop.cor = this.corValida(cor);
+    const pop = document.getElementById('hi-pop-solo');
+    const previa = pop.querySelector('[data-pop-solo-previa]');
+    if (previa) previa.className = `hi-chip cor-${this.solo.pop.cor}`;
+    pop.querySelectorAll('.hi-pop-cor').forEach(botao => {
+      const ativa = botao.dataset.cor === this.solo.pop.cor;
+      botao.classList.toggle('is-ativa', ativa);
+      botao.setAttribute('aria-pressed', String(ativa));
+    });
+  },
+
+  async alternarEtiquetaSolo(id) {
+    const instrutor = this.solo.instrutores.find(i => i.nome === this.solo.pop.instrutor);
+    const etiqueta = this.etiquetaPorIdSolo(id);
+    if (!instrutor || !etiqueta) return;
+
+    const anterior = this.etiquetasDoSolo(instrutor);
+    const novos = anterior.includes(id)
+      ? anterior.filter(item => item !== id)
+      : [...anterior, id];
+
+    instrutor.etiquetas = novos;
+    this.renderizarTudoSolo();
+    this.renderizarPopSolo();
+    this.posicionarPopSolo();
+
+    try {
+      const resultado = await this.enviar('set_instructor_labels_solo', {
+        nome: instrutor.nome,
+        etiquetas: novos
+      });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar as etiquetas.');
+      }
+    } catch (erro) {
+      console.error('[Etiquetas do instrutor de solo]', erro);
+      instrutor.etiquetas = anterior;
+      this.renderizarTudoSolo();
+      if (this.popAbertoSolo()) { this.renderizarPopSolo(); this.posicionarPopSolo(); }
+      toast(erro.message || 'Erro ao salvar as etiquetas.', 'error', 5000);
+    }
+  },
+
+  async salvarEtiquetaSolo(evento) {
+    evento?.preventDefault();
+    const campo = document.getElementById('hi-pop-solo-nome');
+    const nome = String(campo?.value || '').trim();
+    if (!nome) {
+      toast('Dê um nome para a etiqueta.', 'warning');
+      campo?.focus();
+      return;
+    }
+
+    const botao = document.querySelector('[data-pop-solo="salvar"]');
+    if (botao) botao.disabled = true;
+    try {
+      const resultado = await this.enviar('save_label_solo', {
+        id: this.solo.pop.editando || '',
+        nome,
+        cor: this.solo.pop.cor
+      });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar a etiqueta.');
+      }
+      this.solo.etiquetas = resultado.data?.etiquetas || this.solo.etiquetas;
+      toast(this.solo.pop.editando ? 'Etiqueta atualizada.' : 'Etiqueta criada.', 'success');
+      this.voltarParaListaSolo();
+      this.renderizarTudoSolo();
+    } catch (erro) {
+      console.error('[Salvar etiqueta de solo]', erro);
+      toast(erro.message || 'Erro ao salvar a etiqueta.', 'error', 5000);
+    } finally {
+      const atual = document.querySelector('[data-pop-solo="salvar"]');
+      if (atual) atual.disabled = false;
+    }
+  },
+
+  async excluirEtiquetaSolo() {
+    const etiqueta = this.etiquetaPorIdSolo(this.solo.pop.editando);
+    if (!etiqueta) return;
+
+    const usada = this.solo.instrutores.filter(i => this.temEtiquetaSolo(i, etiqueta.id)).length;
+    const aviso = usada
+      ? `\n\nEla está em ${usada} ${usada === 1 ? 'instrutor' : 'instrutores'} e será removida de todos.`
+      : '';
+    if (!confirm(`Excluir a etiqueta "${etiqueta.nome}"?${aviso}`)) return;
+
+    const botao = document.querySelector('[data-pop-solo="excluir"]');
+    if (botao) botao.disabled = true;
+    try {
+      const resultado = await this.enviar('delete_label_solo', { id: etiqueta.id });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível excluir a etiqueta.');
+      }
+      this.solo.etiquetas = resultado.data?.etiquetas || [];
+      this.solo.instrutores.forEach(instrutor => {
+        if (Array.isArray(instrutor.etiquetas)) {
+          instrutor.etiquetas = instrutor.etiquetas.filter(id => id !== etiqueta.id);
+        }
+      });
+      toast('Etiqueta excluída.', 'success');
+      this.voltarParaListaSolo();
+      this.renderizarTudoSolo();
+    } catch (erro) {
+      console.error('[Excluir etiqueta de solo]', erro);
+      toast(erro.message || 'Erro ao excluir a etiqueta.', 'error', 5000);
+    } finally {
+      const atual = document.querySelector('[data-pop-solo="excluir"]');
+      if (atual) atual.disabled = false;
+    }
+  },
+
+  // ── Comentários por instrutor de solo ────────────────────────
+
+  popComentAbertoSolo() {
+    return !!this.solo.popComent.instrutor;
+  },
+
+  gatilhoDoPopComentSolo() {
+    if (!this.solo.popComent.instrutor) return null;
+    return document.querySelector(
+      `.hi-coment-solo[data-coment-solo="${CSS.escape(this.solo.popComent.instrutor)}"]`
+    );
+  },
+
+  posicionarPopComentSolo() {
+    this.posicionarPopover(
+      document.getElementById('hi-pop-coment-solo'),
+      this.gatilhoDoPopComentSolo()
+    );
+  },
+
+  abrirPopComentSolo(nome) {
+    if (this.solo.popComent.instrutor === nome) { this.fecharPopComentSolo(); return; }
+    this.fecharPopSolo();
+    this.solo.popComent.instrutor = nome;
+    this.solo.popComent.salvando = false;
+    this.renderizarPopComentSolo();
+    this.posicionarPopComentSolo();
+    document.getElementById('hi-pop-coment-solo').hidden = false;
+    this.marcarGatilhoComentAtivoSolo();
+    document.getElementById('hi-coment-solo-campo')?.focus();
+  },
+
+  fecharPopComentSolo() {
+    if (!this.solo.popComent.instrutor) return;
+    this.guardarRascunhoSolo();
+    this.solo.popComent.instrutor = null;
+    this.solo.popComent.salvando = false;
+    document.getElementById('hi-pop-coment-solo').hidden = true;
+    this.marcarGatilhoComentAtivoSolo();
+  },
+
+  guardarRascunhoSolo() {
+    const nome = this.solo.popComent.instrutor;
+    if (!nome) return;
+    const campo = document.getElementById('hi-coment-solo-campo');
+    if (!campo) return;
+    const texto = campo.value;
+    if (texto.trim()) this.solo.popComent.rascunhos[nome] = texto;
+    else delete this.solo.popComent.rascunhos[nome];
+  },
+
+  marcarGatilhoComentAtivoSolo() {
+    document.querySelectorAll('.hi-coment-solo').forEach(botao => {
+      const ativo = botao.dataset.comentSolo === this.solo.popComent.instrutor;
+      botao.classList.toggle('is-aberto', ativo);
+      botao.setAttribute('aria-expanded', String(ativo));
+    });
+  },
+
+  /** suportaComentarios genérico bastaria, mas o nome explícito lê melhor aqui. */
+  suportaComentariosSolo() {
+    return this.solo.instrutores.some(i => Array.isArray(i.comentarios));
+  },
+
+  renderizarPopComentSolo() {
+    const pop = document.getElementById('hi-pop-coment-solo');
+    const nome = this.solo.popComent.instrutor;
+    const instrutor = this.solo.instrutores.find(i => i.nome === nome);
+    const comentarios = this.comentariosDe(instrutor);
+    const autor = this.autorAtual();
+    const rascunho = this.solo.popComent.rascunhos[nome] || '';
+
+    const lista = comentarios.length
+      ? comentarios.map(comentario => this.comentarioHtml(
+          comentario,
+          !!autor && String(comentario.autor || '').trim().toUpperCase() === autor.trim().toUpperCase()
+        )).join('')
+      : `<li class="hi-pop-vazio">Nenhum comentário ainda. O primeiro fica aqui.</li>`;
+
+    pop.innerHTML = `
+      <div class="hi-pop-head">
+        <span class="hi-pop-titulo">Comentários</span>
+        <button class="hi-pop-icone" type="button" data-coment-solo-acao="fechar" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="hi-pop-body">
+        <p class="hi-pop-alvo">${this.escape(nome || '')}</p>
+        <ul class="hi-co-lista">${lista}</ul>
+        <form class="hi-co-form" data-coment-solo-form>
+          <textarea class="form-control hi-co-campo" id="hi-coment-solo-campo" rows="2"
+            maxlength="${this.TEXTO_MAX}"
+            placeholder="Escrever um comentário sobre ${this.escape(nome || '')}"
+            aria-label="Escrever um comentário">${this.escape(rascunho)}</textarea>
+          <div class="hi-co-acoes">
+            <button class="btn btn-primary" type="submit" data-coment-solo-acao="enviar"
+              ${this.solo.popComent.salvando ? 'disabled' : ''}>
+              ${this.solo.popComent.salvando ? 'Salvando...' : 'Comentar'}
+            </button>
+          </div>
+        </form>
+      </div>
+    `;
+  },
+
+  async enviarComentarioSolo(evento) {
+    evento?.preventDefault();
+    const nome = this.solo.popComent.instrutor;
+    const instrutor = this.solo.instrutores.find(i => i.nome === nome);
+    const campo = document.getElementById('hi-coment-solo-campo');
+    if (!instrutor || !campo || this.solo.popComent.salvando) return;
+
+    const texto = String(campo.value || '').trim();
+    if (!texto) {
+      toast('Escreva o comentário antes de salvar.', 'warning');
+      campo.focus();
+      return;
+    }
+
+    const anteriores = this.comentariosDe(instrutor);
+    instrutor.comentarios = [
+      ...anteriores,
+      { id: '', autor: this.autorAtual(), data: '', texto, pendente: true }
+    ];
+    delete this.solo.popComent.rascunhos[nome];
+    this.solo.popComent.salvando = true;
+    this.renderizarTudoSolo();
+    this.renderizarPopComentSolo();
+    this.posicionarPopComentSolo();
+
+    try {
+      const resultado = await this.enviar('add_comment_solo', {
+        nome: instrutor.nome,
+        texto,
+        autor: this.autorAtual()
+      });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar o comentário.');
+      }
+      instrutor.comentarios = Array.isArray(resultado.data?.comentarios)
+        ? resultado.data.comentarios
+        : anteriores;
+    } catch (erro) {
+      console.error('[Comentário do instrutor de solo]', erro);
+      instrutor.comentarios = anteriores;
+      this.solo.popComent.rascunhos[nome] = texto;
+      toast(erro.message || 'Erro ao salvar o comentário.', 'error', 5000);
+    } finally {
+      this.solo.popComent.salvando = false;
+      this.renderizarTudoSolo();
+      if (this.popComentAbertoSolo()) {
+        this.renderizarPopComentSolo();
+        this.posicionarPopComentSolo();
+        document.getElementById('hi-coment-solo-campo')?.focus();
+      }
+    }
+  },
+
+  async excluirComentarioSolo(id) {
+    const nome = this.solo.popComent.instrutor;
+    const instrutor = this.solo.instrutores.find(i => i.nome === nome);
+    if (!instrutor || !id) return;
+    if (!confirm('Apagar este comentário?')) return;
+
+    this.guardarRascunhoSolo();
+    const botao = document.querySelector(
+      `#hi-pop-coment-solo [data-coment-solo-acao="excluir"][data-id="${CSS.escape(id)}"]`
+    );
+    if (botao) botao.disabled = true;
+    try {
+      const resultado = await this.enviar('delete_comment_solo', { id, autor: this.autorAtual() });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível apagar o comentário.');
+      }
+      instrutor.comentarios = Array.isArray(resultado.data?.comentarios)
+        ? resultado.data.comentarios
+        : this.comentariosDe(instrutor).filter(c => c.id !== id);
+      this.renderizarTudoSolo();
+      if (this.popComentAbertoSolo()) { this.renderizarPopComentSolo(); this.posicionarPopComentSolo(); }
+    } catch (erro) {
+      console.error('[Excluir comentário de solo]', erro);
+      toast(erro.message || 'Erro ao apagar o comentário.', 'error', 5000);
+      const atual = document.querySelector(
+        `#hi-pop-coment-solo [data-coment-solo-acao="excluir"][data-id="${CSS.escape(id)}"]`
+      );
+      if (atual) atual.disabled = false;
+    }
+  },
+
+  // ── Ordenação de cada base (só prioridade e alfabética) ──────
+
+  emPrioridadeSolo(base) {
+    return this.solo.ordens[base] === 'prioridade';
+  },
+
+  /** A base inteira na ordem de prioridade, SEM o filtro da busca. */
+  nomesDaBaseSolo(base) {
+    return this.ordenarInstrutores(
+      this.solo.instrutores.filter(i => this.baseDoInstrutorSolo(i) === base),
+      'prioridade'
+    ).map(i => i.nome);
+  },
+
+  async aplicarOrdemSolo(base, nomes) {
+    if (!this.bases.includes(base) || !nomes.length) return;
+
+    const antes = this.solo.instrutores.map(i => ({ i, base: i.base, ordem: i.ordem }));
+    nomes.forEach((nome, indice) => {
+      const instrutor = this.solo.instrutores.find(i => i.nome === nome);
+      if (!instrutor) return;
+      instrutor.base = base;
+      instrutor.ordem = indice + 1;
+    });
+    this.renderizarTudoSolo();
+
+    try {
+      const resultado = await this.enviar('set_instructor_order_solo', { base, nomes });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível salvar a ordem.');
+      }
+    } catch (erro) {
+      console.error('[Ordem de prioridade — solo]', erro);
+      antes.forEach(({ i, base: b, ordem }) => { i.base = b; i.ordem = ordem; });
+      this.renderizarTudoSolo();
+      toast(erro.message || 'Erro ao salvar a ordem de prioridade.', 'error', 5000);
+    }
+  },
+
+  reposicionarSolo(nome, base, nomeAlvo) {
+    const fila = this.nomesDaBaseSolo(base).filter(n => n !== nome);
+    const destino = nomeAlvo && nomeAlvo !== nome ? fila.indexOf(nomeAlvo) : -1;
+    if (destino >= 0) fila.splice(destino, 0, nome);
+    else fila.push(nome);
+    return this.aplicarOrdemSolo(base, fila);
+  },
+
+  moverNaFilaSolo(nome, passo) {
+    const instrutor = this.solo.instrutores.find(i => i.nome === nome);
+    if (!instrutor) return;
+    const base = this.baseDoInstrutorSolo(instrutor);
+    if (!this.emPrioridadeSolo(base)) return;
+
+    const fila = this.nomesDaBaseSolo(base);
+    const atual = fila.indexOf(nome);
+    const novo = atual + passo;
+    if (atual < 0 || novo < 0 || novo >= fila.length) return;
+    fila.splice(atual, 1);
+    fila.splice(novo, 0, nome);
+    this.aplicarOrdemSolo(base, fila);
+    requestAnimationFrame(() => {
+      document.querySelector(
+        `#hi-bases-solo .hi-item[data-nome="${CSS.escape(nome)}"] .hi-punho`
+      )?.focus();
+    });
+  },
+
+  pintarMenusOrdemSolo() {
+    this.bases.forEach(base => {
+      const ordem = this.solo.ordens[base];
+      const botao = document.querySelector(`.hi-ordenar-btn[data-ordenar-solo="${base}"]`);
+      if (botao) botao.title = `Ordenar: ${this.ROTULOS_ORDEM[ordem]}`;
+      document.querySelectorAll(`.hi-ordenar-menu[data-menu-solo="${base}"] button`)
+        .forEach(item => {
+          const ativa = item.dataset.ordem === ordem;
+          item.classList.toggle('is-ativa', ativa);
+          item.setAttribute('aria-checked', String(ativa));
+        });
+    });
+  },
+
+  abrirMenuOrdemSolo(base) {
+    document.querySelectorAll('#hi-bases-solo .hi-ordenar-menu').forEach(menu => {
+      const abrir = menu.dataset.menuSolo === base && menu.hidden;
+      menu.hidden = !abrir;
+      const botao = document.querySelector(`.hi-ordenar-btn[data-ordenar-solo="${menu.dataset.menuSolo}"]`);
+      botao?.setAttribute('aria-expanded', String(abrir));
+      botao?.classList.toggle('is-aberto', abrir);
+    });
+  },
+
+  fecharMenusOrdemSolo() {
+    document.querySelectorAll('#hi-bases-solo .hi-ordenar-menu').forEach(menu => { menu.hidden = true; });
+    document.querySelectorAll('#hi-bases-solo .hi-ordenar-btn').forEach(botao => {
+      botao.setAttribute('aria-expanded', 'false');
+      botao.classList.remove('is-aberto');
+    });
+  },
+
+  escolherOrdemSolo(base, ordem) {
+    if (!this.ROTULOS_ORDEM[ordem] || !this.bases.includes(base)) return;
+    this.solo.ordens[base] = ordem;
+    this.fecharMenusOrdemSolo();
+    this.pintarMenusOrdemSolo();
+    this.renderizarBasesSolo();
+  },
+
+  // ── Render ──────────────────────────────────────────────────
+
+  botaoComentariosSolo(instrutor, nomeEscapado) {
+    if (!this.suportaComentariosSolo()) return '';
+    const quantos = this.comentariosDe(instrutor).length;
+    const rotulo = quantos === 0
+      ? `Sem comentário sobre ${instrutor.nome}`
+      : `${quantos} ${quantos === 1 ? 'comentário' : 'comentários'} sobre ${instrutor.nome}`;
+    return `
+      <button class="hi-coment-solo${quantos ? ' tem' : ''}" type="button" data-coment-solo="${nomeEscapado}"
+        aria-haspopup="dialog" aria-expanded="false"
+        title="${this.escape(rotulo)}" aria-label="${this.escape(rotulo)}">
+        <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+          <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.4 9.4 0 0 1-2.9-.4L3 21l1.6-4.6A8.3 8.3 0 0 1 3.6 11.5 8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"
+            fill="none" stroke="currentColor" stroke-width="2.1"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        ${quantos ? `<span class="hi-coment-n">${quantos}</span>` : ''}
+      </button>
+    `;
+  },
+
+  linhaInstrutorSolo(instrutor, base, posicao) {
+    const outra = this.bases.find(b => b !== base) || base;
+    const nome = this.escape(instrutor.nome);
+    const prioridade = this.emPrioridadeSolo(base);
+    const rotuloPunho = prioridade
+      ? `${nome} está em ${posicao}º na prioridade de ${base}. Arraste para mudar a posição, `
+        + `use as setas para cima e para baixo, ou clique para mover para a base ${outra}`
+      : `Arraste para a outra base, ou clique para mover ${nome} para a base ${outra}`;
+
+    return `
+      <li class="hi-item" data-nome="${nome}">
+        <button class="hi-punho" type="button" data-mover="${outra}"
+          title="${this.escape(rotuloPunho)}" aria-label="${this.escape(rotuloPunho)}">
+          <span class="hi-punho-icone" aria-hidden="true"></span>
+        </button>
+        ${prioridade
+          ? `<span class="hi-posicao" aria-hidden="true">${posicao}</span>`
+          : ''}
+        <div class="hi-item-info">
+          <span class="hi-item-nome">${nome}</span>
+          <span class="hi-item-meta">
+            ${this.chipsDoInstrutorSolo(instrutor)}
+            <button class="hi-etiquetas-abrir-solo" type="button" data-etiquetas-solo="${nome}"
+              aria-haspopup="dialog" aria-expanded="false"
+              title="Etiquetas de ${nome}" aria-label="Etiquetas de ${nome}">
+              <span aria-hidden="true">+</span>
+            </button>
+            ${this.botaoComentariosSolo(instrutor, nome)}
+          </span>
+        </div>
+      </li>
+    `;
+  },
+
+  renderizarBasesSolo() {
+    const termo = String(this.solo.filtro).trim().toLocaleLowerCase('pt-BR');
+
+    this.bases.forEach(base => {
+      const lista = document.getElementById(`hi-lista-${base}-solo`);
+      if (!lista) return;
+
+      const daBase = this.ordenarInstrutores(
+        this.solo.instrutores.filter(i => this.baseDoInstrutorSolo(i) === base),
+        this.solo.ordens[base]
+      );
+      const visiveis = daBase.filter(i => {
+        if (!termo) return true;
+        if (String(i.nome || '').toLocaleLowerCase('pt-BR').includes(termo)) return true;
+        const naEtiqueta = this.etiquetasDoSolo(i).some(id =>
+          String(this.etiquetaPorIdSolo(id)?.nome || '')
+            .toLocaleLowerCase('pt-BR').includes(termo)
+        );
+        if (naEtiqueta) return true;
+        return this.comentariosDe(i).some(c =>
+          String(c.texto || '').toLocaleLowerCase('pt-BR').includes(termo)
+        );
+      });
+
+      const contador = document.getElementById(`hi-contador-${base}-solo`);
+      if (contador) {
+        contador.textContent = `${daBase.length} ${daBase.length === 1 ? 'instrutor' : 'instrutores'}`;
+      }
+
+      const aviso = document.getElementById(`hi-vista-${base}-solo`);
+      if (aviso) {
+        aviso.hidden = this.emPrioridadeSolo(base);
+        aviso.textContent = this.emPrioridadeSolo(base)
+          ? ''
+          : `Vendo por ${this.ROTULOS_ORDEM[this.solo.ordens[base]].toLowerCase()}. Esta não é a ordem de prioridade.`;
+      }
+
+      if (!visiveis.length) {
+        const texto = termo && daBase.length
+          ? 'Nenhum instrutor com esse nome nesta base.'
+          : 'Nenhum instrutor aqui. Arraste um pelo punho.';
+        lista.innerHTML = `<li class="hi-vazio">${texto}</li>`;
+        return;
+      }
+
+      const posicoes = new Map(this.nomesDaBaseSolo(base).map((nome, i) => [nome, i + 1]));
+      lista.innerHTML = visiveis
+        .map(i => this.linhaInstrutorSolo(i, base, posicoes.get(i.nome) || 0))
+        .join('');
+    });
+  },
+
+  renderizarTudoSolo() {
+    this.renderizarBasesSolo();
+    if (this.popAbertoSolo()) {
+      this.marcarGatilhoAtivoSolo();
+      this.posicionarPopSolo();
+    }
+    if (this.popComentAbertoSolo()) {
+      this.marcarGatilhoComentAtivoSolo();
+      this.posicionarPopComentSolo();
+    }
+  },
+
+  // ── Arrastar: posição na fila e troca de base ───────────────
+
+  iniciarArrasteSolo(evento, punho) {
+    if (evento.pointerType === 'mouse' && evento.button !== 0) return;
+    const item = punho.closest('.hi-item');
+    if (!item) return;
+
+    this.solo.arraste = {
+      nome: item.dataset.nome,
+      item,
+      punho,
+      pointerId: evento.pointerId,
+      x0: evento.clientX,
+      y0: evento.clientY,
+      largura: item.getBoundingClientRect().width,
+      ativo: false,
+      alvo: null,
+      antesDe: null,
+      marca: null,
+      ghost: null
+    };
+    try { punho.setPointerCapture(evento.pointerId); } catch (ignore) {}
+  },
+
+  moverArrasteSolo(evento) {
+    const a = this.solo.arraste;
+    if (!a || evento.pointerId !== a.pointerId) return;
+
+    if (!a.ativo) {
+      if (Math.hypot(evento.clientX - a.x0, evento.clientY - a.y0) < 6) return;
+      a.ativo = true;
+      a.item.classList.add('is-arrastando');
+      a.ghost = document.createElement('div');
+      a.ghost.className = 'hi-ghost';
+      a.ghost.style.width = `${a.largura}px`;
+      a.ghost.textContent = a.nome;
+      document.body.appendChild(a.ghost);
+      document.body.classList.add('hi-arrastando');
+    }
+
+    evento.preventDefault();
+    a.ghost.style.transform = `translate(${evento.clientX + 14}px, ${evento.clientY + 14}px)`;
+
+    const sob = document.elementFromPoint(evento.clientX, evento.clientY);
+    const zona = sob?.closest('#hi-bases-solo [data-drop-base]') || null;
+    const base = zona?.dataset.dropBase || null;
+
+    if (base !== a.alvo) {
+      a.alvo = base;
+      document.querySelectorAll('#hi-bases-solo [data-drop-base]').forEach(el => {
+        el.classList.toggle('is-drop', el.dataset.dropBase === base);
+      });
+    }
+
+    this.marcarPosicaoDeSolturaSolo(evento, zona, base);
+  },
+
+  marcarPosicaoDeSolturaSolo(evento, zona, base) {
+    const a = this.solo.arraste;
+    const lista = base && this.emPrioridadeSolo(base) ? zona.querySelector('.hi-lista') : null;
+    if (!lista) {
+      a.antesDe = null;
+      a.marca?.remove();
+      a.marca = null;
+      return;
+    }
+
+    const itens = [...lista.querySelectorAll('.hi-item')].filter(el => el !== a.item);
+    let alvo = null;
+    for (const el of itens) {
+      const caixa = el.getBoundingClientRect();
+      if (evento.clientY < caixa.top + caixa.height / 2) { alvo = el; break; }
+    }
+
+    a.antesDe = alvo?.dataset.nome || null;
+    if (!a.marca) {
+      a.marca = document.createElement('li');
+      a.marca.className = 'hi-drop-marca';
+      a.marca.setAttribute('aria-hidden', 'true');
+    }
+    if (alvo) lista.insertBefore(a.marca, alvo);
+    else lista.appendChild(a.marca);
+  },
+
+  encerrarArrasteSolo(evento) {
+    const a = this.solo.arraste;
+    if (!a || (evento && evento.pointerId !== a.pointerId)) return;
+    this.solo.arraste = null;
+
+    try { a.punho.releasePointerCapture(a.pointerId); } catch (ignore) {}
+    a.ghost?.remove();
+    a.marca?.remove();
+    a.item.classList.remove('is-arrastando');
+    document.body.classList.remove('hi-arrastando');
+    document.querySelectorAll('#hi-bases-solo [data-drop-base]')
+      .forEach(el => el.classList.remove('is-drop'));
+
+    if (!a.ativo) return;
+    this.solo.ignorarCliqueDoPunho = true;
+    if (!a.alvo) return;
+
+    const instrutor = this.solo.instrutores.find(i => i.nome === a.nome);
+    const origem = instrutor ? this.baseDoInstrutorSolo(instrutor) : null;
+
+    if (!this.emPrioridadeSolo(a.alvo)) {
+      if (a.alvo !== origem) this.moverBaseSolo(a.nome, a.alvo);
+      return;
+    }
+
+    const fila = this.nomesDaBaseSolo(a.alvo);
+    const atual = fila.indexOf(a.nome);
+    const seguinte = atual >= 0 ? (fila[atual + 1] || null) : null;
+    if (a.alvo === origem && (a.antesDe === seguinte || a.antesDe === a.nome)) return;
+
+    this.reposicionarSolo(a.nome, a.alvo, a.antesDe);
+  },
+
+  cancelarArrasteSolo() {
+    const a = this.solo.arraste;
+    if (!a) return;
+    a.alvo = null;
+    a.antesDe = null;
+    this.encerrarArrasteSolo({ pointerId: a.pointerId });
+  },
+
+  async moverBaseSolo(nome, base) {
+    if (!this.bases.includes(base)) return;
+    const instrutor = this.solo.instrutores.find(i => i.nome === nome);
+    if (!instrutor) return;
+
+    const anterior = this.baseDoInstrutorSolo(instrutor);
+    if (anterior === base) return;
+
+    const ordemAnterior = instrutor.ordem;
+    instrutor.base = base;
+    instrutor.ordem = this.solo.instrutores
+      .filter(i => this.baseDoInstrutorSolo(i) === base && i !== instrutor)
+      .reduce((maior, i) => Math.max(maior, Number(i.ordem) || 0), 0) + 1;
+    this.renderizarTudoSolo();
+
+    try {
+      const resultado = await this.enviar('set_instructor_base_solo', { nome, base });
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível mudar a base.');
+      }
+      if (Number(resultado.data?.ordem) > 0) {
+        instrutor.ordem = Number(resultado.data.ordem);
+        this.renderizarBasesSolo();
+      }
+      toast(`${nome} agora está na base ${base}.`, 'success');
+    } catch (erro) {
+      console.error('[Base do instrutor de solo]', erro);
+      instrutor.base = anterior;
+      instrutor.ordem = ordemAnterior;
+      this.renderizarTudoSolo();
+      toast(erro.message || 'Erro ao mudar a base do instrutor.', 'error', 5000);
+    }
+  },
+
+  // ── Cadastro ──────────────────────────────────────────────────
+
+  async cadastrarSolo(evento) {
+    evento.preventDefault();
+    const formulario = evento.currentTarget || document.getElementById('form-instrutor-solo');
+    const botao = formulario.querySelector('button[type="submit"]');
+    const dados = {
+      nome: document.getElementById('instrutor-solo-nome').value.trim(),
+      base: document.getElementById('instrutor-solo-base').value
+    };
+    if (!dados.nome || !dados.base) {
+      toast('Preencha o nome e a base do instrutor.', 'warning');
+      return;
+    }
+
+    if (botao) botao.disabled = true;
+    try {
+      const resultado = await this.enviar('add_instructor_solo', dados);
+      if (resultado.status !== 'success') {
+        throw new Error(resultado.message || 'Não foi possível cadastrar o instrutor.');
+      }
+      formulario?.reset();
+      toast('Instrutor de solo cadastrado com sucesso.', 'success');
+      await this.carregarDados();
+    } catch (erro) {
+      console.error('[Cadastro de instrutor de solo]', erro);
+      toast(erro.message || 'Erro ao cadastrar o instrutor de solo.', 'error', 5000);
+    } finally {
+      if (botao) botao.disabled = false;
+    }
+  },
+
+  vincularEventosSolo() {
+    document.getElementById('form-instrutor-solo').addEventListener(
+      'submit',
+      evento => this.cadastrarSolo(evento)
+    );
+    document.getElementById('busca-instrutor-solo').addEventListener('input', evento => {
+      this.solo.filtro = evento.target.value;
+      this.renderizarBasesSolo();
+    });
+
+    const bases = document.getElementById('hi-bases-solo');
+    bases.addEventListener('pointerdown', evento => {
+      const punho = evento.target.closest('.hi-punho');
+      if (punho) this.iniciarArrasteSolo(evento, punho);
+    });
+    bases.addEventListener('keydown', evento => {
+      if (evento.key !== 'ArrowUp' && evento.key !== 'ArrowDown') return;
+      const punho = evento.target.closest('.hi-punho');
+      if (!punho) return;
+      const item = punho.closest('.hi-item');
+      if (!item) return;
+      evento.preventDefault();
+      this.moverNaFilaSolo(item.dataset.nome, evento.key === 'ArrowUp' ? -1 : 1);
+    });
+    bases.addEventListener('click', evento => {
+      const gatilhoOrdem = evento.target.closest('.hi-ordenar-btn');
+      if (gatilhoOrdem) { this.abrirMenuOrdemSolo(gatilhoOrdem.dataset.ordenarSolo); return; }
+      const itemOrdem = evento.target.closest('.hi-ordenar-menu button');
+      if (itemOrdem) {
+        this.escolherOrdemSolo(itemOrdem.closest('.hi-ordenar-menu').dataset.menuSolo, itemOrdem.dataset.ordem);
+        return;
+      }
+
+      const punho = evento.target.closest('.hi-punho');
+      if (punho) {
+        if (this.solo.ignorarCliqueDoPunho) {
+          this.solo.ignorarCliqueDoPunho = false;
+          return;
+        }
+        const item = punho.closest('.hi-item');
+        if (item) this.moverBaseSolo(item.dataset.nome, punho.dataset.mover);
+        return;
+      }
+      const etiquetas = evento.target.closest('.hi-etiquetas-abrir-solo');
+      if (etiquetas) {
+        evento.stopPropagation();
+        this.fecharPopComentSolo();
+        this.abrirPopSolo(etiquetas.dataset.etiquetasSolo);
+        return;
+      }
+      const comentarios = evento.target.closest('.hi-coment-solo');
+      if (comentarios) {
+        evento.stopPropagation();
+        this.abrirPopComentSolo(comentarios.dataset.comentSolo);
+        return;
+      }
+    });
+
+    // ── Popover de etiquetas de solo ──────────────────────────
+    const pop = document.getElementById('hi-pop-solo');
+    pop.addEventListener('click', evento => {
+      const acao = evento.target.closest('[data-pop-solo]');
+      if (!acao) return;
+      const tipo = acao.dataset.popSolo;
+      if (tipo === 'fechar') { this.fecharPopSolo(); return; }
+      if (tipo === 'voltar') { this.voltarParaListaSolo(); return; }
+      if (tipo === 'criar') { this.abrirPainelEtiquetaSolo(null); return; }
+      if (tipo === 'editar') { this.abrirPainelEtiquetaSolo(acao.dataset.id); return; }
+      if (tipo === 'alternar') { this.alternarEtiquetaSolo(acao.dataset.id); return; }
+      if (tipo === 'excluir') { this.excluirEtiquetaSolo(); return; }
+    });
+    pop.addEventListener('click', evento => {
+      const cor = evento.target.closest('.hi-pop-cor');
+      if (cor) this.escolherCorPopSolo(cor.dataset.cor);
+    });
+    pop.addEventListener('submit', evento => {
+      if (evento.target.dataset.popSoloForm !== undefined) this.salvarEtiquetaSolo(evento);
+    });
+    pop.addEventListener('input', evento => {
+      if (!evento.target.classList.contains('hi-pop-busca')) return;
+      this.solo.pop.busca = evento.target.value;
+      const foco = document.activeElement === evento.target;
+      this.renderizarPopSolo();
+      if (foco) {
+        const campo = pop.querySelector('.hi-pop-busca');
+        campo?.focus();
+        campo?.setSelectionRange(campo.value.length, campo.value.length);
+      }
+      this.posicionarPopSolo();
+    });
+
+    // ── Popover de comentários de solo ────────────────────────
+    const popComent = document.getElementById('hi-pop-coment-solo');
+    popComent.addEventListener('click', evento => {
+      const acao = evento.target.closest('[data-coment-solo-acao]');
+      if (!acao) return;
+      const tipo = acao.dataset.comentSoloAcao;
+      if (tipo === 'fechar') { this.fecharPopComentSolo(); return; }
+      if (tipo === 'excluir') { this.excluirComentarioSolo(acao.dataset.id); return; }
+    });
+    popComent.addEventListener('submit', evento => {
+      if (evento.target.dataset.comentSoloForm !== undefined) this.enviarComentarioSolo(evento);
+    });
+    popComent.addEventListener('keydown', evento => {
+      if (evento.key !== 'Enter' || evento.shiftKey) return;
+      if (!evento.target.classList.contains('hi-co-campo')) return;
+      evento.preventDefault();
+      this.enviarComentarioSolo();
+    });
+
+    document.addEventListener('click', evento => {
+      if (!this.popComentAbertoSolo()) return;
+      const caminho = evento.composedPath();
+      const dentro = caminho.some(no =>
+        no.id === 'hi-pop-coment-solo' || no.classList?.contains('hi-coment-solo')
+      );
+      if (dentro) return;
+      this.fecharPopComentSolo();
+    });
+    window.addEventListener('scroll', evento => {
+      if (!this.popComentAbertoSolo()) return;
+      if (this.scrollVeioDeDentro(evento.target, 'hi-pop-coment-solo')) return;
+      this.posicionarPopComentSolo();
+    }, true);
+    window.addEventListener('resize', () => {
+      if (this.popComentAbertoSolo()) this.posicionarPopComentSolo();
+    });
+
+    document.addEventListener('click', evento => {
+      if (!this.popAbertoSolo()) return;
+      const caminho = evento.composedPath();
+      const dentro = caminho.some(no =>
+        no.id === 'hi-pop-solo' || no.classList?.contains('hi-etiquetas-abrir-solo')
+      );
+      if (dentro) return;
+      this.fecharPopSolo();
+    });
+    window.addEventListener('scroll', evento => {
+      if (!this.popAbertoSolo()) return;
+      if (this.scrollVeioDeDentro(evento.target, 'hi-pop-solo')) return;
+      this.posicionarPopSolo();
+    }, true);
+    window.addEventListener('resize', () => {
+      if (this.popAbertoSolo()) this.posicionarPopSolo();
+    });
+
+    document.addEventListener('pointermove', evento => this.moverArrasteSolo(evento));
+    document.addEventListener('pointerup', evento => this.encerrarArrasteSolo(evento));
+    document.addEventListener('pointercancel', evento => this.encerrarArrasteSolo(evento));
+
+    document.addEventListener('click', evento => {
+      if (!evento.target.closest('.hi-ordenar')) this.fecharMenusOrdemSolo();
+    });
+
+    document.addEventListener('keydown', evento => {
+      if (evento.key !== 'Escape') return;
+      if (this.solo.arraste) { this.cancelarArrasteSolo(); return; }
+      if (this.popAbertoSolo()) {
+        if (this.solo.pop.painel === 'editar') this.voltarParaListaSolo();
+        else this.fecharPopSolo();
+        return;
+      }
+      if (this.popComentAbertoSolo()) { this.fecharPopComentSolo(); return; }
+      if (document.querySelector('#hi-bases-solo .hi-ordenar-menu:not([hidden])')) {
+        this.fecharMenusOrdemSolo();
+      }
+    });
+  },
+
   async iniciar() {
     if (!Auth.protegerHorasVoadasInva()) return;
     Auth.preencherUI();
@@ -2078,8 +3241,10 @@ const HorasVoadasInva = {
     this.carregarEstadoDiretriz();
     this.aplicarEstadoDiretriz();
     this.pintarMenusOrdem();
+    this.pintarMenusOrdemSolo();
     this.renderizarEtiquetasCadastro();
     this.vincularEventos();
+    this.vincularEventosSolo();
     await this.carregarDados();
   }
 };

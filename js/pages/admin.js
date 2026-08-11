@@ -44,7 +44,7 @@ const RBAC_MODULOS = [
   { id: 'escala_pav', nome: 'Escala PAV de Base', nota: 'PAV das bases',
     ver: ['escala_pav.visualizar_calendario', 'escala_pav.visualizar_financeiro'],
     editar: ['escala_pav.editar_escala', 'escala_pav.exportar_ifood', 'escala_pav.gerenciar_pavs', 'escala_pav.inativar_reativar_pav'] },
-  { id: 'horas_inva', nome: 'Horas Voadas INVA', nota: 'instrutores / CAVOK',
+  { id: 'horas_inva', nome: 'Instrutores', nota: 'voo (CAVOK) e solo',
     ver: ['horas_inva.visualizar'],
     editar: ['horas_inva.sincronizar_cavok', 'horas_inva.cadastrar_instrutor'] },
   { id: 'notams', nome: 'NOTAMs', nota: 'avisos das bases SBSJ e SDAM',

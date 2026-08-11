@@ -86,8 +86,8 @@ const Inicio = {
         permitido: Auth.podeVer('escala-pav.html')
       },
       {
-        titulo: 'Horas Voadas INVA Mês',
-        descricao: 'Acompanhamento de instrutores e horas sincronizadas com o CAVOK.',
+        titulo: 'Instrutores',
+        descricao: 'Instrutores de voo (com horas do CAVOK) e de solo, por base.',
         href: 'horas-voadas-inva.html',
         icone: 'horas',
         tom: 'blue',
