@@ -37,14 +37,26 @@ export class Recusa extends Error {}
 
 /**
  * Roda um comando e devolve { codigo, saida, erroSaida }.
- * Nunca usa shell, entao caminho com espaco (e temos varios,
+ * Nao usa shell no POSIX, entao caminho com espaco (e temos varios,
  * "01. Codigo VSCODE SAFE") nao precisa de aspas nem escapa nada.
+ *
+ * ⚠️ NO WINDOWS, `shell` precisa ser `true`. Binario global instalado
+ * pelo npm (clasp, node ali mesmo) e um shim `.cmd`/`.ps1`, nao um
+ * executavel direto: sem shell, `spawn('clasp', …)` nunca acha o
+ * processo (ENOENT), cai em `p.on('error')`, devolve codigo 127, e
+ * `conferirLogin()` interpretava isso como "clasp sem sessao" —
+ * mensagem enganosa, porque a sessao estava certa o tempo todo.
+ * Medido em 2026-08-12 na maquina do Pedro. Array de args com shell
+ * `true` no Windows continua seguro (o Node escapa cada item), e
+ * `cwd` nao passa pela shell, entao caminho com espaco no POSIX
+ * segue intocado.
  */
 export function rodar(comando, args, opcoes = {}) {
   const { cwd, mostrar = false, entrada = null } = opcoes;
   return new Promise((resolve) => {
     const p = spawn(comando, args, {
       cwd,
+      shell: process.platform === 'win32',
       stdio: [entrada === null ? 'ignore' : 'pipe', 'pipe', 'pipe'],
     });
     let saida = '';
