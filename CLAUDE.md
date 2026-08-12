@@ -1182,9 +1182,38 @@ Medido em 2026-08-03: `fetch` do Node com `redirect: 'follow'` (o padrão) entre
 
 ## Backend das Horas INVA sob git, desde 2026-08-03
 
-O `Código.js` de produção vivia **fora de qualquer repositório**: um push errado pelo clasp não tinha como ser desfeito, e não havia histórico dizendo o que mudou entre uma versão publicada e a seguinte. Agora `../horas-voadas-inva-main/` é um repo git local (sem remoto ainda).
+O `Código.js` de produção vivia **fora de qualquer repositório**: um push errado pelo clasp não tinha como ser desfeito, e não havia histórico dizendo o que mudou entre uma versão publicada e a seguinte. Agora `../horas-voadas-inva-main/` é um repo git com remoto em **`voesafe/horas-voadas-inva-backend`** no GitHub (público, desde 2026-08-12).
 
 O primeiro commit é a **linha de base honesta**: o `@HEAD` remoto baixado por `clasp pull`, não o working tree com as mudanças novas. A rota de manutenção entrou como segundo commit, 215 linhas puramente aditivas.
+
+## Onboarding de colaborador: três repositórios, não um, desde 2026-08-12
+
+O Hub não é um repositório só. Quem entra no projeto precisa dos **três**, mais acesso Google nos três projetos Apps Script (o código não roda sem os dados/planilhas por trás):
+
+| Repositório | Conteúdo | Onde |
+|---|---|---|
+| `portal-hub-safe` | Frontend (GitHub Pages) + backend Apps Script do Hub | github.com/voesafe/portal-hub-safe |
+| `cco-safe` | Frontend + backend Apps Script da Escala CCO | github.com/voesafe/cco-safe |
+| `horas-voadas-inva-backend` | Backend Apps Script das Horas INVA | github.com/voesafe/horas-voadas-inva-backend |
+
+⚠️ **`tools/deploy/alvos.mjs` espera `horas-voadas-inva-backend` e `Escala CCO SAFE/backend` como pastas IRMÃS da pasta que contém `portal-hub-safe`**, não dentro dele. Clonar os três lado a lado, com o backend da CCO dentro de uma pasta chamada exatamente `Escala CCO SAFE` (o nome entra no path resolvido por `alvos.mjs`). Sem isso, `deploy.mjs inva`/`cco` avisam que o alvo não está no disco em vez de quebrar, mas nada publica.
+
+⚠️ **`.clasp.json` de cada backend tem o `scriptId` do projeto Apps Script**, e isso não basta: o `clasp push`/`deploy` só funciona se a conta Google logada no `clasp login` tiver acesso de **Editor** ao projeto (Apps Script é por permissão do arquivo/projeto, não por token do repositório). Precisa compartilhar os três, mais a planilha container-bound de cada um, com a conta Google do colaborador — ver checklist abaixo.
+
+⚠️ **`tools/deploy/.segredos.json` (token da rota de manutenção do Hub) nunca vai para o git**, por design (repo público). Sem ele, `manutencao.mjs` do Hub fica bloqueado para o colaborador; passar por fora (não por chat/e-mail em texto puro).
+
+**`CONTAS_CLASP` em [alvos.mjs](tools/deploy/alvos.mjs) é uma LISTA, não uma conta única, desde 2026-08-12.** `deploy.mjs hub/inva/cco` recusa publicar em produção se o `clasp` não estiver logado como uma das contas da lista — trava deliberada contra publicar no projeto errado ou falhar por permissão a meio caminho (ver [backend.mjs](tools/deploy/backend.mjs)). Ao entrar um segundo desenvolvedor que também publica produção, acrescente o e-mail dele aqui; **e** ele precisa ser Editor dos 3 projetos Apps Script no Google (não basta estar na lista).
+
+### Checklist de onboarding (rodar uma vez por colaborador novo)
+
+1. **GitHub:** adicionar como colaborador (permissão `push`) nos 3 repos: `portal-hub-safe`, `cco-safe`, `horas-voadas-inva-backend`.
+2. **Google — Apps Script (Editor), feito manualmente no navegador, dono atual do projeto:**
+   - Hub e INVA são scripts **standalone** (`SpreadsheetApp.openById`): compartilhar a **planilha não basta**, precisa abrir `script.google.com`, entrar no projeto e clicar em Compartilhar (ou compartilhar o arquivo do script pelo Drive) com o e-mail Google do colaborador, como Editor.
+   - CCO é **container-bound** (`SpreadsheetApp.getActiveSpreadsheet`): compartilhar a **planilha** como Editor já dá acesso ao script via Extensões → Apps Script.
+3. **Google — planilhas** (Editor), para quem for mexer nos dados direto ou testar fora do script: planilha principal do Hub (`Utils.gs` → `SHEET_ID`), Cadastro de Alunos (`CADASTRO_ALUNOS_SHEET_ID`), Fechamento de Horas (`FECHAMENTO_HORAS_SHEET_ID`), planilha das Horas INVA (`Código.js` → `SPREADSHEET_ID`), planilha da Escala CCO (a mesma do item acima).
+4. **Se ele também vai publicar produção:** acrescentar o e-mail em `CONTAS_CLASP` ([alvos.mjs](tools/deploy/alvos.mjs)).
+5. **Segredo local:** `tools/deploy/.segredos.json` (token de manutenção do Hub) — copiar por fora do git.
+6. **Máquina do colaborador:** clonar os 3 repos **lado a lado** na mesma pasta-mãe. O nome da pasta do CCO importa: `git clone <url-cco-safe> "Escala CCO SAFE"` (o clone por padrão criaria `cco-safe/`, e `alvos.mjs` procura literalmente `Escala CCO SAFE/backend`). O do INVA pode ficar com o nome padrão do clone (`horas-voadas-inva-backend`), mas então ajuste `VIZINHANCA`/`dirClasp` em `alvos.mjs`, ou clone renomeando para `horas-voadas-inva-main` para bater com o path atual. Depois: Node 20+; `npm install` dentro de `tools/`; `clasp login` (npm global `@google/clasp`) com a própria conta Google; Python 3 (para `tools/preview.sh`).
 
 ## Captura de tela das páginas (tools/), desde 2026-07-27
 

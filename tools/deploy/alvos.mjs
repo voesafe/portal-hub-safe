@@ -66,8 +66,13 @@ export const ALVOS = {
   },
 };
 
-/** Conta com que o clasp precisa estar logado para publicar. */
-export const CONTA_CLASP = 'victor.pinho@voesafe.com';
+/**
+ * Contas com que o clasp pode estar logado para publicar.
+ * Cada uma precisa ser Editor dos 3 projetos Apps Script no Google
+ * (ver CLAUDE.md, secao "Onboarding de colaborador"), senao o push
+ * falha por permissao mesmo estando na lista aqui.
+ */
+export const CONTAS_CLASP = ['victor.pinho@voesafe.com', 'pedro.capellato@voesafe.com'];
 
 export function alvo(chave) {
   const a = ALVOS[chave];

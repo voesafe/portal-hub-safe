@@ -20,7 +20,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { alvo, alvoDisponivel, CONTA_CLASP } from './alvos.mjs';
+import { alvo, alvoDisponivel, CONTAS_CLASP } from './alvos.mjs';
 import { verificarFontes } from './verificar-gs.mjs';
 import {
   Recusa, rodar, rodarOuFalhar, anunciar, titulo, ok, aviso, erro, nota, cinza, forte,
@@ -32,7 +32,7 @@ async function conferirLogin() {
   if (r.codigo !== 0 || /not logged in|no credentials/i.test(r.saida + r.erroSaida)) {
     throw new Recusa(
       'clasp sem sessao. Rode `clasp login` e tente de novo.\n' +
-        `A conta que publica estes projetos e ${CONTA_CLASP}.`
+        `Contas que publicam estes projetos: ${CONTAS_CLASP.join(', ')}.`
     );
   }
   // ⚠️ `\S+` greedy de proposito: o e-mail tem ponto no lado local
@@ -41,9 +41,9 @@ async function conferirLogin() {
   // desliga a guarda em silencio.
   const m = r.saida.match(/logged in as (\S+@\S+)\./i);
   const conta = m ? m[1] : '(desconhecida)';
-  if (m && conta !== CONTA_CLASP) {
+  if (m && !CONTAS_CLASP.includes(conta)) {
     throw new Recusa(
-      `clasp logado como ${conta}, mas estes projetos sao de ${CONTA_CLASP}.\n` +
+      `clasp logado como ${conta}, mas estes projetos sao de ${CONTAS_CLASP.join(' ou ')}.\n` +
         'Publicar assim ou falha por permissao ou publica no lugar errado.\n' +
         'Rode `clasp login` com a conta certa.'
     );
