@@ -1099,27 +1099,6 @@ const HorasVoadasInva = {
 
   // ── Render ──────────────────────────────────────────────────
 
-  atualizarKpis() {
-    const totalHoras = this.instrutores.reduce(
-      (soma, instrutor) => soma + this.horasDe(instrutor),
-      0
-    );
-    const liberados = this.instrutores.filter(i => this.temFlagVerde(i)).length;
-    // O vinculo virou etiqueta, entao os dois KPIs contam quem TEM a etiqueta.
-    // Nao da mais para deduzir um do outro por subtracao: com etiqueta, o
-    // instrutor pode nao ter nenhuma das duas, e "total menos CLT" mentiria.
-    const clt = this.contarPorNome('CLT');
-    const eventual = this.contarPorNome('Eventual');
-
-    document.getElementById('kpi-instrutores').textContent = this.instrutores.length;
-    document.getElementById('kpi-horas').textContent = `${this.formatarHoras(totalHoras)}h`;
-    // Sem a etiqueta no catalogo o numero nao existe, e mostrar 0 afirmaria
-    // que ninguem e CLT.
-    document.getElementById('kpi-clt').textContent = clt === null ? '—' : clt;
-    document.getElementById('kpi-eventuais').textContent = eventual === null ? '—' : eventual;
-    document.getElementById('kpi-liberados').textContent = liberados;
-  },
-
   /**
    * O balao ao lado do "+". Nasce discreto e vazado; com recado, vira pilula
    * cheia com o numero, para a linha dizer de longe que existe algo escrito
@@ -1454,7 +1433,6 @@ const HorasVoadasInva = {
   },
 
   renderizarTudo() {
-    this.atualizarKpis();
     this.renderizarBases();
     this.renderizarGrafico();
     this.renderizarEtiquetasCadastro();
