@@ -36,6 +36,24 @@ export function nota(txt) {
 export class Recusa extends Error {}
 
 /**
+ * Poe aspas num argumento de linha de comando do cmd.exe do Windows,
+ * so quando precisa (espaco, aspas ou vazio). Aspas interna vira \".
+ *
+ * ⚠️ NECESSARIO porque `spawn(cmd, args, {shell:true})` no Windows, com
+ * `args` em ARRAY, apenas CONCATENA sem escapar (Node emite o aviso
+ * DEP0190 avisando disso). `os.tmpdir()`/pastas de projeto no Windows
+ * podem ter espaco (o Pedro tem "Safe TI" no caminho do clone), e sem
+ * este escape um argumento assim vira DOIS argumentos para o cmd.exe.
+ * Sem essa funcao, funcionaria por sorte enquanto nenhum caminho
+ * envolvido tivesse espaco, e quebraria em silencio no dia que tivesse.
+ */
+function quotarArgWin32_(arg) {
+  const s = String(arg);
+  if (s !== '' && !/[\s"]/.test(s)) return s;
+  return `"${s.replace(/"/g, '\\"')}"`;
+}
+
+/**
  * Roda um comando e devolve { codigo, saida, erroSaida }.
  * Nao usa shell no POSIX, entao caminho com espaco (e temos varios,
  * "01. Codigo VSCODE SAFE") nao precisa de aspas nem escapa nada.
@@ -46,17 +64,21 @@ export class Recusa extends Error {}
  * processo (ENOENT), cai em `p.on('error')`, devolve codigo 127, e
  * `conferirLogin()` interpretava isso como "clasp sem sessao" —
  * mensagem enganosa, porque a sessao estava certa o tempo todo.
- * Medido em 2026-08-12 na maquina do Pedro. Array de args com shell
- * `true` no Windows continua seguro (o Node escapa cada item), e
- * `cwd` nao passa pela shell, entao caminho com espaco no POSIX
- * segue intocado.
+ * Medido em 2026-08-12 na maquina do Pedro. `cwd` nao passa pela
+ * shell, entao caminho com espaco no POSIX segue intocado.
  */
 export function rodar(comando, args, opcoes = {}) {
   const { cwd, mostrar = false, entrada = null } = opcoes;
+  const win = process.platform === 'win32';
+  // Com shell:true no Windows, `args` some: a linha inteira, ja
+  // escapada, vai no primeiro parametro. Sem isso o Node concatena
+  // sem aspas (DEP0190) e um caminho com espaco vira dois argumentos.
+  const comandoFinal = win ? [comando, ...args].map(quotarArgWin32_).join(' ') : comando;
+  const argsFinal = win ? [] : args;
   return new Promise((resolve) => {
-    const p = spawn(comando, args, {
+    const p = spawn(comandoFinal, argsFinal, {
       cwd,
-      shell: process.platform === 'win32',
+      shell: win,
       stdio: [entrada === null ? 'ignore' : 'pipe', 'pipe', 'pipe'],
     });
     let saida = '';
