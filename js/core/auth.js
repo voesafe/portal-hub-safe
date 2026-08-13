@@ -174,6 +174,11 @@ const Auth = {
                                 editar: ['escala_pav.editar_escala', 'escala_pav.gerenciar_pavs', 'escala_pav.inativar_reativar_pav'] },
     'horas-voadas-inva.html': { ver: ['horas_inva.visualizar'],
                                 editar: ['horas_inva.sincronizar_cavok', 'horas_inva.cadastrar_instrutor'] },
+    // Instrutor: só a própria disponibilidade/folga, nunca a de outro — o
+    // recorte real fica no backend (a rota nunca aceita id de instrutor
+    // vindo do cliente), isto aqui só decide o que aparece na tela.
+    'disponibilidade-invas.html': { ver: ['disponibilidade_inva.visualizar_propria'],
+                                editar: ['disponibilidade_inva.editar_propria'] },
     // Ver e liberar sao separadas: liberar cria o aluno na Zenler e dispara o
     // e-mail de boas-vindas dela, que nao volta atras.
     'portal-aluno.html':      { ver: ['portal_aluno.visualizar'], editar: ['portal_aluno.liberar'] },
@@ -206,6 +211,7 @@ const Auth = {
     'escala-cco.html': 'Escala CCO',
     'escala-pav.html': 'Escala PAV de Base',
     'horas-voadas-inva.html': 'Instrutores',
+    'disponibilidade-invas.html': 'Disponibilidade de INVAs',
     'portal-aluno.html': 'Portal do Aluno',
     'progresso-alunos.html': 'Progresso de Alunos',
     'cadastro-alunos.html': 'Cadastro de Aluno',
@@ -399,6 +405,7 @@ const Auth = {
   protegerEscalaCco()       { return this.protegerPagina('escala-cco.html', 'Escala CCO'); },
   protegerEscalaPav()       { return this.protegerPagina('escala-pav.html', 'Escala PAV de Base'); },
   protegerHorasVoadasInva() { return this.protegerPagina('horas-voadas-inva.html', 'Instrutores'); },
+  protegerDisponibilidadeInvas() { return this.protegerPagina('disponibilidade-invas.html', 'Disponibilidade de INVAs'); },
   protegerSafeMinions()     { return this.protegerPagina('safe-minions.html', 'SAFE MINIONS'); },
   protegerProgressoAlunos() { return this.protegerPagina('progresso-alunos.html', 'Progresso de Alunos'); },
   protegerCadastroAlunos()  { return this.protegerPagina('cadastro-alunos.html', 'Cadastro de Aluno'); },
@@ -565,9 +572,10 @@ const Auth = {
     secoes.push(secaoSeTiver('escala', 'Escala', 'escala', [
       { pagina: 'escala-cco.html', label: 'Escala CCO', icone: 'escala' },
       { pagina: 'escala-pav.html', label: 'Escala PAV de Base', icone: 'escala' },
+      { pagina: 'disponibilidade-invas.html', label: 'Disponibilidade de INVAs', icone: 'escala' },
       { pagina: 'horas-voadas-inva.html', label: 'Instrutores', icone: 'horas' },
       { pagina: 'notams.html', label: 'NOTAMs', icone: 'notam' }
-    ], ['escala-cco.html', 'escala-pav.html', 'horas-voadas-inva.html', 'notams.html']));
+    ], ['escala-cco.html', 'escala-pav.html', 'disponibilidade-invas.html', 'horas-voadas-inva.html', 'notams.html']));
 
     secoes.push(secaoSeTiver('financeiro', 'Financeiro', 'financeiro', [
       { pagina: 'concorrencia.html', label: 'Concorrência', icone: 'concorrencia' },

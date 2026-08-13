@@ -21,13 +21,13 @@
     })();
   </script>
   <title>Usuários — SAFE Hub</title>
-  <link rel="manifest" href="manifest.webmanifest?v=d836cf66">
+  <link rel="manifest" href="manifest.webmanifest?v=aeb4b470">
   <meta name="theme-color" content="#19213f">
   <link rel="icon" type="image/png" href="favicon.png?v=91131805">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
-  <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
-  <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
-  <link rel="stylesheet" href="css/pages/admin.css?v=ebe3108e">
+  <link rel="stylesheet" href="css/core/safe-theme.css?v=6b31ea48">
+  <link rel="stylesheet" href="css/core/layout.css?v=bc5ba244">
+  <link rel="stylesheet" href="css/pages/admin.css?v=7e020757">
 </head>
 <body>
 
@@ -291,6 +291,17 @@
             <label class="form-label" for="u-cargo">Cargo</label>
             <select class="form-control" id="u-cargo"></select>
           </div>
+          <!-- Só aparece para o cargo Instrutor. Não é permissão RBAC: é o
+               atributo que separa a regra de prazo (4 dias vs 15 dias antes
+               do mês) e a tela (disponibilidade vs pedido de folga). -->
+          <div class="form-group" id="grupo-tipo-instrutor" hidden>
+            <label class="form-label" for="u-tipo-instrutor">Tipo de instrutor</label>
+            <select class="form-control" id="u-tipo-instrutor">
+              <option value="eventual">Eventual</option>
+              <option value="clt">CLT</option>
+            </select>
+            <small class="form-help">Eventual marca disponibilidade por turno; CLT registra pedido de folga por mês.</small>
+          </div>
           <div class="acesso-matriz" id="u-matriz-acesso" role="table" aria-label="Acessos por módulo"></div>
           <div class="acesso-resumo" id="u-acesso-resumo"></div>
         </div>
@@ -350,9 +361,9 @@
 
 <div id="toast-container" class="toast-container"></div>
 
-<script src="js/core/config.js?v=e18544d3"></script>
-<script src="js/core/api.js?v=46dc9509"></script>
-<script src="js/core/auth.js?v=e545a3e5"></script>
-<script src="js/pages/admin.js?v=d744a303"></script>
+<script src="js/core/config.js?v=cb6d3e3e"></script>
+<script src="js/core/api.js?v=52a48958"></script>
+<script src="js/core/auth.js?v=0e3332c3"></script>
+<script src="js/pages/admin.js?v=ea1ed76c"></script>
 </body>
 </html>

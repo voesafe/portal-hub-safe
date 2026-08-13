@@ -35,7 +35,11 @@ function login(email, senha) {
           email:  row[3],
           perfil: row[5],
           superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
-          avatar: idx.AVATAR ? String(row[idx.AVATAR - 1] || '') : ''
+          avatar: idx.AVATAR ? String(row[idx.AVATAR - 1] || '') : '',
+          // Só tem valor para o cargo Instrutor ('eventual'|'clt'); vazio para
+          // os demais. O módulo de Disponibilidade de INVAs lê isto da sessão
+          // para não precisar de uma segunda chamada.
+          tipoInstrutor: idx.TIPO_INSTRUTOR ? String(row[idx.TIPO_INSTRUTOR - 1] || '') : ''
         };
         anexarPermissoesEfetivasSessao_(usuario);
         usuario.token = criarTokenSessao(usuario);
@@ -211,6 +215,7 @@ function validarTokenSessao(token) {
       email: row[3],
       perfil: normalizarPerfil(row[5]),
       superadmin: idx.SUPERADMIN ? valorBooleano(row[idx.SUPERADMIN - 1]) : normalizarPerfil(row[5]) === 'master',
+      tipoInstrutor: idx.TIPO_INSTRUTOR ? String(row[idx.TIPO_INSTRUTOR - 1] || '') : '',
       token: token
     };
     anexarPermissoesEfetivasSessao_(usuarioAtual);
@@ -284,7 +289,8 @@ function validarAcaoPerfilExclusivo_(token, action) {
   // guarda própria por permissão.
   var acoesPorPerfilExclusivo = {
     controle_gastos_visualizacao: ['controle-gastos'],
-    escala_minions: []
+    escala_minions: [],
+    instrutor_inva: ['disponibilidade-inva', 'disponibilidade-inva-salvar', 'disponibilidade-inva-excluir']
   };
   var perfil = normalizarPerfil(sessao.perfil);
   if (valorBooleano(sessao.superadmin)) return;
@@ -388,6 +394,7 @@ function listarUsuarios() {
       ativo:    row[6],
       criadoEm: row[7],
       cpf:      idx.CPF ? String(row[idx.CPF - 1] || '') : '',
+      tipoInstrutor: idx.TIPO_INSTRUTOR ? String(row[idx.TIPO_INSTRUTOR - 1] || '') : '',
       // A foto vai junto da lista para o superadmin enxergar quem já tem e
       // quem não tem sem abrir usuário por usuário. São ~8 KB por pessoa com
       // foto, que é o preço de uma única leitura em vez de N chamadas.
@@ -434,6 +441,7 @@ function criarUsuario(dados) {
   validarSenhaUsuario_(dados.senha, true);
   validarUnicidadeUsuarioHub_(sheet, null, dados.pac, dados.email);
   dados.perfil = validarPerfilHub_(dados.perfil || 'pac');
+  dados.tipoInstrutor = validarTipoInstrutor_(dados.perfil, dados.tipoInstrutor);
   var senhaHash = hashSenha(dados.senha);
   var id = gerarId();
 
@@ -452,6 +460,9 @@ function criarUsuario(dados) {
   }
   if (idx.CPF) {
     sheet.getRange(sheet.getLastRow(), idx.CPF).setValue(dados.cpf);
+  }
+  if (idx.TIPO_INSTRUTOR) {
+    sheet.getRange(sheet.getLastRow(), idx.TIPO_INSTRUTOR).setValue(dados.tipoInstrutor);
   }
   if (Array.isArray(dados.grupos) || Array.isArray(dados.permissoesAvulsas) || Array.isArray(dados.permissoesNegadas)) {
     salvarAcessosUsuario_(id, dados.grupos || [], dados.permissoesAvulsas || [], dados.atualizadoPor, dados.permissoesNegadas || []);
@@ -600,6 +611,13 @@ function atualizarUsuario(id, dados) {
         sheet.getRange(row, idx.SUPERADMIN).setValue(valorBooleano(dados.superadmin));
       }
       if (idx.CPF) sheet.getRange(row, idx.CPF).setValue(dados.cpf);
+      if (dados.hasOwnProperty('tipoInstrutor') && idx.TIPO_INSTRUTOR) {
+        // Perfil-alvo: o que está sendo salvo agora, ou, se o cargo não
+        // mudou nesta edição, o que já estava na linha (data[i][5] — `row`
+        // aqui já foi reaproveitado como número da linha, não a linha crua).
+        var perfilAlvoTipo = dados.perfil || data[i][5];
+        sheet.getRange(row, idx.TIPO_INSTRUTOR).setValue(validarTipoInstrutor_(perfilAlvoTipo, dados.tipoInstrutor));
+      }
       if (idx.ATUALIZADO_EM) sheet.getRange(row, idx.ATUALIZADO_EM).setValue(new Date());
       if (idx.ATUALIZADO_POR && dados.atualizadoPor) {
         sheet.getRange(row, idx.ATUALIZADO_POR).setValue(dados.atualizadoPor);
@@ -618,10 +636,23 @@ function validarPerfilHub_(perfil) {
   var permitidos = [
     'pac', 'admin', 'master', 'admin_readonly',
     'admin_visualizacao', 'financeiro', 'controle_gastos_visualizacao',
-    'escala_minions'
+    'escala_minions', 'instrutor_inva'
   ];
   if (permitidos.indexOf(normalizado) === -1) {
     throw new Error('Tipo de acesso inválido.');
+  }
+  return normalizado;
+}
+
+// Só vale (e só é obrigatório) para o cargo Instrutor — para qualquer outro
+// perfil devolve string vazia, sem exigir nada. Não é permissão RBAC: é o
+// atributo de dado que separa a regra de prazo (4 dias vs 15 dias antes do
+// mês) e a tela (disponibilidade vs pedido de folga) dentro do mesmo cargo.
+function validarTipoInstrutor_(perfil, tipoInstrutor) {
+  if (normalizarPerfil(perfil) !== 'instrutor_inva') return '';
+  var normalizado = String(tipoInstrutor || '').trim().toLowerCase();
+  if (['eventual', 'clt'].indexOf(normalizado) === -1) {
+    throw new Error('Informe o tipo de instrutor (Eventual ou CLT).');
   }
   return normalizado;
 }

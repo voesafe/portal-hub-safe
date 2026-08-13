@@ -112,7 +112,11 @@ var ACCESS_PERMISSIONS = [
   ['usuarios.gerenciar_permissoes', 'Controle de Acesso', 'Gerenciar permissões'],
   ['usuarios.alterar_superadmin', 'Controle de Acesso', 'Alterar superadmin'],
   ['planilha_admin.abrir', 'Planilha Administrativa', 'Abrir planilha administrativa'],
-  ['auth.alterar_propria_senha', 'Autenticação', 'Alterar própria senha']
+  ['auth.alterar_propria_senha', 'Autenticação', 'Alterar própria senha'],
+  // Disponibilidade de INVAs: só existe a variante "própria" — não há hoje
+  // uma tela de leitura consolidada para o CCO ver todos os instrutores.
+  ['disponibilidade_inva.visualizar_propria', 'Disponibilidade de INVAs', 'Visualizar a própria disponibilidade/folgas'],
+  ['disponibilidade_inva.editar_propria', 'Disponibilidade de INVAs', 'Registrar disponibilidade ou pedido de folga']
 ];
 
 // ── Cargos oficiais (matriz definida pela SAFE em 2026-07) ──
@@ -333,13 +337,29 @@ var ACCESS_DEFAULT_GROUPS = [
     descricao: 'Acesso exclusivo e somente leitura ao Controle de Gastos.',
     legacyPerfis: ['controle_gastos_visualizacao'],
     permissoes: ['inicio.visualizar', 'notams.visualizar', 'controle_gastos.visualizar', 'auth.alterar_propria_senha']
+  },
+  // Instrutor (INVA) — acesso exclusivo à própria disponibilidade/folgas.
+  // Mesmo molde do `controle_gastos_leitura`: cargo "olha uma coisa só", com
+  // o bloqueio de verdade em validarAcaoPerfilExclusivo_ (Auth.gs). Eventual
+  // vs CLT NÃO é um cargo separado — é a coluna TIPO_INSTRUTOR na aba
+  // USUARIOS, lida em tempo de execução pelo módulo de disponibilidade.
+  {
+    id: 'instrutor_inva',
+    nome: 'Instrutor',
+    descricao: 'Acesso exclusivo à própria disponibilidade/pedidos de folga de INVA.',
+    legacyPerfis: ['instrutor_inva'],
+    permissoes: [
+      'inicio.visualizar', 'notams.visualizar', 'auth.alterar_propria_senha',
+      'disponibilidade_inva.visualizar_propria', 'disponibilidade_inva.editar_propria'
+    ]
   }
 ];
 
 // Cargos oferecidos na tela de criação (na ordem). O legado fica de fora.
 var ACCESS_CARGOS_OFERECIDOS = [
   'comercial', 'comercial_gerencia', 'financeiro',
-  'consultor_cco', 'gerente_cco', 'operacoes_escala', 'somente_leitura'
+  'consultor_cco', 'gerente_cco', 'operacoes_escala', 'somente_leitura',
+  'instrutor_inva'
 ];
 
 function garantirEstruturaControleAcesso_() {
@@ -426,7 +446,11 @@ function garantirColunaUsuariosSuperadmin_() {
   // Link do Drive foi descartado de propósito: exigiria a foto de cada
   // funcionário pública por URL, e o `drive.google.com/uc?id=` quebra em
   // hotlink. Ver `salvarMeuAvatar`.
-  ['SUPERADMIN', 'CPF', 'ATUALIZADO_EM', 'ATUALIZADO_POR', 'AVATAR'].forEach(function(nome) {
+  // TIPO_INSTRUTOR guarda 'eventual'|'clt' — só tem valor para usuários do
+  // cargo Instrutor (perfil 'instrutor_inva'); vazio para todos os demais.
+  // Não é permissão RBAC: é atributo de dado que o módulo de Disponibilidade
+  // de INVAs lê para decidir qual regra de prazo e qual tela aplicar.
+  ['SUPERADMIN', 'CPF', 'ATUALIZADO_EM', 'ATUALIZADO_POR', 'AVATAR', 'TIPO_INSTRUTOR'].forEach(function(nome) {
     if (idx[nome]) return;
     var col = sheet.getLastColumn() + 1;
     sheet.getRange(1, col).setValue(nome);

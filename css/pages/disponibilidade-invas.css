@@ -1,0 +1,200 @@
+/* ============================================================
+   disponibilidade-invas.css — Disponibilidade (Eventual) e pedidos
+   de folga (CLT) dos instrutores de INVA
+   SAFE Hub
+
+   Cores só pela camada semântica do tema (--surface, --text, --border
+   etc.), nunca a paleta bruta — é a regra do projeto para o modo escuro
+   funcionar de graça. O grid de 7 colunas é o mesmo padrão da Escala
+   PAV, com os tokens globais do Hub em vez dos tokens locais da PAV.
+   ============================================================ */
+
+.di-regra {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: .85rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.di-regra svg { flex-shrink: 0; margin-top: 1px; }
+.di-regra strong { color: var(--text); }
+
+.di-regra.is-info {
+  background: linear-gradient(var(--tint-info), var(--tint-info)), var(--surface);
+  border-color: rgba(91, 174, 226, .35);
+  color: var(--ink-info);
+}
+.di-regra.is-aviso {
+  background: linear-gradient(var(--tint-aviso), var(--tint-aviso)), var(--surface);
+  border-color: rgba(243, 156, 18, .4);
+  color: var(--ink-aviso);
+}
+.di-regra.is-erro {
+  background: linear-gradient(var(--tint-erro), var(--tint-erro)), var(--surface);
+  border-color: rgba(231, 76, 60, .4);
+  color: var(--ink-erro);
+}
+
+.di-cal { padding: 20px; overflow-x: auto; }
+
+.di-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.di-cal-titulo {
+  font-family: var(--font-head, inherit);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 180px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.di-legenda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+/* Armadilha conhecida do projeto: [hidden] perde para qualquer `display`
+   de maior especificidade se não for reafirmado explicitamente. */
+.di-legenda[hidden] { display: none; }
+.di-legenda-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+.di-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.di-dot.manha,      .di-turno-btn.manha.is-ativo      { background: var(--warning); }
+.di-dot.tarde,      .di-turno-btn.tarde.is-ativo      { background: var(--blue); }
+.di-dot.dia_inteiro,.di-turno-btn.dia_inteiro.is-ativo{ background: var(--teal-dark); }
+
+.di-cal-dow {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(96px, 1fr));
+  min-width: 680px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.di-cal-dow span {
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.di-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(96px, 1fr));
+  grid-auto-rows: 1fr;
+  min-width: 680px;
+}
+
+.di-day {
+  min-height: 96px;
+  padding: 8px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.di-day:nth-child(7n) { border-right: none; }
+.di-day.is-outro-mes { opacity: .32; }
+.di-day.is-bloqueado { background: var(--surface-2); }
+
+.di-day-num {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text-2);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.di-day.is-hoje .di-day-num {
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: #fff;
+}
+
+/* ── Eventual: 3 turnos por dia ─────────────────────────────── */
+.di-turnos { display: flex; gap: 4px; margin-top: auto; }
+.di-turno-btn {
+  flex: 1 1 0;
+  padding: 5px 0;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: .68rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.di-turno-btn:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.di-turno-btn.is-ativo { color: #fff; border-color: transparent; }
+
+/* ── CLT: um pedido de folga por dia, o dia inteiro ─────────── */
+.di-folga-btn {
+  margin-top: auto;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: .72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.di-folga-btn:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.di-folga-btn.is-ativo {
+  background: var(--tint-ok);
+  border-color: rgba(46, 204, 113, .4);
+  color: var(--ink-ok);
+}
+
+/* ── Dia bloqueado ────────────────────────────────────────────
+   ⚠️ Os botões NÃO usam o atributo `disabled`: um clique num controle
+   `disabled` não dispara `click` no navegador, e a regra exige mostrar
+   uma mensagem em toda tentativa de alteração, não só quando ela cai
+   fora do botão. O bloqueio de verdade é no JS (o clique é interceptado
+   e devolve o toast antes de qualquer chamada à API); aqui é só o
+   estilo — visual idêntico ao de um controle desabilitado. */
+.di-day.is-bloqueado { cursor: not-allowed; }
+.di-day.is-bloqueado .di-turno-btn,
+.di-day.is-bloqueado .di-folga-btn {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.di-day.is-bloqueado .di-turno-btn:hover,
+.di-day.is-bloqueado .di-folga-btn:hover {
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+@media (max-width: 640px) {
+  .di-cal-dow, .di-cal-grid { grid-template-columns: repeat(7, minmax(64px, 1fr)); min-width: 460px; }
+  .di-day { min-height: 76px; padding: 5px; }
+  .di-turno-btn { font-size: .62rem; padding: 4px 0; }
+  .di-legenda { gap: 12px; }
+}

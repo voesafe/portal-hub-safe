@@ -74,6 +74,14 @@ function doGet(e) {
         return jsonSuccess(buscarVendaPortal({ termo: p.termo || '' }, pacBuscaV));
       }
 
+      // Disponibilidade/folga de INVA — sempre a própria: o guard devolve o
+      // `usuario` da sessão e a rota nunca aceita um id de instrutor vindo
+      // do cliente. Ver DisponibilidadeInva.gs.
+      case 'disponibilidade-inva': {
+        var uDispInva = exigirDisponibilidadeInvaVer_(token);
+        return jsonSuccess(listarDisponibilidadeInva(uDispInva));
+      }
+
       case 'faturamento': {
         var uFat = exigirSessao(token);
         if (!usuarioEhSuperadmin(uFat) && !perfilEhAdmin(uFat.perfil)) return jsonError('Acesso negado');
@@ -267,6 +275,20 @@ function doPost(e) {
       case 'sincronizar-matriculas-portal': {
         exigirPortalAlunoLiberar(token);
         return jsonSuccess(sincronizarMatriculasPortal());
+      }
+
+      // ── Disponibilidade/folga de INVA ─────────────────────
+      // Sempre a própria: o guard resolve `usuario` pela sessão, nunca por
+      // um id do payload. Sem otimista — o servidor decide se o prazo
+      // ainda vale. Ver DisponibilidadeInva.gs.
+      case 'disponibilidade-inva-salvar': {
+        var uDispSalvar = exigirDisponibilidadeInvaEditar_(token);
+        return jsonSuccess(salvarDisponibilidadeInva(uDispSalvar, dados));
+      }
+
+      case 'disponibilidade-inva-excluir': {
+        var uDispExcluir = exigirDisponibilidadeInvaEditar_(token);
+        return jsonSuccess(excluirDisponibilidadeInva(uDispExcluir, dados));
       }
 
       // ── Vendas ─────────────────────────────────────────────

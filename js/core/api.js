@@ -207,6 +207,13 @@ const API = {
   async buscarVendaPortal(termo) { return this.get('portal-aluno-venda', { termo }, false); },
   async sincronizarMatriculasPortal() { return this.post('sincronizar-matriculas-portal', {}); },
 
+  // Disponibilidade/folga de INVA. Sem cache: prazo muda por dia corrido e
+  // um retrato velho faria a tela desenhar um dia como editável quando já
+  // não é mais.
+  async getDisponibilidadeInva() { return this.get('disponibilidade-inva', {}, false); },
+  async salvarDisponibilidadeInva(dados) { return this.post('disponibilidade-inva-salvar', dados); },
+  async excluirDisponibilidadeInva(dados) { return this.post('disponibilidade-inva-excluir', dados); },
+
   async getAniversarios(mes) { return this.get('aniversarios', mes ? { mes } : {}, false); },
   async reenviarAniversario(id) { return this.post('aniversarios-reenviar', { id }); },
 

@@ -8,7 +8,8 @@
 const RBAC_PERMS_BASE = ['inicio.visualizar', 'auth.alterar_propria_senha'];
 const RBAC_CARGOS_OFERECIDOS = [
   'comercial', 'comercial_gerencia', 'financeiro',
-  'consultor_cco', 'gerente_cco', 'operacoes_escala', 'somente_leitura'
+  'consultor_cco', 'gerente_cco', 'operacoes_escala', 'somente_leitura',
+  'instrutor_inva'
 ];
 const RBAC_MODULOS = [
   { id: 'dashboard', nome: 'Dashboard de Vendas', nota: 'indicadores comerciais', viewOnly: true, escopo: true,
@@ -81,7 +82,12 @@ const RBAC_MODULOS = [
   { id: 'controle_acesso', nome: 'Controle de Acesso', nota: 'grupos e permissões', viewOnly: true,
     ver: ['usuarios.gerenciar_grupos', 'usuarios.gerenciar_permissoes'] },
   { id: 'planilha', nome: 'Planilha Administrativa', nota: 'base integrada', viewOnly: true,
-    ver: ['planilha_admin.abrir'] }
+    ver: ['planilha_admin.abrir'] },
+  // Disponibilidade de INVAs: só existe a variante "própria" — não há hoje
+  // uma tela de leitura consolidada para o CCO ver todos os instrutores.
+  { id: 'disponibilidade_inva', nome: 'Disponibilidade de INVAs', nota: 'instrutores eventuais e CLT',
+    ver: ['disponibilidade_inva.visualizar_propria'],
+    editar: ['disponibilidade_inva.editar_propria'] }
 ];
 
 // ⚠️ Tudo que a matriz sabe representar. O que fica FORA dela não pode ser
@@ -522,6 +528,11 @@ const Admin = {
     ['operacoes_escala', 'escala_minions'],
     ['somente_leitura', 'admin_readonly'],
     ['controle_gastos_leitura', 'controle_gastos_visualizacao'],
+    // ⚠️ Sem esta linha, um Instrutor sairia com `perfil: 'pac'` (o fallback
+    // no fim da lista): o bloqueio duro em validarAcaoPerfilExclusivo_
+    // (Auth.gs) chaveia por `perfil`, e TIPO_INSTRUTOR só é validado/gravado
+    // quando o perfil bate 'instrutor_inva'. Os dois dependem deste espelho.
+    ['instrutor_inva', 'instrutor_inva'],
     ['comercial', 'pac']
   ],
 
@@ -655,6 +666,20 @@ const Admin = {
     this.cargoAtual = cargoId;
     this.matrizAcesso = this.inferirMatriz(new Set(this.permsDoGrupo(cargoId)));
     this.renderMatrizAcesso();
+    this.atualizarCampoTipoInstrutor();
+  },
+
+  // Só aparece para o cargo Instrutor. Não é permissão RBAC — é o atributo
+  // (TIPO_INSTRUTOR) que separa a regra de prazo e a tela dentro do mesmo
+  // cargo. Ver validarTipoInstrutor_ no Auth.gs.
+  atualizarCampoTipoInstrutor(tipoInstrutor) {
+    const grupo = document.getElementById('grupo-tipo-instrutor');
+    if (!grupo) return;
+    const ehInstrutor = this.cargoAtual === 'instrutor_inva';
+    grupo.hidden = !ehInstrutor;
+    if (ehInstrutor) {
+      document.getElementById('u-tipo-instrutor').value = tipoInstrutor || 'eventual';
+    }
   },
 
   renderMatrizAcesso() {
@@ -725,6 +750,7 @@ const Admin = {
     const gruposUsuario = (usuario?.grupos || []).map(String);
     this.cargoAtual = gruposUsuario.find(g => RBAC_CARGOS_OFERECIDOS.includes(g)) || RBAC_CARGOS_OFERECIDOS[0];
     document.getElementById('u-cargo').value = this.cargoAtual;
+    this.atualizarCampoTipoInstrutor(usuario?.tipoInstrutor);
     if (usuario) {
       const efetivas = new Set();
       gruposUsuario.forEach(gid => this.permsDoGrupo(gid).forEach(p => efetivas.add(p)));
@@ -915,6 +941,14 @@ const Admin = {
       grupos: origem === 'hub' ? grupos : undefined,
       permissoesAvulsas: origem === 'hub' ? avulsas : undefined,
       permissoesNegadas: origem === 'hub' ? negadas : undefined,
+      // Vazio fora do cargo Instrutor, de propósito e não `undefined`: numa
+      // EDIÇÃO que troca o cargo para outro, isso limpa o TIPO_INSTRUTOR
+      // que ficaria órfão na planilha (undefined não sobrevive ao
+      // JSON.stringify, e o backend confia em `hasOwnProperty` para saber
+      // se deve tocar na coluna). O backend valida de qualquer forma.
+      tipoInstrutor: origem === 'hub'
+        ? (this.cargoAtual === 'instrutor_inva' ? document.getElementById('u-tipo-instrutor').value : '')
+        : undefined,
       initials: document.getElementById('u-iniciais').value.trim().toUpperCase(),
       cpf: document.getElementById('u-cpf').value.replace(/\D/g, ''),
       birthdate: document.getElementById('u-nascimento').value.trim(),
