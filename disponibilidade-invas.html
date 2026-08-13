@@ -25,7 +25,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=6b31ea48">
   <link rel="stylesheet" href="css/core/layout.css?v=bc5ba244">
-  <link rel="stylesheet" href="css/pages/disponibilidade-invas.css?v=ef7a36c8">
+  <link rel="stylesheet" href="css/pages/disponibilidade-invas.css?v=14950b39">
 </head>
 <body>
 
@@ -75,34 +75,77 @@
         </div>
       </div>
 
-      <!-- Regra de prazo. NUNCA some por decisão da pessoa: não é aviso de
-           conveniência, é a mensagem que a regra de negócio exige. Muda de
-           cor/texto conforme o mês navegado (CLT) e nunca fica com display
-           herdado do hidden: ver .di-regra[hidden] no CSS. -->
-      <div class="di-regra" id="di-regra" role="note"></div>
+      <!-- Só aparece com as DUAS permissões — quem só é instrutor ou só
+           gestão nunca vê uma escolha sem sentido para ele. -->
+      <div class="di-tabs" id="di-tabs" role="tablist" aria-label="Seções de Disponibilidade de INVAs" hidden>
+        <button class="di-tab" id="di-tab-propria" type="button" role="tab" aria-controls="di-painel-propria">Minha disponibilidade</button>
+        <button class="di-tab" id="di-tab-todos" type="button" role="tab" aria-controls="di-painel-todos">Todos os instrutores</button>
+      </div>
 
-      <div class="card di-cal">
-        <div class="di-cal-head">
-          <button class="btn btn-icon btn-ghost" id="di-mes-anterior" type="button" aria-label="Mês anterior">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <div class="di-cal-titulo" id="di-cal-titulo">—</div>
-          <button class="btn btn-icon btn-ghost" id="di-mes-proximo" type="button" aria-label="Próximo mês">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
+      <div id="di-painel-propria" role="tabpanel" aria-labelledby="di-tab-propria">
+        <!-- Regra de prazo. NUNCA some por decisão da pessoa: não é aviso de
+             conveniência, é a mensagem que a regra de negócio exige. Muda de
+             cor/texto conforme o mês navegado (CLT) e nunca fica com display
+             herdado do hidden: ver .di-regra[hidden] no CSS. -->
+        <div class="di-regra" id="di-regra" role="note"></div>
+
+        <div class="card di-cal">
+          <div class="di-cal-head">
+            <button class="btn btn-icon btn-ghost" id="di-mes-anterior" type="button" aria-label="Mês anterior">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div class="di-cal-titulo" id="di-cal-titulo">—</div>
+            <button class="btn btn-icon btn-ghost" id="di-mes-proximo" type="button" aria-label="Próximo mês">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+
+          <!-- Só para Eventual — CLT não escolhe turno, o dia é sempre inteiro. -->
+          <div class="di-legenda" id="di-legenda" hidden>
+            <span class="di-legenda-item"><span class="di-dot manha" aria-hidden="true"></span>Manhã</span>
+            <span class="di-legenda-item"><span class="di-dot tarde" aria-hidden="true"></span>Tarde</span>
+            <span class="di-legenda-item"><span class="di-dot dia_inteiro" aria-hidden="true"></span>Dia inteiro</span>
+          </div>
+
+          <div class="di-cal-dow" aria-hidden="true">
+            <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+          </div>
+          <div class="di-cal-grid" id="di-cal-grid" role="grid" aria-label="Calendário de disponibilidade"></div>
+        </div>
+      </div>
+
+      <!-- Leitura consolidada (CCO/gestão). Só quem tem
+           disponibilidade_inva.visualizar_todos chega aqui. -->
+      <div id="di-painel-todos" role="tabpanel" aria-labelledby="di-tab-todos" hidden>
+        <div class="di-todos-topo">
+          <input class="form-control di-todos-busca" id="di-todos-busca" type="search"
+                 placeholder="Buscar instrutor por nome" autocomplete="off" spellcheck="false">
+          <div class="di-legenda">
+            <span class="di-legenda-item"><span class="di-dot manha" aria-hidden="true"></span>Manhã</span>
+            <span class="di-legenda-item"><span class="di-dot tarde" aria-hidden="true"></span>Tarde</span>
+            <span class="di-legenda-item"><span class="di-dot dia_inteiro" aria-hidden="true"></span>Dia inteiro</span>
+            <span class="di-legenda-item"><span class="di-dot folga" aria-hidden="true"></span>Folga (CLT)</span>
+          </div>
         </div>
 
-        <!-- Só para Eventual — CLT não escolhe turno, o dia é sempre inteiro. -->
-        <div class="di-legenda" id="di-legenda" hidden>
-          <span class="di-legenda-item"><span class="di-dot manha" aria-hidden="true"></span>Manhã</span>
-          <span class="di-legenda-item"><span class="di-dot tarde" aria-hidden="true"></span>Tarde</span>
-          <span class="di-legenda-item"><span class="di-dot dia_inteiro" aria-hidden="true"></span>Dia inteiro</span>
+        <div class="card di-cal">
+          <div class="di-cal-head">
+            <button class="btn btn-icon btn-ghost" id="di-todos-mes-anterior" type="button" aria-label="Mês anterior">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div class="di-cal-titulo" id="di-todos-cal-titulo">—</div>
+            <button class="btn btn-icon btn-ghost" id="di-todos-mes-proximo" type="button" aria-label="Próximo mês">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+
+          <div class="di-cal-dow" aria-hidden="true">
+            <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+          </div>
+          <div class="di-cal-grid di-cal-grid-todos" id="di-todos-cal-grid" role="grid" aria-label="Disponibilidade de todos os instrutores"></div>
         </div>
 
-        <div class="di-cal-dow" aria-hidden="true">
-          <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
-        </div>
-        <div class="di-cal-grid" id="di-cal-grid" role="grid" aria-label="Calendário de disponibilidade"></div>
+        <p class="di-todos-vazio" id="di-todos-vazio" hidden>Nenhum instrutor cadastrado ainda.</p>
       </div>
 
     </div>
@@ -112,8 +155,8 @@
 <div class="toast-container" id="toast-container"></div>
 
 <script src="js/core/config.js?v=cb6d3e3e"></script>
-<script src="js/core/auth.js?v=0e3332c3"></script>
-<script src="js/core/api.js?v=52a48958"></script>
-<script src="js/pages/disponibilidade-invas.js?v=7beab75c"></script>
+<script src="js/core/auth.js?v=627d2af7"></script>
+<script src="js/core/api.js?v=1c75c49e"></script>
+<script src="js/pages/disponibilidade-invas.js?v=9eabc23b"></script>
 </body>
 </html>

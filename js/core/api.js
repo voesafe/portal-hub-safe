@@ -211,6 +211,7 @@ const API = {
   // um retrato velho faria a tela desenhar um dia como editável quando já
   // não é mais.
   async getDisponibilidadeInva() { return this.get('disponibilidade-inva', {}, false); },
+  async getDisponibilidadeInvaTodos() { return this.get('disponibilidade-inva-todos', {}, false); },
   async salvarDisponibilidadeInva(dados) { return this.post('disponibilidade-inva-salvar', dados); },
   async excluirDisponibilidadeInva(dados) { return this.post('disponibilidade-inva-excluir', dados); },
 

@@ -84,6 +84,20 @@ function exigirDisponibilidadeInvaEditar_(token) {
   throw new Error('Sem permissão para editar a disponibilidade de INVA.');
 }
 
+// Leitura consolidada (CCO/gestão): permissão SEPARADA da de "própria" — um
+// instrutor nunca tem esta, e quem gerencia não precisa da outra. Não há
+// bypass por `instrutor_inva`: esse perfil está fora da allowlist desta
+// ação em validarAcaoPerfilExclusivo_ (Auth.gs), então mesmo que alguém
+// tentasse conceder a permissão a um instrutor por engano, a ação nem
+// chegaria a ser roteada para essa conta.
+function exigirDisponibilidadeInvaVerTodos_(token) {
+  var usuario = validarTokenSessao(token);
+  if (!usuario) throw new Error('Sessão expirada. Entre novamente.');
+  if (usuarioEhSuperadmin(usuario)) return usuario;
+  if (usuarioTemPermissao(usuario, 'disponibilidade_inva.visualizar_todos')) return usuario;
+  throw new Error('Sem permissão para ver a disponibilidade de todos os instrutores.');
+}
+
 // ── Datas ────────────────────────────────────────────────────
 // Tudo aqui usa a data do SERVIDOR (new Date() no Apps Script), nunca uma
 // data mandada pelo cliente — mesmo motivo pelo qual nenhuma outra rota de
@@ -208,6 +222,58 @@ function listarDisponibilidadeInva(usuario) {
     diasAntecedenciaClt: DISPONIBILIDADE_INVA_DIAS_ANTECEDENCIA_CLT,
     registros: registros
   };
+}
+
+// ── Leitura consolidada (CCO/gestão) ───────────────────────────
+// Recorte magro: nome e tipo, só o que a tela precisa para saber quem
+// avisar. Nenhum e-mail, CPF ou outro dado do cadastro sai daqui.
+
+/** Só ativos e só quem tem TIPO_INSTRUTOR preenchido — inativo não é
+ * candidato a acionamento, e usuário sem o campo não é instrutor. */
+function listarInstrutoresInva_() {
+  var sheet = getSheet(SHEETS.USUARIOS);
+  var idx = indiceCabecalho_(sheet);
+  if (!idx.TIPO_INSTRUTOR) return [];
+
+  var data = sheet.getDataRange().getValues();
+  var lista = [];
+  for (var i = 1; i < data.length; i++) {
+    var tipo = String(data[i][idx.TIPO_INSTRUTOR - 1] || '').trim().toLowerCase();
+    if (['eventual', 'clt'].indexOf(tipo) === -1) continue;
+    if (!valorBooleano(data[i][6])) continue; // ATIVO
+    lista.push({ id: String(data[i][0]), nome: String(data[i][1] || ''), tipoInstrutor: tipo });
+  }
+  lista.sort(function(a, b) { return a.nome.localeCompare(b.nome, 'pt-BR'); });
+  return lista;
+}
+
+/**
+ * Um item por instrutor ATIVO (mesmo sem nenhuma marcação ainda — sumir da
+ * lista pareceria "não existe" quando na verdade é "ainda não marcou nada",
+ * e essa distinção importa para quem está cobrando o preenchimento).
+ */
+function listarDisponibilidadeInvaTodos() {
+  var aba = disponibilidadeInvaAba_(DISPONIBILIDADE_INVA_SHEETS.DADOS, DISPONIBILIDADE_INVA_HEADERS, false);
+  var porUsuario = {};
+
+  if (aba) {
+    var ultima = aba.getLastRow();
+    if (ultima > 1) {
+      var valores = aba.getRange(2, 1, ultima - 1, DISPONIBILIDADE_INVA_HEADERS.length).getValues();
+      valores.forEach(function(linha) {
+        var userId = String(linha[1]);
+        if (!porUsuario[userId]) porUsuario[userId] = [];
+        porUsuario[userId].push({ data: String(linha[2]), tipoRegistro: String(linha[3]), turno: String(linha[4] || '') });
+      });
+    }
+  }
+
+  return listarInstrutoresInva_().map(function(inst) {
+    var registros = (porUsuario[inst.id] || []).slice().sort(function(a, b) {
+      return a.data < b.data ? -1 : (a.data > b.data ? 1 : 0);
+    });
+    return { userId: inst.id, nome: inst.nome, tipoInstrutor: inst.tipoInstrutor, registros: registros };
+  });
 }
 
 // ── Escrita ──────────────────────────────────────────────────

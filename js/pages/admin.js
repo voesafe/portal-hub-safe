@@ -83,11 +83,16 @@ const RBAC_MODULOS = [
     ver: ['usuarios.gerenciar_grupos', 'usuarios.gerenciar_permissoes'] },
   { id: 'planilha', nome: 'Planilha Administrativa', nota: 'base integrada', viewOnly: true,
     ver: ['planilha_admin.abrir'] },
-  // Disponibilidade de INVAs: só existe a variante "própria" — não há hoje
-  // uma tela de leitura consolidada para o CCO ver todos os instrutores.
-  { id: 'disponibilidade_inva', nome: 'Disponibilidade de INVAs', nota: 'instrutores eventuais e CLT',
-    ver: ['disponibilidade_inva.visualizar_propria'],
-    editar: ['disponibilidade_inva.editar_propria'] }
+  // Escopo aqui não é "próprias vs todas" no sentido de superconjunto (como
+  // em Vendas): é uma escolha ENTRE dois papéis diferentes — instrutor
+  // (vê/edita a própria) ou gestão (vê a de todos, sem editar a de
+  // ninguém). Por isso `ver.todas` não inclui `ver.proprias`, e `editar`
+  // não muda com o escopo (só existe "própria").
+  { id: 'disponibilidade_inva', nome: 'Disponibilidade de INVAs', nota: 'instrutores eventuais e CLT', escopo: true,
+    escLabels: ['Só a própria', 'Todos os instrutores'],
+    ver: { proprias: ['disponibilidade_inva.visualizar_propria'],
+           todas: ['disponibilidade_inva.visualizar_todos'] },
+    editar: { proprias: ['disponibilidade_inva.editar_propria'], todas: ['disponibilidade_inva.editar_propria'] } }
 ];
 
 // ⚠️ Tudo que a matriz sabe representar. O que fica FORA dela não pode ser

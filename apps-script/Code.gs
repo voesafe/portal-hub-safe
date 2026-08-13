@@ -82,6 +82,14 @@ function doGet(e) {
         return jsonSuccess(listarDisponibilidadeInva(uDispInva));
       }
 
+      // Leitura consolidada (CCO/gestão): permissão separada, de propósito
+      // fora do bloqueio duro do instrutor (validarAcaoPerfilExclusivo_ não
+      // lista esta ação para o perfil 'instrutor_inva').
+      case 'disponibilidade-inva-todos': {
+        exigirDisponibilidadeInvaVerTodos_(token);
+        return jsonSuccess(listarDisponibilidadeInvaTodos());
+      }
+
       case 'faturamento': {
         var uFat = exigirSessao(token);
         if (!usuarioEhSuperadmin(uFat) && !perfilEhAdmin(uFat.perfil)) return jsonError('Acesso negado');

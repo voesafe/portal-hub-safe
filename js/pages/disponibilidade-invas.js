@@ -29,13 +29,59 @@ const DisponibilidadeInvas = {
   mesAtual: null,          // Date do primeiro dia do mês exibido
   enviando: false,
 
+  // ── Leitura consolidada (CCO/gestão) ──────────────────────────
+  // Permissão SEPARADA de `visualizar_propria` — quem gerencia não é
+  // instrutor, e um instrutor nunca tem esta. Sem edição nenhuma aqui.
+  podeVerPropria: false,
+  podeVerTodos: false,
+  abaAtual: 'propria',
+  instrutores: [],
+  porDataTodos: new Map(),
+  mesAtualTodos: null,
+  buscaTodos: '',
+
   async init() {
     Auth.proteger();
     Auth.protegerDisponibilidadeInvas();
     Auth.preencherUI();
+    this.podeVerPropria = Auth.temPermissao('disponibilidade_inva.visualizar_propria');
+    this.podeVerTodos = Auth.temPermissao('disponibilidade_inva.visualizar_todos');
     this._bindHamburger();
     this._bind();
+    this._prepararAbas();
     await this.carregar();
+  },
+
+  // Só quem tem as DUAS permissões vê a escolha; caso contrário a página
+  // já nasce na única aba que faz sentido para a pessoa.
+  _prepararAbas() {
+    const tabs = document.getElementById('di-tabs');
+    const tabPropria = document.getElementById('di-tab-propria');
+    const tabTodos = document.getElementById('di-tab-todos');
+    const painelPropria = document.getElementById('di-painel-propria');
+    const painelTodos = document.getElementById('di-painel-todos');
+
+    if (tabs) tabs.hidden = !(this.podeVerPropria && this.podeVerTodos);
+
+    const ativar = aba => {
+      this.abaAtual = aba;
+      tabPropria?.classList.toggle('is-active', aba === 'propria');
+      tabTodos?.classList.toggle('is-active', aba === 'todos');
+      tabPropria?.setAttribute('aria-selected', String(aba === 'propria'));
+      tabTodos?.setAttribute('aria-selected', String(aba === 'todos'));
+      if (painelPropria) painelPropria.hidden = aba !== 'propria';
+      if (painelTodos) painelTodos.hidden = aba !== 'todos';
+    };
+
+    tabPropria?.addEventListener('click', () => ativar('propria'));
+    tabTodos?.addEventListener('click', () => ativar('todos'));
+
+    ativar(this.podeVerPropria ? 'propria' : 'todos');
+
+    if (!this.podeVerPropria) {
+      const sub = document.getElementById('di-subtitulo');
+      if (sub) sub.textContent = 'Consulta consolidada';
+    }
   },
 
   // ⚠️ O toggle do menu no celular é responsabilidade do JS de CADA página
@@ -79,15 +125,28 @@ const DisponibilidadeInvas = {
       if (btnTurno) this._alternarTurno(dia.dataset.data, btnTurno.dataset.turno);
       else if (btnFolga) this._alternarFolga(dia.dataset.data);
     });
+
+    document.getElementById('di-todos-mes-anterior')?.addEventListener('click', () => this._navegarMesTodos(-1));
+    document.getElementById('di-todos-mes-proximo')?.addEventListener('click', () => this._navegarMesTodos(1));
+    document.getElementById('di-todos-busca')?.addEventListener('input', event => {
+      this.buscaTodos = event.target.value || '';
+      this.renderTudoTodos();
+    });
   },
 
   async carregar() {
     this._mostrarCarregando(true);
-    const res = await API.getDisponibilidadeInva();
+    const tarefas = [];
+    if (this.podeVerPropria) tarefas.push(this._carregarPropria());
+    if (this.podeVerTodos) tarefas.push(this._carregarTodos());
+    await Promise.all(tarefas);
     this._mostrarCarregando(false);
+  },
 
+  async _carregarPropria() {
+    const res = await API.getDisponibilidadeInva();
     if (!res.ok) {
-      toast(res.error || 'Não foi possível carregar a disponibilidade.', 'error');
+      toast(res.error || 'Não foi possível carregar sua disponibilidade.', 'error');
       return;
     }
 
@@ -103,6 +162,33 @@ const DisponibilidadeInvas = {
     this._renderSubtitulo();
     this._renderLegenda();
     this.renderTudo();
+  },
+
+  // Leitura consolidada: puramente informativa, sem regra de prazo — por
+  // isso o mês inicial vem do relógio do navegador mesmo (não há decisão
+  // nenhuma sendo tomada contra essa data, só "que mês abrir por padrão").
+  async _carregarTodos() {
+    const res = await API.getDisponibilidadeInvaTodos();
+    if (!res.ok) {
+      toast(res.error || 'Não foi possível carregar a disponibilidade dos instrutores.', 'error');
+      return;
+    }
+
+    this.instrutores = Array.isArray(res.data) ? res.data : [];
+    this._indexarTodos();
+    if (!this.mesAtualTodos) this.mesAtualTodos = this._primeiroDiaMes(new Date());
+
+    this.renderTudoTodos();
+  },
+
+  _indexarTodos() {
+    this.porDataTodos = new Map();
+    this.instrutores.forEach(inst => {
+      (inst.registros || []).forEach(r => {
+        if (!this.porDataTodos.has(r.data)) this.porDataTodos.set(r.data, []);
+        this.porDataTodos.get(r.data).push({ nome: inst.nome, tipoRegistro: r.tipoRegistro, turno: r.turno });
+      });
+    });
   },
 
   _indexar() {
@@ -172,6 +258,71 @@ const DisponibilidadeInvas = {
   _navegarMes(delta) {
     this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() + delta, 1);
     this.renderTudo();
+  },
+
+  _navegarMesTodos(delta) {
+    this.mesAtualTodos = new Date(this.mesAtualTodos.getFullYear(), this.mesAtualTodos.getMonth() + delta, 1);
+    this.renderTudoTodos();
+  },
+
+  // ── Leitura consolidada: calendário só de leitura ────────────
+  renderTudoTodos() {
+    const titulo = document.getElementById('di-todos-cal-titulo');
+    if (titulo && this.mesAtualTodos) {
+      titulo.textContent = this.mesAtualTodos.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    }
+
+    const grid = document.getElementById('di-todos-cal-grid');
+    const vazio = document.getElementById('di-todos-vazio');
+    if (vazio) vazio.hidden = this.instrutores.length > 0;
+    if (!grid || !this.mesAtualTodos) return;
+
+    if (!this.instrutores.length) { grid.innerHTML = ''; return; }
+
+    const ano = this.mesAtualTodos.getFullYear();
+    const mes = this.mesAtualTodos.getMonth();
+    const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
+    const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+    const diasMesAnterior = new Date(ano, mes, 0).getDate();
+    const hojeStr = this._fmtData(new Date());
+
+    const celulas = [];
+    for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
+      celulas.push(this._celulaInerte(diasMesAnterior - i));
+    }
+    for (let dia = 1; dia <= diasNoMes; dia++) {
+      const dataStr = this._fmtData(new Date(ano, mes, dia));
+      celulas.push(this._celulaDiaTodos(dia, dataStr, dataStr === hojeStr));
+    }
+    const restam = (7 - (celulas.length % 7)) % 7;
+    for (let dia = 1; dia <= restam; dia++) {
+      celulas.push(this._celulaInerte(dia));
+    }
+
+    grid.innerHTML = celulas.join('');
+  },
+
+  _celulaDiaTodos(numero, dataStr, ehHoje) {
+    const pessoas = this.porDataTodos.get(dataStr) || [];
+    const busca = this.buscaTodos.trim().toLowerCase();
+    const classes = ['di-day', ehHoje ? 'is-hoje' : ''].filter(Boolean).join(' ');
+
+    const chips = pessoas.map(p => {
+      const oculto = busca && !p.nome.toLowerCase().includes(busca);
+      const classe = p.tipoRegistro === 'folga' ? 'folga' : (p.turno || 'dia_inteiro');
+      const rotulo = p.tipoRegistro === 'folga' ? `${p.nome} · Folga` : `${p.nome} · ${this._rotuloTurno(p.turno)}`;
+      return `<span class="di-chip ${classe}${oculto ? ' is-oculto' : ''}" title="${this._escape(rotulo)}">${this._escape(rotulo)}</span>`;
+    }).join('');
+
+    return `
+      <div class="${classes}" role="gridcell">
+        <span class="di-day-num">${numero}</span>
+        <div class="di-chips">${chips}</div>
+      </div>`;
+  },
+
+  _rotuloTurno(turno) {
+    return { manha: 'Manhã', tarde: 'Tarde', dia_inteiro: 'Dia inteiro' }[turno] || turno || '';
   },
 
   renderTudo() {

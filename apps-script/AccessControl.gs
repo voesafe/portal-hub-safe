@@ -113,10 +113,13 @@ var ACCESS_PERMISSIONS = [
   ['usuarios.alterar_superadmin', 'Controle de Acesso', 'Alterar superadmin'],
   ['planilha_admin.abrir', 'Planilha Administrativa', 'Abrir planilha administrativa'],
   ['auth.alterar_propria_senha', 'Autenticação', 'Alterar própria senha'],
-  // Disponibilidade de INVAs: só existe a variante "própria" — não há hoje
-  // uma tela de leitura consolidada para o CCO ver todos os instrutores.
   ['disponibilidade_inva.visualizar_propria', 'Disponibilidade de INVAs', 'Visualizar a própria disponibilidade/folgas'],
-  ['disponibilidade_inva.editar_propria', 'Disponibilidade de INVAs', 'Registrar disponibilidade ou pedido de folga']
+  ['disponibilidade_inva.editar_propria', 'Disponibilidade de INVAs', 'Registrar disponibilidade ou pedido de folga'],
+  // Leitura consolidada (CCO/gestão): todos os instrutores de uma vez, numa
+  // aba própria dentro da mesma página. De propósito em NENHUM cargo padrão
+  // (mesmo molde de aniversarios.*/notams.sincronizar): não há um dono óbvio
+  // único, então quem precisa recebe pelo Controle de Acesso, sem deploy.
+  ['disponibilidade_inva.visualizar_todos', 'Disponibilidade de INVAs', 'Visualizar a disponibilidade de todos os instrutores']
 ];
 
 // ── Cargos oficiais (matriz definida pela SAFE em 2026-07) ──

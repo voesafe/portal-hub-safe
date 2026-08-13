@@ -1,8 +1,8 @@
 {
   "hub": {
-    "empurradoEm": "2026-08-13T13:34:07.300Z",
+    "empurradoEm": "2026-08-13T14:15:15.794Z",
     "arquivos": {
-      "AccessControl": "0e3b0faf7e05885b9d3e49e21ea3571d7180bfd222354759d8bdef4650129a8e",
+      "AccessControl": "0c43f4ecc0b7d63252eb1ceed74500d3a670642b8089a8b34da0b3b1083af128",
       "Aniversarios": "1a5510cb58e186536f484621691a978bab818b9f28adef56692be235c7fb24ca",
       "appsscript": "057f990b5e9c71191f12f96db5e4de55e4d8b29095d64042725c16e5958e87bd",
       "Auth": "4d36051e310bd0ffc321156de2c0047749b1d634aa349bbcd99bdf7666daf344",
@@ -10,10 +10,10 @@
       "CadastroAlunos": "df291a44c43c755d8c22e6710e46d524ae38a00ff8a5be6aff91ef78c4af2cd8",
       "Cavok": "632cbfa268f044d50abddcab368e1e7e7402435cb4223915c607969c1bb92e60",
       "Cco": "e86d044a977c3ed580b25ce79946f7671f9588fac7cb2c98c8f609a4e051b867",
-      "Code": "f9a250cb4c1ed65de0512752bfd9456b1c63d634d94eb5f6696b21ac99737b1e",
+      "Code": "ac2c72c6470274dc52d0081efb8b1e9e33697c7cf91384c51cba36ec59269553",
       "Concorrencia": "2eb360b1e1a4bd2bf779b9aabc16fb6e6aa8c183ee2d99d8f69af91676cb8b5b",
       "ControleGastos": "8735c17a48062491ac557784c7c3cb2a4e76f886b3de650147fbed483a361a60",
-      "DisponibilidadeInva": "929628a5f25b78101c1fed0851596be982271b9fcb443c170955fbdf40848452",
+      "DisponibilidadeInva": "fdc97dd76c5efc69cd662b1c82de63f340825ff1344546b7d6483dcc49aa4fe7",
       "Faturamento": "57d24982d00e60c3e374816604e24d1ba3c6e9fdc0b427fb8d5e4fe96ff02d83",
       "FechamentoHoras": "1f9b10581b6e2fc584dbd7b62c5e05d7ae93665050069948b61ee85c6a60f468",
       "HeroAsset": "d78e5c0f991a0447bd1e965089c03a46036174e91e0702bde0d8a95b15f8e2c4",

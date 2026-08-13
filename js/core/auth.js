@@ -176,8 +176,11 @@ const Auth = {
                                 editar: ['horas_inva.sincronizar_cavok', 'horas_inva.cadastrar_instrutor'] },
     // Instrutor: só a própria disponibilidade/folga, nunca a de outro — o
     // recorte real fica no backend (a rota nunca aceita id de instrutor
-    // vindo do cliente), isto aqui só decide o que aparece na tela.
-    'disponibilidade-invas.html': { ver: ['disponibilidade_inva.visualizar_propria'],
+    // vindo do cliente), isto aqui só decide o que aparece na tela. `ver`
+    // tem as DUAS permissões (é "ou": própria OU consolidada) para quem
+    // gerencia — sem ser instrutor — também poder abrir a página, só que
+    // caindo direto na aba "Todos os instrutores".
+    'disponibilidade-invas.html': { ver: ['disponibilidade_inva.visualizar_propria', 'disponibilidade_inva.visualizar_todos'],
                                 editar: ['disponibilidade_inva.editar_propria'] },
     // Ver e liberar sao separadas: liberar cria o aluno na Zenler e dispara o
     // e-mail de boas-vindas dela, que nao volta atras.
