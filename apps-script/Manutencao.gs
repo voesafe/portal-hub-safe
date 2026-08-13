@@ -77,6 +77,9 @@ var MANUTENCAO_FUNCOES = {
   portalInstalarTriggerMatriculas: 'Instala o gatilho diario (04h) da sincronia de matriculas.',
   portalRemoverTriggerMatriculas:  'Remove o gatilho da sincronia de matriculas.',
 
+  // ── Fechamento de Horas / Cotistas ────────────────────────
+  repararFrotaFechamentoHoras_: 'ESCREVE. Remove da aba ja criada a aeronave vendida (retiradoEm). Argumentos: ano, mes.',
+
 };
 
 // ── Token ───────────────────────────────────────────────────
