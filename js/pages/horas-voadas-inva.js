@@ -75,11 +75,6 @@ const HorasVoadasInva = {
     'horas-asc': 'Horas, da menor',
     'horas-desc': 'Horas, da maior'
   },
-  // Arrastar termina em pointerup, mas o navegador ainda dispara o click do
-  // punho logo depois. Sem esta trava, um arraste bem-sucedido moveria de
-  // novo pelo click e o instrutor voltaria para a base de origem.
-  ignorarCliqueDoPunho: false,
-
   // ── Instrutores de solo (2026-08-11) ─────────────────────────
   // Mundo separado, com estado PRÓPRIO (nunca misturado com o de voo
   // acima): sem hora voada, sem CAVOK, sem OPR, sem flag de 100h. Ver o
@@ -98,8 +93,7 @@ const HorasVoadasInva = {
     ordens: { SJK: 'prioridade', CPQ: 'prioridade' },
     pop: { instrutor: null, painel: 'lista', editando: null, cor: 'verde', busca: '' },
     popComent: { instrutor: null, salvando: false, rascunhos: {} },
-    arraste: null,
-    ignorarCliqueDoPunho: false
+    arraste: null
   },
 
   escape(valor) {
@@ -1190,9 +1184,9 @@ const HorasVoadasInva = {
     // estao escondidos. Numerar o que esta visivel faria o quinto da fila
     // parecer o segundo.
     const rotuloPunho = prioridade
-      ? `${nome} está em ${posicao}º na prioridade de ${base}. Arraste para mudar a posição, `
-        + `use as setas para cima e para baixo, ou clique para mover para a base ${outra}`
-      : `Arraste para a outra base, ou clique para mover ${nome} para a base ${outra}`;
+      ? `${nome} está em ${posicao}º na prioridade de ${base}. Arraste para mudar a posição `
+        + `ou para mover para a base ${outra}. Use as setas para cima e para baixo para reordenar`
+      : `Arraste ${nome} para a base ${outra} para mudar de base`;
 
     return `
       <li class="hi-item${flag ? ' is-liberado' : ''}" data-nome="${nome}">
@@ -1568,8 +1562,7 @@ const HorasVoadasInva = {
     document.querySelectorAll('[data-drop-base]')
       .forEach(el => el.classList.remove('is-drop'));
 
-    if (!a.ativo) return; // clique simples: quem resolve e o handler de click
-    this.ignorarCliqueDoPunho = true;
+    if (!a.ativo) return; // clique simples: o handler de click nao move mais ninguem
     if (!a.alvo) return;
 
     const instrutor = this.instrutores.find(i => i.nome === a.nome);
@@ -1931,18 +1924,11 @@ const HorasVoadasInva = {
         return;
       }
 
-      const punho = evento.target.closest('.hi-punho');
-      if (punho) {
-        // Tambem cobre teclado: Enter e Espaco num <button> viram click, e
-        // arrastar por teclado nao existe.
-        if (this.ignorarCliqueDoPunho) {
-          this.ignorarCliqueDoPunho = false;
-          return;
-        }
-        const item = punho.closest('.hi-item');
-        if (item) this.moverBase(item.dataset.nome, punho.dataset.mover);
-        return;
-      }
+      // O punho move de base SO ao ser arrastado. Um clique simples nao move
+      // ninguem: era assim antes (Enter/Espaco tambem contava como clique),
+      // e virava movimento acidental sempre que a pessoa so queria olhar a
+      // linha ou tocar de leve no celular.
+      if (evento.target.closest('.hi-punho')) return;
       const etiquetas = evento.target.closest('.hi-etiquetas-abrir');
       if (etiquetas) {
         // Sem isto o mesmo clique borbulha ate o handler de "clique fora" no
@@ -2785,9 +2771,9 @@ const HorasVoadasInva = {
     const nome = this.escape(instrutor.nome);
     const prioridade = this.emPrioridadeSolo(base);
     const rotuloPunho = prioridade
-      ? `${nome} está em ${posicao}º na prioridade de ${base}. Arraste para mudar a posição, `
-        + `use as setas para cima e para baixo, ou clique para mover para a base ${outra}`
-      : `Arraste para a outra base, ou clique para mover ${nome} para a base ${outra}`;
+      ? `${nome} está em ${posicao}º na prioridade de ${base}. Arraste para mudar a posição `
+        + `ou para mover para a base ${outra}. Use as setas para cima e para baixo para reordenar`
+      : `Arraste ${nome} para a base ${outra} para mudar de base`;
 
     return `
       <li class="hi-item" data-nome="${nome}">
@@ -2976,7 +2962,6 @@ const HorasVoadasInva = {
       .forEach(el => el.classList.remove('is-drop'));
 
     if (!a.ativo) return;
-    this.solo.ignorarCliqueDoPunho = true;
     if (!a.alvo) return;
 
     const instrutor = this.solo.instrutores.find(i => i.nome === a.nome);
@@ -3111,16 +3096,9 @@ const HorasVoadasInva = {
         return;
       }
 
-      const punho = evento.target.closest('.hi-punho');
-      if (punho) {
-        if (this.solo.ignorarCliqueDoPunho) {
-          this.solo.ignorarCliqueDoPunho = false;
-          return;
-        }
-        const item = punho.closest('.hi-item');
-        if (item) this.moverBaseSolo(item.dataset.nome, punho.dataset.mover);
-        return;
-      }
+      // O punho move de base SO ao ser arrastado (ver o bloco equivalente do
+      // mundo de voo, acima).
+      if (evento.target.closest('.hi-punho')) return;
       const etiquetas = evento.target.closest('.hi-etiquetas-abrir-solo');
       if (etiquetas) {
         evento.stopPropagation();
