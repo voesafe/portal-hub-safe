@@ -1,5 +1,5 @@
 // ============================================================
-// FechamentoHorasInstrutores.gs — Fechamento de Horas / Instrutores
+// FechamentoHorasInstrutores.gs: Fechamento de Horas / Instrutores
 // SAFE Hub
 //
 // O PROBLEMA
@@ -12,7 +12,7 @@
 // DOIS BACKENDS, PROPOSITO
 // O cadastro dos instrutores e as horas voadas vivem no backend proprio
 // das Horas INVA (outro repositorio, sem sessao). O que este modulo
-// guarda AQUI, no Hub, e so o valor da hora por categoria — porque isso
+// guarda AQUI, no Hub, e so o valor da hora por categoria: isso
 // e dado de folha e precisa de RBAC de verdade (sessao + permissao), que
 // o backend das Horas INVA nao tem (ele responde anonimo). Na leitura,
 // este modulo busca no backend das Horas INVA (a) a lista de instrutores
@@ -72,7 +72,7 @@ function fhiArredondar2_(valor) {
   return Math.round((Number(valor) || 0) * 100) / 100;
 }
 
-/** 'aaaa-mm-dd 23:59:59' do ultimo dia do mes — o corte para "vigente naquele mes". */
+/** 'aaaa-mm-dd 23:59:59' do ultimo dia do mes: o corte para "vigente naquele mes". */
 function fhiChaveMesCorte_(ano, mes) {
   var ultimoDia = new Date(ano, mes, 0).getDate();
   return String(ano).padStart(4, '0') + '-' + String(mes).padStart(2, '0') + '-' +
@@ -86,7 +86,7 @@ function fhiAgoraTexto_() {
 /**
  * Historico completo, uma entrada por vigencia gravada. `getDisplayValues`
  * na coluna de data: mesma cautela do LOG da Escala CCO, da DATA_NASCIMENTO
- * e da reconciliacao das Horas INVA — celula que parece data pode ter virado
+ * e da reconciliacao das Horas INVA: celula que parece data pode ter virado
  * Date de verdade no Sheets, e o que a pessoa ve na celula e o confiavel.
  */
 function fhiLerHistorico_() {
@@ -171,7 +171,10 @@ function fhiHorasCategoriaMes_(ano, mes) {
     porInstrutor[fhiChaveNome_(item.instrutor)] = {
       vfrHoras: Number(item.vfrHoras) || 0,
       ifrHoras: Number(item.ifrHoras) || 0,
-      simuladorHoras: Number(item.simuladorHoras) || 0
+      simuladorHoras: Number(item.simuladorHoras) || 0,
+      // Detalhe por voo, para o "Ver voos" auditar de onde vieram as horas.
+      // Repassado como veio do backend das Horas INVA, sem recalcular nada.
+      voos: Array.isArray(item.voos) ? item.voos : []
     };
   });
   return porInstrutor;
@@ -195,7 +198,7 @@ function listarFechamentoHorasInstrutores(ano, mes) {
 
   var instrutores = instrutoresEventuais.map(function (nome) {
     var chave = fhiChaveNome_(nome);
-    var horas = horasPorInstrutor[chave] || { vfrHoras: 0, ifrHoras: 0, simuladorHoras: 0 };
+    var horas = horasPorInstrutor[chave] || { vfrHoras: 0, ifrHoras: 0, simuladorHoras: 0, voos: [] };
 
     var valorVfr = fhiValorVigenteAte_(historico, chave, 'VFR', corte);
     var valorIfr = fhiValorVigenteAte_(historico, chave, 'IFR', corte);
@@ -209,6 +212,7 @@ function listarFechamentoHorasInstrutores(ano, mes) {
       vfrHoras: horas.vfrHoras,
       ifrHoras: horas.ifrHoras,
       simuladorHoras: horas.simuladorHoras,
+      voos: horas.voos || [],
       totalAPagar: fhiArredondar2_(
         horas.vfrHoras * valorVfr + horas.ifrHoras * valorIfr + horas.simuladorHoras * valorSimulador
       ),
