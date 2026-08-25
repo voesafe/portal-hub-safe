@@ -8,18 +8,32 @@ var FECHAMENTO_HORAS_MESES = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
 ];
+// `retiradoEm` marca aeronave vendida: { ano, mes } do primeiro mês em que ela
+// NÃO deve mais aparecer. Meses anteriores (já fechados ou não) continuam
+// enxergando a aeronave normalmente, inclusive se forem reabertos e salvos de
+// novo — o corte é por competência, nunca por remoção da constante, senão
+// salvar um mês antigo apagaria o histórico dela daquela aba.
 var FECHAMENTO_HORAS_AERONAVES = [
-  { base: 'SJK', tipo: 'PR-CRS', cotista: false },
+  { base: 'SJK', tipo: 'PR-CRS', cotista: false, retiradoEm: { ano: 2026, mes: 8 } },
   { base: 'SJK', tipo: 'PS-LOM', cotista: true },
   { base: 'SJK', tipo: 'PS-SFE', cotista: true },
   { base: 'SJK', tipo: 'PS-SFH', cotista: true },
   { base: 'SJK', tipo: 'PS-SFI', cotista: true },
-  { base: 'CPQ', tipo: 'PS-SFJ', cotista: false },
-  { base: 'CPQ', tipo: 'PS-SFL', cotista: false },
+  { base: 'CPQ', tipo: 'PS-SFJ', cotista: false, retiradoEm: { ano: 2026, mes: 8 } },
+  { base: 'CPQ', tipo: 'PS-SFL', cotista: false, retiradoEm: { ano: 2026, mes: 8 } },
   { base: 'SJK', tipo: 'PS-SFP', cotista: false },
   { base: 'SJK', tipo: 'SM-SJK', cotista: false },
   { base: 'CPQ', tipo: 'SM-CPQ', cotista: false }
 ];
+
+function aeronavesFechamentoHoras_(ano, mes) {
+  var competencia = Number(ano) * 12 + Number(mes);
+  return FECHAMENTO_HORAS_AERONAVES.filter(function(item) {
+    if (!item.retiradoEm) return true;
+    var corte = Number(item.retiradoEm.ano) * 12 + Number(item.retiradoEm.mes);
+    return competencia < corte;
+  });
+}
 var FECHAMENTO_HORAS_METRICAS = [
   'Número de Cheques',
   'Número de Voos Solos',
@@ -120,8 +134,9 @@ function criarAbaFechamentoHoras_(ano, mes) {
   ]]);
   sheet.getRange('F2').setValue('Tabela_2');
   sheet.getRange('F3:G3').setValues([['Métrica', 'Valor']]);
-  sheet.getRange(4, 1, FECHAMENTO_HORAS_AERONAVES.length, 4).setValues(
-    FECHAMENTO_HORAS_AERONAVES.map(function(item) {
+  var aeronaves = aeronavesFechamentoHoras_(ano, mes);
+  sheet.getRange(4, 1, aeronaves.length, 4).setValues(
+    aeronaves.map(function(item) {
       return [item.base, item.tipo, 0, item.cotista ? 0 : ''];
     })
   );
@@ -220,7 +235,7 @@ function lerMesFechamentoHoras_(ano, mes, ss, mapaStatus) {
   }
 
   if (!horas.length) {
-    horas = FECHAMENTO_HORAS_AERONAVES.map(function(item) {
+    horas = aeronavesFechamentoHoras_(ano, mes).map(function(item) {
       return {
         base: item.base,
         tipo: item.tipo,
@@ -340,14 +355,14 @@ function listarFechamentoHoras(ano, mes) {
   };
 }
 
-function validarHorasFechamento_(horas) {
+function validarHorasFechamento_(horas, ano, mes) {
   if (!Array.isArray(horas)) throw new Error('Lista de horas inválida.');
   var porTipo = {};
   horas.forEach(function(item) {
     porTipo[String(item.tipo || '').trim().toUpperCase()] = item;
   });
 
-  return FECHAMENTO_HORAS_AERONAVES.map(function(modelo) {
+  return aeronavesFechamentoHoras_(ano, mes).map(function(modelo) {
     var item = porTipo[modelo.tipo] || {};
     var horasNumero = numeroFechamentoHoras_(item.horas);
     var cotistaNumero = modelo.cotista
@@ -401,7 +416,7 @@ function registrarHistoricoFechamentoHoras_(ano, mes, acao, usuario, anterior, v
 
 function salvarFechamentoHoras(dados, usuario) {
   var competencia = validarCompetenciaFechamentoHoras_(dados.ano, dados.mes);
-  var horas = validarHorasFechamento_(dados.horas);
+  var horas = validarHorasFechamento_(dados.horas, competencia.ano, competencia.mes);
   var metricas = validarMetricasFechamento_(dados.metricas);
   var lock = LockService.getScriptLock();
   lock.waitLock(30000);
@@ -511,6 +526,74 @@ function alterarStatusFechamentoHoras(dados, usuario) {
   }
 
   return listarFechamentoHoras(competencia.ano, competencia.mes);
+}
+
+/**
+ * Manutenção dormente (sem rota própria, rodada via `manutencao.mjs`).
+ * Remove da aba já criada de `ano`/`mes` as linhas de aeronave que
+ * `aeronavesFechamentoHoras_` não inclui mais para aquela competência.
+ *
+ * Existe porque a mudança de `retiradoEm` só evita CRIAR linha nova ou
+ * REESCREVER no salvamento — ela não toca em aba que já existia com a
+ * linha física gravada (mesmo com 0 horas). Sem isto, PR-CRS/PS-SFJ/
+ * PS-SFL continuariam na tela de agosto/2026 até alguém salvar o mês
+ * pela UI.
+ *
+ * Idempotente: sem linha para remover, devolve `removidas: []` e não
+ * escreve nada. Nunca mexe em mês anterior ao corte de `retiradoEm`.
+ */
+function repararFrotaFechamentoHoras_(ano, mes) {
+  var competencia = validarCompetenciaFechamentoHoras_(ano, mes);
+  var ss = garantirEstruturaFechamentoHoras_();
+  var nome = nomeAbaFechamentoHoras_(competencia.ano, competencia.mes);
+  var sheet = ss.getSheetByName(nome);
+  if (!sheet) {
+    return { ok: true, motivo: 'Aba ainda não existe (' + nome + '); nada a reparar.' };
+  }
+
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    var atual = lerMesFechamentoHoras_(competencia.ano, competencia.mes, ss);
+    var tiposValidos = aeronavesFechamentoHoras_(competencia.ano, competencia.mes)
+      .map(function(item) { return item.tipo; });
+    var removidas = atual.horas.filter(function(item) {
+      return tiposValidos.indexOf(item.tipo) === -1;
+    });
+    if (!removidas.length) {
+      return { ok: true, removidas: [], mensagem: 'Nada a remover em ' + nome + '.' };
+    }
+
+    var horasFiltradas = atual.horas.filter(function(item) {
+      return tiposValidos.indexOf(item.tipo) !== -1;
+    });
+    sheet.getRange('A4:D30').clearContent();
+    sheet.getRange(4, 1, horasFiltradas.length, 4).setValues(
+      horasFiltradas.map(function(item) {
+        return [
+          item.base,
+          item.tipo,
+          item.horas,
+          item.cotista_horas === null ? '' : item.cotista_horas
+        ];
+      })
+    );
+
+    var status = obterStatusFechamentoHoras_(competencia.ano, competencia.mes, ss);
+    var novaVersao = status.versao + 1;
+    var usuario = { email: 'manutencao-frota@voesafe.com' };
+    salvarStatusFechamentoHoras_(
+      competencia.ano, competencia.mes, status.fechado, novaVersao, usuario, new Date(), ss
+    );
+    registrarHistoricoFechamentoHoras_(
+      competencia.ano, competencia.mes, 'CORRECAO_FROTA_VENDIDA',
+      usuario, atual, status.versao, novaVersao
+    );
+    SpreadsheetApp.flush();
+    return { ok: true, removidas: removidas.map(function(item) { return item.tipo; }) };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /**
