@@ -168,6 +168,8 @@ const Auth = {
                                 editar: ['controle_gastos.editar_gastos', 'controle_gastos.editar_receitas', 'controle_gastos.editar_horas_voadas', 'controle_gastos.criar_categoria', 'controle_gastos.editar_categoria', 'controle_gastos.ativar_inativar_categoria'] },
     'fechamento-horas.html':  { ver: ['fechamento_horas.visualizar'],
                                 editar: ['fechamento_horas.editar', 'fechamento_horas.importar_cavok', 'fechamento_horas.fechar_mes', 'fechamento_horas.reabrir_mes'] },
+    'fechamento-horas-instrutores.html': { ver: ['fechamento_horas_instrutores.visualizar'],
+                                editar: ['fechamento_horas_instrutores.editar_valores'] },
     'escala-cco.html':        { ver: ['escala_cco.visualizar_calendario'],
                                 editar: ['escala_cco.editar_propria_escala', 'escala_cco.editar_escala', 'escala_cco.editar_valor_turno', 'escala_cco.gerenciar_funcionarios'] },
     'escala-pav.html':        { ver: ['escala_pav.visualizar_calendario', 'escala_pav.visualizar_financeiro'],
@@ -211,6 +213,7 @@ const Auth = {
     'concorrencia.html': 'Concorrência',
     'controle-gastos.html': 'Controle de Gastos',
     'fechamento-horas.html': 'Fechamento de Horas',
+    'fechamento-horas-instrutores.html': 'Fechamento de Horas / Instrutores',
     'escala-cco.html': 'Escala CCO',
     'escala-pav.html': 'Escala PAV de Base',
     'horas-voadas-inva.html': 'Instrutores',
@@ -416,6 +419,7 @@ const Auth = {
   protegerMarketing()       { return this.protegerPagina('marketing-origem-lead.html', 'Origem do Lead'); },
   protegerFinanceiro()      { return this.protegerPagina('controle-gastos.html', 'Controle de Gastos'); },
   protegerFechamentoHoras() { return this.protegerPagina('fechamento-horas.html', 'Fechamento de Horas / Cotistas'); },
+  protegerFechamentoHorasInstrutores() { return this.protegerPagina('fechamento-horas-instrutores.html', 'Fechamento de Horas / Instrutores'); },
   protegerGestaoUsuarios()  { return this.protegerPagina('admin.html', 'Gestão central de usuários'); },
   protegerControleAcesso()  { return this.protegerPagina('access-control.html', 'Controle de Acesso'); },
 
@@ -584,8 +588,9 @@ const Auth = {
       { pagina: 'concorrencia.html', label: 'Concorrência', icone: 'concorrencia' },
       { pagina: 'controle-gastos.html', label: 'Controle de Gastos', icone: 'gastos' },
       { pagina: 'faturamento.html', label: 'Faturamento', icone: 'faturamento' },
-      { pagina: 'fechamento-horas.html', label: 'Fechamento de Horas / Cotistas', icone: 'horas' }
-    ], ['concorrencia.html', 'controle-gastos.html', 'faturamento.html', 'fechamento-horas.html']));
+      { pagina: 'fechamento-horas.html', label: 'Fechamento de Horas / Cotistas', icone: 'horas' },
+      { pagina: 'fechamento-horas-instrutores.html', label: 'Fechamento de Horas / Instrutores', icone: 'horas' }
+    ], ['concorrencia.html', 'controle-gastos.html', 'faturamento.html', 'fechamento-horas.html', 'fechamento-horas-instrutores.html']));
 
     secoes.push(secaoSeTiver('marketing', 'Marketing', 'marketing', [
       { pagina: 'marketing-origem-lead.html', label: 'Origem do Lead', icone: 'origem' }
@@ -677,6 +682,7 @@ const Auth = {
       'access-control.html': 'acesso',
       'controle-gastos.html': 'gastos',
       'fechamento-horas.html': 'horas',
+      'fechamento-horas-instrutores.html': 'horas',
       'escala-cco.html': 'escala',
       'escala-pav.html': 'escala',
       'horas-voadas-inva.html': 'horas',

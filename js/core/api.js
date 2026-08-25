@@ -328,6 +328,24 @@ const API = {
   },
   async importarFechamentoCavok(ano, mes) {
     return this.post('importar-fechamento-cavok', { ano, mes });
+  },
+
+  // ── Fechamento de Horas / Instrutores ─────────────────────
+  async getFechamentoHorasInstrutores(ano, mes, useCache = true) {
+    const sessao = Auth.getSessao();
+    const params = { ano, mes, __pac: sessao?.pac || '', __perfil: sessao?.perfil || '' };
+    if (useCache) {
+      const cached = Cache.get('fechamento-horas-instrutores', params);
+      if (cached) return cached;
+    }
+    const r = await this.post('fechamento-horas-instrutores', { ano, mes });
+    if (r.ok && useCache) Cache.set('fechamento-horas-instrutores', params, r);
+    return r;
+  },
+  async salvarValorFechamentoHorasInstrutor(dados) {
+    const r = await this.post('salvar-valor-fechamento-horas-instrutor', dados);
+    if (r.ok) Cache.invalidar('fechamento-horas-instrutores|');
+    return r;
   }
 };
 
