@@ -105,7 +105,8 @@ function fhiLerHistorico_() {
       instrutorChave: chave,
       categoria: categoria,
       valor: Number(linha[3]) || 0,
-      vigenteDesde: vigenteDesde
+      vigenteDesde: vigenteDesde,
+      registradoPor: String(linha[5] || '').trim()
     });
   });
   return historico;
@@ -223,6 +224,49 @@ function listarFechamentoHorasInstrutores(ano, mes) {
   });
 
   return { ano: anoNum, mes: mesNum, mesAtual: mesAtual, instrutores: instrutores };
+}
+
+/**
+ * Valor ATUAL (vigente agora) de cada categoria por instrutor, mais o
+ * histórico completo de vigências (mais recente primeiro) — é o que
+ * sustenta a aba "Valores" (edição) e o modal de histórico. Sem filtro de
+ * mês, ao contrário de `listarFechamentoHorasInstrutores`: editar é sempre
+ * sobre "agora", independente de qual mês está sendo olhado no Resumo.
+ */
+function listarValoresFechamentoHorasInstrutores() {
+  var instrutoresEventuais = fhiListarInstrutoresEventuais_();
+  var historico = fhiLerHistorico_();
+
+  var instrutores = instrutoresEventuais.map(function (nome) {
+    var chave = fhiChaveNome_(nome);
+    var doInstrutor = historico
+      .filter(function (r) { return r.instrutorChave === chave; })
+      .sort(function (a, b) { return a.vigenteDesde < b.vigenteDesde ? 1 : -1; });
+
+    var valorAtual = function (categoria) {
+      for (var i = 0; i < doInstrutor.length; i++) {
+        if (doInstrutor[i].categoria === categoria) return doInstrutor[i].valor;
+      }
+      return fhiValorPadrao_(categoria);
+    };
+
+    return {
+      instrutor: nome,
+      valorVfr: valorAtual('VFR'),
+      valorIfr: valorAtual('IFR'),
+      valorSimulador: valorAtual('SIMULADOR'),
+      historico: doInstrutor.map(function (r) {
+        return {
+          categoria: r.categoria,
+          valor: r.valor,
+          vigenteDesde: r.vigenteDesde,
+          registradoPor: r.registradoPor
+        };
+      })
+    };
+  });
+
+  return { instrutores: instrutores };
 }
 
 // ── Escrita: nova vigência ───────────────────────────────────

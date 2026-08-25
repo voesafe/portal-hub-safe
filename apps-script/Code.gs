@@ -516,6 +516,13 @@ function doPost(e) {
         var usuarioSalvaFhi = exigirFechamentoHorasInstrutoresEditar(token);
         return jsonSuccess(salvarValorFechamentoHorasInstrutor(dados, usuarioSalvaFhi));
 
+      // Aba "Valores": valor atual + histórico de vigências por instrutor.
+      // Atrás de EDITAR (não visualizar): é a mesma tela que edita, e o
+      // histórico mostra quem mudou o quê.
+      case 'fechamento-horas-instrutores-valores':
+        exigirFechamentoHorasInstrutoresEditar(token);
+        return jsonSuccess(listarValoresFechamentoHorasInstrutores());
+
       // Manutenção: roda função de manutenção sem clique no editor.
       // ⚠️ NÃO usa sessão do Hub de propósito. A autenticação é o token
       // em `dados.chave`, guardado só em Propriedade do script, e a lista
