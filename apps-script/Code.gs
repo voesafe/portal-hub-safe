@@ -504,6 +504,18 @@ function doPost(e) {
         var usuarioImportaCavok = exigirAcessoFechamentoHoras(token);
         return jsonSuccess(importarFechamentoHorasCavok(dados, usuarioImportaCavok));
 
+      // ── Fechamento de Horas / Instrutores ─────────────────
+      // Valor da hora (VFR/IFR/Simulador) dos instrutores "Eventual",
+      // cruzado com as horas voadas do backend das Horas INVA. Ver o
+      // topo do FechamentoHorasInstrutores.gs.
+      case 'fechamento-horas-instrutores':
+        exigirFechamentoHorasInstrutoresVer(token);
+        return jsonSuccess(listarFechamentoHorasInstrutores(dados.ano, dados.mes));
+
+      case 'salvar-valor-fechamento-horas-instrutor':
+        var usuarioSalvaFhi = exigirFechamentoHorasInstrutoresEditar(token);
+        return jsonSuccess(salvarValorFechamentoHorasInstrutor(dados, usuarioSalvaFhi));
+
       // Manutenção: roda função de manutenção sem clique no editor.
       // ⚠️ NÃO usa sessão do Hub de propósito. A autenticação é o token
       // em `dados.chave`, guardado só em Propriedade do script, e a lista

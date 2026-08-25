@@ -1,0 +1,9 @@
+# Fim de linha estavel para o backend do Hub (apps-script/), independente
+# de sistema operacional. Sem isto, com core.autocrlf=true, um checkout no
+# Windows baixa os .gs com CRLF enquanto o Git (e o Apps Script publicado)
+# guardam LF: toda linha de todo arquivo parece alterada, e a guarda de
+# drift do tools/deploy/deploy.mjs acusa edicao no editor que nunca houve.
+# Descoberto em 2026-08-25 ao publicar o backend do Hub pela primeira vez
+# a partir de uma maquina Windows.
+apps-script/*.gs text eol=lf
+apps-script/appsscript.json text eol=lf

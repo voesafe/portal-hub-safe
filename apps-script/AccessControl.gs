@@ -54,6 +54,11 @@ var ACCESS_PERMISSIONS = [
   ['fechamento_horas.fechar_mes', 'Fechamento de Horas', 'Fechar mês'],
   ['fechamento_horas.reabrir_mes', 'Fechamento de Horas', 'Reabrir mês'],
   ['fechamento_horas.visualizar_historico', 'Fechamento de Horas', 'Visualizar histórico'],
+  // Valor da hora (VFR/IFR/Simulador) dos instrutores "Eventual" e o total a
+  // pagar. Módulo separado do Fechamento de Horas / Cotistas acima: dados,
+  // tela e permissões diferentes, só o nome da família é parecido.
+  ['fechamento_horas_instrutores.visualizar', 'Fechamento de Horas / Instrutores', 'Visualizar'],
+  ['fechamento_horas_instrutores.editar_valores', 'Fechamento de Horas / Instrutores', 'Editar valor da hora'],
   ['escala_cco.visualizar_calendario', 'Escala CCO', 'Visualizar calendário'],
   ['escala_cco.editar_propria_escala', 'Escala CCO', 'Editar a própria escala/disponibilidade'],
   ['escala_cco.editar_escala', 'Escala CCO', 'Editar escala'],
@@ -220,6 +225,8 @@ var ACCESS_DEFAULT_GROUPS = [
       'fechamento_horas.importar_cavok',
       'fechamento_horas.fechar_mes',
       'fechamento_horas.reabrir_mes',
+      'fechamento_horas_instrutores.visualizar',
+      'fechamento_horas_instrutores.editar_valores',
       'escala_pav.visualizar_calendario',
       'escala_pav.visualizar_financeiro',
       'bases.visualizar'
