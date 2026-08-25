@@ -109,30 +109,9 @@
 }
 .fhi-vazio[hidden] { display: none; }
 
-.fhi-loading {
-  position: fixed;
-  inset: 0;
-  z-index: 900;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: rgba(14, 20, 40, .55);
-  backdrop-filter: blur(2px);
-}
-.fhi-loading.active { display: flex; }
-.fhi-loading-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  box-shadow: var(--shadow-md);
-  color: var(--text);
-  font-size: .82rem;
-  font-weight: 700;
-}
+/* O overlay de carregamento é o .dashboard-loading-overlay compartilhado
+   (core/layout.css), mesmo usado na tela de Instrutores: nada para
+   definir aqui, só reaproveitar as classes no HTML. */
 
 /* ── Modal "Ver voos" ────────────────────────────────────────
    Auditoria: separa os voos considerados em VFR/IFR/Simulador, com data,

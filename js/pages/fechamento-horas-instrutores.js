@@ -126,7 +126,7 @@ const FechamentoHorasInstrutores = {
   // ── Aba "Resumo do mês" ──────────────────────────────────
 
   async carregar(useCache = true) {
-    this.setLoading(true);
+    this.setLoading(true, 'Carregando fechamento de horas...');
     try {
       const r = await API.getFechamentoHorasInstrutores(this.ano, this.mes, useCache);
       if (!r.ok) {
@@ -272,7 +272,7 @@ const FechamentoHorasInstrutores = {
   // ── Aba "Valores dos instrutores" ────────────────────────
 
   async _carregarValores() {
-    this.setLoading(true);
+    this.setLoading(true, 'Carregando valores dos instrutores...');
     try {
       const r = await API.getValoresFechamentoHorasInstrutores();
       if (!r.ok) {
@@ -472,8 +472,11 @@ const FechamentoHorasInstrutores = {
     return (Number(valor) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   },
 
-  setLoading(ativo) {
-    document.getElementById('fhi-loading')?.classList.toggle('active', !!ativo);
+  setLoading(ativo, texto = 'Carregando fechamento de horas...') {
+    const overlay = document.getElementById('fhi-loading');
+    const label = document.getElementById('fhi-loading-text');
+    if (label) label.textContent = texto;
+    overlay?.classList.toggle('active', !!ativo);
   }
 };
 
