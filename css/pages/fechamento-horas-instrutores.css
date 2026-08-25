@@ -9,6 +9,33 @@
   gap: 16px;
 }
 
+/* Abas da página: Resumo do mês (leitura) e Valores dos instrutores
+   (edição + histórico), mesmo padrão do .fechamento-tabs/.fechamento-view. */
+.fhi-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.fhi-tab {
+  min-height: 38px;
+  padding: 8px 15px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: .8rem;
+  font-weight: 700;
+  transition: var(--transition);
+}
+.fhi-tab:hover { color: var(--text); background: var(--surface-2); }
+.fhi-tab.active { color: var(--text-on-brand); background: var(--brand-surface); }
+.fhi-tab[hidden] { display: none; }
+
+.fhi-view { display: none; }
+.fhi-view.active { display: flex; flex-direction: column; gap: 16px; }
+
 /* Mês fechado: valores são os que valiam na época, não editáveis aqui.
    Composto sobre superfície opaca antes do tint translúcido, senão o aviso
    herda a cor de quem estiver por baixo (mesma lição do Portal do Aluno). */
@@ -47,7 +74,11 @@
 .fhi-table th, .fhi-table td { white-space: nowrap; }
 .fhi-table td.text-right, .fhi-table th.text-right { text-align: right; }
 
-.fhi-btn-voos { white-space: nowrap; }
+.fhi-btn-acao { white-space: nowrap; }
+
+/* Valor no Resumo: texto simples, não é mais editável ali (a edição mudou
+   para a aba "Valores dos instrutores"). */
+.fhi-valor-texto { color: var(--text); }
 
 .fhi-input-valor {
   width: 92px;
@@ -155,6 +186,36 @@
   font-size: .85rem;
 }
 
+/* ── Modal "Histórico de valores" ───────────────────────────── */
+.fhi-historico-lista { max-height: 55vh; overflow-y: auto; }
+.fhi-historico-item {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 8px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: .85rem;
+}
+.fhi-historico-item:last-child { border-bottom: none; }
+.fhi-historico-cat {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.fhi-historico-quem { color: var(--text-muted); font-size: .78rem; }
+.fhi-historico-valor { font-weight: 700; text-align: right; white-space: nowrap; }
+.fhi-historico-vazio {
+  padding: 24px 8px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .85rem;
+}
+
 @media (max-width: 700px) {
   .fhi-filtros { grid-template-columns: 1fr; }
+  .fhi-historico-item { grid-template-columns: 1fr; row-gap: 2px; }
+  .fhi-historico-valor { text-align: left; }
 }

@@ -60,6 +60,12 @@
     </div>
 
     <div class="page fhi-page">
+      <div class="fhi-tabs" role="tablist" aria-label="Áreas do fechamento">
+        <button class="fhi-tab active" type="button" role="tab" aria-selected="true" data-view="resumo">Resumo do mês</button>
+        <button class="fhi-tab" type="button" role="tab" aria-selected="false" data-view="valores" id="fhi-tab-valores" hidden>Valores dos instrutores</button>
+      </div>
+
+      <section class="fhi-view active" id="fhi-view-resumo">
       <div class="fhi-aviso-historico" id="fhi-aviso-historico" hidden>
         Este é um mês fechado: os valores mostrados são os que valiam na época e não podem ser editados aqui. Para
         mudar o valor da hora dos próximos pagamentos, volte para o mês atual.
@@ -104,8 +110,50 @@
           <div class="fhi-vazio" id="fhi-vazio" hidden>Nenhum instrutor Eventual encontrado.</div>
         </div>
       </div>
+      </section>
+
+      <section class="fhi-view" id="fhi-view-valores">
+        <div class="card fhi-table-card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Valores dos instrutores</div>
+              <div class="fhi-card-sub">Valor atual da hora por categoria, vale a partir de agora. Editar aqui não muda o pagamento de um mês já calculado.</div>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="table fhi-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th class="text-right">Valor VFR</th>
+                  <th class="text-right">Valor IFR</th>
+                  <th class="text-right">Valor Simulador</th>
+                  <th style="width:110px"></th>
+                </tr>
+              </thead>
+              <tbody id="fhi-valores-tbody"></tbody>
+            </table>
+            <div class="fhi-vazio" id="fhi-valores-vazio" hidden>Nenhum instrutor Eventual encontrado.</div>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
+</div>
+
+<div class="modal-overlay" id="fhi-modal-historico">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="fhi-historico-titulo">Histórico de valores</h3>
+      <button class="modal-close" data-close="fhi-modal-historico" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fhi-historico-lista" id="fhi-historico-lista"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fhi-modal-historico">Fechar</button>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="fhi-modal-voos">
