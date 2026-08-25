@@ -1,5 +1,5 @@
 /* ============================================================
-   fechamento-horas-instrutores.css — Fechamento de Horas / Instrutores
+   fechamento-horas-instrutores.css: Fechamento de Horas / Instrutores
    SAFE Hub
    ============================================================ */
 
@@ -8,17 +8,6 @@
   flex-direction: column;
   gap: 16px;
 }
-
-.fhi-busca {
-  width: 220px;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--text);
-  font-size: .85rem;
-}
-.fhi-busca:focus { border-color: var(--blue); outline: none; }
 
 /* Mês fechado: valores são os que valiam na época, não editáveis aqui.
    Composto sobre superfície opaca antes do tint translúcido, senão o aviso
@@ -34,12 +23,31 @@
 }
 .fhi-aviso-historico[hidden] { display: none; }
 
-.fhi-table-card { padding: 0; overflow: hidden; }
-.fhi-table-card .card-header { padding: 18px 20px 12px; }
+/* Cabeçalho do card com o resumo numa linha e os filtros na linha de baixo,
+   igual à Gestão de Usuários (.usuarios-card-header/.usuarios-filtros): o
+   `.card-header` padrão é flex sem quebra, então o wrap é explícito aqui. */
+.fhi-card-header {
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 12px;
+}
+.fhi-card-heading { flex: 1 1 auto; }
 .fhi-card-sub { color: var(--text-muted); font-size: .8rem; margin-top: 2px; }
 
+.fhi-filtros {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.3fr) minmax(130px, 1fr) minmax(90px, .6fr);
+  gap: 8px;
+  width: 100%;
+}
+
+/* A tabela fica dentro do respiro padrão do `.card` (24px), como a de
+   Gestão de Usuários, sem o full-bleed de padding:0 que a versão anterior
+   usava. */
 .fhi-table th, .fhi-table td { white-space: nowrap; }
 .fhi-table td.text-right, .fhi-table th.text-right { text-align: right; }
+
+.fhi-btn-voos { white-space: nowrap; }
 
 .fhi-input-valor {
   width: 92px;
@@ -95,6 +103,58 @@
   font-weight: 700;
 }
 
-@media (max-width: 600px) {
-  .fhi-busca { width: 100%; }
+/* ── Modal "Ver voos" ────────────────────────────────────────
+   Auditoria: separa os voos considerados em VFR/IFR/Simulador, com data,
+   horas e a Missão do CAVOK que decidiu a categoria. */
+.fhi-modal-voos { max-width: 620px; }
+
+.fhi-voos-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+.fhi-voos-tab {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: .78rem;
+  font-weight: 700;
+  transition: var(--transition);
+}
+.fhi-voos-tab span {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(29, 41, 81, .08);
+  font-size: .68rem;
+}
+.fhi-voos-tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(29, 41, 81, .08);
+}
+.fhi-voos-tab.active span { background: rgba(91, 174, 226, .14); color: var(--ink-blue); }
+
+.fhi-voos-lista { max-height: 50vh; overflow-y: auto; }
+.fhi-voos-lista .table td, .fhi-voos-lista .table th { white-space: normal; }
+.fhi-voos-lista .table td.col-missao { color: var(--text-muted); font-size: .78rem; }
+
+.fhi-voos-vazio {
+  padding: 24px 8px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .85rem;
+}
+
+@media (max-width: 700px) {
+  .fhi-filtros { grid-template-columns: 1fr; }
 }

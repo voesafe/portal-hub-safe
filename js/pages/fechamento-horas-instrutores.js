@@ -1,5 +1,5 @@
 // ============================================================
-// fechamento-horas-instrutores.js — Fechamento de Horas / Instrutores
+// fechamento-horas-instrutores.js: Fechamento de Horas / Instrutores
 // SAFE Hub
 //
 // Lista os instrutores de voo com a etiqueta "Eventual" (cadastro vive no
@@ -10,7 +10,7 @@
 // Editar um valor é otimista com rollback: é edição de um campo de um item
 // já carregado, o servidor não recalcula nada complexo na escrita em si
 // (quem recalcula o total é o próximo carregamento). Só o mês CORRENTE é
-// editável — o valor de um mês passado é o que já foi de fato usado no
+// editável: o valor de um mês passado é o que já foi de fato usado no
 // cálculo daquele mês (resolvido pela vigência), então editar ali
 // reescreveria histórico em vez de corrigir o futuro.
 // ============================================================
@@ -22,12 +22,17 @@ const FechamentoHorasInstrutores = {
   mes: null,
   busca: '',
 
+  // Instrutor + categoria abertos no modal "Ver voos" no momento.
+  _voosInstrutor: null,
+  _voosCategoria: 'VFR',
+
   async iniciar() {
     if (!Auth.protegerFechamentoHorasInstrutores()) return;
     Auth.preencherUI();
     this._bindHamburger();
     this._inicializarFiltros();
     this._bindEventos();
+    this._bindModalVoos();
     await this.carregar();
   },
 
@@ -139,10 +144,14 @@ const FechamentoHorasInstrutores = {
     tbody.querySelectorAll('.fhi-input-valor').forEach(input => {
       input.addEventListener('change', () => this._salvarValor(input));
     });
+    tbody.querySelectorAll('.fhi-btn-voos').forEach(botao => {
+      botao.addEventListener('click', () => this._abrirVoos(botao.closest('tr')?.dataset.instrutor));
+    });
   },
 
   _linhaHtml(item) {
     const dis = item.editavel ? '' : 'disabled';
+    const totalVoos = (item.voos || []).length;
     return `
       <tr data-instrutor="${escapeHtml(item.instrutor)}">
         <td>${escapeHtml(item.instrutor)}</td>
@@ -153,8 +162,99 @@ const FechamentoHorasInstrutores = {
         <td class="text-right">${this._horas(item.ifrHoras)}</td>
         <td class="text-right">${this._horas(item.simuladorHoras)}</td>
         <td class="text-right fhi-total" data-total>${this._moeda(item.totalAPagar)}</td>
+        <td class="text-right">
+          <button class="btn btn-ghost btn-sm fhi-btn-voos" type="button" ${totalVoos ? '' : 'disabled'}
+            title="${totalVoos ? 'Ver os voos considerados neste mês' : 'Nenhum voo neste mês'}">
+            Ver voos
+          </button>
+        </td>
       </tr>
     `;
+  },
+
+  _abrirVoos(nome) {
+    const item = this.instrutores.find(i => i.instrutor === nome);
+    if (!item) return;
+    this._voosInstrutor = item;
+    this._voosCategoria = 'VFR';
+
+    const rotuloMes = CONFIG.MESES[this.mes] || '';
+    document.getElementById('fhi-voos-titulo').textContent =
+      `Voos de ${item.instrutor} · ${rotuloMes}/${this.ano}`;
+
+    document.querySelectorAll('.fhi-voos-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.cat === 'VFR');
+    });
+    this._atualizarContagemVoos(item);
+    this._renderizarVoos();
+    abrirModal('fhi-modal-voos');
+  },
+
+  _atualizarContagemVoos(item) {
+    const voos = item.voos || [];
+    const contar = cat => voos.filter(v => v.categoria === cat).length;
+    document.getElementById('fhi-voos-count-vfr').textContent = contar('VFR');
+    document.getElementById('fhi-voos-count-ifr').textContent = contar('IFR');
+    document.getElementById('fhi-voos-count-sim').textContent = contar('SIMULADOR');
+  },
+
+  _renderizarVoos() {
+    const lista = document.getElementById('fhi-voos-lista');
+    if (!lista || !this._voosInstrutor) return;
+    const voos = (this._voosInstrutor.voos || []).filter(v => v.categoria === this._voosCategoria);
+
+    if (!voos.length) {
+      lista.innerHTML = '<p class="fhi-voos-vazio">Nenhum voo nessa categoria neste mês.</p>';
+      return;
+    }
+
+    lista.innerHTML = `
+      <table class="table">
+        <thead>
+          <tr><th>Data</th><th class="text-right">Horas</th><th>Missão (CAVOK)</th></tr>
+        </thead>
+        <tbody>
+          ${voos.map(v => `
+            <tr>
+              <td>${escapeHtml(this._dataVoo(v.data))}</td>
+              <td class="text-right">${this._horas(v.horas)}</td>
+              <td class="col-missao">${escapeHtml(v.missao || '')}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  },
+
+  _bindModalVoos() {
+    document.querySelectorAll('.fhi-voos-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        this._voosCategoria = tab.dataset.cat;
+        document.querySelectorAll('.fhi-voos-tab').forEach(t => t.classList.toggle('active', t === tab));
+        this._renderizarVoos();
+      });
+    });
+    document.querySelectorAll('[data-close]').forEach(botao => {
+      botao.addEventListener('click', () => fecharModal(botao.dataset.close));
+    });
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', event => {
+        if (event.target === overlay) fecharModal(overlay.id);
+      });
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') fecharModal('fhi-modal-voos');
+    });
+  },
+
+  /** "2026-08-25" (ou variantes) -> "25/08/2026". Sem casar, devolve o texto cru. */
+  _dataVoo(valor) {
+    const texto = String(valor || '').trim();
+    let m = texto.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return `${m[3]}/${m[2]}/${m[1]}`;
+    m = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if (m) return `${m[1]}/${m[2]}/${m[3]}`;
+    return texto;
   },
 
   async _salvarValor(input) {

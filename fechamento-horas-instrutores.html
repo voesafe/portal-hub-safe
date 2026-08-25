@@ -57,13 +57,6 @@
           <div class="topbar-subtitle">Valor da hora e horas voadas dos instrutores Eventual</div>
         </div>
       </div>
-      <div class="topbar-right">
-        <input type="search" id="fhi-busca" class="fhi-busca" placeholder="Buscar instrutor…" aria-label="Buscar instrutor">
-        <div class="topbar-period">
-          <select id="fhi-mes" aria-label="Mês"></select>
-          <select id="fhi-ano" aria-label="Ano"></select>
-        </div>
-      </div>
     </div>
 
     <div class="page fhi-page">
@@ -73,10 +66,15 @@
       </div>
 
       <div class="card fhi-table-card">
-        <div class="card-header">
-          <div>
+        <div class="card-header fhi-card-header">
+          <div class="fhi-card-heading">
             <div class="card-title">Instrutores Eventual</div>
             <div class="fhi-card-sub" id="fhi-card-sub">Carregando…</div>
+          </div>
+          <div class="fhi-filtros">
+            <input type="search" id="fhi-busca" class="form-control" placeholder="Buscar instrutor…" aria-label="Buscar instrutor">
+            <select class="form-control" id="fhi-mes" aria-label="Mês"></select>
+            <select class="form-control" id="fhi-ano" aria-label="Ano"></select>
           </div>
         </div>
         <div class="table-wrapper">
@@ -91,6 +89,7 @@
                 <th class="text-right">Horas IFR</th>
                 <th class="text-right">Horas Simulador</th>
                 <th class="text-right">Total a pagar</th>
+                <th style="width:110px"></th>
               </tr>
             </thead>
             <tbody id="fhi-tbody"></tbody>
@@ -98,6 +97,7 @@
               <tr>
                 <th colspan="7">Total do mês</th>
                 <td class="text-right" id="fhi-total-geral">R$ 0,00</td>
+                <td></td>
               </tr>
             </tfoot>
           </table>
@@ -106,6 +106,26 @@
       </div>
     </div>
   </main>
+</div>
+
+<div class="modal-overlay" id="fhi-modal-voos">
+  <div class="modal fhi-modal-voos">
+    <div class="modal-header">
+      <h3 id="fhi-voos-titulo">Voos considerados</h3>
+      <button class="modal-close" data-close="fhi-modal-voos" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fhi-voos-tabs" role="tablist" aria-label="Categoria dos voos">
+        <button class="fhi-voos-tab active" type="button" role="tab" data-cat="VFR">VFR <span id="fhi-voos-count-vfr">0</span></button>
+        <button class="fhi-voos-tab" type="button" role="tab" data-cat="IFR">IFR <span id="fhi-voos-count-ifr">0</span></button>
+        <button class="fhi-voos-tab" type="button" role="tab" data-cat="SIMULADOR">Simulador <span id="fhi-voos-count-sim">0</span></button>
+      </div>
+      <div class="fhi-voos-lista" id="fhi-voos-lista"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fhi-modal-voos">Fechar</button>
+    </div>
+  </div>
 </div>
 
 <div class="fhi-loading" id="fhi-loading">
