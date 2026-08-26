@@ -85,15 +85,29 @@ function listarVendas(pac, mes, ano) {
  * ⚠️ Dedup por CPF, chave estável. Venda anterior a 2026-08-06 pode não ter
  * CPF gravado, e cai no e-mail. Sem os dois não há como identificar o
  * cliente de forma confiável entre uma venda e outra, e a linha fica de
- * fora — a mesma regra de `portalVendasCasaveis_`.
+ * fora: é a mesma regra de `portalVendasCasaveis_`.
  *
  * ⚠️ Nome suspeito (marcador de status tipo "TESTE"/"INATIVO" digitado no
  * campo errado) é descartado pelo mesmo filtro dos Aniversários e do Portal
  * do Aluno: sugerir aqui preencheria o cadastro novo com lixo.
+ *
+ * ⚠️ NASCIMENTO sai por `getDisplayValues` + `marketingDataNascimento_`
+ * ([Marketing.gs](apps-script/Marketing.gs)), NUNCA pelo `row[5]` cru de
+ * `linhaParaVenda`. A coluna não tem `setNumberFormat('@')` nenhum na
+ * escrita, então o Sheets pode ter convertido a célula em Date de verdade; a
+ * planilha não tem fuso declarado, e um objeto Date lido por `getValues` e
+ * depois serializado em JSON vira ISO com hora e `Z`, formato que o
+ * `<input type="date">` do navegador rejeita em silêncio, deixando o campo
+ * em branco. O Marketing já tinha essa armadilha resolvida para esta mesma
+ * coluna; aqui é reaproveitada, não reinventada. Venda antiga com só a
+ * idade (número solto) não vira data, e o campo fica vazio de propósito:
+ * não existe nascimento nenhum para reconstruir a partir de uma idade.
  */
 function listarClientesVendas(pac) {
   var sheet = getSheet(SHEETS.VENDAS);
-  var dados = sheet.getDataRange().getValues();
+  var range = sheet.getDataRange();
+  var dados = range.getValues();
+  var exibidos = range.getDisplayValues();
 
   var porChave = {};
   for (var i = 1; i < dados.length; i++) {
@@ -110,6 +124,9 @@ function listarClientesVendas(pac) {
     var chave = cpfDigitos ? 'cpf:' + cpfDigitos : (email ? 'email:' + email : '');
     if (!chave) continue;
 
+    var nasc = null;
+    try { nasc = marketingDataNascimento_(String(exibidos[i][5] || '').trim()); } catch (e) {}
+
     // Mesmo cliente com duas vendas aparece uma vez, com a mais recente.
     var atual = porChave[chave];
     if (!atual || String(v.data) > String(atual.data)) {
@@ -117,7 +134,7 @@ function listarClientesVendas(pac) {
         nome:       v.nome,
         cpf:        cpfDigitos,
         sexo:       v.sexo || '',
-        nascimento: v.nascimento || '',
+        nascimento: nasc ? nasc.iso : '',
         cidade:     v.cidade || '',
         estado:     v.estado || '',
         email:      v.email || '',
