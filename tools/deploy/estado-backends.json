@@ -1,20 +1,21 @@
 {
   "hub": {
-    "empurradoEm": "2026-08-13T20:35:02.138Z",
+    "empurradoEm": "2026-08-26T21:58:45.467Z",
     "arquivos": {
-      "AccessControl": "34874934e197994b0f253b43d59f896087c0297a949034a865935ee3cf169a6d",
+      "AccessControl": "784cd3818f83f02ee49bdc836d4306aff2a97631b7471bc4d23f6dfd35ae072a",
       "Aniversarios": "9721b0115a82953c3c53e6b94e589c9fe64a2cd051cf3dc43936bce43e0406b5",
       "Auth": "b21dfe81dd626a70108db4e343b57fe3d0ebe546fc48773af9315e0ac05db56c",
       "Bases": "36c91fd3e23db399e1ffdc7d850b60590e33f7d04d896a81b897893797a68045",
       "CadastroAlunos": "392a945c48ad76f1a121d695e0b825f6efdc2c0dd2dd0d551859b1d1268a7735",
       "Cavok": "0f2137626c21f253c0b57021b17b357b8dfb9ac8dff849f6d041977542df9dd9",
       "Cco": "dfbf61f9cf7f0f6a33ee00fa75ae38268ba48f2a43932997cbd0b93e4a842187",
-      "Code": "2ee88e03e49ef9b80827e9c0cd7dec95a852d393b0f524219cce53841860877e",
+      "Code": "e77daae82fb4614c4dd00591a137fddee3315bfe339a35bd72adcd3f689243eb",
       "Concorrencia": "c702abef2978a3652623c05c492e4671e5b9b594b3d38743be2c1e6f57e8d608",
       "ControleGastos": "9cce6dbfcb51c09ceb37901040020a459dc63071beee0782083b6c2f104baf58",
       "DisponibilidadeInva": "fdc97dd76c5efc69cd662b1c82de63f340825ff1344546b7d6483dcc49aa4fe7",
       "Faturamento": "a278a2bbe4042f6caa854c0cdbc64a8ac81aad84e6d319557461a21d02697656",
       "FechamentoHoras": "ce8a7914d8b31303d77cf8a3b5fb2f954d31a6fbb5428b2a586c1f21686c2732",
+      "FechamentoHorasInstrutores": "4bde1f3391200b7d785e36aa6b6e8e08e26c613829a039744eac4e04df75becd",
       "HeroAsset": "3b6e842f16696ad7d3fa1f5dcae0b4f5adb83edbb1bd23f8233e32ccb669c78f",
       "LogoAsset": "ac07c315050a31c9d28355cddb4a51bda4dbacc817c7fa474f80956a992aa1ab",
       "Manutencao": "77f23ac72f6de91655f2e5438fd7426a2bb736e5a84cddb407481423c21c936d",
@@ -25,7 +26,7 @@
       "PortalAluno": "25e0ceb6b449389876a72aeaab2e41fc4994e14b15e50ab4b466ce20fd9a9803",
       "Rotaer": "dd9b9f6ab9ff1d90ac5515a285269c19f450e7e64d5f24b8a2ab7136999559c2",
       "Utils": "36308b54794569a6b260dd1da9d37fb43c26e7b8eb64d85a56b2f65050984b17",
-      "Vendas": "e58a2ec22475a90bf92c897e20789cec0531a08974aa33e4de77b92d70e19464",
+      "Vendas": "2511683ff6b38dd45412a293965796377b2b1d9b1a1bdad2006a10378206bf12",
       "appsscript": "eda75aa6485dc21bacb094be0427a39e4e30fb6a6a99fa63afd5b25d4178640e"
     }
   },

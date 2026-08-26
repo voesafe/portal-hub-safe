@@ -46,6 +46,16 @@ function doGet(e) {
         return jsonSuccess(vendaItem);
       }
 
+      // Autocompletar de cliente repetido no cadastro de Vendas. Mesma regra
+      // de escopo da rota `vendas`: quem não é admin só reencontra os
+      // próprios clientes.
+      case 'vendas-clientes': {
+        var uVendasCli = exigirSessao(token);
+        var perfilVendasCli = usuarioEhSuperadmin(uVendasCli) ? 'master' : uVendasCli.perfil;
+        var pacVendasCli = perfilEhAdmin(perfilVendasCli) ? null : uVendasCli.pac;
+        return jsonSuccess(listarClientesVendas(pacVendasCli));
+      }
+
       // Marketing — recorte anônimo e SEMPRE global das vendas.
       // Não reusa a rota `vendas` de propósito: aquela filtra por PAC para quem
       // não é admin, e aqui o retrato parcial mentiria. Ver o topo do
@@ -503,6 +513,25 @@ function doPost(e) {
       case 'importar-fechamento-cavok':
         var usuarioImportaCavok = exigirAcessoFechamentoHoras(token);
         return jsonSuccess(importarFechamentoHorasCavok(dados, usuarioImportaCavok));
+
+      // ── Fechamento de Horas / Instrutores ─────────────────
+      // Valor da hora (VFR/IFR/Simulador) dos instrutores "Eventual",
+      // cruzado com as horas voadas do backend das Horas INVA. Ver o
+      // topo do FechamentoHorasInstrutores.gs.
+      case 'fechamento-horas-instrutores':
+        exigirFechamentoHorasInstrutoresVer(token);
+        return jsonSuccess(listarFechamentoHorasInstrutores(dados.ano, dados.mes));
+
+      case 'salvar-valor-fechamento-horas-instrutor':
+        var usuarioSalvaFhi = exigirFechamentoHorasInstrutoresEditar(token);
+        return jsonSuccess(salvarValorFechamentoHorasInstrutor(dados, usuarioSalvaFhi));
+
+      // Aba "Valores": valor atual + histórico de vigências por instrutor.
+      // Atrás de EDITAR (não visualizar): é a mesma tela que edita, e o
+      // histórico mostra quem mudou o quê.
+      case 'fechamento-horas-instrutores-valores':
+        exigirFechamentoHorasInstrutoresEditar(token);
+        return jsonSuccess(listarValoresFechamentoHorasInstrutores());
 
       // Manutenção: roda função de manutenção sem clique no editor.
       // ⚠️ NÃO usa sessão do Hub de propósito. A autenticação é o token
