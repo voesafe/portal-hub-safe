@@ -85,9 +85,13 @@
 }
 .fhi-btn-acao { white-space: nowrap; }
 
-/* Total a pagar ganhou o tooltip (title nativo) com os 3 valores
-   considerados: o cursor de ajuda avisa que há mais informação ali. */
-.fhi-total { cursor: help; }
+/* Gatilho do tooltip do Total a pagar. O tooltip em si (#fhi-tooltip-
+   flutuante) é posicionado por JS, não por CSS: ver a nota dele mais
+   abaixo. */
+.fhi-tooltip-gatilho {
+  cursor: help;
+  border-bottom: 1px dashed var(--text-muted);
+}
 
 .fhi-input-valor {
   width: 92px;
@@ -121,6 +125,52 @@
 /* O overlay de carregamento é o .dashboard-loading-overlay compartilhado
    (core/layout.css), mesmo usado na tela de Instrutores: nada para
    definir aqui, só reaproveitar as classes no HTML. */
+
+/* Tooltip flutuante do Total a pagar (mesmo visual do tooltip da sidebar
+   recolhida: navy-deep + seta). Elemento ÚNICO, fora da tabela, posicionado
+   por JS (FechamentoHorasInstrutores._mostrarTooltip) em vez de CSS puro:
+   `.card`/`.table-wrapper` deste projeto acabam com overflow hidden pela
+   cascata do layout.css, e um tooltip absoluto escapando pra cima da linha
+   seria cortado em silêncio, do jeito que já aconteceu com outros popovers
+   do Hub. */
+.fhi-tooltip-flutuante {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 190px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--navy-deep);
+  color: var(--text-on-brand);
+  font-size: .78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s;
+}
+.fhi-tooltip-flutuante.active { opacity: 1; }
+
+/* ── Modal "Exportar mensagem" ──────────────────────────────── */
+.fhi-modal-exportar { max-width: 560px; }
+.fhi-exportar-texto {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: .85rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+.fhi-exportar-texto:focus { border-color: var(--blue); outline: none; }
 
 /* ── Modal "Ver voos" ────────────────────────────────────────
    Auditoria: separa os voos considerados em VFR/IFR/Simulador, com data,

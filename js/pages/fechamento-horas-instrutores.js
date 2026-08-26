@@ -185,11 +185,45 @@ const FechamentoHorasInstrutores = {
     tbody.querySelectorAll('.fhi-btn-exportar').forEach(botao => {
       botao.addEventListener('click', () => this._exportarInstrutor(botao.closest('tr')?.dataset.instrutor));
     });
+    tbody.querySelectorAll('.fhi-tooltip-gatilho').forEach(gatilho => {
+      gatilho.addEventListener('mouseenter', () => this._mostrarTooltip(gatilho));
+      gatilho.addEventListener('mouseleave', () => this._esconderTooltip());
+      gatilho.addEventListener('focus', () => this._mostrarTooltip(gatilho));
+      gatilho.addEventListener('blur', () => this._esconderTooltip());
+    });
+  },
+
+  /**
+   * Posiciona o tooltip flutuante por JS (não por CSS escapando o card),
+   * porque `.card`/`.table-wrapper` deste projeto acabam com overflow
+   * hidden pela cascata do layout.css: um tooltip absoluto escapando pra
+   * cima da linha seria cortado em silêncio. O elemento único vive fora da
+   * tabela (irmão do topo do body), então nada o corta.
+   */
+  _mostrarTooltip(gatilho) {
+    const el = document.getElementById('fhi-tooltip-flutuante');
+    if (!el) return;
+    el.innerHTML = (gatilho.dataset.tooltip || '')
+      .split('\n')
+      .map(linha => `<span>${escapeHtml(linha)}</span>`)
+      .join('');
+
+    const rect = gatilho.getBoundingClientRect();
+    el.classList.add('active');
+    const larguraTooltip = el.offsetWidth;
+    let esquerda = rect.right - larguraTooltip;
+    esquerda = Math.max(8, Math.min(esquerda, window.innerWidth - larguraTooltip - 8));
+    el.style.left = `${esquerda}px`;
+    el.style.top = `${rect.top - el.offsetHeight - 10}px`;
+  },
+
+  _esconderTooltip() {
+    document.getElementById('fhi-tooltip-flutuante')?.classList.remove('active');
   },
 
   _linhaHtml(item) {
     const totalVoos = (item.voos || []).length;
-    const tooltipValores =
+    const tooltipTexto =
       `Valor VFR: ${this._moeda(item.valorVfr)}\n` +
       `Valor IFR: ${this._moeda(item.valorIfr)}\n` +
       `Valor Simulador: ${this._moeda(item.valorSimulador)}`;
@@ -199,7 +233,9 @@ const FechamentoHorasInstrutores = {
         <td class="text-right">${this._horas(item.vfrHoras)}</td>
         <td class="text-right">${this._horas(item.ifrHoras)}</td>
         <td class="text-right">${this._horas(item.simuladorHoras)}</td>
-        <td class="text-right fhi-total" title="${escapeHtml(tooltipValores)}">${this._moeda(item.totalAPagar)}</td>
+        <td class="text-right">
+          <span class="fhi-total fhi-tooltip-gatilho" tabindex="0" data-tooltip="${escapeHtml(tooltipTexto)}">${this._moeda(item.totalAPagar)}</span>
+        </td>
         <td class="text-right fhi-acoes">
           <button class="btn btn-ghost btn-sm fhi-btn-acao fhi-btn-voos" type="button" ${totalVoos ? '' : 'disabled'}
             title="${totalVoos ? 'Ver os voos considerados neste mês' : 'Nenhum voo neste mês'}">
@@ -279,10 +315,19 @@ const FechamentoHorasInstrutores = {
 
   // ── Exportar mensagem para o instrutor ───────────────────
 
-  async _exportarInstrutor(nome) {
+  _exportarInstrutor(nome) {
     const item = this.instrutores.find(i => i.instrutor === nome);
     if (!item) return;
-    await navigator.clipboard?.writeText(this._textoExportacao(item));
+    document.getElementById('fhi-exportar-titulo').textContent = `Mensagem para ${item.instrutor}`;
+    const campo = document.getElementById('fhi-exportar-texto');
+    if (campo) campo.value = this._textoExportacao(item);
+    abrirModal('fhi-modal-exportar');
+  },
+
+  async _copiarMensagemExportacao() {
+    const campo = document.getElementById('fhi-exportar-texto');
+    if (!campo) return;
+    await navigator.clipboard?.writeText(campo.value);
     toast('Mensagem copiada.', 'success');
   },
 
@@ -493,7 +538,14 @@ const FechamentoHorasInstrutores = {
       if (event.key !== 'Escape') return;
       fecharModal('fhi-modal-voos');
       fecharModal('fhi-modal-historico');
+      fecharModal('fhi-modal-exportar');
     });
+    document.getElementById('fhi-exportar-copiar')?.addEventListener('click', () => this._copiarMensagemExportacao());
+
+    // Scroll não bubbla, então captura é o único jeito de pegar o scroll de
+    // dentro do .table-wrapper também, não só o da página. Só esconde: o
+    // tooltip é uma interação curta, não precisa reancorar.
+    window.addEventListener('scroll', () => this._esconderTooltip(), true);
   },
 
   /** "2026-08-25" (ou variantes) -> "25/08/2026". Sem casar, devolve o texto cru. */
