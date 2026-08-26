@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- tema:guarda-anti-flash -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('safe-hub-theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+  <title>Fechamento de Horas / Instrutores — SAFE Hub</title>
+  <link rel="manifest" href="manifest.webmanifest?v=d836cf66">
+  <meta name="theme-color" content="#19213f">
+  <link rel="icon" type="image/png" href="favicon.png?v=91131805">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
+  <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
+  <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
+  <link rel="stylesheet" href="css/pages/fechamento-horas-instrutores.css?v=7bc21a73">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/img/logo.png?v=59c27084" alt="SAFE">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">SAFE</span>
+        <span class="sidebar-brand-sub">Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user-current">
+        <div class="sidebar-avatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Carregando...</div>
+          <div class="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-context">
+          <div class="topbar-title">Fechamento de Horas / Instrutores</div>
+          <div class="topbar-subtitle">Valor da hora e horas voadas dos instrutores Eventual</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page fhi-page">
+      <div class="fhi-tabs" role="tablist" aria-label="Áreas do fechamento">
+        <button class="fhi-tab active" type="button" role="tab" aria-selected="true" data-view="resumo">Resumo do mês</button>
+        <button class="fhi-tab" type="button" role="tab" aria-selected="false" data-view="valores" id="fhi-tab-valores" hidden>Valores dos instrutores</button>
+      </div>
+
+      <section class="fhi-view active" id="fhi-view-resumo">
+      <div class="fhi-aviso-historico" id="fhi-aviso-historico" hidden>
+        Este é um mês fechado: os valores mostrados são os que valiam na época e não podem ser editados aqui. Para
+        mudar o valor da hora dos próximos pagamentos, volte para o mês atual.
+      </div>
+
+      <div class="card fhi-table-card">
+        <div class="card-header fhi-card-header">
+          <div class="fhi-card-heading">
+            <div class="card-title">Instrutores Eventual</div>
+            <div class="fhi-card-sub" id="fhi-card-sub">Carregando…</div>
+          </div>
+          <div class="fhi-filtros">
+            <input type="search" id="fhi-busca" class="form-control" placeholder="Buscar instrutor…" aria-label="Buscar instrutor">
+            <select class="form-control" id="fhi-mes" aria-label="Mês"></select>
+            <select class="form-control" id="fhi-ano" aria-label="Ano"></select>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="table fhi-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th class="text-right">Horas VFR</th>
+                <th class="text-right">Horas IFR</th>
+                <th class="text-right">Horas Simulador</th>
+                <th class="text-right">Total a pagar</th>
+                <th style="width:210px"></th>
+              </tr>
+            </thead>
+            <tbody id="fhi-tbody"></tbody>
+            <tfoot>
+              <tr>
+                <th colspan="4">Total do mês</th>
+                <td class="text-right" id="fhi-total-geral">R$ 0,00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="fhi-vazio" id="fhi-vazio" hidden>Nenhum instrutor Eventual encontrado.</div>
+        </div>
+      </div>
+      </section>
+
+      <section class="fhi-view" id="fhi-view-valores">
+        <div class="card fhi-table-card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Valores dos instrutores</div>
+              <div class="fhi-card-sub">Valor atual da hora por categoria, vale a partir de agora. Editar aqui não muda o pagamento de um mês já calculado.</div>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="table fhi-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th class="text-right">Valor VFR</th>
+                  <th class="text-right">Valor IFR</th>
+                  <th class="text-right">Valor Simulador</th>
+                  <th style="width:110px"></th>
+                </tr>
+              </thead>
+              <tbody id="fhi-valores-tbody"></tbody>
+            </table>
+            <div class="fhi-vazio" id="fhi-valores-vazio" hidden>Nenhum instrutor Eventual encontrado.</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="dashboard-loading-overlay active" id="fhi-loading">
+        <div class="dashboard-loading-card">
+          <img class="dashboard-loading-logo" src="assets/img/logo.png?v=59c27084" alt="">
+          <span class="dashboard-loading-text" id="fhi-loading-text">Carregando fechamento de horas...</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="fhi-modal-exportar">
+  <div class="modal fhi-modal-exportar">
+    <div class="modal-header">
+      <h3 id="fhi-exportar-titulo">Mensagem para o instrutor</h3>
+      <button class="modal-close" data-close="fhi-modal-exportar" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <textarea class="fhi-exportar-texto" id="fhi-exportar-texto" rows="16" readonly aria-label="Mensagem para copiar"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fhi-modal-exportar">Fechar</button>
+      <button class="btn btn-primary" id="fhi-exportar-copiar" type="button">Copiar mensagem</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fhi-modal-historico">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="fhi-historico-titulo">Histórico de valores</h3>
+      <button class="modal-close" data-close="fhi-modal-historico" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fhi-historico-lista" id="fhi-historico-lista"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fhi-modal-historico">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fhi-modal-voos">
+  <div class="modal fhi-modal-voos">
+    <div class="modal-header">
+      <h3 id="fhi-voos-titulo">Voos considerados</h3>
+      <button class="modal-close" data-close="fhi-modal-voos" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fhi-voos-tabs" role="tablist" aria-label="Categoria dos voos">
+        <button class="fhi-voos-tab active" type="button" role="tab" data-cat="VFR">VFR <span id="fhi-voos-count-vfr">0</span></button>
+        <button class="fhi-voos-tab" type="button" role="tab" data-cat="IFR">IFR <span id="fhi-voos-count-ifr">0</span></button>
+        <button class="fhi-voos-tab" type="button" role="tab" data-cat="SIMULADOR">Simulador <span id="fhi-voos-count-sim">0</span></button>
+      </div>
+      <div class="fhi-voos-lista" id="fhi-voos-lista"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="fhi-modal-voos">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="fhi-tooltip-flutuante" id="fhi-tooltip-flutuante" role="tooltip"></div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/core/config.js?v=e18544d3"></script>
+<script src="js/core/api.js?v=bccb346f"></script>
+<script src="js/core/auth.js?v=af6d1b4d"></script>
+<script src="js/pages/fechamento-horas-instrutores.js?v=1220efa6"></script>
+</body>
+</html>

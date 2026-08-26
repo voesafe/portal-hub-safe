@@ -10,4 +10,7 @@ tools/package-lock.json
 
 # ⚠️ Token da rota de manutencao dos backends. NUNCA entra no git:
 # este repositorio e publico (GitHub Pages em hub.voesafe.com.br).
+# manutencao.mjs le ".segredos.json" (com ponto); o nome sem ponto
+# ficou aqui de um descompasso anterior e nao protegia o arquivo real.
 tools/deploy/.segredos.json
+tools/deploy/segredos.json

@@ -1,0 +1,259 @@
+/* ============================================================
+   fechamento-horas-instrutores.css: Fechamento de Horas / Instrutores
+   SAFE Hub
+   ============================================================ */
+
+.fhi-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Abas da página: Resumo do mês (leitura) e Valores dos instrutores
+   (edição + histórico), mesmo padrão do .fechamento-tabs/.fechamento-view. */
+.fhi-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.fhi-tab {
+  min-height: 38px;
+  padding: 8px 15px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: .8rem;
+  font-weight: 700;
+  transition: var(--transition);
+}
+.fhi-tab:hover { color: var(--text); background: var(--surface-2); }
+.fhi-tab.active { color: var(--text-on-brand); background: var(--brand-surface); }
+.fhi-tab[hidden] { display: none; }
+
+.fhi-view { display: none; }
+.fhi-view.active { display: flex; flex-direction: column; gap: 16px; }
+
+/* Mês fechado: valores são os que valiam na época, não editáveis aqui.
+   Composto sobre superfície opaca antes do tint translúcido, senão o aviso
+   herda a cor de quem estiver por baixo (mesma lição do Portal do Aluno). */
+.fhi-aviso-historico {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(var(--tint-aviso), var(--tint-aviso)), var(--surface);
+  color: var(--ink-aviso);
+  border: 1px solid var(--ink-aviso);
+  font-size: .85rem;
+  line-height: 1.5;
+}
+.fhi-aviso-historico[hidden] { display: none; }
+
+/* Cabeçalho do card com o resumo numa linha e os filtros na linha de baixo,
+   igual à Gestão de Usuários (.usuarios-card-header/.usuarios-filtros): o
+   `.card-header` padrão é flex sem quebra, então o wrap é explícito aqui. */
+.fhi-card-header {
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 12px;
+}
+.fhi-card-heading { flex: 1 1 auto; }
+.fhi-card-sub { color: var(--text-muted); font-size: .8rem; margin-top: 2px; }
+
+.fhi-filtros {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.3fr) minmax(130px, 1fr) minmax(90px, .6fr);
+  gap: 8px;
+  width: 100%;
+}
+
+/* A tabela fica dentro do respiro padrão do `.card` (24px), como a de
+   Gestão de Usuários, sem o full-bleed de padding:0 que a versão anterior
+   usava. */
+.fhi-table th, .fhi-table td { white-space: nowrap; }
+.fhi-table td.text-right, .fhi-table th.text-right { text-align: right; }
+
+/* Ver voos + Exportar na mesma célula, lado a lado, quebrando pra baixo
+   quando não couberem (celular). */
+.fhi-acoes {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+  white-space: normal;
+}
+.fhi-btn-acao { white-space: nowrap; }
+
+/* Gatilho do tooltip do Total a pagar. O tooltip em si (#fhi-tooltip-
+   flutuante) é posicionado por JS, não por CSS: ver a nota dele mais
+   abaixo. */
+.fhi-tooltip-gatilho {
+  cursor: help;
+  border-bottom: 1px dashed var(--text-muted);
+}
+
+.fhi-input-valor {
+  width: 92px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: .85rem;
+  text-align: right;
+}
+.fhi-input-valor:focus { border-color: var(--blue); outline: none; }
+.fhi-input-valor:disabled {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border-color: transparent;
+  cursor: default;
+}
+.fhi-input-valor.is-salvando { opacity: .6; }
+
+.fhi-total { font-weight: 700; }
+
+.fhi-vazio {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .9rem;
+}
+.fhi-vazio[hidden] { display: none; }
+
+/* O overlay de carregamento é o .dashboard-loading-overlay compartilhado
+   (core/layout.css), mesmo usado na tela de Instrutores: nada para
+   definir aqui, só reaproveitar as classes no HTML. */
+
+/* Tooltip flutuante do Total a pagar (mesmo visual do tooltip da sidebar
+   recolhida: navy-deep + seta). Elemento ÚNICO, fora da tabela, posicionado
+   por JS (FechamentoHorasInstrutores._mostrarTooltip) em vez de CSS puro:
+   `.card`/`.table-wrapper` deste projeto acabam com overflow hidden pela
+   cascata do layout.css, e um tooltip absoluto escapando pra cima da linha
+   seria cortado em silêncio, do jeito que já aconteceu com outros popovers
+   do Hub. */
+.fhi-tooltip-flutuante {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 190px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--navy-deep);
+  color: var(--text-on-brand);
+  font-size: .78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s;
+}
+.fhi-tooltip-flutuante.active { opacity: 1; }
+
+/* ── Modal "Exportar mensagem" ──────────────────────────────── */
+.fhi-modal-exportar { max-width: 560px; }
+.fhi-exportar-texto {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: .85rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+.fhi-exportar-texto:focus { border-color: var(--blue); outline: none; }
+
+/* ── Modal "Ver voos" ────────────────────────────────────────
+   Auditoria: separa os voos considerados em VFR/IFR/Simulador, com data,
+   horas e a Missão do CAVOK que decidiu a categoria. */
+.fhi-modal-voos { max-width: 620px; }
+
+.fhi-voos-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+.fhi-voos-tab {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: .78rem;
+  font-weight: 700;
+  transition: var(--transition);
+}
+.fhi-voos-tab span {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(29, 41, 81, .08);
+  font-size: .68rem;
+}
+.fhi-voos-tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(29, 41, 81, .08);
+}
+.fhi-voos-tab.active span { background: rgba(91, 174, 226, .14); color: var(--ink-blue); }
+
+.fhi-voos-lista { max-height: 50vh; overflow-y: auto; }
+.fhi-voos-lista .table td, .fhi-voos-lista .table th { white-space: normal; }
+.fhi-voos-lista .table td.col-missao { color: var(--text-muted); font-size: .78rem; }
+
+.fhi-voos-vazio {
+  padding: 24px 8px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .85rem;
+}
+
+/* ── Modal "Histórico de valores" ───────────────────────────── */
+.fhi-historico-lista { max-height: 55vh; overflow-y: auto; }
+.fhi-historico-item {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 8px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: .85rem;
+}
+.fhi-historico-item:last-child { border-bottom: none; }
+.fhi-historico-cat {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.fhi-historico-quem { color: var(--text-muted); font-size: .78rem; }
+.fhi-historico-valor { font-weight: 700; text-align: right; white-space: nowrap; }
+.fhi-historico-vazio {
+  padding: 24px 8px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .85rem;
+}
+
+@media (max-width: 700px) {
+  .fhi-filtros { grid-template-columns: 1fr; }
+  .fhi-historico-item { grid-template-columns: 1fr; row-gap: 2px; }
+  .fhi-historico-valor { text-align: left; }
+}

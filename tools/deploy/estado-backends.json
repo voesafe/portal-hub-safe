@@ -4,6 +4,7 @@
     "arquivos": {
       "AccessControl": "784cd3818f83f02ee49bdc836d4306aff2a97631b7471bc4d23f6dfd35ae072a",
       "Aniversarios": "9721b0115a82953c3c53e6b94e589c9fe64a2cd051cf3dc43936bce43e0406b5",
+      "appsscript": "eda75aa6485dc21bacb094be0427a39e4e30fb6a6a99fa63afd5b25d4178640e",
       "Auth": "b21dfe81dd626a70108db4e343b57fe3d0ebe546fc48773af9315e0ac05db56c",
       "Bases": "36c91fd3e23db399e1ffdc7d850b60590e33f7d04d896a81b897893797a68045",
       "CadastroAlunos": "392a945c48ad76f1a121d695e0b825f6efdc2c0dd2dd0d551859b1d1268a7735",
@@ -31,10 +32,10 @@
     }
   },
   "inva": {
-    "empurradoEm": "2026-08-11T12:49:39.572Z",
+    "empurradoEm": "2026-08-25T20:11:34.118Z",
     "arquivos": {
-      "Código": "bd9404b1486b013036f1453724b7022ad1738c53134fdbf4767eb8a7455d48b1",
-      "appsscript": "4e5a3ad66bd6aaa5911307cf78b515cc304b2f1cdc90c18e58c119a64b4adda7"
+      "appsscript": "1f4e909cb5466210ca99e9d7ffd12d168140bf4ce504ff8e225d26c293193d76",
+      "Código": "83d0d48c2974b4ceb5e418ed504ea3fe67dbc977500218692610061c4be4b3d8"
     }
   }
 }
