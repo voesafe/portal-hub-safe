@@ -74,11 +74,20 @@
 .fhi-table th, .fhi-table td { white-space: nowrap; }
 .fhi-table td.text-right, .fhi-table th.text-right { text-align: right; }
 
+/* Ver voos + Exportar na mesma célula, lado a lado, quebrando pra baixo
+   quando não couberem (celular). */
+.fhi-acoes {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+  white-space: normal;
+}
 .fhi-btn-acao { white-space: nowrap; }
 
-/* Valor no Resumo: texto simples, não é mais editável ali (a edição mudou
-   para a aba "Valores dos instrutores"). */
-.fhi-valor-texto { color: var(--text); }
+/* Total a pagar ganhou o tooltip (title nativo) com os 3 valores
+   considerados: o cursor de ajuda avisa que há mais informação ali. */
+.fhi-total { cursor: help; }
 
 .fhi-input-valor {
   width: 92px;

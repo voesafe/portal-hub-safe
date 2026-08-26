@@ -7,10 +7,10 @@
 // por categoria (VFR/IFR/Simulador, classificadas lá pela Fase do CAVOK) e
 // com o valor da hora guardado aqui no Hub (histórico por vigência).
 //
-// Duas abas: "Resumo do mês" é só leitura (nome, valores vigentes no mês
-// filtrado, horas, total a pagar, Ver voos). "Valores dos instrutores" é
-// onde se edita o valor atual da hora e se vê o histórico de mudanças; só
-// aparece para quem tem permissão de editar.
+// Duas abas: "Resumo do mês" é só leitura (nome, horas, total a pagar, com
+// o valor de cada categoria só no tooltip do Total, Ver voos e Exportar).
+// "Valores dos instrutores" é onde se edita o valor atual da hora e se vê
+// o histórico de mudanças; só aparece para quem tem permissão de editar.
 //
 // Editar é otimista com rollback: é edição de um campo de um item já
 // carregado, o servidor não recalcula nada complexo na escrita em si.
@@ -182,24 +182,32 @@ const FechamentoHorasInstrutores = {
     tbody.querySelectorAll('.fhi-btn-voos').forEach(botao => {
       botao.addEventListener('click', () => this._abrirVoos(botao.closest('tr')?.dataset.instrutor));
     });
+    tbody.querySelectorAll('.fhi-btn-exportar').forEach(botao => {
+      botao.addEventListener('click', () => this._exportarInstrutor(botao.closest('tr')?.dataset.instrutor));
+    });
   },
 
   _linhaHtml(item) {
     const totalVoos = (item.voos || []).length;
+    const tooltipValores =
+      `Valor VFR: ${this._moeda(item.valorVfr)}\n` +
+      `Valor IFR: ${this._moeda(item.valorIfr)}\n` +
+      `Valor Simulador: ${this._moeda(item.valorSimulador)}`;
     return `
       <tr data-instrutor="${escapeHtml(item.instrutor)}">
         <td>${escapeHtml(item.instrutor)}</td>
-        <td class="text-right fhi-valor-texto">${this._moeda(item.valorVfr)}</td>
-        <td class="text-right fhi-valor-texto">${this._moeda(item.valorIfr)}</td>
-        <td class="text-right fhi-valor-texto">${this._moeda(item.valorSimulador)}</td>
         <td class="text-right">${this._horas(item.vfrHoras)}</td>
         <td class="text-right">${this._horas(item.ifrHoras)}</td>
         <td class="text-right">${this._horas(item.simuladorHoras)}</td>
-        <td class="text-right fhi-total">${this._moeda(item.totalAPagar)}</td>
-        <td class="text-right">
+        <td class="text-right fhi-total" title="${escapeHtml(tooltipValores)}">${this._moeda(item.totalAPagar)}</td>
+        <td class="text-right fhi-acoes">
           <button class="btn btn-ghost btn-sm fhi-btn-acao fhi-btn-voos" type="button" ${totalVoos ? '' : 'disabled'}
             title="${totalVoos ? 'Ver os voos considerados neste mês' : 'Nenhum voo neste mês'}">
             Ver voos
+          </button>
+          <button class="btn btn-ghost btn-sm fhi-btn-acao fhi-btn-exportar" type="button"
+            title="Copiar mensagem pronta para enviar ao instrutor">
+            Exportar
           </button>
         </td>
       </tr>
@@ -267,6 +275,50 @@ const FechamentoHorasInstrutores = {
         </tbody>
       </table>
     `;
+  },
+
+  // ── Exportar mensagem para o instrutor ───────────────────
+
+  async _exportarInstrutor(nome) {
+    const item = this.instrutores.find(i => i.instrutor === nome);
+    if (!item) return;
+    await navigator.clipboard?.writeText(this._textoExportacao(item));
+    toast('Mensagem copiada.', 'success');
+  },
+
+  /**
+   * Monta a mensagem pronta para o instrutor: saudação, a discriminação
+   * de cada voo considerado por categoria e o mesmo cálculo (horas × valor
+   * = total) que a linha da tabela mostra, para o instrutor conferir contra
+   * o próprio CAVOK antes de emitir a NF.
+   */
+  _textoExportacao(item) {
+    const categorias = [
+      { chave: 'VFR', rotulo: 'VFR', horas: item.vfrHoras, valor: item.valorVfr },
+      { chave: 'IFR', rotulo: 'IFR', horas: item.ifrHoras, valor: item.valorIfr },
+      { chave: 'SIMULADOR', rotulo: 'Simulador', horas: item.simuladorHoras, valor: item.valorSimulador }
+    ];
+
+    const linhas = [
+      `Boa tarde, ${item.instrutor}`,
+      '',
+      'Segue em anexo abaixo horas do CAVOK referente aos voos realizados.'
+    ];
+
+    categorias.forEach(c => {
+      const voos = (item.voos || []).filter(v => v.categoria === c.chave);
+      if (!voos.length) return;
+      linhas.push('', `Voos ${c.rotulo}:`);
+      voos.forEach(v => linhas.push(`${this._dataVoo(v.data)} - ${this._horas(v.horas)} - ${v.missao || ''}`));
+    });
+
+    categorias.forEach(c => {
+      linhas.push('', `Período totaliza ${this._horas(c.horas)} * ${this._moeda(c.valor)} = ${this._moeda(c.horas * c.valor)}`);
+    });
+
+    linhas.push('', `TOTAL ${this._moeda(item.totalAPagar)}`, '', 'Estando de acordo, peço a gentileza de emitir a NF');
+
+    return linhas.join('\n');
   },
 
   // ── Aba "Valores dos instrutores" ────────────────────────
