@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
   <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
-  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=cf22551a">
+  <link rel="stylesheet" href="css/pages/horas-voadas-inva.css?v=549f5b7b">
 </head>
 <body>
 <div class="app-shell">
@@ -231,6 +231,14 @@
                   <strong>✓</strong> verde e travado: está liberado pela meta e não depende
                   da operação.
                 </span>
+                <!-- ⚠️ Escondido enquanto o backend publicado não souber de
+                     inativação: mandar procurar um ícone que não está na tela é
+                     pior que não explicar nada. Quem revela é o renderizarBases. -->
+                <span id="hi-ajuda-inativar" hidden>
+                  O último ícone da linha inativa o instrutor: ele sai da lista, dos
+                  contadores e do gráfico sem perder nada, e volta pelo bloco
+                  <strong>Instrutores inativos</strong>, no fim desta aba.
+                </span>
                 <span class="hi-legenda"><span class="hi-flag" aria-hidden="true"></span> 100h voadas ou liberado pela operação</span>
               </p>
 
@@ -295,6 +303,36 @@
                   </ul>
                 </section>
               </div>
+
+              <!-- ⚠️ Nasce recolhido e o card inteiro fica com `hidden` enquanto
+                   ninguém estiver inativo (quem cuida disso é o renderizarInativos):
+                   é registro, não seção fixa. O bloco existe para a inativação ser
+                   REVERSÍVEL pela tela; sem ele, desfazer exigiria editar a planilha
+                   do Google na mão. O `hidden` só funciona por causa da regra
+                   `.hi-inativos-card[hidden]{display:none}` no CSS, porque o
+                   `display` da regra base ganha do atributo. -->
+              <article class="card hi-inativos-card" id="hi-inativos-card" hidden>
+                <h3 class="card-title hi-chart-h2">
+                  <button class="hi-chart-toggle" id="hi-inativos-toggle" type="button"
+                    aria-expanded="false" aria-controls="hi-inativos-corpo"
+                    title="Ver quem está inativo e reativar">
+                    <span class="hi-chart-seta" aria-hidden="true">
+                      <svg viewBox="0 0 16 16" width="12" height="12">
+                        <path d="M6 3.5L10.5 8L6 12.5" fill="none" stroke="currentColor"
+                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                    <span id="hi-inativos-rotulo">Instrutores inativos</span>
+                  </button>
+                </h3>
+                <p class="horas-inva-card-subtitle hi-chart-sub">
+                  Quem saiu da operação. Nada foi apagado: as horas voadas, as etiquetas e os
+                  comentários continuam guardados, e dá para reativar quando quiser.
+                </p>
+                <div class="hi-inativos-corpo" id="hi-inativos-corpo" hidden>
+                  <ul class="hi-inativos-lista" id="hi-inativos-lista"></ul>
+                </div>
+              </article>
             </div>
 
             <div class="hi-subview" id="hi-subview-solo">
@@ -312,6 +350,11 @@
                   <strong>↓</strong> movem um degrau. No celular, um toque no punho move
                   para a outra base. O <strong>+</strong> ao lado do nome abre as etiquetas
                   e o balão abre os comentários.
+                </span>
+                <span id="hi-ajuda-inativar-solo" hidden>
+                  O último ícone da linha inativa o instrutor: ele sai da lista e dos
+                  contadores sem perder nada, e volta pelo bloco
+                  <strong>Instrutores inativos</strong>, no fim desta aba.
                 </span>
               </p>
 
@@ -368,6 +411,36 @@
                   </ul>
                 </section>
               </div>
+
+              <!-- ⚠️ Nasce recolhido e o card inteiro fica com `hidden` enquanto
+                   ninguém estiver inativo (quem cuida disso é o renderizarInativos):
+                   é registro, não seção fixa. O bloco existe para a inativação ser
+                   REVERSÍVEL pela tela; sem ele, desfazer exigiria editar a planilha
+                   do Google na mão. O `hidden` só funciona por causa da regra
+                   `.hi-inativos-card[hidden]{display:none}` no CSS, porque o
+                   `display` da regra base ganha do atributo. -->
+              <article class="card hi-inativos-card" id="hi-inativos-card-solo" hidden>
+                <h3 class="card-title hi-chart-h2">
+                  <button class="hi-chart-toggle" id="hi-inativos-toggle-solo" type="button"
+                    aria-expanded="false" aria-controls="hi-inativos-corpo-solo"
+                    title="Ver quem está inativo e reativar">
+                    <span class="hi-chart-seta" aria-hidden="true">
+                      <svg viewBox="0 0 16 16" width="12" height="12">
+                        <path d="M6 3.5L10.5 8L6 12.5" fill="none" stroke="currentColor"
+                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                    <span id="hi-inativos-rotulo-solo">Instrutores inativos</span>
+                  </button>
+                </h3>
+                <p class="horas-inva-card-subtitle hi-chart-sub">
+                  Quem saiu da operação. Nada foi apagado: as etiquetas e os comentários
+                  continuam guardados, e dá para reativar quando quiser.
+                </p>
+                <div class="hi-inativos-corpo" id="hi-inativos-corpo-solo" hidden>
+                  <ul class="hi-inativos-lista" id="hi-inativos-lista-solo"></ul>
+                </div>
+              </article>
             </div>
           </article>
         </div>
@@ -491,6 +564,43 @@
         </div>
       </div>
 
+      <!-- ⚠️ Um modal só para os dois mundos (voo e solo): eles nunca estão
+           abertos ao mesmo tempo, e quem diz de qual se trata é o
+           this.inativacao.solo, que também escolhe o texto da descrição.
+           Confirmação existe porque a ação faz o instrutor desaparecer da tela,
+           e ninguém deve descobrir isso por acidente. Não pede a senha da
+           operação de propósito: ela guarda a liberação por OPR, e aqui a ação
+           é reversível em um clique. -->
+      <div class="modal-overlay" id="modal-inativar">
+        <div class="modal hi-modal" role="dialog" aria-modal="true" aria-labelledby="inativar-titulo">
+          <div class="modal-header">
+            <h2 class="card-title" id="inativar-titulo">Inativar instrutor</h2>
+            <button class="modal-close" type="button" id="inativar-fechar" aria-label="Fechar">&times;</button>
+          </div>
+          <!-- novalidate pelo mesmo motivo do modal de liberação: a bolha cinza
+               do navegador chegaria antes da nossa validação. -->
+          <form id="form-inativar" novalidate>
+            <div class="modal-body">
+              <p class="hi-modal-instrutor" id="inativar-instrutor">—</p>
+              <p class="hi-modal-descricao" id="inativar-descricao"></p>
+              <div class="form-group">
+                <label class="form-label" for="inativar-motivo">Motivo (opcional)</label>
+                <input class="form-control" type="text" id="inativar-motivo" maxlength="200"
+                  autocomplete="off" placeholder="Ex.: saiu da escola">
+                <p class="hi-modal-dica">
+                  Fica registrado junto da data e do nome de quem inativou. Em branco
+                  também vale, mas seis meses depois o motivo é o que ninguém lembra.
+                </p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost" type="button" id="inativar-cancelar">Cancelar</button>
+              <button class="btn btn-danger" type="submit" id="inativar-confirmar">Inativar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <div class="dashboard-loading-overlay active" id="horas-inva-loading">
         <div class="dashboard-loading-card">
           <img class="dashboard-loading-logo" src="assets/img/logo.png?v=59c27084" alt="">
@@ -506,6 +616,6 @@
 <script src="js/core/config.js?v=e18544d3"></script>
 <script src="js/core/api.js?v=bccb346f"></script>
 <script src="js/core/auth.js?v=af6d1b4d"></script>
-<script src="js/pages/horas-voadas-inva.js?v=e5c9a204"></script>
+<script src="js/pages/horas-voadas-inva.js?v=8ef98638"></script>
 </body>
 </html>
