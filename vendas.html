@@ -21,13 +21,13 @@
     })();
   </script>
   <title>Vendas — SAFE Hub</title>
-  <link rel="manifest" href="manifest.webmanifest?v=aeb4b470">
+  <link rel="manifest" href="manifest.webmanifest?v=d836cf66">
   <meta name="theme-color" content="#19213f">
   <link rel="icon" type="image/png" href="favicon.png?v=91131805">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
-  <link rel="stylesheet" href="css/core/safe-theme.css?v=6b31ea48">
-  <link rel="stylesheet" href="css/core/layout.css?v=bc5ba244">
-  <link rel="stylesheet" href="css/pages/vendas.css?v=8bd4f83e">
+  <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
+  <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
+  <link rel="stylesheet" href="css/pages/vendas.css?v=321a8b46">
 </head>
 <body>
 
@@ -270,8 +270,17 @@
 
       <div class="form-group">
         <label class="form-label">Nome Completo *</label>
-        <input type="text" class="form-control" id="f-nome" placeholder="Nome completo do cliente">
+        <input type="text" class="form-control" id="f-nome" placeholder="Nome completo do cliente"
+               autocomplete="off" aria-autocomplete="list" aria-controls="venda-sugestoes" aria-expanded="false">
+        <!-- Painel flutuante: em fluxo, empurraria os campos de baixo a cada
+             tecla. Aparece só na venda NOVA (cliente repetido de verdade). -->
+        <div class="venda-sugestoes" id="venda-sugestoes" hidden></div>
       </div>
+
+      <!-- Tarja "preenchido a partir de venda anterior". Sem ela, campo
+           preenchido sozinho parece digitado, e ninguém confere um dado que
+           acredita ter escrito. -->
+      <div class="venda-vinculo" id="venda-vinculo" hidden></div>
 
       <!-- inputmode numeric abre o teclado de numeros no celular; maxlength 14
            = 11 digitos + os 3 separadores da mascara. -->
@@ -357,11 +366,11 @@
 
 <div id="toast-container" class="toast-container"></div>
 
-<script src="js/core/config.js?v=cb6d3e3e"></script>
-<script src="js/core/api.js?v=1f8f7759"></script>
-<script src="js/core/auth.js?v=a480e79d"></script>
-<script src="js/data/municipios-br.js?v=cd1cc767"></script>
-<script src="js/pages/vendas.js?v=046f5672"></script>
+<script src="js/core/config.js?v=e18544d3"></script>
+<script src="js/core/api.js?v=bccb346f"></script>
+<script src="js/core/auth.js?v=af6d1b4d"></script>
+<script src="js/data/municipios-br.js?v=d876cc49"></script>
+<script src="js/pages/vendas.js?v=3c8f65c3"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {

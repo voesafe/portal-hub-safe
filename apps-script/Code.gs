@@ -46,6 +46,16 @@ function doGet(e) {
         return jsonSuccess(vendaItem);
       }
 
+      // Autocompletar de cliente repetido no cadastro de Vendas. Mesma regra
+      // de escopo da rota `vendas`: quem não é admin só reencontra os
+      // próprios clientes.
+      case 'vendas-clientes': {
+        var uVendasCli = exigirSessao(token);
+        var perfilVendasCli = usuarioEhSuperadmin(uVendasCli) ? 'master' : uVendasCli.perfil;
+        var pacVendasCli = perfilEhAdmin(perfilVendasCli) ? null : uVendasCli.pac;
+        return jsonSuccess(listarClientesVendas(pacVendasCli));
+      }
+
       // Marketing — recorte anônimo e SEMPRE global das vendas.
       // Não reusa a rota `vendas` de propósito: aquela filtra por PAC para quem
       // não é admin, e aqui o retrato parcial mentiria. Ver o topo do

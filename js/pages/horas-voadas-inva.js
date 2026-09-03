@@ -11,6 +11,9 @@ const HorasVoadasInva = {
   nomesBases: { SJK: 'São José dos Campos', CPQ: 'Campinas' },
   arraste: null,
   liberacao: null,
+  // Pedido de inativação em curso: { nome, solo }. Um só, porque o modal é um
+  // só e serve aos dois mundos.
+  inativacao: null,
   // Catalogo de etiquetas, vindo junto do get_data para nao custar uma
   // segunda ida de ~10s ao Apps Script so para abrir a tela.
   etiquetas: [],
@@ -69,6 +72,12 @@ const HorasVoadasInva = {
   CHAVE_GRAFICO: 'horas-inva-grafico',
   diretrizAberta: false,
   CHAVE_DIRETRIZ: 'horas-inva-diretriz',
+  // O bloco de inativos nasce recolhido, e a escolha É persistida: bloco
+  // fechado não engana ninguém, porque a contagem fica no próprio título. É a
+  // mesma razão pela qual o gráfico pode ser guardado e as ordenações não.
+  inativosAbertos: false,
+  CHAVE_INATIVOS: 'horas-inva-inativos',
+  MOTIVO_INATIVO_MAX: 200,
   ROTULOS_ORDEM: {
     prioridade: 'Prioridade de acionamento',
     alfabetica: 'Ordem alfabética',
@@ -93,8 +102,10 @@ const HorasVoadasInva = {
     ordens: { SJK: 'prioridade', CPQ: 'prioridade' },
     pop: { instrutor: null, painel: 'lista', editando: null, cor: 'verde', busca: '' },
     popComent: { instrutor: null, salvando: false, rascunhos: {} },
-    arraste: null
+    arraste: null,
+    inativosAbertos: false
   },
+  CHAVE_INATIVOS_SOLO: 'horas-inva-inativos-solo',
 
   escape(valor) {
     // Escapa tambem as aspas: o retorno entra em atributo (data-nome, title),
@@ -183,6 +194,48 @@ const HorasVoadasInva = {
     return this.bases.includes(base) ? base : this.bases[0];
   },
 
+  /**
+   * Instrutor que continua na operação.
+   *
+   * ⚠️ ATIVO é o padrão, e a leitura nunca pode inverter: `inativo` ausente
+   * acontece com célula vazia (todo mundo que já estava cadastrado) e com
+   * backend publicado antes desta entrega. Se a ausência significasse inativo,
+   * uma versão antiga do Apps Script apagaria a lista inteira da tela.
+   */
+  estaAtivo(instrutor) {
+    return instrutor?.inativo !== true;
+  },
+
+  /**
+   * O botão de inativar só é desenhado quando o backend PUBLICADO sabe de
+   * inativação.
+   *
+   * ⚠️ O frontend sobe pelo GitHub Pages e o Apps Script sobe por clasp, em
+   * momentos diferentes. Sem esta checagem, entre um deploy e o outro a tela
+   * ofereceria um botão que responde "Ação inválida" na rota inexistente, o
+   * que é pior que não ter o recurso. Mesma decisão do suportaComentarios.
+   *
+   * O backend novo manda `inativo` SEMPRE, nem que seja false (e mesmo antes
+   * de a coluna existir na planilha), então a presença do campo é a versão do
+   * backend, não o estado do dado. O recurso aparece sozinho na primeira carga
+   * depois do deploy do backend, sem tocar no frontend de novo.
+   */
+  suportaInativar() {
+    return this.instrutores.some(i => i.inativo !== undefined);
+  },
+
+  /** A lista que a tela mostra. Vale para os cards, o gráfico e a fila. */
+  ativos() {
+    return this.instrutores.filter(i => this.estaAtivo(i));
+  },
+
+  /** Quem saiu, em ordem alfabética: aqui não existe fila de acionamento. */
+  inativos() {
+    return this.instrutores
+      .filter(i => !this.estaAtivo(i))
+      .sort((a, b) => this.compararNome(a, b));
+  },
+
   temFlagVerde(instrutor) {
     return this.horasDe(instrutor) >= this.metaHoras || instrutor.liberadoOpr === true;
   },
@@ -227,7 +280,10 @@ const HorasVoadasInva = {
       e => String(e.nome).trim().toUpperCase() === nome.toUpperCase()
     );
     if (!alvo) return null;
-    return this.instrutores.filter(i => this.temEtiqueta(i, alvo.id)).length;
+    // Só ativos: é contagem de quadro, e quem saiu da escola não faz parte
+    // dele. Já a contagem de "usada em N instrutores" na exclusão da etiqueta
+    // conta TODOS de propósito, porque a exclusão alcança a linha do inativo.
+    return this.ativos().filter(i => this.temEtiqueta(i, alvo.id)).length;
   },
 
   chipEtiqueta(etiqueta, extra = '') {
@@ -968,10 +1024,16 @@ const HorasVoadasInva = {
     return copia.sort((a, b) => this.ordemDe(a) - this.ordemDe(b) || this.compararNome(a, b));
   },
 
-  /** A base inteira na ordem de prioridade, SEM o filtro da busca. */
+  /**
+   * A base inteira na ordem de prioridade, SEM o filtro da busca.
+   *
+   * ⚠️ Só ativos. É esta lista que vai para o backend no set_instructor_order,
+   * então incluir um inativo aqui o devolveria à fila de acionamento na
+   * primeira vez que alguém reordenasse a base.
+   */
   nomesDaBase(base) {
     return this.ordenarInstrutores(
-      this.instrutores.filter(i => this.baseDoInstrutor(i) === base),
+      this.ativos().filter(i => this.baseDoInstrutor(i) === base),
       'prioridade'
     ).map(i => i.nome);
   },
@@ -1171,6 +1233,38 @@ const HorasVoadasInva = {
     `;
   },
 
+  /**
+   * O botão que tira o instrutor da lista.
+   *
+   * ⚠️ Sem texto visível, o significado inteiro mora no title e no aria-label,
+   * como no check da liberação. E o ícone é uma PESSOA com um sinal de menos,
+   * não um "×" nem um traço solto: ao lado do check verde, um traço seria lido
+   * como "desligar a liberação", e um "×" como "apagar o cadastro", que é
+   * justamente o que esta ação não faz.
+   */
+  botaoInativar(instrutor, nomeEscapado) {
+    if (!this.suportaInativar()) return '';
+    const rotulo = `Inativar ${instrutor.nome}. Ele sai da lista, dos contadores e do `
+      + 'gráfico, sem perder as horas, as etiquetas nem os comentários.';
+    return `
+      <button class="hi-inativar" type="button" data-inativar="${nomeEscapado}"
+        title="${this.escape(rotulo)}" aria-label="${this.escape(rotulo)}">
+        <!-- ⚠️ viewBox de 18, não de 24, e o desenho PREENCHE a caixa. Com o
+             de 24 o glifo usava dois terços do espaço e, renderizado a 15px,
+             a cabeça saía com 2px de raio: virava um respingo ao lado do
+             check, não uma pessoa. Só a captura de tela mostrou isso. -->
+        <svg viewBox="0 0 18 18" width="16" height="16" aria-hidden="true">
+          <circle cx="7" cy="5" r="3.1" fill="none" stroke="currentColor"
+            stroke-width="1.9"/>
+          <path d="M1.6 15.7c0-3.2 2.4-5 5.4-5 1 0 1.9.2 2.7.55"
+            fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          <path d="M12.1 13.3h4.6" fill="none" stroke="currentColor"
+            stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    `;
+  },
+
   linhaInstrutor(instrutor, base, posicao) {
     const outra = this.bases.find(b => b !== base) || base;
     const horas = this.horasDe(instrutor);
@@ -1215,6 +1309,7 @@ const HorasVoadasInva = {
         </div>
         <span class="horas-inva-hours">${this.formatarHoras(horas)}h</span>
         ${this.botaoLiberar(instrutor, nome, liberado)}
+        ${this.botaoInativar(instrutor, nome)}
       </li>
     `;
   },
@@ -1226,8 +1321,10 @@ const HorasVoadasInva = {
       const lista = document.getElementById(`hi-lista-${base}`);
       if (!lista) return;
 
+      // Inativo não entra em nenhum card, contador ou total: é o que a
+      // inativação promete. Ele passa a viver só no bloco de inativos.
       const daBase = this.ordenarInstrutores(
-        this.instrutores.filter(i => this.baseDoInstrutor(i) === base),
+        this.ativos().filter(i => this.baseDoInstrutor(i) === base),
         this.ordens[base]
       );
       // A busca tambem casa etiqueta: com nomes como LIBERADO IFR AVIAO, a
@@ -1257,6 +1354,11 @@ const HorasVoadasInva = {
       if (total) total.textContent = `${this.formatarHoras(horasBase)}h`;
 
       const aviso = document.getElementById(`hi-vista-${base}`);
+      // ⚠️ A ajuda não pode citar um botão que não está na tela: com o
+      // backend antigo a frase mandaria procurar um ícone inexistente.
+      const ajudaInativar = document.getElementById('hi-ajuda-inativar');
+      if (ajudaInativar) ajudaInativar.hidden = !this.suportaInativar();
+
       if (aviso) {
         // ⚠️ Sem este aviso, uma vista ordenada por horas seria lida como a
         // fila de acionamento, que e exatamente o que o texto no topo da
@@ -1373,8 +1475,10 @@ const HorasVoadasInva = {
     if (!canvas) return;
     this.grafico?.destroy();
 
-    // Ordena por base para o grafico contar a mesma historia da lista.
-    const ordenados = [...this.instrutores].sort((a, b) => {
+    // Ordena por base para o grafico contar a mesma historia da lista, e por
+    // isso mesmo usa a MESMA lista: inativo fora do card tem que ficar fora da
+    // barra tambem, senao o grafico mostra quem a lista diz que nao existe.
+    const ordenados = [...this.ativos()].sort((a, b) => {
       const baseA = this.baseDoInstrutor(a);
       const baseB = this.baseDoInstrutor(b);
       if (baseA !== baseB) return this.bases.indexOf(baseA) - this.bases.indexOf(baseB);
@@ -1426,8 +1530,244 @@ const HorasVoadasInva = {
     });
   },
 
+  // ── Instrutores inativos ────────────────────────────────────
+  //
+  // ⚠️ O bloco existe para a inativação ser REVERSÍVEL pela tela. Sumir de vez
+  // era a alternativa, e deixaria o desfazer só na mão, editando a planilha do
+  // Google, o que é o oposto de uma ação que a coordenação usa sozinha. Ele
+  // também é o único lugar que responde "quem saiu, quando e por quê".
+  //
+  // Nasce recolhido e não aparece enquanto ninguém estiver inativo: é registro,
+  // não seção fixa.
+
+  carregarEstadoInativos() {
+    try {
+      this.inativosAbertos = localStorage.getItem(this.CHAVE_INATIVOS) === 'aberto';
+      this.solo.inativosAbertos =
+        localStorage.getItem(this.CHAVE_INATIVOS_SOLO) === 'aberto';
+    } catch (ignore) {
+      this.inativosAbertos = false;
+      this.solo.inativosAbertos = false;
+    }
+  },
+
+  aplicarEstadoInativos() {
+    const corpo = document.getElementById('hi-inativos-corpo');
+    const botao = document.getElementById('hi-inativos-toggle');
+    if (!corpo || !botao) return;
+    corpo.hidden = !this.inativosAbertos;
+    botao.setAttribute('aria-expanded', String(this.inativosAbertos));
+    botao.title = this.inativosAbertos
+      ? 'Recolher os instrutores inativos'
+      : 'Ver quem está inativo e reativar';
+  },
+
+  alternarInativos() {
+    this.inativosAbertos = !this.inativosAbertos;
+    try {
+      localStorage.setItem(this.CHAVE_INATIVOS, this.inativosAbertos ? 'aberto' : 'fechado');
+    } catch (ignore) {}
+    this.aplicarEstadoInativos();
+  },
+
+  /** Só o nome casa aqui: inativo não tem fila, etiqueta nem recado a buscar. */
+  inativosFiltrados() {
+    const termo = String(this.filtro).trim().toLocaleLowerCase('pt-BR');
+    const todos = this.inativos();
+    if (!termo) return todos;
+    return todos.filter(i =>
+      String(i.nome || '').toLocaleLowerCase('pt-BR').includes(termo)
+    );
+  },
+
+  /**
+   * A linha de registro. Três estados possíveis, e cada um diz a verdade:
+   * pendente (o horário é do servidor e ainda não chegou), sem data (alguém
+   * marcou direto na planilha) e o registro completo.
+   */
+  registroInativo(instrutor) {
+    if (instrutor.pendente) return 'gravando o registro…';
+    if (!instrutor.inativoEm) return 'sem data registrada (marcado direto na planilha)';
+    const quem = instrutor.inativoPor ? ` por ${this.escape(instrutor.inativoPor)}` : '';
+    return `inativado em ${this.escape(instrutor.inativoEm)}${quem}`;
+  },
+
+  linhaInativo(instrutor) {
+    const nome = this.escape(instrutor.nome);
+    const base = this.baseDoInstrutor(instrutor);
+    const rotulo = `Devolver ${instrutor.nome} à lista da base ${base}. Ele entra no fim `
+      + 'da fila de prioridade, não na posição antiga.';
+    return `
+      <li class="hi-inativo" data-nome="${nome}">
+        <div class="hi-inativo-info">
+          <span class="hi-inativo-nome">${nome}</span>
+          <span class="hi-inativo-registro">
+            ${base} · ${this.formatarHoras(this.horasDe(instrutor))}h voadas · ${this.registroInativo(instrutor)}
+          </span>
+          ${instrutor.inativoMotivo
+            ? `<span class="hi-inativo-motivo">${this.escape(instrutor.inativoMotivo)}</span>`
+            : ''}
+        </div>
+        <button class="btn btn-ghost hi-reativar" type="button" data-reativar="${nome}"
+          title="${this.escape(rotulo)}">Reativar</button>
+      </li>
+    `;
+  },
+
+  renderizarInativos() {
+    const card = document.getElementById('hi-inativos-card');
+    const lista = document.getElementById('hi-inativos-lista');
+    const rotulo = document.getElementById('hi-inativos-rotulo');
+    if (!card || !lista || !rotulo) return;
+
+    const todos = this.inativos();
+    card.hidden = !todos.length;
+    if (!todos.length) return;
+
+    const visiveis = this.inativosFiltrados();
+    const termo = String(this.filtro).trim();
+    // ⚠️ A contagem da busca precisa aparecer no TÍTULO, porque é o que fica
+    // visível com o bloco recolhido. Sem isso, procurar alguém que está
+    // inativo devolve "nenhum instrutor com esse nome" nas duas bases e a
+    // pessoa conclui que o cadastro nunca existiu.
+    rotulo.textContent = `Instrutores inativos (${todos.length})`
+      + (termo && visiveis.length ? ` · ${visiveis.length} na busca` : '');
+
+    lista.innerHTML = visiveis.length
+      ? visiveis.map(i => this.linhaInativo(i)).join('')
+      : '<li class="hi-vazio">Nenhum inativo com esse nome.</li>';
+    this.aplicarEstadoInativos();
+  },
+
+  // ── Inativar e reativar ─────────────────────────────────────
+
+  abrirInativacao(nome, solo) {
+    // ⚠️ O guarda vive aqui TAMBÉM, e não só no botão: o modal é o único
+    // caminho de escrita, e esconder o botão não impede uma chamada direta.
+    // Foi o teste que pegou isto, não a leitura: com o backend antigo o modal
+    // abria, e o Cancelar era a única saída de um formulário que não tinha
+    // rota para onde enviar.
+    if (solo ? !this.suportaInativarSolo() : !this.suportaInativar()) return;
+    const lista = solo ? this.solo.instrutores : this.instrutores;
+    const instrutor = lista.find(i => i.nome === nome);
+    if (!instrutor || !this.estaAtivo(instrutor)) return;
+
+    this.inativacao = { nome, solo: !!solo };
+    document.getElementById('inativar-instrutor').textContent = nome;
+    document.getElementById('inativar-descricao').textContent = solo
+      ? 'Ele sai da lista da base e dos contadores. Nada é apagado: as etiquetas e os '
+        + 'comentários continuam guardados, e dá para reativar quando quiser.'
+      : 'Ele sai da lista da base, dos contadores e do gráfico. Nada é apagado: as horas '
+        + 'voadas, as etiquetas e os comentários continuam guardados, e dá para reativar '
+        + 'quando quiser.';
+    const motivo = document.getElementById('inativar-motivo');
+    motivo.value = '';
+    document.getElementById('modal-inativar').classList.add('open');
+    // Deixa a transição terminar antes do foco, senão o teclado do celular
+    // sobe com a caixa ainda no meio do caminho.
+    setTimeout(() => motivo.focus(), 120);
+  },
+
+  fecharInativacao() {
+    this.inativacao = null;
+    document.getElementById('modal-inativar').classList.remove('open');
+    document.getElementById('inativar-motivo').value = '';
+  },
+
+  async confirmarInativacao(evento) {
+    evento?.preventDefault();
+    const pedido = this.inativacao;
+    if (!pedido) return;
+    const motivo = document.getElementById('inativar-motivo').value.trim();
+    this.fecharInativacao();
+    await this.alterarAtividade(pedido.nome, true, motivo, pedido.solo);
+  },
+
+  /**
+   * Inativa ou reativa, nos dois mundos.
+   *
+   * Otimista com rollback: é mutação simples de item que já existe no estado
+   * local. A inativação não mexe na ordem de prioridade (buraco na numeração é
+   * inofensivo), e na reativação o espelho local repete a regra do backend
+   * (fim da fila) para o instrutor não aparecer no meio por um instante e
+   * pular quando a resposta chegar, exatamente como o moverBase já faz.
+   *
+   * ⚠️ Otimista NÃO significa inventar data e autor. O horário é do servidor,
+   * então o registro fica marcado como pendente até a resposta: fingir um
+   * carimbo mostraria por ~10s um registro que pode nem ter sido gravado.
+   */
+  async alterarAtividade(nome, inativar, motivo, solo) {
+    const lista = solo ? this.solo.instrutores : this.instrutores;
+    const instrutor = lista.find(i => i.nome === nome);
+    if (!instrutor) return;
+
+    const antes = {
+      inativo: instrutor.inativo,
+      inativoEm: instrutor.inativoEm,
+      inativoPor: instrutor.inativoPor,
+      inativoMotivo: instrutor.inativoMotivo,
+      ordem: instrutor.ordem
+    };
+    const baseDe = i => (solo ? this.baseDoInstrutorSolo(i) : this.baseDoInstrutor(i));
+    const base = baseDe(instrutor);
+    const redesenhar = () => (solo ? this.renderizarTudoSolo() : this.renderizarTudo());
+
+    instrutor.inativo = inativar;
+    instrutor.inativoEm = '';
+    instrutor.inativoPor = '';
+    instrutor.inativoMotivo = inativar ? String(motivo || '') : '';
+    instrutor.pendente = inativar;
+    if (!inativar) {
+      instrutor.ordem = lista
+        .filter(i => i !== instrutor && this.estaAtivo(i) && baseDe(i) === base)
+        .reduce((maior, i) => Math.max(maior, Number(i.ordem) || 0), 0) + 1;
+    }
+    redesenhar();
+
+    try {
+      const resultado = await this.enviar(
+        solo ? 'set_instructor_active_solo' : 'set_instructor_active',
+        {
+          nome,
+          inativo: inativar,
+          motivo: String(motivo || '').substring(0, this.MOTIVO_INATIVO_MAX),
+          autor: Auth.getNome() || Auth.getEmail() || ''
+        }
+      );
+      if (resultado.status !== 'success') {
+        throw new Error(
+          resultado.message
+          || (inativar ? 'Não foi possível inativar o instrutor.' : 'Não foi possível reativar.')
+        );
+      }
+
+      const dados = resultado.data || {};
+      instrutor.inativo = dados.inativo === true;
+      instrutor.inativoEm = dados.inativoEm || '';
+      instrutor.inativoPor = dados.inativoPor || '';
+      instrutor.inativoMotivo = dados.inativoMotivo || '';
+      instrutor.pendente = false;
+      if (Number(dados.ordem) > 0) instrutor.ordem = Number(dados.ordem);
+      redesenhar();
+      toast(
+        inativar
+          ? `${nome} foi inativado e saiu da lista. Está no bloco "Instrutores inativos".`
+          : `${nome} voltou à lista da base ${base}, no fim da fila de prioridade.`,
+        'success',
+        6000
+      );
+    } catch (erro) {
+      console.error('[Inativação de instrutor]', erro);
+      Object.assign(instrutor, antes);
+      instrutor.pendente = false;
+      redesenhar();
+      toast(erro.message || 'Erro ao salvar o estado do instrutor.', 'error', 5000);
+    }
+  },
+
   renderizarTudo() {
     this.renderizarBases();
+    this.renderizarInativos();
     this.renderizarGrafico();
     this.renderizarEtiquetasCadastro();
     // As listas sao remontadas por innerHTML, entao o gatilho do popover
@@ -1887,6 +2227,10 @@ const HorasVoadasInva = {
     document.getElementById('busca-instrutor').addEventListener('input', evento => {
       this.filtro = evento.target.value;
       this.renderizarBases();
+      // O bloco de inativos entra na busca pelo mesmo motivo: sem isto,
+      // procurar quem saiu devolve "nenhum instrutor com esse nome" nas duas
+      // bases e nada indica que o cadastro existe, inativo.
+      this.renderizarInativos();
     });
     document.getElementById('form-instrutor').addEventListener(
       'submit',
@@ -1942,6 +2286,13 @@ const HorasVoadasInva = {
       if (comentarios) {
         evento.stopPropagation();
         this.abrirPopComent(comentarios.dataset.coment);
+        return;
+      }
+
+      const inativar = evento.target.closest('.hi-inativar');
+      if (inativar) {
+        const linha = inativar.closest('.hi-item');
+        if (linha) this.abrirInativacao(linha.dataset.nome, false);
         return;
       }
 
@@ -2066,6 +2417,33 @@ const HorasVoadasInva = {
     document.addEventListener('pointerup', evento => this.encerrarArraste(evento));
     document.addEventListener('pointercancel', evento => this.encerrarArraste(evento));
 
+    // ── Bloco de inativos de voo ──────────────────────────────
+    // Ele vive FORA do #hi-bases, então precisa da própria delegação.
+    document.getElementById('hi-inativos-toggle')?.addEventListener(
+      'click',
+      () => this.alternarInativos()
+    );
+    document.getElementById('hi-inativos-card')?.addEventListener('click', evento => {
+      const botao = evento.target.closest('[data-reativar]');
+      if (botao) this.alterarAtividade(botao.dataset.reativar, false, '', false);
+    });
+
+    document.getElementById('form-inativar').addEventListener(
+      'submit',
+      evento => this.confirmarInativacao(evento)
+    );
+    document.getElementById('inativar-cancelar').addEventListener(
+      'click',
+      () => this.fecharInativacao()
+    );
+    document.getElementById('inativar-fechar').addEventListener(
+      'click',
+      () => this.fecharInativacao()
+    );
+    document.getElementById('modal-inativar').addEventListener('click', evento => {
+      if (evento.target.id === 'modal-inativar') this.fecharInativacao();
+    });
+
     document.getElementById('form-liberacao').addEventListener(
       'submit',
       evento => this.confirmarLiberacao(evento)
@@ -2106,7 +2484,8 @@ const HorasVoadasInva = {
         this.fecharMenusOrdem();
         return;
       }
-      if (this.liberacao) this.fecharLiberacao();
+      if (this.liberacao) { this.fecharLiberacao(); return; }
+      if (this.inativacao) this.fecharInativacao();
     });
   },
 
@@ -2136,6 +2515,22 @@ const HorasVoadasInva = {
   baseDoInstrutorSolo(instrutor) {
     const base = String(instrutor.base || '').trim().toUpperCase();
     return this.bases.includes(base) ? base : this.bases[0];
+  },
+
+  /** Espelho do suportaInativar, com o estado próprio deste mundo. */
+  suportaInativarSolo() {
+    return this.solo.instrutores.some(i => i.inativo !== undefined);
+  },
+
+  /** Mesma leitura do mundo de voo: ausência de `inativo` significa ativo. */
+  ativosSolo() {
+    return this.solo.instrutores.filter(i => this.estaAtivo(i));
+  },
+
+  inativosSolo() {
+    return this.solo.instrutores
+      .filter(i => !this.estaAtivo(i))
+      .sort((a, b) => this.compararNome(a, b));
   },
 
   etiquetaPorIdSolo(id) {
@@ -2644,9 +3039,10 @@ const HorasVoadasInva = {
   },
 
   /** A base inteira na ordem de prioridade, SEM o filtro da busca. */
+  /** Só ativos: é esta lista que o set_instructor_order_solo grava. */
   nomesDaBaseSolo(base) {
     return this.ordenarInstrutores(
-      this.solo.instrutores.filter(i => this.baseDoInstrutorSolo(i) === base),
+      this.ativosSolo().filter(i => this.baseDoInstrutorSolo(i) === base),
       'prioridade'
     ).map(i => i.nome);
   },
@@ -2766,6 +3162,35 @@ const HorasVoadasInva = {
     `;
   },
 
+  /**
+   * ⚠️ Classe e atributo EXCLUSIVOS deste mundo (.hi-inativar-solo,
+   * data-inativar-solo), pela mesma razão do resto do bloco: as duas listas
+   * vivem no mesmo documento (a aba escondida é display:none, não removida do
+   * DOM) e a delegação do mundo de voo usa seletor global.
+   */
+  botaoInativarSolo(instrutor, nomeEscapado) {
+    if (!this.suportaInativarSolo()) return '';
+    const rotulo = `Inativar ${instrutor.nome}. Ele sai da lista e dos contadores, sem `
+      + 'perder as etiquetas nem os comentários.';
+    return `
+      <button class="hi-inativar-solo" type="button" data-inativar-solo="${nomeEscapado}"
+        title="${this.escape(rotulo)}" aria-label="${this.escape(rotulo)}">
+        <!-- ⚠️ viewBox de 18, não de 24, e o desenho PREENCHE a caixa. Com o
+             de 24 o glifo usava dois terços do espaço e, renderizado a 15px,
+             a cabeça saía com 2px de raio: virava um respingo ao lado do
+             check, não uma pessoa. Só a captura de tela mostrou isso. -->
+        <svg viewBox="0 0 18 18" width="16" height="16" aria-hidden="true">
+          <circle cx="7" cy="5" r="3.1" fill="none" stroke="currentColor"
+            stroke-width="1.9"/>
+          <path d="M1.6 15.7c0-3.2 2.4-5 5.4-5 1 0 1.9.2 2.7.55"
+            fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          <path d="M12.1 13.3h4.6" fill="none" stroke="currentColor"
+            stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    `;
+  },
+
   linhaInstrutorSolo(instrutor, base, posicao) {
     const outra = this.bases.find(b => b !== base) || base;
     const nome = this.escape(instrutor.nome);
@@ -2796,6 +3221,7 @@ const HorasVoadasInva = {
             ${this.botaoComentariosSolo(instrutor, nome)}
           </span>
         </div>
+        ${this.botaoInativarSolo(instrutor, nome)}
       </li>
     `;
   },
@@ -2808,7 +3234,7 @@ const HorasVoadasInva = {
       if (!lista) return;
 
       const daBase = this.ordenarInstrutores(
-        this.solo.instrutores.filter(i => this.baseDoInstrutorSolo(i) === base),
+        this.ativosSolo().filter(i => this.baseDoInstrutorSolo(i) === base),
         this.solo.ordens[base]
       );
       const visiveis = daBase.filter(i => {
@@ -2823,6 +3249,9 @@ const HorasVoadasInva = {
           String(c.texto || '').toLocaleLowerCase('pt-BR').includes(termo)
         );
       });
+
+      const ajudaInativarSolo = document.getElementById('hi-ajuda-inativar-solo');
+      if (ajudaInativarSolo) ajudaInativarSolo.hidden = !this.suportaInativarSolo();
 
       const contador = document.getElementById(`hi-contador-${base}-solo`);
       if (contador) {
@@ -2852,8 +3281,86 @@ const HorasVoadasInva = {
     });
   },
 
+  // ── Instrutores de solo inativos ────────────────────────────
+  // Espelho do bloco de voo, sem horas voadas (não existem aqui).
+
+  aplicarEstadoInativosSolo() {
+    const corpo = document.getElementById('hi-inativos-corpo-solo');
+    const botao = document.getElementById('hi-inativos-toggle-solo');
+    if (!corpo || !botao) return;
+    corpo.hidden = !this.solo.inativosAbertos;
+    botao.setAttribute('aria-expanded', String(this.solo.inativosAbertos));
+    botao.title = this.solo.inativosAbertos
+      ? 'Recolher os instrutores de solo inativos'
+      : 'Ver quem está inativo e reativar';
+  },
+
+  alternarInativosSolo() {
+    this.solo.inativosAbertos = !this.solo.inativosAbertos;
+    try {
+      localStorage.setItem(
+        this.CHAVE_INATIVOS_SOLO,
+        this.solo.inativosAbertos ? 'aberto' : 'fechado'
+      );
+    } catch (ignore) {}
+    this.aplicarEstadoInativosSolo();
+  },
+
+  inativosFiltradosSolo() {
+    const termo = String(this.solo.filtro).trim().toLocaleLowerCase('pt-BR');
+    const todos = this.inativosSolo();
+    if (!termo) return todos;
+    return todos.filter(i =>
+      String(i.nome || '').toLocaleLowerCase('pt-BR').includes(termo)
+    );
+  },
+
+  linhaInativoSolo(instrutor) {
+    const nome = this.escape(instrutor.nome);
+    const base = this.baseDoInstrutorSolo(instrutor);
+    const rotulo = `Devolver ${instrutor.nome} à lista da base ${base}. Ele entra no fim `
+      + 'da fila de prioridade, não na posição antiga.';
+    return `
+      <li class="hi-inativo" data-nome="${nome}">
+        <div class="hi-inativo-info">
+          <span class="hi-inativo-nome">${nome}</span>
+          <span class="hi-inativo-registro">
+            ${base} · ${this.registroInativo(instrutor)}
+          </span>
+          ${instrutor.inativoMotivo
+            ? `<span class="hi-inativo-motivo">${this.escape(instrutor.inativoMotivo)}</span>`
+            : ''}
+        </div>
+        <button class="btn btn-ghost hi-reativar" type="button" data-reativar-solo="${nome}"
+          title="${this.escape(rotulo)}">Reativar</button>
+      </li>
+    `;
+  },
+
+  renderizarInativosSolo() {
+    const card = document.getElementById('hi-inativos-card-solo');
+    const lista = document.getElementById('hi-inativos-lista-solo');
+    const rotulo = document.getElementById('hi-inativos-rotulo-solo');
+    if (!card || !lista || !rotulo) return;
+
+    const todos = this.inativosSolo();
+    card.hidden = !todos.length;
+    if (!todos.length) return;
+
+    const visiveis = this.inativosFiltradosSolo();
+    const termo = String(this.solo.filtro).trim();
+    rotulo.textContent = `Instrutores inativos (${todos.length})`
+      + (termo && visiveis.length ? ` · ${visiveis.length} na busca` : '');
+
+    lista.innerHTML = visiveis.length
+      ? visiveis.map(i => this.linhaInativoSolo(i)).join('')
+      : '<li class="hi-vazio">Nenhum inativo com esse nome.</li>';
+    this.aplicarEstadoInativosSolo();
+  },
+
   renderizarTudoSolo() {
     this.renderizarBasesSolo();
+    this.renderizarInativosSolo();
     if (this.popAbertoSolo()) {
       this.marcarGatilhoAtivoSolo();
       this.posicionarPopSolo();
@@ -3071,6 +3578,7 @@ const HorasVoadasInva = {
     document.getElementById('busca-instrutor-solo').addEventListener('input', evento => {
       this.solo.filtro = evento.target.value;
       this.renderizarBasesSolo();
+      this.renderizarInativosSolo();
     });
 
     const bases = document.getElementById('hi-bases-solo');
@@ -3112,6 +3620,24 @@ const HorasVoadasInva = {
         this.abrirPopComentSolo(comentarios.dataset.comentSolo);
         return;
       }
+      const inativar = evento.target.closest('.hi-inativar-solo');
+      if (inativar) {
+        const linha = inativar.closest('.hi-item');
+        if (linha) this.abrirInativacao(linha.dataset.nome, true);
+      }
+    });
+
+    // ── Bloco de inativos de solo ─────────────────────────────
+    // Ele vive FORA do #hi-bases-solo, então precisa da própria delegação.
+    document.getElementById('hi-inativos-toggle-solo')?.addEventListener(
+      'click',
+      () => this.alternarInativosSolo()
+    );
+    document.getElementById('hi-inativos-card-solo')?.addEventListener('click', evento => {
+      const botao = evento.target.closest('[data-reativar-solo]');
+      // Reativar não abre modal: é ação reversível, e o toast diz onde a
+      // pessoa reapareceu. Pedir confirmação aqui só somaria um clique.
+      if (botao) this.alterarAtividade(botao.dataset.reativarSolo, false, '', true);
     });
 
     // ── Popover de etiquetas de solo ──────────────────────────
@@ -3233,6 +3759,9 @@ const HorasVoadasInva = {
     this.aplicarEstadoGrafico();
     this.carregarEstadoDiretriz();
     this.aplicarEstadoDiretriz();
+    this.carregarEstadoInativos();
+    this.aplicarEstadoInativos();
+    this.aplicarEstadoInativosSolo();
     this.pintarMenusOrdem();
     this.pintarMenusOrdemSolo();
     this.renderizarEtiquetasCadastro();

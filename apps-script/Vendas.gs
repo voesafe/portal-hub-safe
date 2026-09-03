@@ -72,6 +72,84 @@ function listarVendas(pac, mes, ano) {
   return vendas;
 }
 
+/**
+ * Recorte magro de clientes já cadastrados em vendas anteriores, para o
+ * autocompletar do "Nome Completo" no cadastro de venda nova. Poupa o
+ * comercial de redigitar CPF, sexo, nascimento, cidade, estado e e-mail de
+ * quem já comprou antes.
+ *
+ * ⚠️ Mesma regra de escopo da rota `vendas`: pac !== null filtra por
+ * consultor. Quem não é admin só reencontra os próprios clientes, nunca os
+ * de um colega.
+ *
+ * ⚠️ Dedup por CPF, chave estável. Venda anterior a 2026-08-06 pode não ter
+ * CPF gravado, e cai no e-mail. Sem os dois não há como identificar o
+ * cliente de forma confiável entre uma venda e outra, e a linha fica de
+ * fora: é a mesma regra de `portalVendasCasaveis_`.
+ *
+ * ⚠️ Nome suspeito (marcador de status tipo "TESTE"/"INATIVO" digitado no
+ * campo errado) é descartado pelo mesmo filtro dos Aniversários e do Portal
+ * do Aluno: sugerir aqui preencheria o cadastro novo com lixo.
+ *
+ * ⚠️ NASCIMENTO sai por `getDisplayValues` + `marketingDataNascimento_`
+ * ([Marketing.gs](apps-script/Marketing.gs)), NUNCA pelo `row[5]` cru de
+ * `linhaParaVenda`. A coluna não tem `setNumberFormat('@')` nenhum na
+ * escrita, então o Sheets pode ter convertido a célula em Date de verdade; a
+ * planilha não tem fuso declarado, e um objeto Date lido por `getValues` e
+ * depois serializado em JSON vira ISO com hora e `Z`, formato que o
+ * `<input type="date">` do navegador rejeita em silêncio, deixando o campo
+ * em branco. O Marketing já tinha essa armadilha resolvida para esta mesma
+ * coluna; aqui é reaproveitada, não reinventada. Venda antiga com só a
+ * idade (número solto) não vira data, e o campo fica vazio de propósito:
+ * não existe nascimento nenhum para reconstruir a partir de uma idade.
+ */
+function listarClientesVendas(pac) {
+  var sheet = getSheet(SHEETS.VENDAS);
+  var range = sheet.getDataRange();
+  var dados = range.getValues();
+  var exibidos = range.getDisplayValues();
+
+  var porChave = {};
+  for (var i = 1; i < dados.length; i++) {
+    var row = dados[i];
+    if (!row[0]) continue;
+    if (pac && String(row[2]).toLowerCase() !== pac.toLowerCase()) continue;
+
+    var v = linhaParaVenda(row);
+    if (!v.nome) continue;
+    try { if (aniversariosNomeSuspeito_(v.nome)) continue; } catch (e) {}
+
+    var cpfDigitos = cpfSoDigitosVenda_(v.cpf);
+    var email = String(v.email || '').trim().toLowerCase();
+    var chave = cpfDigitos ? 'cpf:' + cpfDigitos : (email ? 'email:' + email : '');
+    if (!chave) continue;
+
+    var nasc = null;
+    try { nasc = marketingDataNascimento_(String(exibidos[i][5] || '').trim()); } catch (e) {}
+
+    // Mesmo cliente com duas vendas aparece uma vez, com a mais recente.
+    var atual = porChave[chave];
+    if (!atual || String(v.data) > String(atual.data)) {
+      porChave[chave] = {
+        nome:       v.nome,
+        cpf:        cpfDigitos,
+        sexo:       v.sexo || '',
+        nascimento: nasc ? nasc.iso : '',
+        cidade:     v.cidade || '',
+        estado:     v.estado || '',
+        email:      v.email || '',
+        data:       v.data || '',
+        curso:      v.curso || ''
+      };
+    }
+  }
+
+  var lista = [];
+  Object.keys(porChave).forEach(function(k) { lista.push(porChave[k]); });
+  lista.sort(function(a, b) { return String(b.data).localeCompare(String(a.data)); });
+  return lista;
+}
+
 function valorVenda(valor) {
   if (valor === null || valor === undefined || valor === '') return 0;
   if (typeof valor === 'number') return valor;

@@ -1370,6 +1370,13 @@ body.hi-arrastando {
   line-height: 1.5;
 }
 
+.hi-modal-dica {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: .72rem;
+  line-height: 1.5;
+}
+
 @media (max-width: 1200px) {
   .horas-inva-kpis {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1430,9 +1437,18 @@ body.hi-arrastando {
   }
 
   /* Punho, nome, horas e o botao de liberar nao cabem numa linha de ~350px:
-     o botao desce para uma segunda faixa em vez de espremer o nome. */
+     o botao desce para uma segunda faixa em vez de espremer o nome.
+
+     ⚠️ O gap cai para 6px por MEDIÇÃO, não por gosto: com o botão de inativar
+     na linha, 5 vãos de 10px sobrecarregam a faixa e o nome passa a quebrar
+     palavra por palavra ("Ana / Prado"), o que custava 21px por linha com
+     flag. Medido a 390px com 4 instrutores: 352px de altura total com gap 10,
+     305px com gap 6. E o limiar é exato, 7px já não desfaz a quebra. Encolher
+     os botões ou a coluna da posição não acrescentou nada além disso, então
+     ficou só o gap. */
   .hi-item {
     flex-wrap: wrap;
+    gap: 6px;
   }
 
   /* O `.hi-liberar { flex: 1 0 100% }` saiu daqui junto com o botão de texto:
@@ -1545,5 +1561,158 @@ body.hi-arrastando {
 
   .hi-diretriz-titulo {
     font-size: .74rem;
+  }
+}
+
+/* ── Inativar instrutor e o bloco dos inativos ──────────────────
+   Instrutor que saiu da escola precisa sair da lista, do contador e do
+   gráfico, e nada disso pode custar o histórico dele. Daí um estado, nunca
+   uma remoção. */
+
+/* O botão que tira o instrutor da lista, no fim da linha.
+   ⚠️ Sem borda em repouso, de propósito: ao lado do check da liberação (que
+   TEM borda sempre, porque é indicador de estado), um segundo círculo
+   desenhado seria lido como um segundo estado do instrutor. Aqui é ação.
+   ⚠️ E sem `opacity: 0` também de propósito: um alvo clicável invisível na
+   ponta da linha convida ao clique acidental, e esta ação faz alguém
+   desaparecer da tela. Discreto resolve; invisível não. */
+.hi-inativar,
+.hi-inativar-solo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid transparent;
+  border-radius: 50%;
+  /* ⚠️ --text-2, não --text-muted nem --text-subtle. Medido no modo claro:
+     --text-muted dá 2,55:1 e --text-subtle é ainda mais fraco, abaixo do
+     mínimo de 3:1 para elemento gráfico. Um botão de ação que ninguém acha é
+     um botão que não existe, e aqui ele é a única forma de tirar alguém da
+     lista. Fica mais escuro que o check em repouso ao lado, e isso é correto:
+     o check é indicador de estado, este é um botão. */
+  color: var(--text-2);
+  background: transparent;
+  transition: var(--transition);
+}
+
+/* Âmbar, não vermelho: vermelho promete exclusão, e o que este botão faz é
+   reversível em um clique no bloco de baixo. O par de estado (--ink-aviso
+   sobre --tint-aviso) foi feito para funcionar nos dois modos. */
+.hi-inativar:hover,
+.hi-inativar-solo:hover,
+.hi-inativar:focus-visible,
+.hi-inativar-solo:focus-visible {
+  border-color: var(--warning);
+  color: var(--ink-aviso);
+  background: var(--tint-aviso);
+}
+
+/* ⚠️ `.hi-inativos-card[hidden]{display:none}` é OBRIGATÓRIO: o `display` da
+   regra base ganha do atributo `hidden`, e sem isto o card apareceria vazio no
+   fim da aba mesmo sem ninguém inativo. É a mesma armadilha da
+   .cadastro-bulk-bar, da .topbar-status, da .hi-ordenar-menu, da .notam-note,
+   da .hi-pop e do #pa-resultado-refazer. */
+/* ⚠️ Molde do .hi-base (bandeja cinza com os itens em branco por cima), NÃO
+   um card tracejado. A borda tracejada foi a primeira tentativa e só a captura
+   de tela mostrou o problema: um retângulo pontilhado de largura inteira no fim
+   da tela pesa mais que a lista dos ativos, ou seja, o registro de quem saiu
+   chamava mais atenção que a fila de quem está em operação. */
+.hi-inativos-card {
+  display: block;
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+
+.hi-inativos-card[hidden] {
+  display: none;
+}
+
+.hi-inativos-corpo {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.hi-inativos-corpo[hidden] {
+  display: none;
+}
+
+.hi-inativos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.hi-inativo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.hi-inativo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ⚠️ --text, o mesmo do nome na lista dos ativos, e NÃO --text-muted (2,55:1
+   medidos no modo claro). Quem está inativo já é dito pela bandeja cinza, pela
+   borda lateral apagada e pela linha de registro; apagar o NOME por cima disso
+   só dificulta achar a pessoa que se quer reativar. */
+.hi-inativo-nome {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* A linha de auditoria (base, horas, data e autor) a 11px: --text-2, porque
+   texto pequeno em --text-muted mede 2,55:1 no claro e é justamente o dado que
+   se lê com atenção quando alguém pergunta quem tirou o instrutor da lista. */
+.hi-inativo-registro {
+  color: var(--text-2);
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+/* O motivo em itálico separa a frase da operação do registro automático de
+   data e autor, que é a linha de cima. */
+.hi-inativo-motivo {
+  color: var(--text);
+  font-size: .72rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.hi-inativo .hi-reativar {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  font-size: .74rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  /* Numa faixa de ~350px o botão não cabe ao lado de três linhas de texto:
+     ele passa para baixo, alinhado à direita, em vez de espremer o registro. */
+  .hi-inativo {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hi-inativo .hi-reativar {
+    align-self: flex-end;
   }
 }

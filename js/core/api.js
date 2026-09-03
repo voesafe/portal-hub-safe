@@ -28,7 +28,7 @@ const Cache = {
 
   // `marketing|` entra aqui porque aquele recorte é derivado da mesma aba
   // VENDAS: mexeu numa venda, o retrato de marketing envelheceu junto.
-  invalidarVendas()       { this.invalidar('vendas|'); this.invalidar('kpis|'); this.invalidar('marketing|'); },
+  invalidarVendas()       { this.invalidar('vendas|'); this.invalidar('kpis|'); this.invalidar('marketing|'); this.invalidar('vendas-clientes|'); },
   invalidarConcorrencia() { this.invalidar('listar-concorrencia|'); this.invalidar('listar-precos-safe|'); }
 };
 
@@ -135,6 +135,7 @@ const API = {
   async getKPIs(mes, ano)    { return this.get('kpis',   { ...(mes && {mes}), ...(ano && {ano}) }); },
   async getVendas(mes, ano)  { return this.get('vendas', { ...(mes && {mes}), ...(ano && {ano}) }); },
   async getVenda(id)         { return this.get('venda',  { id }, false); },
+  async getClientesVendas()  { return this.get('vendas-clientes', {}); },
 
   async criarVenda(dados)  { const r = await this.post('criar-venda',  dados); if (r.ok) Cache.invalidarVendas(); return r; },
   async editarVenda(dados) { const r = await this.post('editar-venda', dados); if (r.ok) Cache.invalidarVendas(); return r; },

@@ -142,10 +142,11 @@ function fhiValorVigenteAte_(historico, instrutorChave, categoria, corteTexto) {
  * Repassa a mensagem que o backend das Horas INVA devolveu, quando devolve.
  *
  * ⚠️ Sem isto a tela dizia só "Resposta inesperada do backend de
- * Instrutores", engolindo o motivo. Em 2026-08-26 o motivo real era
+ * Instrutores", engolindo o motivo. Em 2026-09-03 o motivo real era
  * "Ação inválida" (a rota `get_horas_categoria` tinha saído da versão
- * publicada de lá), e a mensagem genérica não deixava ninguém descobrir
- * isso pela tela: só apareceu ao chamar a rota na mão.
+ * publicada de lá, sobrescrita por um deploy feito de um clone sem os
+ * commits dela), e a mensagem genérica não deixava ninguém descobrir isso
+ * pela tela: só apareceu ao chamar a rota na mão.
  */
 function fhiDetalheErroInva_(corpo) {
   var mensagem = corpo && corpo.message ? String(corpo.message).trim() : '';

@@ -44,6 +44,75 @@
 }
 .modal-section-title svg { color: var(--blue); flex-shrink: 0; }
 
+/* ── Autocompletar de cliente repetido (Nome Completo) ───────
+   O painel flutua sobre o formulário: em fluxo, empurraria os campos de
+   baixo a cada tecla e o formulário inteiro pularia enquanto se digita. */
+.venda-sugestoes {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+}
+/* A regra base tem `position`, que ganha do atributo `hidden`. Sem isto o
+   painel fica sempre no fluxo, vazio, empurrando o campo de baixo. */
+.venda-sugestoes[hidden] { display: none; }
+
+/* O ancestral posicionado do painel, senão ele se ancora no modal inteiro
+   e cai longe do campo Nome Completo. */
+#modal-venda .form-group { position: relative; }
+
+.venda-sug {
+  display: grid;
+  width: 100%;
+  gap: 1px;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.venda-sug:last-child { border-bottom: 0; }
+.venda-sug:hover,
+.venda-sug.is-ativa { background: var(--surface-2); }
+.venda-sug-nome { font-size: .88rem; font-weight: 600; color: var(--text); }
+.venda-sug-meta { font-size: .76rem; color: var(--text-muted); }
+
+/* ── Tarja "preenchido a partir de venda anterior" ───────────── */
+.venda-vinculo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: -6px 0 16px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: var(--tint-ok);
+  color: var(--ink-ok);
+  font-size: .82rem;
+}
+.venda-vinculo[hidden] { display: none; }
+.venda-vinculo svg { flex-shrink: 0; }
+.venda-vinculo-limpar {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* ── Seletor de cursos ─────────────────────────────────────── */
 .curso-picker {
   position: relative;

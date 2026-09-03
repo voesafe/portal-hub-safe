@@ -119,6 +119,13 @@ const Vendas = {
   cursosSelecionados: [],
   cursoBusca: '',
 
+  // ── Autocompletar de cliente repetido (Nome Completo) ─────────
+  clientes: [],
+  sugestoesCliente: [],
+  sugestaoClienteAberta: false,
+  sugestaoClienteAtiva: -1,
+  clienteVinculado: null,
+
   async init() {
     Auth.proteger();
     Auth.preencherUI();
@@ -130,6 +137,10 @@ const Vendas = {
       this.initForm();
       this.initExportacao();
       this.initSidebar();
+      // Sem `await`: o Apps Script leva ~10s por chamada, e o cadastro de
+      // venda nao pode esperar isso para abrir. Ate a resposta chegar, o
+      // autocompletar simplesmente nao acha nada, o que e seguro.
+      this.carregarClientes();
       await this.carregar();
     } finally {
       this.setCarregando(false);
@@ -305,10 +316,184 @@ const Vendas = {
     this.initCursoPicker();
     this.initCidadeEstado();
     this.initValidacao();
+    this.initAutocompleteCliente();
     document.getElementById('btn-nova-venda')?.addEventListener('click',   () => this.abrirForm());
     document.getElementById('modal-close')?.addEventListener('click',      () => fecharModal('modal-venda'));
     document.getElementById('modal-cancelar')?.addEventListener('click',   () => fecharModal('modal-venda'));
     document.getElementById('btn-salvar')?.addEventListener('click',       () => this.salvar());
+  },
+
+  // ── Autocompletar de cliente repetido (Nome Completo) ─────────
+  //
+  // Carrega uma vez, ao abrir a pagina, o recorte de clientes ja vendidos
+  // (nome, CPF, sexo, nascimento, cidade, estado, e-mail); o filtro em si
+  // acontece inteiro no navegador enquanto se digita. Nao busca no servidor
+  // a cada tecla: com ~10s de latencia por chamada, isso travaria o campo.
+  async carregarClientes() {
+    const res = await API.getClientesVendas();
+    if (res.ok) this.clientes = res.data || [];
+  },
+
+  // Acento escrito por escape (̀-ͯ), nao colado literalmente: o
+  // intervalo de marcas de combinacao e invisivel no editor, e um caractere
+  // perdido numa copia deixaria a classe casando outra coisa em silencio.
+  _normalizarBuscaCliente(t) {
+    return String(t ?? '').toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\s+/g, ' ').trim();
+  },
+
+  _chaveCliente(c) {
+    return c.cpf ? 'cpf:' + c.cpf : 'email:' + String(c.email || '').trim().toLowerCase();
+  },
+
+  initAutocompleteCliente() {
+    const campo = document.getElementById('f-nome');
+    const painel = document.getElementById('venda-sugestoes');
+    if (!campo || !painel) return;
+
+    campo.addEventListener('input', () => this._aoDigitarNomeCliente());
+    campo.addEventListener('keydown', e => this._aoTeclarNomeCliente(e));
+
+    // mousedown, e nao click: o blur do campo chega antes do click e
+    // fecharia o painel debaixo do dedo/clique.
+    painel.addEventListener('mousedown', e => {
+      const btn = e.target.closest('.venda-sug');
+      if (!btn) return;
+      e.preventDefault();
+      this._escolherCliente(btn.dataset.chave);
+    });
+
+    document.addEventListener('mousedown', e => {
+      if (!this.sugestaoClienteAberta) return;
+      const caminho = e.composedPath();
+      if (caminho.some(el => el.id === 'venda-sugestoes' || el.id === 'f-nome')) return;
+      this._fecharSugestoesCliente();
+    });
+
+    document.getElementById('venda-vinculo')?.addEventListener('click', e => {
+      if (e.target.closest('.venda-vinculo-limpar')) this._limparVinculoCliente();
+    });
+  },
+
+  _aoDigitarNomeCliente() {
+    // So faz sentido numa venda NOVA: editar uma venda existente ja tem o
+    // nome preenchido pelo proprio cadastro que esta sendo editado.
+    if (this.editandoId) return;
+    // Digitar a mao desfaz o vinculo com a sugestao escolhida: o que esta
+    // no formulario deixou de vir dela, e manter a marca mentiria.
+    if (this.clienteVinculado) this._limparVinculoCliente();
+
+    const termo = document.getElementById('f-nome')?.value || '';
+    const t = this._normalizarBuscaCliente(termo);
+    this.sugestaoClienteAtiva = -1;
+
+    if (t.length < 3) { this._fecharSugestoesCliente(); return; }
+
+    this.sugestoesCliente = this.clientes
+      .filter(c => this._normalizarBuscaCliente(c.nome).includes(t))
+      .slice(0, 6);
+
+    this._renderSugestoesCliente();
+  },
+
+  _renderSugestoesCliente() {
+    const painel = document.getElementById('venda-sugestoes');
+    if (!painel) return;
+    if (!this.sugestoesCliente.length) { this._fecharSugestoesCliente(); return; }
+
+    painel.innerHTML = this.sugestoesCliente.map((c, i) => `
+      <button type="button" class="venda-sug${i === this.sugestaoClienteAtiva ? ' is-ativa' : ''}"
+              data-chave="${escapeHtml(this._chaveCliente(c))}" role="option">
+        <span class="venda-sug-nome">${escapeHtml(c.nome)}</span>
+        <span class="venda-sug-meta">Última compra: ${escapeHtml(formatData(c.data))}${c.curso ? ' · ' + escapeHtml(c.curso) : ''}</span>
+      </button>`).join('');
+
+    painel.hidden = false;
+    this.sugestaoClienteAberta = true;
+    document.getElementById('f-nome')?.setAttribute('aria-expanded', 'true');
+  },
+
+  _fecharSugestoesCliente() {
+    const painel = document.getElementById('venda-sugestoes');
+    if (painel) painel.hidden = true;
+    this.sugestaoClienteAberta = false;
+    this.sugestaoClienteAtiva = -1;
+    document.getElementById('f-nome')?.setAttribute('aria-expanded', 'false');
+  },
+
+  /**
+   * Setas navegam, Enter escolhe, Escape fecha.
+   *
+   * ⚠️ O Enter so e interceptado com um item DESTACADO pelas setas. Sem
+   * isso, quem digita o nome inteiro e aperta Enter para seguir adiante
+   * escolheria a primeira sugestao sem querer.
+   */
+  _aoTeclarNomeCliente(evento) {
+    if (!this.sugestaoClienteAberta || !this.sugestoesCliente.length) return;
+    const max = this.sugestoesCliente.length - 1;
+
+    if (evento.key === 'ArrowDown' || evento.key === 'ArrowUp') {
+      evento.preventDefault();
+      const passo = evento.key === 'ArrowDown' ? 1 : -1;
+      this.sugestaoClienteAtiva = Math.max(-1, Math.min(max, this.sugestaoClienteAtiva + passo));
+      this._renderSugestoesCliente();
+      return;
+    }
+    if (evento.key === 'Enter' && this.sugestaoClienteAtiva >= 0) {
+      evento.preventDefault();
+      this._escolherCliente(this._chaveCliente(this.sugestoesCliente[this.sugestaoClienteAtiva]));
+      return;
+    }
+    if (evento.key === 'Escape') { evento.preventDefault(); this._fecharSugestoesCliente(); }
+  },
+
+  /** Preenche o formulario com o cliente escolhido. */
+  _escolherCliente(chave) {
+    const c = this.sugestoesCliente.find(x => this._chaveCliente(x) === chave);
+    if (!c) return;
+
+    document.getElementById('f-nome').value       = c.nome || '';
+    document.getElementById('f-cpf').value        = c.cpf ? cpfMascarado(c.cpf) : '';
+    document.getElementById('f-sexo').value       = c.sexo || '';
+    document.getElementById('f-nascimento').value = c.nascimento || '';
+    document.getElementById('f-email').value      = c.email || '';
+
+    const uf = String(c.estado || '').trim().toUpperCase();
+    document.getElementById('f-estado').value = municipiosDoEstado(uf).length ? uf : '';
+    this.preencherCidades(uf, c.cidade);
+
+    // As marcas de campo invalido somem: o dado veio de uma venda real, nao
+    // ha erro para acusar num campo que acabou de ser preenchido.
+    CAMPOS_OBRIGATORIOS_VENDA.forEach(campo => this._desmarcarCampo(campo));
+
+    this.clienteVinculado = c;
+    this._fecharSugestoesCliente();
+    this._renderVinculoCliente();
+  },
+
+  /**
+   * A tarja que diz de onde os dados vieram.
+   *
+   * ⚠️ Nao e enfeite: sem ela, campo preenchido sozinho parece digitado, e
+   * ninguem confere um dado que acredita ter escrito.
+   */
+  _renderVinculoCliente() {
+    const cx = document.getElementById('venda-vinculo');
+    if (!cx) return;
+    const c = this.clienteVinculado;
+    if (!c) { cx.hidden = true; cx.innerHTML = ''; return; }
+
+    cx.innerHTML = `
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      <span>CPF, sexo, nascimento, e-mail, cidade e estado preenchidos a partir da compra de <strong>${escapeHtml(formatData(c.data))}</strong>. Confira antes de salvar.</span>
+      <button type="button" class="venda-vinculo-limpar">limpar</button>`;
+    cx.hidden = false;
+  },
+
+  _limparVinculoCliente() {
+    this.clienteVinculado = null;
+    this._renderVinculoCliente();
   },
 
   // ── Cidade dependente do estado ─────────────────────────────
@@ -955,6 +1140,12 @@ const Vendas = {
     document.getElementById('modal-titulo').textContent = venda ? 'Editar Venda' : 'Nova Venda';
 
     this.limparMarcasInvalidas();
+    // A sugestao e a tarja de "cliente repetido" sao de uma sessao anterior
+    // do modal: sem limpar aqui, abrir para editar uma venda mostraria a
+    // tarja de outro cliente que nunca foi escolhido para esta.
+    this._fecharSugestoesCliente();
+    this.clienteVinculado = null;
+    this._renderVinculoCliente();
 
     if (venda) {
       document.getElementById('f-data').value         = venda.data        || '';
