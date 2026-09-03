@@ -173,12 +173,18 @@
 .fhi-exportar-texto:focus { border-color: var(--blue); outline: none; }
 
 /* ── Modal "Ver voos" ────────────────────────────────────────
-   Auditoria: separa os voos considerados em VFR/IFR/Simulador, com data,
-   horas e a Missão do CAVOK que decidiu a categoria. */
-.fhi-modal-voos { max-width: 620px; }
+   Auditoria: separa os voos considerados em VFR, IFR, Simulador AATD e
+   Simulador PCATD, com data, horas e a Missão do CAVOK que decidiu a
+   categoria. */
+.fhi-modal-voos { max-width: 660px; }
 
+/* ⚠️ `flex-wrap` e `flex-basis` em conteúdo, não `1 1 0`: com quatro abas,
+   dividir a largura em partes iguais espremeria "Simulador PCATD" e o
+   rótulo quebraria no meio. Assim as abas ocupam o que precisam e caem para
+   uma segunda faixa quando não couberem. */
 .fhi-voos-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   padding: 4px;
   margin-bottom: 14px;
@@ -186,7 +192,7 @@
   background: var(--surface-2);
 }
 .fhi-voos-tab {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -213,7 +219,13 @@
 }
 .fhi-voos-tab.active span { background: rgba(91, 174, 226, .14); color: var(--ink-blue); }
 
-.fhi-voos-lista { max-height: 50vh; overflow-y: auto; }
+/* ⚠️ `overflow-x` junto do `-y`: com a coluna Aeronave (quatro colunas), a
+   tabela não cabe em 390px e a Missão saía CORTADA na borda do modal, sem
+   nenhuma forma de ler o resto. Medido na captura de tela; as checagens
+   funcionais passavam. O `min-width` garante que, ao rolar, a Missão tenha
+   largura de leitura em vez de uma palavra por linha. */
+.fhi-voos-lista { max-height: 50vh; overflow: auto; }
+.fhi-voos-lista .table { min-width: 440px; }
 .fhi-voos-lista .table td, .fhi-voos-lista .table th { white-space: normal; }
 .fhi-voos-lista .table td.col-missao { color: var(--text-muted); font-size: .78rem; }
 

@@ -19,7 +19,7 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=4b0b2d7e">
   <link rel="stylesheet" href="css/core/safe-theme.css?v=9e14b94c">
   <link rel="stylesheet" href="css/core/layout.css?v=9d06c4a7">
-  <link rel="stylesheet" href="css/pages/fechamento-horas-instrutores.css?v=7bc21a73">
+  <link rel="stylesheet" href="css/pages/fechamento-horas-instrutores.css?v=027adede">
 </head>
 <body>
 
@@ -90,7 +90,8 @@
                 <th>Nome</th>
                 <th class="text-right">Horas VFR</th>
                 <th class="text-right">Horas IFR</th>
-                <th class="text-right">Horas Simulador</th>
+                <th class="text-right" title="Horas em simulador AATD (SM-SJK, SM-CPQ)">Horas AATD</th>
+                <th class="text-right" title="Horas em simulador PCATD (PC-SJK, PC-CPQ)">Horas PCATD</th>
                 <th class="text-right">Total a pagar</th>
                 <th style="width:210px"></th>
               </tr>
@@ -98,7 +99,7 @@
             <tbody id="fhi-tbody"></tbody>
             <tfoot>
               <tr>
-                <th colspan="4">Total do mês</th>
+                <th colspan="5">Total do mês</th>
                 <td class="text-right" id="fhi-total-geral">R$ 0,00</td>
                 <td></td>
               </tr>
@@ -124,7 +125,8 @@
                   <th>Nome</th>
                   <th class="text-right">Valor VFR</th>
                   <th class="text-right">Valor IFR</th>
-                  <th class="text-right">Valor Simulador</th>
+                  <th class="text-right" title="Valor da hora em simulador AATD (SM-SJK, SM-CPQ)">Valor AATD</th>
+                  <th class="text-right" title="Valor da hora em simulador PCATD (PC-SJK, PC-CPQ)">Valor PCATD</th>
                   <th style="width:110px"></th>
                 </tr>
               </thead>
@@ -183,11 +185,8 @@
       <button class="modal-close" data-close="fhi-modal-voos" aria-label="Fechar">×</button>
     </div>
     <div class="modal-body">
-      <div class="fhi-voos-tabs" role="tablist" aria-label="Categoria dos voos">
-        <button class="fhi-voos-tab active" type="button" role="tab" data-cat="VFR">VFR <span id="fhi-voos-count-vfr">0</span></button>
-        <button class="fhi-voos-tab" type="button" role="tab" data-cat="IFR">IFR <span id="fhi-voos-count-ifr">0</span></button>
-        <button class="fhi-voos-tab" type="button" role="tab" data-cat="SIMULADOR">Simulador <span id="fhi-voos-count-sim">0</span></button>
-      </div>
+      <!-- As abas nascem do JS (FHI_CATEGORIAS), com a contagem de voos de cada categoria. -->
+      <div class="fhi-voos-tabs" id="fhi-voos-tabs" role="tablist" aria-label="Categoria dos voos"></div>
       <div class="fhi-voos-lista" id="fhi-voos-lista"></div>
     </div>
     <div class="modal-footer">
@@ -203,6 +202,6 @@
 <script src="js/core/config.js?v=e18544d3"></script>
 <script src="js/core/api.js?v=bccb346f"></script>
 <script src="js/core/auth.js?v=af6d1b4d"></script>
-<script src="js/pages/fechamento-horas-instrutores.js?v=1220efa6"></script>
+<script src="js/pages/fechamento-horas-instrutores.js?v=ed2d6feb"></script>
 </body>
 </html>

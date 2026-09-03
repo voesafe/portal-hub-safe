@@ -4,8 +4,9 @@
 //
 // Lista os instrutores de voo com a etiqueta "Eventual" (cadastro vive no
 // backend das Horas INVA, outro repositório) cruzados com as horas do mês
-// por categoria (VFR/IFR/Simulador, classificadas lá pela Fase do CAVOK) e
-// com o valor da hora guardado aqui no Hub (histórico por vigência).
+// por categoria (VFR, IFR, Simulador AATD e Simulador PCATD, classificadas
+// lá pelo equipamento e pela Fase do CAVOK) e com o valor da hora guardado
+// aqui no Hub (histórico por vigência).
 //
 // Duas abas: "Resumo do mês" é só leitura (nome, horas, total a pagar, com
 // o valor de cada categoria só no tooltip do Total, Ver voos e Exportar).
@@ -17,6 +18,26 @@
 // Depois de salvar com sucesso, o Resumo é recarregado em segundo plano
 // para o total do mês corrente refletir o valor novo.
 // ============================================================
+
+/**
+ * As categorias de pagamento, definidas UMA vez. A ordem daqui é a ordem
+ * das colunas de horas do Resumo, das abas do "Ver voos", dos campos da aba
+ * "Valores" e das linhas da mensagem de exportação: com quatro categorias,
+ * repetir essa lista em cinco lugares é como uma delas fica de fora de um
+ * deles sem ninguém notar (o total continua certo, e só uma coluna deixa de
+ * aparecer).
+ *
+ * ⚠️ A chave 'SIMULADOR' é o AATD, apesar de o rótulo dizer AATD. Ela é a
+ * chave gravada no histórico de valores desde a primeira versão do módulo:
+ * renomear para 'SIMULADOR_AATD' orfanaria tudo que já foi registrado, e o
+ * valor voltaria ao padrão em silêncio.
+ */
+const FHI_CATEGORIAS = [
+  { chave: 'VFR',             rotulo: 'VFR',             horas: 'vfrHoras',            valor: 'valorVfr' },
+  { chave: 'IFR',             rotulo: 'IFR',             horas: 'ifrHoras',            valor: 'valorIfr' },
+  { chave: 'SIMULADOR',       rotulo: 'Simulador AATD',  horas: 'simuladorHoras',      valor: 'valorSimulador' },
+  { chave: 'SIMULADOR_PCATD', rotulo: 'Simulador PCATD', horas: 'simuladorPcatdHoras', valor: 'valorSimuladorPcatd' }
+];
 
 const FechamentoHorasInstrutores = {
   instrutores: [],
@@ -223,16 +244,16 @@ const FechamentoHorasInstrutores = {
 
   _linhaHtml(item) {
     const totalVoos = (item.voos || []).length;
-    const tooltipTexto =
-      `Valor VFR: ${this._moeda(item.valorVfr)}\n` +
-      `Valor IFR: ${this._moeda(item.valorIfr)}\n` +
-      `Valor Simulador: ${this._moeda(item.valorSimulador)}`;
+    const tooltipTexto = FHI_CATEGORIAS
+      .map(c => `Valor ${c.rotulo}: ${this._moeda(item[c.valor])}`)
+      .join('\n');
+    const colunasHoras = FHI_CATEGORIAS
+      .map(c => `<td class="text-right">${this._horas(item[c.horas])}</td>`)
+      .join('');
     return `
       <tr data-instrutor="${escapeHtml(item.instrutor)}">
         <td>${escapeHtml(item.instrutor)}</td>
-        <td class="text-right">${this._horas(item.vfrHoras)}</td>
-        <td class="text-right">${this._horas(item.ifrHoras)}</td>
-        <td class="text-right">${this._horas(item.simuladorHoras)}</td>
+        ${colunasHoras}
         <td class="text-right">
           <span class="fhi-total fhi-tooltip-gatilho" tabindex="0" data-tooltip="${escapeHtml(tooltipTexto)}">${this._moeda(item.totalAPagar)}</span>
         </td>
@@ -269,20 +290,27 @@ const FechamentoHorasInstrutores = {
     document.getElementById('fhi-voos-titulo').textContent =
       `Voos de ${item.instrutor} · ${rotuloMes}/${this.ano}`;
 
-    document.querySelectorAll('.fhi-voos-tab').forEach(tab => {
-      tab.classList.toggle('active', tab.dataset.cat === 'VFR');
-    });
-    this._atualizarContagemVoos(item);
+    this._renderizarVoosTabs(item);
     this._renderizarVoos();
     abrirModal('fhi-modal-voos');
   },
 
-  _atualizarContagemVoos(item) {
+  /**
+   * Abas do modal montadas por JS a partir de `FHI_CATEGORIAS`, com a
+   * contagem de voos de cada uma. Escritas no HTML seriam quatro blocos
+   * quase idênticos, e acrescentar categoria voltaria a exigir mexer em
+   * dois arquivos.
+   */
+  _renderizarVoosTabs(item) {
+    const alvo = document.getElementById('fhi-voos-tabs');
+    if (!alvo || !item) return;
     const voos = item.voos || [];
-    const contar = cat => voos.filter(v => v.categoria === cat).length;
-    document.getElementById('fhi-voos-count-vfr').textContent = contar('VFR');
-    document.getElementById('fhi-voos-count-ifr').textContent = contar('IFR');
-    document.getElementById('fhi-voos-count-sim').textContent = contar('SIMULADOR');
+    alvo.innerHTML = FHI_CATEGORIAS.map(c => {
+      const total = voos.filter(v => v.categoria === c.chave).length;
+      const ativo = c.chave === this._voosCategoria;
+      return `<button class="fhi-voos-tab${ativo ? ' active' : ''}" type="button" role="tab"
+        aria-selected="${ativo}" data-cat="${c.chave}">${escapeHtml(c.rotulo)} <span>${total}</span></button>`;
+    }).join('');
   },
 
   _renderizarVoos() {
@@ -295,15 +323,20 @@ const FechamentoHorasInstrutores = {
       return;
     }
 
+    // A coluna Aeronave não é enfeite: desde 2026-09-03 é o equipamento que
+    // decide se o voo é simulador e qual dos dois (SM- = AATD, PC- = PCATD).
+    // Sem ela, auditar "por que este voo caiu em PCATD" exigiria abrir o
+    // CAVOK.
     lista.innerHTML = `
       <table class="table">
         <thead>
-          <tr><th>Data</th><th class="text-right">Horas</th><th>Missão (CAVOK)</th></tr>
+          <tr><th>Data</th><th>Aeronave</th><th class="text-right">Horas</th><th>Missão (CAVOK)</th></tr>
         </thead>
         <tbody>
           ${voos.map(v => `
             <tr>
               <td>${escapeHtml(this._dataVoo(v.data))}</td>
+              <td>${escapeHtml(v.aeronave || '—')}</td>
               <td class="text-right">${this._horas(v.horas)}</td>
               <td class="col-missao">${escapeHtml(v.missao || '')}</td>
             </tr>
@@ -338,11 +371,12 @@ const FechamentoHorasInstrutores = {
    * o próprio CAVOK antes de emitir a NF.
    */
   _textoExportacao(item) {
-    const categorias = [
-      { chave: 'VFR', rotulo: 'VFR', horas: item.vfrHoras, valor: item.valorVfr },
-      { chave: 'IFR', rotulo: 'IFR', horas: item.ifrHoras, valor: item.valorIfr },
-      { chave: 'SIMULADOR', rotulo: 'Simulador', horas: item.simuladorHoras, valor: item.valorSimulador }
-    ];
+    const categorias = FHI_CATEGORIAS.map(c => ({
+      chave: c.chave,
+      rotulo: c.rotulo,
+      horas: Number(item[c.horas]) || 0,
+      valor: Number(item[c.valor]) || 0
+    }));
 
     const linhas = [
       `Boa tarde, ${item.instrutor}`,
@@ -357,8 +391,12 @@ const FechamentoHorasInstrutores = {
       voos.forEach(v => linhas.push(`${this._dataVoo(v.data)} - ${this._horas(v.horas)} - ${v.missao || ''}`));
     });
 
+    // Categoria sem hora no mês fica FORA da conta: com quatro categorias,
+    // "0,0 h * R$ 45,00 = R$ 0,00" repetido é ruído em cima justamente das
+    // linhas que o instrutor precisa conferir.
     categorias.forEach(c => {
-      linhas.push('', `Período totaliza ${this._horas(c.horas)} * ${this._moeda(c.valor)} = ${this._moeda(c.horas * c.valor)}`);
+      if (!c.horas) return;
+      linhas.push('', `Período totaliza ${this._horas(c.horas)} ${c.rotulo} * ${this._moeda(c.valor)} = ${this._moeda(c.horas * c.valor)}`);
     });
 
     linhas.push('', `TOTAL ${this._moeda(item.totalAPagar)}`, '', 'Estando de acordo, peço a gentileza de emitir a NF');
@@ -411,12 +449,14 @@ const FechamentoHorasInstrutores = {
 
   _linhaValorHtml(item) {
     const totalHistorico = (item.historico || []).length;
+    const campos = FHI_CATEGORIAS.map(c => `
+      <td class="text-right"><input type="number" min="0" step="0.01" class="fhi-input-valor"
+        data-categoria="${c.chave}" value="${this._numeroInput(item[c.valor])}"
+        aria-label="Valor ${escapeHtml(c.rotulo)} de ${escapeHtml(item.instrutor)}"></td>`).join('');
     return `
       <tr data-instrutor="${escapeHtml(item.instrutor)}">
         <td>${escapeHtml(item.instrutor)}</td>
-        <td class="text-right"><input type="number" min="0" step="0.01" class="fhi-input-valor" data-categoria="VFR" value="${this._numeroInput(item.valorVfr)}" aria-label="Valor VFR de ${escapeHtml(item.instrutor)}"></td>
-        <td class="text-right"><input type="number" min="0" step="0.01" class="fhi-input-valor" data-categoria="IFR" value="${this._numeroInput(item.valorIfr)}" aria-label="Valor IFR de ${escapeHtml(item.instrutor)}"></td>
-        <td class="text-right"><input type="number" min="0" step="0.01" class="fhi-input-valor" data-categoria="SIMULADOR" value="${this._numeroInput(item.valorSimulador)}" aria-label="Valor Simulador de ${escapeHtml(item.instrutor)}"></td>
+        ${campos}
         <td class="text-right">
           <button class="btn btn-ghost btn-sm fhi-btn-acao fhi-btn-historico" type="button" ${totalHistorico ? '' : 'disabled'}
             title="${totalHistorico ? 'Ver o histórico de valores' : 'Nenhuma edição registrada ainda'}">
@@ -472,15 +512,18 @@ const FechamentoHorasInstrutores = {
     if (this.mesAtual) this.carregar(false);
   },
 
+  /** Nome do campo do payload que guarda o valor daquela categoria. */
+  _campoDaCategoria(categoria) {
+    const achado = FHI_CATEGORIAS.find(c => c.chave === categoria);
+    return achado ? achado.valor : '';
+  },
   _campoValor(item, categoria) {
-    if (categoria === 'VFR') return item.valorVfr;
-    if (categoria === 'IFR') return item.valorIfr;
-    return item.valorSimulador;
+    const campo = this._campoDaCategoria(categoria);
+    return campo ? item[campo] : 0;
   },
   _aplicarValor(item, categoria, valor) {
-    if (categoria === 'VFR') item.valorVfr = valor;
-    else if (categoria === 'IFR') item.valorIfr = valor;
-    else item.valorSimulador = valor;
+    const campo = this._campoDaCategoria(categoria);
+    if (campo) item[campo] = valor;
   },
 
   // ── Modal "Histórico de valores" ─────────────────────────
@@ -496,7 +539,8 @@ const FechamentoHorasInstrutores = {
     if (!historico.length) {
       lista.innerHTML = '<p class="fhi-historico-vazio">Nenhuma edição registrada ainda. Os valores atuais são os padrões da operação.</p>';
     } else {
-      const rotuloCategoria = { VFR: 'VFR', IFR: 'IFR', SIMULADOR: 'Simulador' };
+      const rotuloCategoria = {};
+      FHI_CATEGORIAS.forEach(c => { rotuloCategoria[c.chave] = c.rotulo; });
       lista.innerHTML = historico.map(h => `
         <div class="fhi-historico-item">
           <span class="fhi-historico-cat">${escapeHtml(rotuloCategoria[h.categoria] || h.categoria)}</span>
@@ -519,12 +563,15 @@ const FechamentoHorasInstrutores = {
   // ── Modais (fechar por X, clique fora, Escape) ───────────
 
   _bindModais() {
-    document.querySelectorAll('.fhi-voos-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        this._voosCategoria = tab.dataset.cat;
-        document.querySelectorAll('.fhi-voos-tab').forEach(t => t.classList.toggle('active', t === tab));
-        this._renderizarVoos();
-      });
+    // Delegação, e não um listener por aba: as abas nascem do
+    // `_renderizarVoosTabs` a cada abertura do modal, então um bind direto
+    // no carregamento não encontraria nenhuma.
+    document.getElementById('fhi-voos-tabs')?.addEventListener('click', event => {
+      const tab = event.target.closest('.fhi-voos-tab');
+      if (!tab) return;
+      this._voosCategoria = tab.dataset.cat;
+      this._renderizarVoosTabs(this._voosInstrutor);
+      this._renderizarVoos();
     });
     document.querySelectorAll('[data-close]').forEach(botao => {
       botao.addEventListener('click', () => fecharModal(botao.dataset.close));

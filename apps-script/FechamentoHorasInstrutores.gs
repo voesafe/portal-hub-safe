@@ -4,7 +4,8 @@
 //
 // O PROBLEMA
 // Instrutor de voo com etiqueta "Eventual" (na tela Instrutores, Escala)
-// e pago por hora, em tres categorias diferentes: VFR, IFR e Simulador.
+// e pago por hora, em quatro categorias diferentes: VFR, IFR, Simulador
+// AATD e Simulador PCATD.
 // Este modulo lista quem esta nessa etiqueta, cruza com as horas voadas
 // do mes (vindas do backend das Horas INVA, que por sua vez consulta o
 // CAVOK) e calcula o total a pagar.
@@ -29,14 +30,23 @@
 // reescrever historico).
 //
 // Instrutor novo, ou sem valor gravado ainda, cai nos padroes definidos
-// pela operacao: R$70 VFR, R$100 IFR, R$60 Simulador.
+// pela operacao: R$70 VFR, R$100 IFR, R$60 Simulador AATD, R$45
+// Simulador PCATD.
+//
+// ⚠️ A CHAVE 'SIMULADOR' E O AATD, e nao deve ser renomeada para
+// 'SIMULADOR_AATD' por mais que o rotulo da tela diga AATD. Ela e a chave
+// gravada na coluna CATEGORIA do historico de vigencias desde a primeira
+// versao deste modulo: renomear orfanaria todo valor ja registrado, que
+// voltaria a cair no padrao em silencio. Quem separa AATD de PCATD e o
+// backend das Horas INVA, pelo PREFIXO DA MATRICULA do equipamento
+// (SM- = AATD, PC- = PCATD), nao pela lista de fases.
 // ============================================================
 
 var FHI_SHEET_VALORES = 'FECHAMENTO_HORAS_INSTRUTORES_VALORES';
 var FHI_VALORES_HEADERS = ['ID', 'INSTRUTOR', 'CATEGORIA', 'VALOR', 'VIGENTE_DESDE', 'REGISTRADO_POR'];
 
-var FHI_CATEGORIAS = ['VFR', 'IFR', 'SIMULADOR'];
-var FHI_VALOR_PADRAO = { VFR: 70, IFR: 100, SIMULADOR: 60 };
+var FHI_CATEGORIAS = ['VFR', 'IFR', 'SIMULADOR', 'SIMULADOR_PCATD'];
+var FHI_VALOR_PADRAO = { VFR: 70, IFR: 100, SIMULADOR: 60, SIMULADOR_PCATD: 45 };
 
 // Mesma implantacao de producao que o frontend das Horas INVA ja usa
 // (CONFIG.HORAS_VOADAS_INVA_API_URL em js/core/config.js). Nao e segredo,
@@ -189,7 +199,12 @@ function fhiParseHorasCategoriaMes_(corpoTexto) {
     porInstrutor[fhiChaveNome_(item.instrutor)] = {
       vfrHoras: Number(item.vfrHoras) || 0,
       ifrHoras: Number(item.ifrHoras) || 0,
+      // `simuladorHoras` e o AATD (ver a nota da chave 'SIMULADOR' no
+      // cabecalho). Backend das Horas INVA anterior a 2026-09-03 nao manda
+      // `simuladorPcatdHoras`, e ai o `|| 0` deixa a coluna em zero em vez
+      // de quebrar a tela.
       simuladorHoras: Number(item.simuladorHoras) || 0,
+      simuladorPcatdHoras: Number(item.simuladorPcatdHoras) || 0,
       // Detalhe por voo, para o "Ver voos" auditar de onde vieram as horas.
       // Repassado como veio do backend das Horas INVA, sem recalcular nada.
       voos: Array.isArray(item.voos) ? item.voos : []
@@ -262,23 +277,30 @@ function listarFechamentoHorasInstrutores(ano, mes) {
 
   var instrutores = dadosInva.instrutoresEventuais.map(function (nome) {
     var chave = fhiChaveNome_(nome);
-    var horas = dadosInva.horasPorInstrutor[chave] || { vfrHoras: 0, ifrHoras: 0, simuladorHoras: 0, voos: [] };
+    var horas = dadosInva.horasPorInstrutor[chave] ||
+      { vfrHoras: 0, ifrHoras: 0, simuladorHoras: 0, simuladorPcatdHoras: 0, voos: [] };
 
     var valorVfr = fhiValorVigenteAte_(historico, chave, 'VFR', corte);
     var valorIfr = fhiValorVigenteAte_(historico, chave, 'IFR', corte);
     var valorSimulador = fhiValorVigenteAte_(historico, chave, 'SIMULADOR', corte);
+    var valorSimuladorPcatd = fhiValorVigenteAte_(historico, chave, 'SIMULADOR_PCATD', corte);
 
     return {
       instrutor: nome,
       valorVfr: valorVfr,
       valorIfr: valorIfr,
       valorSimulador: valorSimulador,
+      valorSimuladorPcatd: valorSimuladorPcatd,
       vfrHoras: horas.vfrHoras,
       ifrHoras: horas.ifrHoras,
       simuladorHoras: horas.simuladorHoras,
+      simuladorPcatdHoras: horas.simuladorPcatdHoras || 0,
       voos: horas.voos || [],
       totalAPagar: fhiArredondar2_(
-        horas.vfrHoras * valorVfr + horas.ifrHoras * valorIfr + horas.simuladorHoras * valorSimulador
+        horas.vfrHoras * valorVfr +
+        horas.ifrHoras * valorIfr +
+        horas.simuladorHoras * valorSimulador +
+        (horas.simuladorPcatdHoras || 0) * valorSimuladorPcatd
       ),
       // Só o mês corrente permite editar: valor de mês passado é o que já
       // foi de fato usado no cálculo, editar ali reescreveria histórico.
@@ -318,6 +340,7 @@ function listarValoresFechamentoHorasInstrutores() {
       valorVfr: valorAtual('VFR'),
       valorIfr: valorAtual('IFR'),
       valorSimulador: valorAtual('SIMULADOR'),
+      valorSimuladorPcatd: valorAtual('SIMULADOR_PCATD'),
       historico: doInstrutor.map(function (r) {
         return {
           categoria: r.categoria,

@@ -30,11 +30,34 @@ const EXTENSOES_VERSIONAVEIS = new Set([
   '.webmanifest', '.json', '.woff', '.woff2',
 ]);
 
+/**
+ * Extensoes cujo conteudo e TEXTO, e por isso precisa ter a quebra de linha
+ * normalizada antes do hash.
+ */
+const EXTENSOES_TEXTO = new Set([
+  '.css', '.js', '.mjs', '.json', '.webmanifest', '.svg',
+]);
+
 const cacheHash = new Map();
 
+/**
+ * ⚠️ Quebra de linha NORMALIZADA para LF antes do hash, e nao os bytes
+ * crus do disco. O repositorio guarda LF, mas quem clona no Windows com
+ * `core.autocrlf=true` recebe CRLF no disco: medido em 2026-09-03, isso
+ * dava um hash diferente para o MESMO arquivo e um `bump` no Windows
+ * reescrevia 186 referencias em 25 HTML sem nada ter mudado, que o `bump`
+ * seguinte no macOS desfazia de volta. Fora o diff inutil, o risco e
+ * mascarar a unica mudanca de verdade no meio das 186.
+ *
+ * Binario (png, woff...) continua hasheado byte a byte: ali `0d0a` e dado,
+ * nao quebra de linha.
+ */
 function hashDe(arquivoAbsoluto) {
   if (cacheHash.has(arquivoAbsoluto)) return cacheHash.get(arquivoAbsoluto);
-  const buf = fs.readFileSync(arquivoAbsoluto);
+  let buf = fs.readFileSync(arquivoAbsoluto);
+  if (EXTENSOES_TEXTO.has(path.extname(arquivoAbsoluto).toLowerCase())) {
+    buf = Buffer.from(buf.toString('utf8').replace(/\r\n/g, '\n'), 'utf8');
+  }
   const h = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 8);
   cacheHash.set(arquivoAbsoluto, h);
   return h;
