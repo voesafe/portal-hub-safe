@@ -128,24 +128,48 @@ function fhiValorVigenteAte_(historico, instrutorChave, categoria, corteTexto) {
 }
 
 // ── Backend das Horas INVA (leitura, server-to-server) ──────
+//
+// ⚠️ Medido em 2026-08-26: get_data e get_horas_categoria levam ~13s e ~12s
+// CADA UMA, sozinhas (o backend das Horas INVA é assim: get_data lê várias
+// abas, get_horas_categoria varre o CAVOK dia a dia). Chamar as duas em
+// série, uma esperando a outra terminar, soma as duas esperas. O Resumo do
+// mês (`fhiBuscarResumoMes_`) busca as duas de uma vez com `fetchAll`, que
+// dispara as duas ao mesmo tempo e o tempo total vira o da mais lenta, não
+// a soma. A aba "Valores" não precisa da segunda, então continua com uma
+// chamada só.
+
+/**
+ * Repassa a mensagem que o backend das Horas INVA devolveu, quando devolve.
+ *
+ * ⚠️ Sem isto a tela dizia só "Resposta inesperada do backend de
+ * Instrutores", engolindo o motivo. Em 2026-08-26 o motivo real era
+ * "Ação inválida" (a rota `get_horas_categoria` tinha saído da versão
+ * publicada de lá), e a mensagem genérica não deixava ninguém descobrir
+ * isso pela tela: só apareceu ao chamar a rota na mão.
+ */
+function fhiDetalheErroInva_(corpo) {
+  var mensagem = corpo && corpo.message ? String(corpo.message).trim() : '';
+  return mensagem ? ': ' + mensagem : '.';
+}
+
+/** Confere o HTTP e devolve o corpo cru, ou lança com a mensagem certa. */
+function fhiConferirRespostaInva_(resposta, mensagemErro) {
+  var codigo = resposta.getResponseCode();
+  if (codigo < 200 || codigo >= 300) {
+    throw new Error(mensagemErro + ' (HTTP ' + codigo + ').');
+  }
+  return resposta.getContentText();
+}
 
 /**
  * Instrutores com a etiqueta 'eventual' (id fixo, ver INVA_ETIQUETAS_SEMENTE
- * no backend das Horas INVA). So o nome: e a unica coisa que este modulo usa
- * de la alem das horas.
+ * no backend das Horas INVA), a partir do corpo cru de `get_data`. So o
+ * nome: e a unica coisa que este modulo usa de la alem das horas.
  */
-function fhiListarInstrutoresEventuais_() {
-  var resposta = UrlFetchApp.fetch(FHI_INVA_API_URL + '?action=get_data', {
-    method: 'get',
-    muteHttpExceptions: true
-  });
-  var codigo = resposta.getResponseCode();
-  if (codigo < 200 || codigo >= 300) {
-    throw new Error('Não foi possível consultar os instrutores (HTTP ' + codigo + ').');
-  }
-  var corpo = JSON.parse(resposta.getContentText());
+function fhiParseInstrutoresEventuais_(corpoTexto) {
+  var corpo = JSON.parse(corpoTexto);
   if (corpo.status !== 'success' || !Array.isArray(corpo.data)) {
-    throw new Error('Resposta inesperada do backend de Instrutores.');
+    throw new Error('Resposta inesperada do backend de Instrutores' + fhiDetalheErroInva_(corpo));
   }
   return corpo.data
     .filter(function (inst) { return Array.isArray(inst.etiquetas) && inst.etiquetas.indexOf('eventual') >= 0; })
@@ -153,19 +177,11 @@ function fhiListarInstrutoresEventuais_() {
     .filter(function (nome) { return nome; });
 }
 
-/** Horas do mes por instrutor, ja separadas em VFR/IFR/Simulador pelo backend das Horas INVA. */
-function fhiHorasCategoriaMes_(ano, mes) {
-  var resposta = UrlFetchApp.fetch(
-    FHI_INVA_API_URL + '?action=get_horas_categoria&ano=' + encodeURIComponent(ano) + '&mes=' + encodeURIComponent(mes),
-    { method: 'get', muteHttpExceptions: true }
-  );
-  var codigo = resposta.getResponseCode();
-  if (codigo < 200 || codigo >= 300) {
-    throw new Error('Não foi possível consultar as horas do mês (HTTP ' + codigo + ').');
-  }
-  var corpo = JSON.parse(resposta.getContentText());
+/** Horas do mes por instrutor, a partir do corpo cru de `get_horas_categoria`. */
+function fhiParseHorasCategoriaMes_(corpoTexto) {
+  var corpo = JSON.parse(corpoTexto);
   if (corpo.status !== 'success' || !corpo.data || !Array.isArray(corpo.data.instrutores)) {
-    throw new Error('Resposta inesperada do backend de Instrutores ao consultar horas do mês.');
+    throw new Error('Resposta inesperada do backend de Instrutores ao consultar horas do mês' + fhiDetalheErroInva_(corpo));
   }
   var porInstrutor = {};
   corpo.data.instrutores.forEach(function (item) {
@@ -181,6 +197,53 @@ function fhiHorasCategoriaMes_(ano, mes) {
   return porInstrutor;
 }
 
+/** Só a lista de instrutores "Eventual". Usada pela aba "Valores", que não precisa de horas. */
+function fhiListarInstrutoresEventuais_() {
+  var resposta = UrlFetchApp.fetch(FHI_INVA_API_URL + '?action=get_data', {
+    method: 'get',
+    muteHttpExceptions: true
+  });
+  return fhiParseInstrutoresEventuais_(
+    fhiConferirRespostaInva_(resposta, 'Não foi possível consultar os instrutores')
+  );
+}
+
+/** Só as horas do mês. Existe separada de `fhiBuscarResumoMes_` para uso avulso (ex: manutenção). */
+function fhiHorasCategoriaMes_(ano, mes) {
+  var resposta = UrlFetchApp.fetch(
+    FHI_INVA_API_URL + '?action=get_horas_categoria&ano=' + encodeURIComponent(ano) + '&mes=' + encodeURIComponent(mes),
+    { method: 'get', muteHttpExceptions: true }
+  );
+  return fhiParseHorasCategoriaMes_(
+    fhiConferirRespostaInva_(resposta, 'Não foi possível consultar as horas do mês')
+  );
+}
+
+/**
+ * Instrutores "Eventual" + horas do mês, buscados em PARALELO (uma
+ * `fetchAll` só) em vez de duas chamadas em série. É o que o Resumo do mês
+ * usa, porque é a única tela daqui que precisa das duas coisas ao mesmo
+ * tempo.
+ */
+function fhiBuscarResumoMes_(ano, mes) {
+  var respostas = UrlFetchApp.fetchAll([
+    { url: FHI_INVA_API_URL + '?action=get_data', method: 'get', muteHttpExceptions: true },
+    {
+      url: FHI_INVA_API_URL + '?action=get_horas_categoria&ano=' + encodeURIComponent(ano) + '&mes=' + encodeURIComponent(mes),
+      method: 'get',
+      muteHttpExceptions: true
+    }
+  ]);
+  return {
+    instrutoresEventuais: fhiParseInstrutoresEventuais_(
+      fhiConferirRespostaInva_(respostas[0], 'Não foi possível consultar os instrutores')
+    ),
+    horasPorInstrutor: fhiParseHorasCategoriaMes_(
+      fhiConferirRespostaInva_(respostas[1], 'Não foi possível consultar as horas do mês')
+    )
+  };
+}
+
 // ── Leitura consolidada ──────────────────────────────────────
 
 function listarFechamentoHorasInstrutores(ano, mes) {
@@ -192,14 +255,13 @@ function listarFechamentoHorasInstrutores(ano, mes) {
   var hoje = new Date();
   var mesAtual = hoje.getFullYear() === anoNum && (hoje.getMonth() + 1) === mesNum;
 
-  var instrutoresEventuais = fhiListarInstrutoresEventuais_();
-  var horasPorInstrutor = fhiHorasCategoriaMes_(anoNum, mesNum);
+  var dadosInva = fhiBuscarResumoMes_(anoNum, mesNum);
   var historico = fhiLerHistorico_();
   var corte = fhiChaveMesCorte_(anoNum, mesNum);
 
-  var instrutores = instrutoresEventuais.map(function (nome) {
+  var instrutores = dadosInva.instrutoresEventuais.map(function (nome) {
     var chave = fhiChaveNome_(nome);
-    var horas = horasPorInstrutor[chave] || { vfrHoras: 0, ifrHoras: 0, simuladorHoras: 0, voos: [] };
+    var horas = dadosInva.horasPorInstrutor[chave] || { vfrHoras: 0, ifrHoras: 0, simuladorHoras: 0, voos: [] };
 
     var valorVfr = fhiValorVigenteAte_(historico, chave, 'VFR', corte);
     var valorIfr = fhiValorVigenteAte_(historico, chave, 'IFR', corte);
@@ -228,7 +290,7 @@ function listarFechamentoHorasInstrutores(ano, mes) {
 
 /**
  * Valor ATUAL (vigente agora) de cada categoria por instrutor, mais o
- * histórico completo de vigências (mais recente primeiro) — é o que
+ * histórico completo de vigências (mais recente primeiro): é o que
  * sustenta a aba "Valores" (edição) e o modal de histórico. Sem filtro de
  * mês, ao contrário de `listarFechamentoHorasInstrutores`: editar é sempre
  * sobre "agora", independente de qual mês está sendo olhado no Resumo.
