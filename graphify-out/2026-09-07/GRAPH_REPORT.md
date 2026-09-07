@@ -487,12 +487,12 @@ Cohesion: 0.06
 Nodes (34): KPI Receita Global (Vendas + Faturamento), Performance por Consultor (PAC) Chart, Dashboard / Visão Geral Page, Diagnóstico SAFE Hub Page, Detecção de Inconsistência MES/ANO vs DATA, Cálculo Receita Global = KPI Vendas + Fat 4 Canais (rationale), Canais de Receita (Lojinha, Safe Academy, Azul Pontos, Lito Academy, Vendas Comercial), Faturamento Page (+26 more)
 
 ### Community 6 - "Escala CCO: Shell e SSO"
-Cohesion: 0.11
-Nodes (26): HTML mal fechado deixou a Escala CCO em branco (sem erro de JS), js/core/auth.js, sessionStorage cco_session, js/core/config.js, Seletores :root[data-theme=dark] da Escala CCO, doLogin(e), doLogout(), Bootstrap DOMContentLoaded (+18 more)
+Cohesion: 0.13
+Nodes (22): HTML mal fechado deixou a Escala CCO em branco (sem erro de JS), js/core/auth.js, js/core/config.js, Seletores :root[data-theme=dark] da Escala CCO, doLogout(), Bootstrap DOMContentLoaded, Auth.getSessao(), Head da Escala CCO (PWA, iOS, viewport, theme-color) (+14 more)
 
 ### Community 7 - "Escala CCO: Ações e Funcionários"
-Cohesion: 0.12
-Nodes (24): Ação getLog, Ação getUsers, Ação login, Ação saveUser, Ação setShift, Ação toggleUserActive, Param actor (autor real gravado no LOG), alternarAtivoFunc(username, reativar) (+16 more)
+Cohesion: 0.13
+Nodes (25): Ação getLog, Ação getUsers, Ação login, Ação saveUser, Ação setConfig, Ação setShift, Param actor (autor real gravado no LOG), Painel admin do valor do turno (#adminPanel) (+17 more)
 
 ### Community 8 - "CLI de Administração"
 Cohesion: 0.22
@@ -507,8 +507,8 @@ Cohesion: 0.13
 Nodes (20): O motivo do build mora nas anotações do check-run, não na API de builds, Backend das Horas INVA sob git, building na API do Pages pode ser um build morto, ?v= por sha256 do arquivo (tools/deploy/bump.mjs), clasp push sozinho mexe só no @HEAD e produção não muda, tools/deploy/conferir.mjs (compara ?v= asset por asset), CONTAS_CLASP é uma lista (trava contra publicar no projeto errado), deploy front passou a saber repetir (commit vazio) (+12 more)
 
 ### Community 11 - "Escala CCO: Dashboard Mensal"
-Cohesion: 0.13
-Nodes (20): Ação getMonth, applyScheduleFixes(monthKey, data), applyScheduleOverrides(data), criarCardUser(uname, isAtivo), View Dashboard (#dashView), dashCache (cache por mês do dashboard), fmtR$(v, short), formatCPF(v) (+12 more)
+Cohesion: 0.10
+Nodes (26): abrirModalExport(), Ação getMonth, #appScreen (shell do app), applyScheduleFixes(monthKey, data), applyScheduleOverrides(data), criarCardUser(uname, isAtivo), View Dashboard (#dashView), dashCache (cache por mês do dashboard) (+18 more)
 
 ### Community 12 - "Controle de Acesso e Bases"
 Cohesion: 0.20
@@ -519,8 +519,8 @@ Cohesion: 0.10
 Nodes (20): dependencies, playwright-core, description, name, private, scripts, bump, bump:seco (+12 more)
 
 ### Community 14 - "Escala CCO: Drawer e Exportação"
-Cohesion: 0.16
-Nodes (19): abrirModalExport(), abrirModalHistorico(), Permissão canViewLog, Drawer lateral da Escala CCO, drawerAction(action), Modal de exportação iFood (#modalExportIfood), View Funcionários (#funcView), Gate defensivo no cliente + validação no servidor (+11 more)
+Cohesion: 0.20
+Nodes (16): abrirModalHistorico(), Permissão canViewLog, Drawer lateral da Escala CCO, drawerAction(action), View Funcionários (#funcView), Gate defensivo no cliente + validação no servidor, Botões data-cco-nav da topbar, style=display:none inline nos botões nav (+8 more)
 
 ### Community 15 - "Calendário e Financeiro CCO/PAV"
 Cohesion: 0.13
@@ -603,8 +603,8 @@ Cohesion: 0.18
 Nodes (10): dependencies, exceptionLogging, executionApi, access, oauthScopes, runtimeVersion, timeZone, webapp (+2 more)
 
 ### Community 39 - "Pagina Cadastro de Aluno (cadastro-alunos.html)"
-Cohesion: 0.13
-Nodes (18): Auditoria de alterações da Escala CCO, Permissão canViewLog (coluna O do usuarios), Ação setConfig, Painel admin do valor do turno (#adminPanel), #appScreen (shell do app), Duplo turno T1+T2 (dia todo), Espera das gravações pendentes antes de ler (await gasWriteChain), Resumo financeiro (#financials) (+10 more)
+Cohesion: 0.22
+Nodes (10): Ação toggleUserActive, alternarAtivoFunc(username, reativar), alternarAtivoUser(uname, novoAtivo), criarCardFunc(u), Duplicação: dois módulos de funcionários coexistindo, filtrarFuncs(f), renderFuncList(), renderUsersList() (+2 more)
 
 ### Community 40 - "Módulo Horas Voadas INVA Mês…"
 Cohesion: 0.22
@@ -639,8 +639,8 @@ Cohesion: 0.22
 Nodes (9): carregarHistorico(), currentUser (identidade da sessão), Diff antes → depois no histórico, Formatadores do histórico (histTurnoLabel, histNomes, histFmtData), Modal de Histórico (auditoria), histEntries (cache das entradas do LOG), histFmtData / histMetaAcao / histTurnoLabel, Sentinel safe-hub-admin (param by) (+1 more)
 
 ### Community 48 - "iniciarApp(u)"
-Cohesion: 0.27
-Nodes (10): iniciarApp(u), isAdmin(), isFinanceiro(), Papéis admin / financeiro / user, renderCalendar(), renderCalendarReadOnly(), SHIFT_LABELS (T1, T2, NOT), shortName(fullName) (+2 more)
+Cohesion: 0.15
+Nodes (18): Auditoria de alterações da Escala CCO, Permissão canViewLog (coluna O do usuarios), Duplo turno T1+T2 (dia todo), iniciarApp(u), isAdmin(), isFinanceiro(), Atualização otimista com rollback do turno, Papéis admin / financeiro / user (+10 more)
 
 ### Community 49 - "Importar Relatório Cavok (XLS/XLSX)"
 Cohesion: 0.20
