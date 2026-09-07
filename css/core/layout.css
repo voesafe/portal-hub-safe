@@ -617,7 +617,7 @@ html, body {
   .cco-hub-main .cco-main,
   .pav-main .pav-app #appScreen > .screen {
     width: 100%;
-    max-width: 1600px;
+    max-width: 1440px;
     margin-inline: auto;
     padding-inline: var(--page-gutter);
   }
