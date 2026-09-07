@@ -6,10 +6,7 @@
 .home-page {
   min-height: calc(100vh - var(--topbar-h));
   padding: clamp(20px, 3vw, 36px);
-  background:
-    radial-gradient(circle at 96% 2%, rgba(91,174,226,.12), transparent 26%),
-    radial-gradient(circle at 2% 98%, rgba(96,192,191,.10), transparent 22%),
-    var(--bg);
+  background: var(--bg);
 }
 
 .home-date {

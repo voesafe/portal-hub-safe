@@ -608,6 +608,31 @@ html, body {
   position: relative;
 }
 
+/* Container horizontal comum, preservando o espaçamento vertical e a impressão. */
+@media screen {
+  .main { --page-gutter: 24px; }
+
+  .main > .page,
+  .main > .access-page,
+  .cco-hub-main .cco-main,
+  .pav-main .pav-app #appScreen > .screen {
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  .main > .page > .safe-minions-content { max-width: none; }
+}
+
+@media screen and (min-width: 1280px) {
+  .main { --page-gutter: 32px; }
+}
+
+@media screen and (max-width: 768px) {
+  .main { --page-gutter: 16px; }
+}
+
 .dashboard-loading-overlay {
   position: absolute;
   inset: 0;
