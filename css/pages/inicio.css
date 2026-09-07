@@ -28,7 +28,6 @@
   border-radius: 20px;
   color: var(--text-on-brand);
   background: linear-gradient(118deg, #1b2650 0%, #26356b 56%, #3d8cc4 128%);
-  box-shadow: 0 14px 36px rgba(29,41,81,.2);
 }
 
 .home-hero::before,
