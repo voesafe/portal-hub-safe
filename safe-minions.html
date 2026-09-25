@@ -407,10 +407,12 @@ function analisarINVA(rows) {
     return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null;
   };
 
-  // Último voo de cheque = linha mais recente com "CHEQUE" na observação
+  // "Para cheque" indica avaliação ou endosso preparatório, não o cheque realizado.
+  // Último voo de cheque = linha mais recente com "CHEQUE" efetivo na observação.
   let cheque = null; // { data, dataObj, observacao }
   rows.forEach(r => {
-    if (!/cheque/i.test(r.observacao || '')) return;
+    const obs = normalizarTextoComparacao(r.observacao);
+    if (!/\bCHEQUE\b/.test(obs) || /\bPARA\s+(?:O\s+)?CHEQUE\b/.test(obs)) return;
     const dt = parseDataBR(r.data);
     if (!dt) return;
     if (!cheque || dt > cheque.dataObj) cheque = { data: r.data, dataObj: dt, observacao: r.observacao };
