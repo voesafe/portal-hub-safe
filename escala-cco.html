@@ -416,6 +416,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .shift-row:last-child{border-bottom:none}
 .shift-ho{background:rgba(96,192,191,.04)}
 .shift-label{font-size:9px;font-weight:700;letter-spacing:.3px;color:var(--muted);white-space:nowrap;width:76px;flex-shrink:0}
+.new-schedule .shift-label{white-space:normal;line-height:1.2}
 .shift-ho .shift-label{color:rgba(96,192,191,.7)}
 .shift-avatars{display:flex;gap:3px;flex:1;flex-wrap:wrap;align-items:center}
 .avatar{width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;flex-shrink:0;border:1.5px solid rgba(255,255,255,.5)}
@@ -855,7 +856,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div id="adminPanel" style="display:none" class="admin-panel">
       <span class="admin-tag">⚙ Admin</span>
       <div class="admin-control">
-        <label>Valor por turno presencial:</label>
+        <label>Valor por turno remunerado:</label>
         <input class="admin-input" type="number" id="shiftValueInput" value="50" min="0" step="0.50">
         <button class="admin-save" onclick="saveShiftValue()">Salvar</button>
       </div>
@@ -893,9 +894,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
 
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#5BAEE2"></div>T1 · 08h–14h (pago)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#60C0BF"></div>T2 · 12h–18h (pago)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#80B8B8"></div>NOT · 18h–20h (sem valor)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5BAEE2"></div><span id="legendT1">T1 · 08h–14h (pago)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#60C0BF"></div><span id="legendT2">T2 · 12h–18h (pago)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#80B8B8"></div><span id="legendThird">NOT · 18h–20h (sem valor)</span></div>
       <div class="legend-item"><div class="legend-dot" style="background:#B6E8C8;border:1px solid #3a9e5f"></div>Dia completo</div>
     </div>
 
@@ -1271,8 +1272,25 @@ const MONTHS = [
   {y:2026,m:10,label:"Novembro 2026"},{y:2026,m:11,label:"Dezembro 2026"},
 ];
 
-const SHIFT_LABELS = {t1:"T1 · 08h–14h",t2:"T2 · 12h–18h",ho:"NOT · 18h–20h"};
+const NEW_SCHEDULE_START = "2026-10-01";
+const SHIFT_LABELS_OLD = {t1:"T1 · 08h–14h",t2:"T2 · 12h–18h",ho:"NOT · 18h–20h"};
+const SHIFT_LABELS_NEW = {t1:"T1 · 07h00–12h00",t2:"T2 · 11h21–16h21",ho:"T3 · 16h00–21h00"};
 const DOW = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+// A coluna `ho` do backend é mantida para preservar as pessoas já escaladas.
+// A partir de outubro ela representa T3; antes disso continua sendo NOT sem remuneração.
+function isNewSchedule(dk){return dk>=NEW_SCHEDULE_START}
+function shiftLabel(shift,dk){return (isNewSchedule(dk)?SHIFT_LABELS_NEW:SHIFT_LABELS_OLD)[shift]}
+function paidShiftCount(day,dk){
+  return (day.t1||[]).length+(day.t2||[]).length+(isNewSchedule(dk)?(day.ho||[]).length:0);
+}
+function updateScheduleLegend(){
+  const {y,m}=MONTHS[currentMonthIdx];
+  const isNew=isNewSchedule(dateKey(y,m,1));
+  const labels=isNew?SHIFT_LABELS_NEW:SHIFT_LABELS_OLD;
+  document.getElementById("legendT1").textContent=`${labels.t1} (pago)`;
+  document.getElementById("legendT2").textContent=`${labels.t2} (pago)`;
+  document.getElementById("legendThird").textContent=`${labels.ho} (${isNew?"pago":"sem valor"})`;
+}
 // Sem ajustes pontuais: o backend (agora com LockService) é a única fonte da verdade.
 // Estes overrides eram um band-aid da época em que o backend perdia gravações e
 // IMPEDIAM remover quem fosse fixado (ex.: ruan.pablo em 29/06 e 28/07 voltava a cada load).
@@ -1283,6 +1301,7 @@ const SCHEDULE_OVERRIDE_DATES = new Set();
 const now=new Date();
 const currentMonthMatch=MONTHS.findIndex(({y,m})=>y===now.getFullYear()&&m===now.getMonth());
 let currentUser=null, currentMonthIdx=currentMonthMatch>=0?currentMonthMatch:0, scheduleData={}, shiftValue=50;
+let loadMonthRequestId=0;
 let isSaving=false, midnightTimer=null, myDaysOnly=false;
 
 // ── Helpers ───────────────────────────────────────────────
@@ -1700,6 +1719,7 @@ function toggleScaleView(){
 function renderCalendarReadOnly(){
   const{y,m}=MONTHS[currentMonthIdx];
   const days=daysInMonth(y,m),grid=document.getElementById("calendarGrid"),today=new Date();
+  grid.classList.toggle("new-schedule",isNewSchedule(dateKey(y,m,1)));
   grid.innerHTML="";
   for(let d=1;d<=days;d++){
     const dow=dayOfWeek(y,m,d),dk=dateKey(y,m,d);
@@ -1717,7 +1737,7 @@ function renderCalendarReadOnly(){
       const nameHTML=arr.map(u=>{const i=USERS[u];return i?`<span style="font-size:9px;font-weight:600;color:var(--text2)">${shortName(i.name)}</span>`:""}).join("");
       const row=document.createElement("div");
       row.className=`shift-row${isHO?" shift-ho":""}`;
-      row.innerHTML=`<span class="shift-label">${SHIFT_LABELS[shift]}</span><div class="shift-avatars">${avatarHTML}${nameHTML||'<span style="font-size:9px;color:var(--muted)">—</span>'}</div>`;
+      row.innerHTML=`<span class="shift-label">${shiftLabel(shift,dk)}</span><div class="shift-avatars">${avatarHTML}${nameHTML||'<span style="font-size:9px;color:var(--muted)">—</span>'}</div>`;
       card.appendChild(row);
     });
     grid.appendChild(card);
@@ -1726,9 +1746,11 @@ function renderCalendarReadOnly(){
 
 // ── Load month ────────────────────────────────────────────
 async function loadMonth(){
+  const requestId=++loadMonthRequestId;
   const{y,m,label}=MONTHS[currentMonthIdx];
   document.getElementById("monthLabel").textContent=label;
   document.getElementById("finMonthLabel").textContent=label;
+  updateScheduleLegend();
   document.getElementById("prevBtn").disabled=currentMonthIdx===0;
   document.getElementById("nextBtn").disabled=currentMonthIdx===MONTHS.length-1;
   if(!isFinanceiro()) document.getElementById("refreshBtn").classList.add("spinning");
@@ -1737,14 +1759,15 @@ async function loadMonth(){
     const mk=`${y}-${String(m+1).padStart(2,"0")}`;
     await gasWriteChain;  // espera as gravações pendentes commitarem antes de ler (evita "remover -> Atualizar -> volta")
     const r=await gasRequest("getMonth",{month:mk});
+    if(requestId!==loadMonthRequestId) return;
     scheduleData=applyScheduleOverrides(applyScheduleFixes(mk,r.data));
-    if(r.shiftValue!==undefined){shiftValue=parseFloat(r.shiftValue)||50;const inp=document.getElementById("shiftValueInput");if(inp)inp.value=shiftValue;document.getElementById("shiftValueDisplay").textContent=`R$ ${shiftValue.toFixed(2).replace(".",",")}`}
+    if(r.shiftValue!==undefined){const rate=Number(r.shiftValue);shiftValue=Number.isFinite(rate)?rate:50;const inp=document.getElementById("shiftValueInput");if(inp)inp.value=shiftValue;document.getElementById("shiftValueDisplay").textContent=`R$ ${shiftValue.toFixed(2).replace(".",",")}`}
     setLoading(100);setSyncState("ok");
     if(!isFinanceiro()) renderCalendar();
     else if(scaleVisible) renderCalendarReadOnly();
     renderFinancials();
-  }catch(e){setLoading(100);setSyncState("error");showToast("Erro ao carregar dados.","error")}
-  finally{if(!isFinanceiro()) document.getElementById("refreshBtn").classList.remove("spinning")}
+  }catch(e){if(requestId===loadMonthRequestId){setLoading(100);setSyncState("error");showToast("Erro ao carregar dados.","error")}}
+  finally{if(requestId===loadMonthRequestId&&!isFinanceiro()) document.getElementById("refreshBtn").classList.remove("spinning")}
 }
 
 function prevMonth(){if(currentMonthIdx>0){currentMonthIdx--;loadMonth()}}
@@ -1752,10 +1775,11 @@ function nextMonth(){if(currentMonthIdx<MONTHS.length-1){currentMonthIdx++;loadM
 
 // ── Toggle shift ──────────────────────────────────────────
 async function toggleShift(dk,shift,targetUser){
+  const monthIdx=currentMonthIdx;
   const prev=[...(scheduleData[dk]?.[shift]||[])]; // estado anterior, para rollback preciso em caso de falha
   const arr=[...prev];
   const idx=arr.indexOf(targetUser);
-  const maxCap=1; // todos os turnos (T1, T2, NOT) = máximo 1 pessoa
+  const maxCap=1; // todos os turnos = máximo 1 pessoa
   if(idx>=0){arr.splice(idx,1)}
   else{if(arr.length>=maxCap){showToast("Turno já tem alguém escalado!","error");return}arr.push(targetUser)}
   if(!scheduleData[dk]) scheduleData[dk]={t1:[],t2:[],ho:[]};
@@ -1764,16 +1788,19 @@ async function toggleShift(dk,shift,targetUser){
   renderCalendar();renderFinancials();
   isSaving=true;setLoading(40);
   try{
-    const{y,m}=MONTHS[currentMonthIdx];
+    const{y,m}=MONTHS[monthIdx];
     await gasWrite("setShift",{month:`${y}-${String(m+1).padStart(2,"0")}`,date:dk,shift,users:arr,by:currentUser?.username,actor:currentUser?.autor||currentUser?.username});
+    delete dashCache[`${y}-${String(m+1).padStart(2,"0")}`];
     setLoading(100);
   }catch(e){
     // Desfaz só este turno (sem recarregar o mês todo) e avisa de forma clara.
     setLoading(100);
-    if(!scheduleData[dk]) scheduleData[dk]={t1:[],t2:[],ho:[]};
-    scheduleData[dk][shift]=prev;
-    saveScheduleOverride(dk,scheduleData[dk]);
-    renderCalendar();renderFinancials();
+    if(currentMonthIdx===monthIdx){
+      if(!scheduleData[dk]) scheduleData[dk]={t1:[],t2:[],ho:[]};
+      scheduleData[dk][shift]=prev;
+      saveScheduleOverride(dk,scheduleData[dk]);
+      renderCalendar();renderFinancials();
+    }
     showToast("Não foi possível salvar. Verifique a conexão e tente de novo.","error");
   }
   finally{isSaving=false}
@@ -1782,16 +1809,24 @@ async function toggleShift(dk,shift,targetUser){
 async function saveShiftValue(){
   const val=parseFloat(document.getElementById("shiftValueInput").value);
   if(isNaN(val)||val<0){showToast("Valor inválido.","error");return}
-  shiftValue=val;
-  document.getElementById("shiftValueDisplay").textContent=`R$ ${val.toFixed(2).replace(".",",")}`;
-  try{await gasWrite("setConfig",{shiftValue:val,by:currentUser?.username,actor:currentUser?.autor||currentUser?.username});showToast("Valor atualizado!","success");renderFinancials()}
-  catch(e){showToast("Erro ao salvar valor.","error")}
+  try{
+    await gasWrite("setConfig",{shiftValue:val,by:currentUser?.username,actor:currentUser?.autor||currentUser?.username});
+    shiftValue=val;
+    dashCache={};
+    document.getElementById("shiftValueDisplay").textContent=`R$ ${val.toFixed(2).replace(".",",")}`;
+    showToast("Valor atualizado!","success");
+    renderFinancials();
+  }catch(e){
+    document.getElementById("shiftValueInput").value=shiftValue;
+    showToast("Erro ao salvar valor.","error");
+  }
 }
 
 // ── Render calendar ───────────────────────────────────────
 function renderCalendar(){
   const{y,m}=MONTHS[currentMonthIdx];
   const days=daysInMonth(y,m),grid=document.getElementById("calendarGrid"),today=new Date();
+  grid.classList.toggle("new-schedule",isNewSchedule(dateKey(y,m,1)));
   grid.innerHTML="";
 
   for(let d=1;d<=days;d++){
@@ -1807,7 +1842,7 @@ function renderCalendar(){
       if(!iAmThere) continue;
     }
 
-    // Dia completo = T1, T2 e NOT preenchidos
+    // Dia completo = os três turnos preenchidos
     const isComplete=(dayData.t1||[]).length>0&&(dayData.t2||[]).length>0&&(dayData.ho||[]).length>0;
 
     const card=document.createElement("div");
@@ -1837,7 +1872,7 @@ function renderCalendar(){
         const canAdd=arr.length===0&&notIn.length>0;
         const addHTML=canAdd?`<select class="add-select" onchange="if(this.value){toggleShift('${dk}','${shift}',this.value);this.value=''}"><option value="">+ Adicionar</option>${notIn.map(u=>`<option value="${u}">${shortName(USERS[u].name)}</option>`).join("")}</select>`:"";
 
-        row.innerHTML=`<span class="shift-label">${SHIFT_LABELS[shift]}</span><div style="flex:1;display:flex;flex-wrap:nowrap;gap:4px;align-items:center;overflow:hidden"><div class="admin-turn-pills">${pillsHTML||`<span style="font-size:9px;color:var(--muted)">Vazio</span>`}</div>${addHTML}</div>`;
+        row.innerHTML=`<span class="shift-label">${shiftLabel(shift,dk)}</span><div style="flex:1;display:flex;flex-wrap:nowrap;gap:4px;align-items:center;overflow:hidden"><div class="admin-turn-pills">${pillsHTML||`<span style="font-size:9px;color:var(--muted)">Vazio</span>`}</div>${addHTML}</div>`;
         card.appendChild(row);
       });
     } else {
@@ -1861,18 +1896,18 @@ function renderCalendar(){
           card.appendChild(actionRow);
         }
 
-        // HO separado
+        // Terceiro turno separado
         const hoArr=dayData.ho||[];
         const hoRow=document.createElement("div");
         hoRow.className="shift-row shift-ho";
         const iAmInHO=hoArr.includes(currentUser.username);
         const hoFull=hoArr.length>=1&&!iAmInHO;
         const hoAvatars=hoArr.map(u=>{const i=USERS[u];return i?`<div class="avatar" style="background:${i.color}" title="${shortName(i.name)}">${i.initials}</div>`:""}).join("");
-        hoRow.innerHTML=`<span class="shift-label">${SHIFT_LABELS.ho}</span><div class="shift-avatars">${hoAvatars}</div><button class="shift-btn ${iAmInHO?"active":""}" ${hoFull?"disabled":""} onclick="toggleShift('${dk}','ho','${currentUser.username}')">${iAmInHO?"✓":"+"}</button>`;
+        hoRow.innerHTML=`<span class="shift-label">${shiftLabel("ho",dk)}</span><div class="shift-avatars">${hoAvatars}</div><button class="shift-btn ${iAmInHO?"active":""}" ${hoFull?"disabled":""} onclick="toggleShift('${dk}','ho','${currentUser.username}')">${iAmInHO?"✓":"+"}</button>`;
         card.appendChild(hoRow);
 
       } else {
-        // Normal: T1, T2, HO separados
+        // Normal: três turnos separados
         ["t1","t2","ho"].forEach(shift=>{
           const arr=dayData[shift]||[];
           const isHO=shift==="ho";
@@ -1880,7 +1915,7 @@ function renderCalendar(){
           const avatarHTML=arr.map(u=>{const i=USERS[u];return i?`<div class="avatar" style="background:${i.color}" title="${shortName(i.name)}">${i.initials}</div>`:""}).join("");
           const row=document.createElement("div");
           row.className=`shift-row${isHO?" shift-ho":""}`;
-          row.innerHTML=`<span class="shift-label">${SHIFT_LABELS[shift]}</span><div class="shift-avatars">${avatarHTML}</div><button class="shift-btn ${iAmIn?"active":""}" ${arr.length>=1&&!iAmIn?"disabled":""} onclick="toggleShift('${dk}','${shift}','${currentUser.username}')">${iAmIn?"✓":"+"}</button>`;
+          row.innerHTML=`<span class="shift-label">${shiftLabel(shift,dk)}</span><div class="shift-avatars">${avatarHTML}</div><button class="shift-btn ${iAmIn?"active":""}" ${arr.length>=1&&!iAmIn?"disabled":""} onclick="toggleShift('${dk}','${shift}','${currentUser.username}')">${iAmIn?"✓":"+"}</button>`;
           card.appendChild(row);
         });
       }
@@ -1897,13 +1932,17 @@ async function removeBothShifts(dk){
 }
 
 // ── Computa totais/usuários de um mês específico (reutilizado pela exportação) ──
-function computeFinForMonth(idx){
+function computeFinForMonth(idx,monthData=scheduleData){
   const{y,m}=MONTHS[idx],days=daysInMonth(y,m);
   const totals={};
-  SCHEDULE_USERS.forEach(u=>{totals[u]={t1:0,t2:0,ho:0}});
+  SCHEDULE_USERS.forEach(u=>{totals[u]={t1:0,t2:0,ho:0,paid:0}});
   for(let d=1;d<=days;d++){
-    const dk=dateKey(y,m,d),dd=scheduleData[dk]||{};
-    ["t1","t2","ho"].forEach(s=>{(dd[s]||[]).forEach(u=>{if(totals[u])totals[u][s]++})});
+    const dk=dateKey(y,m,d),dd=monthData[dk]||{};
+    ["t1","t2","ho"].forEach(s=>{(dd[s]||[]).forEach(u=>{
+      if(!totals[u]) return;
+      totals[u][s]++;
+      if(s!=="ho"||isNewSchedule(dk)) totals[u].paid++;
+    })});
   }
   // Admin/Financeiro: exclui financeiroExclude (ex.: Pedro); user comum: só o próprio
   let usersToShow;
@@ -1918,6 +1957,7 @@ function computeFinForMonth(idx){
 // ── Render financials ─────────────────────────────────────
 function renderFinancials(){
   const{y,m}=MONTHS[currentMonthIdx],days=daysInMonth(y,m);
+  const thirdLabel=isNewSchedule(dateKey(y,m,1))?"T3":"NOT";
   const fin=document.getElementById("financials");
   fin.innerHTML="";
   // Remove botão iFood anterior se existir
@@ -1934,8 +1974,8 @@ function renderFinancials(){
     fin.classList.add("fin-list-view");
     usersToShow.forEach(uname=>{
       const u=USERS[uname];if(!u)return;
-      const t=totals[uname]||{t1:0,t2:0,ho:0};
-      const paid=t.t1+t.t2,total=paid*shiftValue;
+      const t=totals[uname]||{t1:0,t2:0,ho:0,paid:0};
+      const paid=t.paid,total=paid*shiftValue;
       const row=document.createElement("div");
       row.className="fin-list-row";
       row.innerHTML=`
@@ -1943,7 +1983,7 @@ function renderFinancials(){
           <div class="fin-list-avatar" style="background:${u.color}">${u.initials}</div>
           <div class="fin-list-identity">
             <div class="fin-list-fullname">${u.fullName||u.name}</div>
-            <div class="fin-list-shifts"><span>${t.t1}× T1</span><span>${t.t2}× T2</span><span class="ho-tag">${t.ho}× NOT</span></div>
+            <div class="fin-list-shifts"><span>${t.t1}× T1</span><span>${t.t2}× T2</span><span class="ho-tag">${t.ho}× ${thirdLabel}</span></div>
           </div>
           <div class="fin-list-total">
             <div class="fin-list-amount">R$ ${total.toFixed(2).replace(".",",")}</div>
@@ -1983,15 +2023,15 @@ function renderFinancials(){
   fin.classList.remove("fin-list-view");
   usersToShow.forEach(uname=>{
     const u=USERS[uname];if(!u)return;
-    const t=totals[uname]||{t1:0,t2:0,ho:0};
-    const paid=t.t1+t.t2,total=paid*shiftValue;
+      const t=totals[uname]||{t1:0,t2:0,ho:0,paid:0};
+      const paid=t.paid,total=paid*shiftValue;
     const card=document.createElement("div");
     card.className="fin-card";
     card.innerHTML=`
       <div class="fin-avatar" style="background:${u.color}">${u.initials}</div>
       <div class="fin-info">
         <div class="fin-name">${u.name}</div>
-        <div class="fin-shifts"><span>${t.t1}× T1</span><span>${t.t2}× T2</span><span class="ho-tag">${t.ho}× NOT</span></div>
+        <div class="fin-shifts"><span>${t.t1}× T1</span><span>${t.t2}× T2</span><span class="ho-tag">${t.ho}× ${thirdLabel}</span></div>
       </div>
       <div class="fin-total">
         <div class="fin-amount">R$ ${total.toFixed(2).replace(".",",")}</div>
@@ -2484,7 +2524,10 @@ function histMetaAcao(acao){
   };
   return M[acao] || { txt: acao || "Alteração", ic:"•", cls:"" };
 }
-function histTurnoLabel(t){ return ({t1:"T1",t2:"T2",ho:"NOT"})[t] || (t||"").toUpperCase(); }
+function histTurnoLabel(t,dk){
+  if(t==="ho") return isNewSchedule(dk)?"T3":"NOT";
+  return ({t1:"T1",t2:"T2"})[t] || (t||"").toUpperCase();
+}
 // Resolve "user1,user2" para nomes de exibição (via USERS); vazio → "—"
 function histNomes(csv){
   const s = String(csv||"").trim();
@@ -2506,7 +2549,7 @@ function renderHistorico(){
   const filtradas = histEntries.filter(e=>{
     if(!q) return true;
     const autorNome = (USERS[e.autor] && USERS[e.autor].name) || e.autor || "";
-    const blob = [autorNome, e.autor, e.acao, histMetaAcao(e.acao).txt, e.alvo, histTurnoLabel(e.turno),
+    const blob = [autorNome, e.autor, e.acao, histMetaAcao(e.acao).txt, e.alvo, histTurnoLabel(e.turno,e.alvo),
                   histNomes(e.antes), histNomes(e.depois), e.detalhe].join(" ").toLowerCase();
     return blob.includes(q);
   });
@@ -2524,7 +2567,7 @@ function renderHistorico(){
     let alvoHtml = "";
     if(ehTurno(e)){
       const dataBR = (()=>{ const p=String(e.alvo).split("-"); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : e.alvo; })();
-      alvoHtml = `<span class="hist-alvo">${dataBR} · ${histTurnoLabel(e.turno)}</span>`;
+      alvoHtml = `<span class="hist-alvo">${dataBR} · ${histTurnoLabel(e.turno,e.alvo)}</span>`;
     } else if(e.acao==="valor_turno"){
       alvoHtml = `<span class="hist-alvo">valor do turno</span>`;
     } else {
@@ -2739,9 +2782,9 @@ async function renderDash(){
     const mk = `${mo.y}-${String(mo.m+1).padStart(2,"0")}`;
     const data = allData[mk] || {};
     let total=0, dias=0;
-    Object.values(data).forEach(day=>{
-      const paid = (day.t1||[]).length + (day.t2||[]).length;
-      total += paid * (allData[mk+"_sv"] || shiftValue);
+    Object.entries(data).forEach(([dk,day])=>{
+      const paid = paidShiftCount(day,dk);
+      total += paid * (allData[mk+"_sv"] ?? shiftValue);
       dias  += paid;
     });
     monthTotals[mk] = { total, dias, label: mo.label };
@@ -2749,15 +2792,18 @@ async function renderDash(){
 
   // ── Calcular totais por funcionário no mês de referência ─
   const refData = allData[refKey] || {};
-  const sv      = allData[refKey+"_sv"] || shiftValue;
+  const sv      = allData[refKey+"_sv"] ?? shiftValue;
   const funcTotals = {}; // { username: { t1,t2,ho,dias,total } }
   SCHEDULE_USERS.concat(Object.keys(USERS).filter(k=>!SCHEDULE_USERS.includes(k))).forEach(u=>{
     funcTotals[u] = {t1:0,t2:0,ho:0,dias:0,total:0};
   });
-  Object.values(refData).forEach(day=>{
+  Object.entries(refData).forEach(([dk,day])=>{
     (day.t1||[]).forEach(u=>{ if(funcTotals[u]){funcTotals[u].t1++;funcTotals[u].dias++;funcTotals[u].total+=sv;} });
     (day.t2||[]).forEach(u=>{ if(funcTotals[u]){funcTotals[u].t2++;funcTotals[u].dias++;funcTotals[u].total+=sv;} });
-    (day.ho||[]).forEach(u=>{ if(funcTotals[u]){funcTotals[u].ho++;} });
+    (day.ho||[]).forEach(u=>{ if(funcTotals[u]){
+      funcTotals[u].ho++;
+      if(isNewSchedule(dk)){funcTotals[u].dias++;funcTotals[u].total+=sv;}
+    } });
   });
 
   // ── Totais acumulados no ano ─────────────────────────────
@@ -2772,7 +2818,7 @@ async function renderDash(){
     <div class="dash-kpi dash-kpi-accent">
       <div class="dash-kpi-label">Total Pago no Mês</div>
       <div class="dash-kpi-value">${fmtR$(totalMes)}</div>
-      <div class="dash-kpi-sub">${diasMes} turnos presenciais</div>
+      <div class="dash-kpi-sub">${diasMes} turnos remunerados</div>
     </div>
     <div class="dash-kpi dash-kpi-accent2">
       <div class="dash-kpi-label">Total Acumulado no Ano</div>
@@ -2838,7 +2884,7 @@ async function renderDash(){
       <div class="dias-avatar" style="background:${u.color||'#5BAEE2'}">${u.initials||"??"}</div>
       <div class="dias-info">
         <div class="dias-name">${shortName(u.name||uname)}</div>
-        <div class="dias-count">T1:${f.t1} T2:${f.t2} NOT:${f.ho}</div>
+        <div class="dias-count">T1:${f.t1} T2:${f.t2} ${isNewSchedule(dateKey(refMonth.y,refMonth.m,1))?"T3":"NOT"}:${f.ho}</div>
       </div>
       <div class="dias-val">${f.dias}d</div>
     </div>`;
@@ -2857,9 +2903,9 @@ async function loadAllMonths(){
     }
     try {
       const r = await gasRequest("getMonth",{month:mk});
-      if(r.data){ dashCache[mk]=applyScheduleOverrides(applyScheduleFixes(mk,r.data)); dashCache[mk+"_sv"]=r.shiftValue||shiftValue; }
+      if(r.data){ dashCache[mk]=applyScheduleOverrides(applyScheduleFixes(mk,r.data)); dashCache[mk+"_sv"]=r.shiftValue??shiftValue; }
       result[mk]       = dashCache[mk]    || {};
-      result[mk+"_sv"] = dashCache[mk+"_sv"] || shiftValue;
+      result[mk+"_sv"] = dashCache[mk+"_sv"] ?? shiftValue;
     } catch(e){ result[mk]={}; result[mk+"_sv"]=shiftValue; }
   }));
   return result;
@@ -2873,6 +2919,8 @@ function fmtR$(v, short=false){
 // ─── EXPORTAR IFOOD ───────────────────────────────────────────
 // ── Modal de exportação: seleção de mês + confirmação ──
 let _exportModalIdx = null; // índice do mês escolhido no modal
+let _exportSnapshot = null;
+let _exportRequestId = 0;
 
 function abrirModalExport(){
   const sel=document.getElementById("exportMesSelect");
@@ -2885,26 +2933,43 @@ function abrirModalExport(){
 
 function fmtMoedaCco(v){return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
 
-function atualizarPreviewExport(){
+async function atualizarPreviewExport(){
   const idx=parseInt(document.getElementById("exportMesSelect").value,10);
+  const requestId=++_exportRequestId;
   _exportModalIdx=idx;
+  _exportSnapshot=null;
   const label=MONTHS[idx].label;
-  const{usersToShow,totals}=computeFinForMonth(idx);
-  const totalVal=usersToShow.reduce((s,u)=>{const t=totals[u]||{t1:0,t2:0};return s+(t.t1+t.t2)*shiftValue;},0);
   document.getElementById("exportPreviewMes").textContent=label;
-  document.getElementById("exportPreviewPavs").textContent=usersToShow.length;
-  document.getElementById("exportPreviewTotal").textContent=fmtMoedaCco(totalVal);
-  document.getElementById("exportContinuar").disabled=usersToShow.length===0;
+  document.getElementById("exportPreviewPavs").textContent="—";
+  document.getElementById("exportPreviewTotal").textContent="Carregando...";
+  document.getElementById("exportContinuar").disabled=true;
+  try{
+    const mo=MONTHS[idx];
+    const mk=`${mo.y}-${String(mo.m+1).padStart(2,"0")}`;
+    await gasWriteChain;
+    const res=await gasRequest("getMonth",{month:mk});
+    if(requestId!==_exportRequestId) return;
+    const rate=Number(res.shiftValue);
+    const valorTurno=Number.isFinite(rate) ? rate : shiftValue;
+    const{usersToShow,totals}=computeFinForMonth(idx,res.data||{});
+    const totalVal=usersToShow.reduce((s,u)=>s+(totals[u]?.paid||0)*valorTurno,0);
+    _exportSnapshot={idx,usersToShow,totals,valorTurno,totalVal};
+    document.getElementById("exportPreviewPavs").textContent=usersToShow.length;
+    document.getElementById("exportPreviewTotal").textContent=fmtMoedaCco(totalVal);
+    document.getElementById("exportContinuar").disabled=usersToShow.length===0;
+  }catch(e){
+    if(requestId!==_exportRequestId) return;
+    document.getElementById("exportPreviewTotal").textContent="Erro ao carregar";
+    showToast("Não foi possível carregar o mês para exportação.","error");
+  }
 }
 
 function exportIrParaConfirmacao(){
-  const idx=_exportModalIdx;
-  const{usersToShow,totals}=computeFinForMonth(idx);
-  if(!usersToShow.length){showToast("Nenhum dado para exportar","error");return;}
-  const totalVal=usersToShow.reduce((s,u)=>{const t=totals[u]||{t1:0,t2:0};return s+(t.t1+t.t2)*shiftValue;},0);
+  const snapshot=_exportSnapshot;
+  if(!snapshot||snapshot.idx!==_exportModalIdx||!snapshot.usersToShow.length){showToast("Nenhum dado para exportar","error");return;}
   document.getElementById("exportConfirmCallout").innerHTML=
-    `Você está prestes a exportar o mês de <strong style="text-transform:capitalize">${MONTHS[idx].label}</strong>, `+
-    `com <strong>${usersToShow.length} colaborador(es)</strong> e valor total de <strong>${fmtMoedaCco(totalVal)}</strong>.`+
+    `Você está prestes a exportar o mês de <strong style="text-transform:capitalize">${MONTHS[snapshot.idx].label}</strong>, `+
+    `com <strong>${snapshot.usersToShow.length} colaborador(es)</strong> e valor total de <strong>${fmtMoedaCco(snapshot.totalVal)}</strong>.`+
     `<br><br>O mês está correto?`;
   document.getElementById("exportStep1").style.display="none";
   document.getElementById("exportStep2").style.display="block";
@@ -2915,21 +2980,26 @@ function exportVoltarEtapa1(){
   document.getElementById("exportStep1").style.display="block";
 }
 
-function fecharModalExport(){document.getElementById("modalExportIfood").classList.remove("open")}
-
-function exportConfirmarExportacao(){
-  const idx=_exportModalIdx;
-  const{usersToShow,totals}=computeFinForMonth(idx);
-  fecharModalExport();
-  gerarXlsxIfood(usersToShow,totals,idx);
+function fecharModalExport(){
+  ++_exportRequestId;
+  document.getElementById("modalExportIfood").classList.remove("open");
 }
 
-function gerarXlsxIfood(usersToShow, totals, monthIdx) {
+function exportConfirmarExportacao(){
+  const snapshot=_exportSnapshot;
+  if(!snapshot||snapshot.idx!==_exportModalIdx) return;
+  fecharModalExport();
+  gerarXlsxIfood(snapshot.usersToShow,snapshot.totals,snapshot.idx,snapshot.valorTurno);
+}
+
+function gerarXlsxIfood(usersToShow, totals, monthIdx, valorTurno=shiftValue) {
   if(!usersToShow||usersToShow.length===0){showToast("Nenhum dado para exportar","error");return;}
   if(monthIdx===undefined) monthIdx=currentMonthIdx;
 
   function loadAndExport(){
-    const CNPJ_FIXO = "29952771000160";
+    // CNPJ vai como NUMERO, nao texto: o iFood recusa a importacao quando a coluna
+    // chega com formatacao Geral (texto). O formato '0' evita notacao cientifica.
+    const CNPJ_FIXO = 29952771000160;
     const headers = [
       "CNPJ\n(obrigatório)",
       "Nome\n(obrigatório)",
@@ -2941,9 +3011,9 @@ function gerarXlsxIfood(usersToShow, totals, monthIdx) {
 
     const dataRows = usersToShow.map(uname => {
       const u = USERS[uname]; if(!u) return null;
-      const t = totals[uname]||{t1:0,t2:0,ho:0};
-      const paid = t.t1 + t.t2;
-      const total = paid * shiftValue;
+      const t = totals[uname]||{t1:0,t2:0,ho:0,paid:0};
+      const paid = t.paid;
+      const total = paid * valorTurno;
       return [
         CNPJ_FIXO,
         u.fullName || u.name || "",
@@ -2962,6 +3032,12 @@ function gerarXlsxIfood(usersToShow, totals, monthIdx) {
     headers.forEach((_,i)=>{
       const cell=ws[XLSX.utils.encode_cell({r:0,c:i})];
       if(cell) cell.s={alignment:{wrapText:true,vertical:"center"}};
+    });
+
+    // Coluna CNPJ: numero com formato '0' (sem notacao cientifica)
+    dataRows.forEach((_,i)=>{
+      const cell=ws[XLSX.utils.encode_cell({r:i+1,c:0})];
+      if(cell){ cell.t="n"; cell.z="0"; }
     });
     XLSX.utils.book_append_sheet(wb, ws, "Planilha Modelo");
 
