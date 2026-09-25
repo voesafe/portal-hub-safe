@@ -511,9 +511,8 @@ function verificarNav150(rows) {
 function verificarNav300(rows) {
   const trechosMissao = rows.filter(r => {
     const obs = normalizarTextoComparacao(r.observacao);
-    // O SACI exporta a missão ora como "NAV 300NM", ora como "NAVEGACAO 300 NM".
-    // Aceita o radical "NAV" seguido (com letras/ponto/espaco opcionais) de "300 NM".
-    return /NAV[A-Z]*\.?\s*300\s*NM/.test(obs);
+    // O SACI também registra a missão como "NAVEGAÇÃO DE 300NM".
+    return /\bNAV[A-Z]*\.?\s*(?:DE\s*)?300\s*NM\b/.test(obs);
   });
 
   if (!trechosMissao.length) {
@@ -538,7 +537,7 @@ function verificarNav300(rows) {
       todosIcaos.push(v.destino);
       extrairICAOs(v.observacao).forEach(i => todosIcaos.push(i));
     });
-    const primeiraEtapa = voos.find(v => /ETAPA\s*1/.test(normalizarTextoComparacao(v.observacao)));
+    const primeiraEtapa = voos.find(v => /\b(?:ETAPA|TRECHO)\s*0*1\b/.test(normalizarTextoComparacao(v.observacao)));
     const partida = primeiraEtapa?.origem || voos[0].origem;
     const aeroAlem = [...new Set(todosIcaos.filter(i => i && i !== partida && i.length === 4))];
     const esteOk = totalNm >= 300 && aeroAlem.length >= 2;
