@@ -30,8 +30,15 @@
 // reescrever historico).
 //
 // Instrutor novo, ou sem valor gravado ainda, cai nos padroes definidos
-// pela operacao: R$70 VFR, R$100 IFR, R$60 Simulador AATD, R$45
+// pela operacao: R$70 VFR, R$100 IFR, R$60 Simulador AATD e R$60
 // Simulador PCATD.
+//
+// ⚠️ O PCATD paga o MESMO que o AATD desde 2026-10-07. A regra de 03/09
+// pagava R$45 no PCATD, e os instrutores mostraram que estava errado: o
+// valor e R$60 nos dois simuladores. A coluna PCATD continua separada so
+// para conferencia. Como o padrao vale para qualquer mes sem valor gravado,
+// a troca corrige tambem os meses ja fechados (agosto e setembro), que e o
+// que permite reenviar o fechamento a quem reclamou.
 //
 // ⚠️ A CHAVE 'SIMULADOR' E O AATD, e nao deve ser renomeada para
 // 'SIMULADOR_AATD' por mais que o rotulo da tela diga AATD. Ela e a chave
@@ -46,7 +53,7 @@ var FHI_SHEET_VALORES = 'FECHAMENTO_HORAS_INSTRUTORES_VALORES';
 var FHI_VALORES_HEADERS = ['ID', 'INSTRUTOR', 'CATEGORIA', 'VALOR', 'VIGENTE_DESDE', 'REGISTRADO_POR'];
 
 var FHI_CATEGORIAS = ['VFR', 'IFR', 'SIMULADOR', 'SIMULADOR_PCATD'];
-var FHI_VALOR_PADRAO = { VFR: 70, IFR: 100, SIMULADOR: 60, SIMULADOR_PCATD: 45 };
+var FHI_VALOR_PADRAO = { VFR: 70, IFR: 100, SIMULADOR: 60, SIMULADOR_PCATD: 60 };
 
 // Mesma implantacao de producao que o frontend das Horas INVA ja usa
 // (CONFIG.HORAS_VOADAS_INVA_API_URL em js/core/config.js). Nao e segredo,
