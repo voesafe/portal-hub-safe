@@ -1416,6 +1416,15 @@ Pedido do financeiro: **AATD paga R$60 e PCATD paga R$45**, exceto os **LAB IFR*
 - Em setembro, o único Eventual afetado foi o **Eduardo Gevinski** (2h de "Treinamento Safe" no PC-CPQ em 03/09, de R$90 para R$120). Os LAB IFR já pagavam R$60 pela exceção.
 - ⚠️ **Instrutor com valor de PCATD GRAVADO no Histórico não é afetado pela troca do padrão**: o valor gravado vence. Se alguém tiver 45 gravado, precisa corrigir na planilha com vigência no mês certo, porque a tela só grava vigência a partir de hoje.
 - **Publicado em produção no @84** (só backend do Hub, o frontend não muda). Rollback: `clasp redeploy AKfycbxpOGXgEJ5… -V 83`.
+
+#### ⚠️ A API do CAVOK NÃO traz o Tipo da etapa (VFR / IFR Real), medido em 2026-10-07
+
+Regra decidida pelo Victor: **a missão continua decidindo a categoria, mas o Tipo da etapa precisa bater**. Algumas missões (ex.: "Treinamento Safe > Aperfeiçoamento Contínuo") podem ser VFR ou IFR, e só o Tipo da etapa desempata. Só que a integração não enxerga esse Tipo:
+- `api/voos/?data=` devolve 9 campos por voo (Missao, Instrutor, Aeronave, Aluno, Tempo total de voo, Abastecimento, Data, Id e **`Tipo de voo financeiro`**). ⚠️ **Esse último vem "VFR" em TODOS os voos**, inclusive 3B em avião, cheque ANAC e simulador: está fixo e não serve. O voo vem inteiro, sem as etapas.
+- Nenhuma outra rota serve à integração: `api/`, `api/etapas/`, `api/schema/`, `api/docs/` dão 404, e `api/voos/<id>/` e `api/voos/etapas/` redirecionam para o login do navegador. Parâmetros como `?id=` e `&etapas=1` são ignorados.
+- Medido por uma sonda temporária só leitura no INVA, publicada no @26/@27 e retirada no @28.
+- **Solução de verdade é pedir ao CAVOK** que o `Tipo de voo financeiro` reflita as etapas, ou que a API mande o tempo por etapa com o Tipo.
+- **Enquanto isso, existe `INVA_CATEGORIA_POR_ID_VOO`** no `Código.js` do INVA: correção pontual de categoria por **Id do voo**, que vence a regra de fase e de equipamento. Hoje tem só o voo **19710** (Stephan, 07/09/2026, 5,9h, IFR Real lançado em "Treinamento Safe"), que passou de VFR para IFR (+R$177). Publicado no INVA **@29**; rollback `clasp redeploy AKfycbyThE1… -V 28`. **Não use para regra geral**: é lista de exceção, um voo por linha, com o motivo comentado.
 - A exceção dos LAB IFR no INVA (`INVA_FASE_MOCKUP_SIM_IFR`) continua no código e hoje não muda valor nenhum: só decide em qual coluna a sessão aparece. O comentário de lá ainda fala em R$45; é texto, não regra.
 
 - ⚠️⚠️ **QUEM DECIDE SE É SIMULADOR É O EQUIPAMENTO (campo Aeronave), NÃO o texto da Fase.** A primeira versão classificava por uma lista fechada de nomes de fase, e medido contra junho, julho e agosto de 2026 isso deixava **240,7 HORAS de simulador sendo pagas como VFR** (R$70). O CAVOK usa mais de dez textos de fase para simulador (`Simulador IFR`, `Treinamento em Simulador`, `Fase 1 - Mockup / Simulador`, `Fase 2C - Navegação`...) e **nenhuma lista acompanha isso**. A matrícula é factual: `PC-SJK`/`PC-CPQ` são o PCATD e `SM-SJK`/`SM-CPQ` são o AATD, o que bateu 100% nos três meses conferidos.
