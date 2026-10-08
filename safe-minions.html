@@ -400,7 +400,7 @@ function analisarPC(rows) {
 
 // ─── ANÁLISE INVA ─────────────────────────────────────────────
 // Conta o duplo comando (instrução) somente APÓS o último voo de
-// cheque, identificado pela palavra "CHEQUE" na observação.
+// cheque, identificado por "CHEQUE", "RECHEQUE" ou "EXAMINADOR" na observação.
 function analisarINVA(rows) {
   const parseDataBR = s => {
     const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(String(s || '').trim());
@@ -412,7 +412,8 @@ function analisarINVA(rows) {
   let cheque = null; // { data, dataObj, observacao }
   rows.forEach(r => {
     const obs = normalizarTextoComparacao(r.observacao);
-    if (!/\bCHEQUE\b/.test(obs) || /\bPARA\s+(?:O\s+)?CHEQUE\b/.test(obs)) return;
+    // Cheque efetivo: "CHEQUE", "RECHEQUE" ou voo com examinador ("VOO CQ ... EXAMINADOR").
+    if (!/\b(?:RE)?CHEQUE\b|\bEXAMINADOR\b/.test(obs) || /\bPARA\s+(?:O\s+)?CHEQUE\b/.test(obs)) return;
     const dt = parseDataBR(r.data);
     if (!dt) return;
     if (!cheque || dt > cheque.dataObj) cheque = { data: r.data, dataObj: dt, observacao: r.observacao };
@@ -707,7 +708,7 @@ function renderizarResultado(analise, ativos, todos) {
       chequeInfo = `
         <div class="inva-cheque-info inva-cheque-alerta">
           <div class="ici-titulo">⚠️ Nenhum voo de cheque encontrado no extrato</div>
-          <div class="ici-nota">Não foi possível determinar o corte. Verifique se a observação do cheque contém a palavra "CHEQUE".</div>
+          <div class="ici-nota">Não foi possível determinar o corte. Verifique se a observação do cheque contém "CHEQUE", "RECHEQUE" ou "EXAMINADOR".</div>
         </div>`;
     }
   }
