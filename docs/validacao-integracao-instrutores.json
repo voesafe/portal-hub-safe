@@ -1,0 +1,30 @@
+{
+  "data": "2026-10-11",
+  "sucesso": true,
+  "checks": [
+    "API recusa acesso sem credencial",
+    "Hash da credencial configurado",
+    "Consulta autenticada funciona",
+    "IDs e versoes presentes nos 40 instrutores existentes",
+    "Dados existentes preservados: voo",
+    "Dados existentes preservados: solo",
+    "25 instrutores de voo e 15 de solo",
+    "Parceiro nao pode alterar liberacao operacional",
+    "Parceiro nao pode excluir instrutores",
+    "Credencial nao contorna rotas internas do Hub",
+    "Hub exige sessao real para autorizar alteracoes",
+    "Cadastro de teste: voo",
+    "Reenvio sem duplicacao: voo",
+    "Edicao de nome/base preserva ID: voo",
+    "Versao antiga nao sobrescreve alteracao: voo",
+    "Cadastro de teste: solo",
+    "Reenvio sem duplicacao: solo",
+    "Edicao de nome/base preserva ID: solo",
+    "Versao antiga nao sobrescreve alteracao: solo",
+    "Registros de teste removidos pela manutencao",
+    "Nao restaram registros de teste",
+    "Cadastros reais intactos apos verificacao"
+  ],
+  "voo": 25,
+  "solo": 15
+}

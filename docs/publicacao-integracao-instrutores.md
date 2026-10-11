@@ -1,5 +1,20 @@
 # Ativacao da API de Instrutores
 
+## Publicacao concluida em 11/10/2026
+
+- Hub backend: versao 85, anterior 84.
+- INVA backend: versao 31, anterior 30.
+- Frontend: publicado no GitHub Pages, JavaScript conferido contra o arquivo local.
+- IDs estaveis inicializados nos 25 instrutores de voo e 15 de solo.
+- Credencial exclusiva ativa, com somente o hash no servidor.
+- 11 cenarios locais e 22 verificacoes em producao aprovados.
+- Registros de teste removidos. Os dados dos 40 instrutores existentes foram
+  comparados antes/depois e permaneceram intactos.
+- Credencial entregue em arquivo privado, separado do pacote tecnico.
+
+A integracao do parceiro na VPS pode consumir a API existente. Os passos abaixo
+sao o registro operacional e a referencia para futuras publicacoes.
+
 Esta entrega muda dois repositorios: `portal-hub-safe` e
 `../horas-voadas-inva-main`. O novo arquivo `backend/IntegracaoInstrutores.js`
 precisa acompanhar `backend/Codigo.js` (nome real com acento). Publicar apenas

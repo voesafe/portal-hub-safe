@@ -1,7 +1,9 @@
 # Integracao da pagina Instrutores, API v1
 
-Estado: implementada e testada localmente. A ativacao em producao depende dos
-passos de [publicacao](publicacao-integracao-instrutores.md).
+Estado: publicada e validada em producao em 11/10/2026. Backend do Hub na
+versao 85 e backend INVA na versao 31. Foram aprovados 11 cenarios locais e
+22 verificacoes de producao. Consulte o [registro de publicacao](publicacao-integracao-instrutores.md).
+A credencial e entregue separadamente, por arquivo privado.
 
 Esta API permite incorporar os dados da pagina Instrutores ao projeto do
 parceiro, cujo backend fica na VPS. O parceiro constroi a propria interface.

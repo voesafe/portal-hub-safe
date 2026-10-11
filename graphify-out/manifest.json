@@ -270,8 +270,8 @@
     "semantic_hash": "79d800d2eb3ad1c2e84fd7d8337170a1"
   },
   "README.md": {
-    "mtime": 1791732578.0553799,
-    "ast_hash": "a27618a01f19ff17c45d58673d2d3ac1",
+    "mtime": 1791733832.947228,
+    "ast_hash": "fa008e5f640e8666407a47c75e1ee1cb",
     "semantic_hash": ""
   },
   "access-control.html": {
@@ -895,8 +895,8 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1791732578.0546672,
-    "ast_hash": "69905dab0b22254e483948e568e466df",
+    "mtime": 1791733832.9466357,
+    "ast_hash": "efd550cc9a32f0117ec4a6160fc703c4",
     "semantic_hash": ""
   },
   "notams.html": {
@@ -1055,8 +1055,8 @@
     "semantic_hash": "40537934ece6c8cb63e4f520a36f11f3"
   },
   "tools/deploy/estado-backends.json": {
-    "mtime": 1791733428.3930554,
-    "ast_hash": "6a7ceb2d7417173069ff7ad101efb9a8",
+    "mtime": 1791733527.2066674,
+    "ast_hash": "7f02e0f7f255e554603c4ed5cd58214b",
     "semantic_hash": ""
   },
   "tools/deploy/frontend.mjs": {
@@ -1125,13 +1125,18 @@
     "semantic_hash": ""
   },
   "docs/integracao-instrutores.md": {
-    "mtime": 1791732492.6420183,
-    "ast_hash": "08093dc5ebeb85ae598ff47f6e5decf7",
+    "mtime": 1791733832.9439213,
+    "ast_hash": "6821e88b63eea0fde1ddd6adfddf0f9a",
     "semantic_hash": ""
   },
   "docs/publicacao-integracao-instrutores.md": {
-    "mtime": 1791732492.6422918,
-    "ast_hash": "01f782d0e46a9a7dcee16aaecf64f9f6",
+    "mtime": 1791733832.9441984,
+    "ast_hash": "a57e6f2fb05ac0c7c18d4d4eb89520a3",
+    "semantic_hash": ""
+  },
+  "docs/validacao-integracao-instrutores.json": {
+    "mtime": 1791733832.9473944,
+    "ast_hash": "31ee1ae9cd92ed00f6ac146aa97b8905",
     "semantic_hash": ""
   }
 }

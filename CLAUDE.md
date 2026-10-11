@@ -2,7 +2,11 @@
 
 ## Integracao da pagina Instrutores, 2026-10-11
 
-Implementada localmente, sem publicacao ou credencial ativa. Escopo autorizado:
+Publicada em 11/10/2026: Hub @85, INVA @31, frontend conferido no GitHub Pages.
+Credencial exclusiva ativa, somente o hash no servidor. IDs inicializados em
+25 instrutores de voo e 15 de solo. Foram aprovados 11 cenarios locais e 22
+verificacoes em producao; fixtures removidas e cadastros reais preservados.
+Escopo autorizado:
 consulta dos dados da pagina Instrutores (voo e solo), cadastro de nome/base e
 edicao somente de nome/base. Nenhum endpoint do parceiro inclui outro modulo.
 

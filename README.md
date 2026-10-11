@@ -2,7 +2,7 @@
 
 Integracao externa da pagina Instrutores: [contrato da API](docs/integracao-instrutores.md)
 e [procedimento de ativacao](docs/publicacao-integracao-instrutores.md).
-Implementacao local; consulte o procedimento antes de publicar.
+API ativa e validada em 11/10/2026; consulte o procedimento antes de novas publicacoes.
 
 Portal interno da SAFE Escola de Aviação para operação comercial,
 financeira e administrativa.
