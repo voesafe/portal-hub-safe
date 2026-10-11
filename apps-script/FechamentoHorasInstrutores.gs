@@ -189,10 +189,30 @@ function fhiParseInstrutoresEventuais_(corpoTexto) {
   if (corpo.status !== 'success' || !Array.isArray(corpo.data)) {
     throw new Error('Resposta inesperada do backend de Instrutores' + fhiDetalheErroInva_(corpo));
   }
-  return corpo.data
+  var nomes = corpo.data
     .filter(function (inst) { return Array.isArray(inst.etiquetas) && inst.etiquetas.indexOf('eventual') >= 0; })
     .map(function (inst) { return String(inst.nome || '').trim(); })
     .filter(function (nome) { return nome; });
+  nomes.nomesAnterioresPorNome = {};
+  corpo.data.forEach(function (inst) {
+    nomes.nomesAnterioresPorNome[fhiChaveNome_(inst.nome)] = Array.isArray(inst.nomesAnteriores) ? inst.nomesAnteriores : [];
+  });
+  return nomes;
+}
+
+// Compatibilidade interna: renomear na pagina Instrutores preserva os
+// vinculos ja existentes. Nenhum dado deste modulo entra na API do parceiro.
+function fhiResolverNomesAnteriores_(historico, nomes) {
+  var mapa = {};
+  nomes.forEach(function (nome) {
+    var atual = fhiChaveNome_(nome);
+    ((nomes.nomesAnterioresPorNome || {})[atual] || []).forEach(function (anterior) {
+      mapa[fhiChaveNome_(anterior)] = atual;
+    });
+  });
+  return historico.map(function (registro) {
+    return Object.assign({}, registro, { instrutorChave: mapa[registro.instrutorChave] || registro.instrutorChave });
+  });
 }
 
 /** Horas do mes por instrutor, a partir do corpo cru de `get_horas_categoria`. */
@@ -279,7 +299,7 @@ function listarFechamentoHorasInstrutores(ano, mes) {
   var mesAtual = hoje.getFullYear() === anoNum && (hoje.getMonth() + 1) === mesNum;
 
   var dadosInva = fhiBuscarResumoMes_(anoNum, mesNum);
-  var historico = fhiLerHistorico_();
+  var historico = fhiResolverNomesAnteriores_(fhiLerHistorico_(), dadosInva.instrutoresEventuais);
   var corte = fhiChaveMesCorte_(anoNum, mesNum);
 
   var instrutores = dadosInva.instrutoresEventuais.map(function (nome) {
@@ -327,7 +347,7 @@ function listarFechamentoHorasInstrutores(ano, mes) {
  */
 function listarValoresFechamentoHorasInstrutores() {
   var instrutoresEventuais = fhiListarInstrutoresEventuais_();
-  var historico = fhiLerHistorico_();
+  var historico = fhiResolverNomesAnteriores_(fhiLerHistorico_(), instrutoresEventuais);
 
   var instrutores = instrutoresEventuais.map(function (nome) {
     var chave = fhiChaveNome_(nome);

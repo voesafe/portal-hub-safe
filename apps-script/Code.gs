@@ -239,6 +239,9 @@ function doPost(e) {
     switch (action) {
 
       // ── Auth ───────────────────────────────────────────────
+      case 'autorizar-inva':
+        return jsonSuccess(autorizarEscritaInva(token, dados.acao));
+
       case 'login':
         var usuario = login(dados.email, dados.senha);
         if (!usuario) return jsonError('E-mail ou senha incorretos');

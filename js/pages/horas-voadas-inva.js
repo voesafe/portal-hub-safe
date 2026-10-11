@@ -126,7 +126,7 @@ const HorasVoadasInva = {
     const urlBase = CONFIG.HORAS_VOADAS_INVA_API_URL;
     if (!urlBase) throw new Error('A URL do backend de horas voadas não foi configurada.');
 
-    const query = new URLSearchParams({ action, ...params });
+    const query = new URLSearchParams({ action, ...params, token: Auth.getSessao()?.token || '' });
     const resposta = await fetch(`${urlBase}?${query.toString()}`, {
       method: 'GET',
       mode: 'cors',
@@ -141,7 +141,7 @@ const HorasVoadasInva = {
       method: 'POST',
       mode: 'cors',
       redirect: 'follow',
-      body: JSON.stringify({ action, data })
+      body: JSON.stringify({ action, data, token: Auth.getSessao()?.token || '' })
     });
     if (!resposta.ok) throw new Error(`Falha na comunicação com o backend (HTTP ${resposta.status}).`);
     return resposta.json();

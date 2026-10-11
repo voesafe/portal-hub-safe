@@ -1,5 +1,38 @@
 # CLAUDE.md — Regras do Projeto SAFE Hub
 
+## Integracao da pagina Instrutores, 2026-10-11
+
+Implementada localmente, sem publicacao ou credencial ativa. Escopo autorizado:
+consulta dos dados da pagina Instrutores (voo e solo), cadastro de nome/base e
+edicao somente de nome/base. Nenhum endpoint do parceiro inclui outro modulo.
+
+- Contrato: `docs/integracao-instrutores.md`. Ordem de ativacao e compatibilidade:
+  `docs/publicacao-integracao-instrutores.md`.
+- Backend fora deste repo: `../horas-voadas-inva-main/backend/IntegracaoInstrutores.js`,
+  roteado pelo `Codigo.js` (nome real com acento), POST
+  `action=integracao_instrutores_v1`, operacoes `listar`, `cadastrar`, `editar`.
+- Segredo apenas no backend da VPS; hash em Propriedade do INVA
+  `INVA_PARCEIRO_SHA256`. Sem propriedade, acesso fechado. Nao gravar chave no Git.
+- ID opaco em `ID_INTEGRACAO`; nomes anteriores em `NOMES_ANTERIORES`. As colunas
+  sao adicionadas no fim, preservando as posicoes de voo e solo.
+  `instalarIntegracaoInstrutores()` popula IDs existentes, sem alterar cadastros.
+- Campos desconhecidos sao rejeitados; `versao` obrigatoria em edicao,
+  `requestId` obrigatorio nas escritas, trava no servidor, log e comprovante na
+  propria linha para recuperar resultado indeterminado sem duplicar cadastros.
+- Renomear nao reescreve a aba Horas nem os comentarios. Leituras reconhecem
+  nomes anteriores; apelidos CAVOK continuam ligados ao nome atual. O acumulado
+  usa apenas nomes atuais/anteriores, mantendo a regra original de horas.
+- `apps-script/InvaIntegracao.gs` e `Code.gs` autorizam as rotas legadas de escrita
+  do INVA por sessao real e permissoes do Hub. O frontend `horas-voadas-inva.js`
+  envia o token. A chave do parceiro nao autoriza essas rotas.
+- Compatibilidade interna em `FechamentoHorasInstrutores.gs` preserva os vinculos
+  apos renomeacoes, sem expor os dados daquele modulo ao parceiro.
+- Publicar Hub backend, frontend e INVA nessa ordem. Previews antigos e o cliente
+  standalone do INVA nao enviam sessao: suas escritas deixam de funcionar apos a
+  protecao das rotas. Leituras legadas mantem seus contratos.
+- Testes: `node --test tools/tests/instrutores-api.test.mjs`, totalmente em memoria,
+  com fontes do backend INVA no checkout vizinho. Nenhum teste grava em producao.
+
 Regras permanentes para qualquer trabalho neste projeto. Estas instruções têm prioridade sobre o comportamento padrão.
 
 ## Escrita: sem travessão

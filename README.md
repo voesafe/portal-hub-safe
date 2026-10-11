@@ -1,5 +1,9 @@
 # SAFE Hub
 
+Integracao externa da pagina Instrutores: [contrato da API](docs/integracao-instrutores.md)
+e [procedimento de ativacao](docs/publicacao-integracao-instrutores.md).
+Implementacao local; consulte o procedimento antes de publicar.
+
 Portal interno da SAFE Escola de Aviação para operação comercial,
 financeira e administrativa.
 
