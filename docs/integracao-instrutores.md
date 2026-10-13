@@ -1,8 +1,8 @@
 # Integracao da pagina Instrutores, API v1
 
-Estado: publicada e validada em producao em 11/10/2026. Backend do Hub na
-versao 85 e backend INVA na versao 31. Foram aprovados 11 cenarios locais e
-22 verificacoes de producao. Consulte o [registro de publicacao](publicacao-integracao-instrutores.md).
+Estado inicial: publicada e validada em producao em 11/10/2026, Hub 85 e INVA 31.
+Em 13/10/2026, o escopo autorizado foi ampliado para todas as acoes da pagina
+Instrutores, pela API e pelo Hub. Consulte o [registro de publicacao](publicacao-integracao-instrutores.md).
 A credencial e entregue separadamente, por arquivo privado.
 
 Esta API permite incorporar os dados da pagina Instrutores ao projeto do
@@ -16,15 +16,15 @@ O Hub e a API continuam fora da VPS e usam a mesma base de instrutores.
 | Consultar | Todos os dados da pagina Instrutores, de voo e de solo, incluindo inativos |
 | Cadastrar | Modalidade (`voo` ou `solo`), nome e base (`SJK` ou `CPQ`) |
 | Editar | Somente nome e base, identificando o instrutor por ID |
-| Outras alteracoes | Bloqueadas, incluindo horas, saldo, etiquetas, comentarios, prioridade, OPR e inativacao |
+| Executar | Todas as acoes da pagina, usando a lista fechada abaixo |
 
 Modalidade e o grupo voo/solo, definido na criacao. O campo legado `tipo`
-(vinculo CLT/Eventual) e somente leitura. Cadastro novo nao recebe etiquetas,
-saldo inicial ou liberacao operacional. A operacao SAFE continua responsavel
-por conceder essas informacoes no Hub.
+(vinculo CLT/Eventual) deriva das etiquetas. A operacao `cadastrar` preserva o
+contrato simples de nome/base. Para cadastrar com etiquetas ou saldo inicial,
+use `executar` com `add_instructor` ou `add_instructor_solo`.
 
 Ao cadastrar ou mudar de base, o instrutor entra no fim da fila da base
-destino, seguindo a regra do Hub. O parceiro nao escolhe a prioridade.
+destino, seguindo a regra do Hub. A prioridade pode ser ajustada por `executar`.
 Alterar nome preserva ID, horas e comentarios. Nomes antigos permanecem
 reservados para a mesma pessoa, inclusive quando o instrutor esta inativo.
 O parceiro nao pode transformar um instrutor de voo em instrutor de solo.
@@ -101,7 +101,75 @@ no fim. Inativos devem aparecer em uma lista separada. A consulta le o cache
 operacional atual; nao executa sincronizacao CAVOK.
 
 `diretrizEventuais` reproduz o texto informativo da pagina. Nao e uma autorizacao
-individual automatica e nao permite liberar instrutores pela API.
+individual automatica. A liberacao individual depende de etiquetas ou OPR.
+
+## Executar as demais acoes da pagina
+
+A mesma URL e a mesma credencial continuam validas. O backend da VPS deve usar
+`operacao: "executar"`, uma `acao` da tabela e um novo `requestId` por operacao.
+Na consulta, `data.meta.acessoCompleto` informa se a liberacao esta ativa.
+No servidor, a propriedade `INVA_PARCEIRO_ACESSO_COMPLETO=true` habilita essas
+acoes; removendo-a, voltam a valer apenas listar/cadastrar/editar.
+
+Exemplo para ajustar as habilitacoes de um instrutor de voo:
+
+```json
+{
+  "action": "integracao_instrutores_v1",
+  "chave": "CREDENCIAL_FORNECIDA_PELA_SAFE",
+  "operacao": "executar",
+  "acao": "set_instructor_labels",
+  "requestId": "UUID_UNICO_DA_OPERACAO",
+  "autor": "Eduardo Fields",
+  "dados": {
+    "instrutorId": "ID_RECEBIDO_NA_CONSULTA",
+    "etiquetas": ["ID_ETIQUETA_MC01", "ID_ETIQUETA_IFR"]
+  }
+}
+```
+
+`etiquetas` substitui o conjunto inteiro, portanto envie tambem os IDs que
+devem permanecer. Use os IDs reais de `meta.etiquetas` ou `meta.etiquetasSolo`.
+Nas acoes por instrutor, prefira `instrutorId`; `nome` atual tambem e aceito.
+Na ordenacao, `nomes` e uma lista ordenada de nomes atuais, sem repeticoes,
+seguindo o comportamento do Hub, inclusive movimentacao entre bases.
+
+| Acao de voo | Dados aceitos |
+|---|---|
+| `add_instructor` | `nome`, `base`, `etiquetas` opcional, `saldoInicial` opcional, numero nao negativo |
+| `set_instructor_base` | `instrutorId` ou `nome`, `base` |
+| `set_instructor_order` | `base`, `nomes` em ordem de prioridade |
+| `set_instructor_labels` | `instrutorId` ou `nome`, `etiquetas` com IDs |
+| `set_instructor_active` | `instrutorId` ou `nome`, `inativo` booleano, `motivo` opcional |
+| `set_instructor_release` | `instrutorId` ou `nome`, `liberado` booleano, `senha` da operacao |
+| `add_comment` | `instrutorId` ou `nome`, `texto` |
+| `delete_comment` | `id` do comentario |
+| `save_label` | `nome`, `cor`, `id` opcional para editar etiqueta existente |
+| `delete_label` | `id` da etiqueta |
+| `sync_cavok` | objeto vazio `{}`, mesma janela automatica da pagina |
+
+Para solo, acrescente `_solo` ao nome da acao. As excecoes sao
+`set_instructor_release` e `sync_cavok`, que so existem para voo. Cadastro de
+solo nao aceita saldo inicial. `save_label` usa as cores do catalogo do Hub.
+`delete_label` tambem remove a etiqueta dos instrutores que a possuem.
+`autor` fica no corpo principal e identifica o usuario informado pelo parceiro.
+A exclusao de comentario conserva a regra de autor original. A senha OPR
+continua obrigatoria, igual ao Hub, e nao e registrada no recibo.
+
+Resposta: `status`, `apiVersion`, `repetida`, e `data` com o resultado do
+handler. Apos sucesso, consulte `listar` para atualizar a interface e a versao.
+Em erro de negocio: `status: "error"`, `code: "REGRA_NEGOCIO"` e `message`.
+Reenvie o MESMO pedido com o MESMO `requestId` se a resposta se perder.
+Nao use esse ID para outra acao ou outros dados.
+
+As novas acoes possuem recibos na aba `INTEGRACAO_INSTRUTORES_REQUESTS`.
+Se a execucao interromper depois de reservar o pedido, o reenvio responde
+`RESULTADO_INDETERMINADO`, sem executar novamente. Nesse caso, consulte os
+dados e confira o resultado antes de gerar outro pedido. A SAFE pode verificar
+o recibo. A credencial e a senha OPR nao aparecem nessa aba.
+
+Inativacao preserva historico. Exclusao definitiva de instrutores, alteracao
+arbitraria de horas, manutencao e outros modulos continuam fora deste contrato.
 
 ## Cadastrar
 
@@ -162,8 +230,9 @@ Em timeout, falha de conexao, resposta ilegivel ou `ERRO_INTERNO`, a gravacao
 pode ter acontecido. Reenvie o mesmo corpo com o mesmo `requestId`; nao gere
 outro ID automaticamente. Nao repita mudando dados ou autor.
 
-O servidor serializa alteracoes e guarda um comprovante na linha e no log.
-Isso impede que um reenvio crie outra pessoa. Uma nova acao usa novo UUID.
+Os handlers serializam alteracoes. Cadastro e edicao guardam comprovante na
+linha e no log; `executar` usa a aba de recibos. Isso impede repetir criacoes
+em reenvios. Uma nova acao usa novo UUID.
 
 | Codigo | Tratamento |
 |---|---|
@@ -171,11 +240,13 @@ Isso impede que um reenvio crie outra pessoa. Uma nova acao usa novo UUID.
 | `INSTALACAO_PENDENTE` | A SAFE precisa inicializar os IDs |
 | `CAMPO_PROIBIDO`, `OPERACAO_PROIBIDA` | Corrigir o pedido; nao repetir automaticamente |
 | `DADOS_INVALIDOS` | Corrigir nome, base, modalidade ou campos obrigatorios |
-| `NOME_DUPLICADO` | Reutilizar o cadastro existente; inativos exigem acao da SAFE |
+| `NOME_DUPLICADO` | Reutilizar o cadastro existente; reativar pela API se necessario |
 | `NAO_ENCONTRADO` | Atualizar a lista e conferir o ID |
 | `CONFLITO` | Reconsultar antes de tentar nova edicao |
 | `REQUEST_ID_REUTILIZADO` | O UUID ja foi usado com outro corpo |
 | `ERRO_INTERNO` | Resultado possivelmente indeterminado; repetir com mesmo UUID |
+| `RESULTADO_INDETERMINADO` | Conferir o estado antes de gerar outro pedido |
+| `REGRA_NEGOCIO` | Conferir `message`; a regra da pagina recusou a acao |
 
 Nomes aceitam ate 120 caracteres, sem virgulas, caracteres de controle ou prefixo
 de formula. Use consulta com cache no backend da VPS, por exemplo 60 segundos,
@@ -187,11 +258,12 @@ os limites do Apps Script exigem chamadas moderadas.
 ```js
 import { randomUUID } from 'node:crypto';
 
-async function instrutores(operacao, dados, requestId, autor) {
+async function instrutores(operacao, dados, requestId, autor, acao) {
   const body = {
     action: 'integracao_instrutores_v1',
     chave: process.env.SAFE_INSTRUTORES_API_CHAVE,
     operacao,
+    ...(acao && { acao }),
     ...(dados && { dados }),
     ...(requestId && { requestId }),
     ...(autor && { autor })

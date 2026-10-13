@@ -1,5 +1,26 @@
 # Ativacao da API de Instrutores
 
+## Ampliacao autorizada em 13/10/2026
+
+- Hub publicado na versao 86, anterior 85. INVA na versao 32, anterior 31.
+- Perfil exclusivo de Operacoes aceita a rota `autorizar-inva`, mantendo a
+  validacao de sessao e permissoes efetivas de cada acao.
+- API oferece `executar` com lista fechada das acoes da pagina Instrutores.
+  URL e credencial anteriores continuam validas. Outros modulos nao sao expostos.
+- Ativacao pelo flag `INVA_PARCEIRO_ACESSO_COMPLETO=true` nas propriedades do
+  INVA. Remover esse flag restaura o contrato limitado sem revogar a consulta.
+- 14 cenarios locais aprovados, incluindo o roteador real do Hub, handlers de
+  voo/solo e recibos que impedem repetir mutacoes interrompidas.
+- Senha OPR e autoria para apagar comentarios preservam as regras da pagina.
+- Diagnostico administrativo de acesso e somente leitura e nao cria sessoes.
+- Flag ativo e permissoes reais do Fields conferidos em producao. 37 verificacoes
+  aprovadas, incluindo habilitacoes, comentarios sem duplicacao, inativacao,
+  reativacao e base para voo/solo. Fixtures e etiquetas de teste removidas.
+  Cadastros e catalogos reais comparados antes/depois e integralmente preservados.
+  Registro: `docs/validacao-acesso-completo-instrutores.json`.
+  Ordenacao, senha OPR e sincronizacao foram verificadas nos testes locais;
+  nao foi executada sincronizacao CAVOK durante a validacao de producao.
+
 ## Publicacao concluida em 11/10/2026
 
 - Hub backend: versao 85, anterior 84.
@@ -48,8 +69,9 @@ node tools/deploy/manutencao.mjs rodar inva instalarIntegracaoInstrutores
 ```
 
 Esse comando grava IDs reais e so deve rodar na fase de ativacao. A chave do
-parceiro nao permite chamar manutencao, sincronizar CAVOK ou usar as rotas
-legadas de escrita. Estas exigem token do Hub e permissao
+parceiro nao permite chamar manutencao ou usar as rotas legadas de escrita.
+Sincronizacao CAVOK pode ser chamada pela API ampliada usando `executar`.
+As rotas legadas exigem token do Hub e permissao
 `horas_inva.cadastrar_instrutor` ou `horas_inva.sincronizar_cavok`.
 
 As leituras legadas ja usadas por outros modulos continuam com o contrato

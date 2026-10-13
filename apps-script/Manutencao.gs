@@ -38,6 +38,7 @@ var MANUTENCAO_TAMANHO_MINIMO_TOKEN = 32;
  * codigo de novo.
  */
 var MANUTENCAO_FUNCOES = {
+  diagnosticarAcessoInstrutores: 'Somente leitura: confere rota e permissoes de Instrutores para um ID de usuario.',
   // ── NOTAMs ────────────────────────────────────────────────
   notamsInstalarTrigger:   'Instala o gatilho de hora em hora dos NOTAMs.',
   notamsRemoverTrigger:    'Remove o gatilho dos NOTAMs.',

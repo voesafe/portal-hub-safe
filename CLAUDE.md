@@ -6,15 +6,25 @@ Publicada em 11/10/2026: Hub @85, INVA @31, frontend conferido no GitHub Pages.
 Credencial exclusiva ativa, somente o hash no servidor. IDs inicializados em
 25 instrutores de voo e 15 de solo. Foram aprovados 11 cenarios locais e 22
 verificacoes em producao; fixtures removidas e cadastros reais preservados.
-Escopo autorizado:
-consulta dos dados da pagina Instrutores (voo e solo), cadastro de nome/base e
-edicao somente de nome/base. Nenhum endpoint do parceiro inclui outro modulo.
+Escopo ampliado em 13/10/2026: todas as acoes da pagina Instrutores, voo e solo,
+pela API e pelo Hub. Nenhum endpoint do parceiro inclui outro modulo.
+Publicacao ampliada: Hub @86 e INVA @32. 14 cenarios locais e 37 verificacoes
+em producao aprovados. Fixtures removidas; cadastros e catalogos preservados.
+`executar` usa lista fechada de handlers da pagina, habilitada somente com
+`INVA_PARCEIRO_ACESSO_COMPLETO=true`. Mesmo endpoint e mesma chave.
+Recibos em `INTEGRACAO_INSTRUTORES_REQUESTS` evitam repetir mutacoes em retries;
+interrupcao apos reserva responde RESULTADO_INDETERMINADO para conferir estado.
+Senha OPR e autoria de comentarios mantem as regras da pagina.
+Perfil exclusivo `escala_minions` permite a rota `autorizar-inva`, que exige
+sessao valida e a permissao efetiva da acao. Teste cobre o roteador real do Hub.
+Diagnostico administrativo `diagnosticarAcessoInstrutores(userId)` e somente
+leitura, sem criar ou modificar sessoes.
 
 - Contrato: `docs/integracao-instrutores.md`. Ordem de ativacao e compatibilidade:
   `docs/publicacao-integracao-instrutores.md`.
 - Backend fora deste repo: `../horas-voadas-inva-main/backend/IntegracaoInstrutores.js`,
   roteado pelo `Codigo.js` (nome real com acento), POST
-  `action=integracao_instrutores_v1`, operacoes `listar`, `cadastrar`, `editar`.
+  `action=integracao_instrutores_v1`, operacoes `listar`, `cadastrar`, `editar`, `executar`.
 - Segredo apenas no backend da VPS; hash em Propriedade do INVA
   `INVA_PARCEIRO_SHA256`. Sem propriedade, acesso fechado. Nao gravar chave no Git.
 - ID opaco em `ID_INTEGRACAO`; nomes anteriores em `NOMES_ANTERIORES`. As colunas

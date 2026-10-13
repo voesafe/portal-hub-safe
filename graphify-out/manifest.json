@@ -895,8 +895,8 @@
     "semantic_hash": "7e3a95f11963822dcfdf7eb348297248"
   },
   "CLAUDE.md": {
-    "mtime": 1791733832.9466357,
-    "ast_hash": "efd550cc9a32f0117ec4a6160fc703c4",
+    "mtime": 1791911272.1494107,
+    "ast_hash": "0c8479a1e68ac260616aa9e73e5004bd",
     "semantic_hash": ""
   },
   "notams.html": {
@@ -1055,8 +1055,8 @@
     "semantic_hash": "40537934ece6c8cb63e4f520a36f11f3"
   },
   "tools/deploy/estado-backends.json": {
-    "mtime": 1791733527.2066674,
-    "ast_hash": "7f02e0f7f255e554603c4ed5cd58214b",
+    "mtime": 1791911225.816171,
+    "ast_hash": "eb7c7523f81ae65a24953f1667217067",
     "semantic_hash": ""
   },
   "tools/deploy/frontend.mjs": {
@@ -1120,23 +1120,58 @@
     "semantic_hash": ""
   },
   "tools/tests/instrutores-api.test.mjs": {
-    "mtime": 1791733349.0862284,
-    "ast_hash": "99187f21cb91f45755190b0814f85d95",
+    "mtime": 1791911524.390749,
+    "ast_hash": "55637f127d3aa86b79924dd2bf60acbf",
     "semantic_hash": ""
   },
   "docs/integracao-instrutores.md": {
-    "mtime": 1791733832.9439213,
-    "ast_hash": "6821e88b63eea0fde1ddd6adfddf0f9a",
+    "mtime": 1791911451.6822367,
+    "ast_hash": "ebf229c7ca6cb778920b7b669d30dd09",
     "semantic_hash": ""
   },
   "docs/publicacao-integracao-instrutores.md": {
-    "mtime": 1791733832.9441984,
-    "ast_hash": "a57e6f2fb05ac0c7c18d4d4eb89520a3",
+    "mtime": 1791911272.147979,
+    "ast_hash": "dd74a833c4457f076ce9075022ea9160",
     "semantic_hash": ""
   },
   "docs/validacao-integracao-instrutores.json": {
     "mtime": 1791733832.9473944,
     "ast_hash": "31ee1ae9cd92ed00f6ac146aa97b8905",
+    "semantic_hash": ""
+  },
+  "/Users/macbookpro/Documents/01. Co\u0301digo VSCODE SAFE/horas-voadas-inva-main/app.js": {
+    "mtime": 1781038926.0,
+    "ast_hash": "efe8bb1d705d72672abb672941bcc3a8",
+    "semantic_hash": ""
+  },
+  "/Users/macbookpro/Documents/01. Co\u0301digo VSCODE SAFE/horas-voadas-inva-main/backend/.clasp.json": {
+    "mtime": 1785265024.7346566,
+    "ast_hash": "b5eb89496f37963739d66cecfeec85ae",
+    "semantic_hash": ""
+  },
+  "/Users/macbookpro/Documents/01. Co\u0301digo VSCODE SAFE/horas-voadas-inva-main/backend/C\u00f3digo.js": {
+    "mtime": 1791733397.9087217,
+    "ast_hash": "dea2f512806b2207d04d54774d657513",
+    "semantic_hash": ""
+  },
+  "/Users/macbookpro/Documents/01. Co\u0301digo VSCODE SAFE/horas-voadas-inva-main/backend/IntegracaoInstrutores.js": {
+    "mtime": 1791911187.4211712,
+    "ast_hash": "096df53d635ac9884b240021e1dc466d",
+    "semantic_hash": ""
+  },
+  "/Users/macbookpro/Documents/01. Co\u0301digo VSCODE SAFE/horas-voadas-inva-main/backend/appsscript.json": {
+    "mtime": 1785265024.7264576,
+    "ast_hash": "fd444ff37420e4ef3d48293319e196d1",
+    "semantic_hash": ""
+  },
+  "/Users/macbookpro/Documents/01. Co\u0301digo VSCODE SAFE/horas-voadas-inva-main/index.html": {
+    "mtime": 1781038926.0,
+    "ast_hash": "5621ae72d96ce4c9c216e3a06f92c002",
+    "semantic_hash": ""
+  },
+  "docs/validacao-acesso-completo-instrutores.json": {
+    "mtime": 1791911573.1883433,
+    "ast_hash": "281a2e47b62a283d703087918aaf7b00",
     "semantic_hash": ""
   }
 }

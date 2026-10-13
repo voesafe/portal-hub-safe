@@ -3823,7 +3823,7 @@
       "label": "Escrita: sem travessão",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L42",
+      "source_location": "L51",
       "_origin": "ast"
     },
     {
@@ -3831,7 +3831,7 @@
       "label": "Uso obrigatório do Graphify",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L46",
+      "source_location": "L55",
       "_origin": "ast"
     },
     {
@@ -3839,7 +3839,7 @@
       "label": "Transparência de comandos",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L60",
+      "source_location": "L69",
       "_origin": "ast"
     },
     {
@@ -3847,7 +3847,7 @@
       "label": "Confiabilidade do grafo",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L64",
+      "source_location": "L73",
       "_origin": "ast"
     },
     {
@@ -3855,7 +3855,7 @@
       "label": "Arquitetura de Controle de Acesso (RBAC) — desde 2026-07-09",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L68",
+      "source_location": "L77",
       "_origin": "ast"
     },
     {
@@ -3863,7 +3863,7 @@
       "label": "Cargos e tela de criação de usuário (desde 2026-07-09)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L80",
+      "source_location": "L89",
       "_origin": "ast"
     },
     {
@@ -3871,7 +3871,7 @@
       "label": "Padrão de UI: atualização instantânea (optimistic) — desde 2026-07-15",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L88",
+      "source_location": "L97",
       "_origin": "ast"
     },
     {
@@ -3879,7 +3879,7 @@
       "label": "Módulo NOTAMs (bases SAFE) — desde 2026-07-17",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L97",
+      "source_location": "L106",
       "_origin": "ast"
     },
     {
@@ -3887,7 +3887,7 @@
       "label": "Schema real do AISWEB, confirmado em 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L106",
+      "source_location": "L115",
       "_origin": "ast"
     },
     {
@@ -3895,7 +3895,7 @@
       "label": "Sincronização e busca de outra localidade, desde 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L119",
+      "source_location": "L128",
       "_origin": "ast"
     },
     {
@@ -3903,7 +3903,7 @@
       "label": "NOTAMs no Controle de Acesso: entrega em duas fases, desde 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L146",
+      "source_location": "L155",
       "_origin": "ast"
     },
     {
@@ -3911,7 +3911,7 @@
       "label": "Revisão de UX e espaçamento, 2026-07-29 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L161",
+      "source_location": "L170",
       "_origin": "ast"
     },
     {
@@ -3919,7 +3919,7 @@
       "label": "Horário de funcionamento das bases (ROTAER), desde 2026-07-29",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L188",
+      "source_location": "L197",
       "_origin": "ast"
     },
     {
@@ -3927,7 +3927,7 @@
       "label": "Resposta de POST perdida no redirecionamento do Apps Script, desde 2026-07-29",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L224",
+      "source_location": "L233",
       "_origin": "ast"
     },
     {
@@ -3935,7 +3935,7 @@
       "label": "Cadastro de Aluno — menu de ações e seleção em massa (desde 2026-07-20)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L235",
+      "source_location": "L244",
       "_origin": "ast"
     },
     {
@@ -3943,7 +3943,7 @@
       "label": "Auditoria de alterações (Escala CCO) — desde 2026-07-22",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L247",
+      "source_location": "L256",
       "_origin": "ast"
     },
     {
@@ -3951,7 +3951,7 @@
       "label": "Módulo Aniversários de alunos — desde 2026-07-24",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L262",
+      "source_location": "L271",
       "_origin": "ast"
     },
     {
@@ -3959,7 +3959,7 @@
       "label": "Entrega (deliverability) do e-mail de aniversário",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L286",
+      "source_location": "L295",
       "_origin": "ast"
     },
     {
@@ -3967,7 +3967,7 @@
       "label": "Lembrete de trocar o template do e-mail, desde 2026-07-30",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L333",
+      "source_location": "L342",
       "_origin": "ast"
     },
     {
@@ -3975,7 +3975,7 @@
       "label": "Passo a passo para trocar o template (a fazer a cada ano)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L348",
+      "source_location": "L357",
       "_origin": "ast"
     },
     {
@@ -3983,7 +3983,7 @@
       "label": "Layout mobile: invariantes descobertas na auditoria de 2026-07-26",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L360",
+      "source_location": "L369",
       "_origin": "ast"
     },
     {
@@ -3991,7 +3991,7 @@
       "label": "Segunda leva, fechada no mesmo dia",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L369",
+      "source_location": "L378",
       "_origin": "ast"
     },
     {
@@ -3999,7 +3999,7 @@
       "label": "Zoom automático em campo no celular, corrigido em 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L378",
+      "source_location": "L387",
       "_origin": "ast"
     },
     {
@@ -4007,7 +4007,7 @@
       "label": "Header e navegação unificados na auditoria de 2026-07-26",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L388",
+      "source_location": "L397",
       "_origin": "ast"
     },
     {
@@ -4015,7 +4015,7 @@
       "label": "Contrato de header (obrigatório em página nova)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L392",
+      "source_location": "L401",
       "_origin": "ast"
     },
     {
@@ -4023,7 +4023,7 @@
       "label": "Escala CCO",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L418",
+      "source_location": "L427",
       "_origin": "ast"
     },
     {
@@ -4031,7 +4031,7 @@
       "label": "Escala PAV",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L422",
+      "source_location": "L431",
       "_origin": "ast"
     },
     {
@@ -4039,7 +4039,7 @@
       "label": "Ordem do menu da sidebar, decidida em 2026-07-26",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L428",
+      "source_location": "L437",
       "_origin": "ast"
     },
     {
@@ -4047,7 +4047,7 @@
       "label": "`<head>` padronizado",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L439",
+      "source_location": "L448",
       "_origin": "ast"
     },
     {
@@ -4055,7 +4055,7 @@
       "label": "O que ficou de fora",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L445",
+      "source_location": "L454",
       "_origin": "ast"
     },
     {
@@ -4063,7 +4063,7 @@
       "label": "Estrutura de pastas, tema global e menu do usuário, desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L450",
+      "source_location": "L459",
       "_origin": "ast"
     },
     {
@@ -4071,7 +4071,7 @@
       "label": "Pastas: `core/` e `pages/`",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L454",
+      "source_location": "L463",
       "_origin": "ast"
     },
     {
@@ -4079,7 +4079,7 @@
       "label": "Camada semântica de cor (é aqui que o tema acontece)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L462",
+      "source_location": "L471",
       "_origin": "ast"
     },
     {
@@ -4087,7 +4087,7 @@
       "label": "Guarda anti-flash (obrigatória em página nova)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L472",
+      "source_location": "L481",
       "_origin": "ast"
     },
     {
@@ -4095,7 +4095,7 @@
       "label": "Menu do usuário (avatar na topbar)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L476",
+      "source_location": "L485",
       "_origin": "ast"
     },
     {
@@ -4103,7 +4103,7 @@
       "label": "Foto de perfil (avatar), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L487",
+      "source_location": "L496",
       "_origin": "ast"
     },
     {
@@ -4111,7 +4111,7 @@
       "label": "Editor de enquadramento e foto pelo superadmin, desde 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L501",
+      "source_location": "L510",
       "_origin": "ast"
     },
     {
@@ -4119,7 +4119,7 @@
       "label": "Marca em dois arquivos",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L522",
+      "source_location": "L531",
       "_origin": "ast"
     },
     {
@@ -4127,7 +4127,7 @@
       "label": "O que foi arrancado",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L528",
+      "source_location": "L537",
       "_origin": "ast"
     },
     {
@@ -4135,7 +4135,7 @@
       "label": "Verificação",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L536",
+      "source_location": "L545",
       "_origin": "ast"
     },
     {
@@ -4143,7 +4143,7 @@
       "label": "Bases na home: pinta na hora, confere depois, desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L542",
+      "source_location": "L551",
       "_origin": "ast"
     },
     {
@@ -4151,7 +4151,7 @@
       "label": "Horas Voadas INVA Mês: cadastro de instrutor, desde 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L556",
+      "source_location": "L565",
       "_origin": "ast"
     },
     {
@@ -4159,7 +4159,7 @@
       "label": "Reconciliação da janela, desde 2026-07-28 (backend @6)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L566",
+      "source_location": "L575",
       "_origin": "ast"
     },
     {
@@ -4167,7 +4167,7 @@
       "label": "Refazer o saldo inicial (rebase), desde 2026-07-28 (backend @8)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L586",
+      "source_location": "L595",
       "_origin": "ast"
     },
     {
@@ -4175,7 +4175,7 @@
       "label": "Gatilhos diários, desde 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L600",
+      "source_location": "L609",
       "_origin": "ast"
     },
     {
@@ -4183,7 +4183,7 @@
       "label": "Três bugs corrigidos em 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L612",
+      "source_location": "L621",
       "_origin": "ast"
     },
     {
@@ -4191,7 +4191,7 @@
       "label": "Bases SJK/CPQ, flag de 100h e liberação por OPR, desde 2026-07-28",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L618",
+      "source_location": "L627",
       "_origin": "ast"
     },
     {
@@ -4199,7 +4199,7 @@
       "label": "Etiquetas no molde do Trello, desde 2026-07-29",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L642",
+      "source_location": "L651",
       "_origin": "ast"
     },
     {
@@ -4207,7 +4207,7 @@
       "label": "Comentários por instrutor, desde 2026-07-30",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L664",
+      "source_location": "L673",
       "_origin": "ast"
     },
     {
@@ -4215,7 +4215,7 @@
       "label": "Diretriz de missões dos eventuais, desde 2026-07-30 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L693",
+      "source_location": "L702",
       "_origin": "ast"
     },
     {
@@ -4223,7 +4223,7 @@
       "label": "O popover não rolava, corrigido em 2026-07-30 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L703",
+      "source_location": "L712",
       "_origin": "ast"
     },
     {
@@ -4231,7 +4231,7 @@
       "label": "Ordem de prioridade de acionamento, desde 2026-07-30",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L712",
+      "source_location": "L721",
       "_origin": "ast"
     },
     {
@@ -4239,7 +4239,7 @@
       "label": "O botão de OPR virou um check, em 2026-07-30 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L729",
+      "source_location": "L738",
       "_origin": "ast"
     },
     {
@@ -4247,7 +4247,7 @@
       "label": "O check trava em verde nas 100h, desde 2026-07-31 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L739",
+      "source_location": "L748",
       "_origin": "ast"
     },
     {
@@ -4255,7 +4255,7 @@
       "label": "Gráfico recolhido e etiqueta longa legível, em 2026-07-30 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L753",
+      "source_location": "L762",
       "_origin": "ast"
     },
     {
@@ -4263,7 +4263,7 @@
       "label": "Inativar instrutor, desde 2026-09-02",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L777",
+      "source_location": "L786",
       "_origin": "ast"
     },
     {
@@ -4271,7 +4271,7 @@
       "label": "Módulo Marketing / Origem do Lead, desde 2026-08-03",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L814",
+      "source_location": "L823",
       "_origin": "ast"
     },
     {
@@ -4279,7 +4279,7 @@
       "label": "Filtro cruzado e as decisões da tela",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L828",
+      "source_location": "L837",
       "_origin": "ast"
     },
     {
@@ -4287,7 +4287,7 @@
       "label": "Cores dos gráficos (foram medidas, não escolhidas a olho)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L836",
+      "source_location": "L845",
       "_origin": "ast"
     },
     {
@@ -4295,7 +4295,7 @@
       "label": "O corte do rótulo do eixo, que só a captura de tela pegou",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L845",
+      "source_location": "L854",
       "_origin": "ast"
     },
     {
@@ -4303,7 +4303,7 @@
       "label": "A coluna SEXO tem nome de pessoa dentro (achado em produção, 2026-08-03)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L854",
+      "source_location": "L863",
       "_origin": "ast"
     },
     {
@@ -4311,7 +4311,7 @@
       "label": "Período no ano vigente e filtros recolhidos, desde 2026-08-03 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L866",
+      "source_location": "L875",
       "_origin": "ast"
     },
     {
@@ -4319,7 +4319,7 @@
       "label": "Acesso",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L879",
+      "source_location": "L888",
       "_origin": "ast"
     },
     {
@@ -4327,7 +4327,7 @@
       "label": "Publicação, nesta ordem",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L887",
+      "source_location": "L896",
       "_origin": "ast"
     },
     {
@@ -4335,7 +4335,7 @@
       "label": "API do Newzenler: escrita medida contra a API real, 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L899",
+      "source_location": "L908",
       "_origin": "ast"
     },
     {
@@ -4343,7 +4343,7 @@
       "label": "O que a API faz",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L905",
+      "source_location": "L914",
       "_origin": "ast"
     },
     {
@@ -4351,7 +4351,7 @@
       "label": "As quatro coisas que mudaram o desenho",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L912",
+      "source_location": "L921",
       "_origin": "ast"
     },
     {
@@ -4359,7 +4359,7 @@
       "label": "Bundle: existe, cascateia, e foi descartado assim mesmo",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L919",
+      "source_location": "L928",
       "_origin": "ast"
     },
     {
@@ -4367,7 +4367,7 @@
       "label": "Como a sondagem foi feita",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L928",
+      "source_location": "L937",
       "_origin": "ast"
     },
     {
@@ -4375,7 +4375,7 @@
       "label": "O mapa aluno para cursos, e o unenroll, medidos em 2026-08-06 (segunda sondagem)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L936",
+      "source_location": "L945",
       "_origin": "ast"
     },
     {
@@ -4383,7 +4383,7 @@
       "label": "Módulo Portal do Aluno: liberar acesso, desde 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L964",
+      "source_location": "L973",
       "_origin": "ast"
     },
     {
@@ -4391,7 +4391,7 @@
       "label": "Aba \"Alunos\": quem está matriculado em quê, desde 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L986",
+      "source_location": "L995",
       "_origin": "ast"
     },
     {
@@ -4399,7 +4399,7 @@
       "label": "Excluir o aluno da Zenler, desde 2026-08-07",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1015",
+      "source_location": "L1024",
       "_origin": "ast"
     },
     {
@@ -4407,7 +4407,7 @@
       "label": "Autocompletar o cadastro a partir das vendas, desde 2026-08-07",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1028",
+      "source_location": "L1037",
       "_origin": "ast"
     },
     {
@@ -4415,7 +4415,7 @@
       "label": "Tirar curso do pacote na prévia, desde 2026-08-07 (só frontend)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1050",
+      "source_location": "L1059",
       "_origin": "ast"
     },
     {
@@ -4423,7 +4423,7 @@
       "label": "⚠️ Passo obrigatório em produção: `portalAplicarCursosVenda`",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1067",
+      "source_location": "L1076",
       "_origin": "ast"
     },
     {
@@ -4431,7 +4431,7 @@
       "label": "⚠️ Bug pré-existente corrigido junto: permissão fora da matriz era apagada em silêncio",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1077",
+      "source_location": "L1086",
       "_origin": "ast"
     },
     {
@@ -4439,7 +4439,7 @@
       "label": "Progresso de Alunos desligado, desde 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1088",
+      "source_location": "L1097",
       "_origin": "ast"
     },
     {
@@ -4447,7 +4447,7 @@
       "label": "Conferir se produção está atualizada (tools/deploy/conferir.mjs), desde 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1099",
+      "source_location": "L1108",
       "_origin": "ast"
     },
     {
@@ -4455,7 +4455,7 @@
       "label": "⚠️ O \"GitHub Pages publicou\" do `deploy front` é uma SENTINELA, e ela mente quando o `auth.js` não muda",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1116",
+      "source_location": "L1125",
       "_origin": "ast"
     },
     {
@@ -4463,7 +4463,7 @@
       "label": "⚠️ `building` na API do Pages pode ser um build MORTO, não um build em andamento",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1124",
+      "source_location": "L1133",
       "_origin": "ast"
     },
     {
@@ -4471,7 +4471,7 @@
       "label": "`deploy front` passou a saber REPETIR, desde 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1133",
+      "source_location": "L1142",
       "_origin": "ast"
     },
     {
@@ -4479,7 +4479,7 @@
       "label": "O frontend passou a publicar por GitHub Actions, em 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1142",
+      "source_location": "L1151",
       "_origin": "ast"
     },
     {
@@ -4487,7 +4487,7 @@
       "label": "Conferir a interface antes de publicar (tools/preview.sh)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1159",
+      "source_location": "L1168",
       "_origin": "ast"
     },
     {
@@ -4495,7 +4495,7 @@
       "label": "Publicação automatizada (tools/deploy/), desde 2026-08-03",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1171",
+      "source_location": "L1180",
       "_origin": "ast"
     },
     {
@@ -4503,7 +4503,7 @@
       "label": "O `?v=` deixou de ser escolhido a mão",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1186",
+      "source_location": "L1195",
       "_origin": "ast"
     },
     {
@@ -4511,7 +4511,7 @@
       "label": "As travas do deploy de backend",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1196",
+      "source_location": "L1205",
       "_origin": "ast"
     },
     {
@@ -4519,7 +4519,7 @@
       "label": "⚠️ A guarda de drift precisa de memória, e nasceu errada",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1207",
+      "source_location": "L1216",
       "_origin": "ast"
     },
     {
@@ -4527,7 +4527,7 @@
       "label": "O frontend só diz \"publicado\" quando o Pages publicou",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1216",
+      "source_location": "L1225",
       "_origin": "ast"
     },
     {
@@ -4535,7 +4535,7 @@
       "label": "Publicar código inacabado derruba módulo alheio, em 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1220",
+      "source_location": "L1229",
       "_origin": "ast"
     },
     {
@@ -4543,7 +4543,7 @@
       "label": "Rodar manutenção sem clique no editor, desde 2026-08-03",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1242",
+      "source_location": "L1251",
       "_origin": "ast"
     },
     {
@@ -4551,7 +4551,7 @@
       "label": "As travas, e por que cada uma existe",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1262",
+      "source_location": "L1271",
       "_origin": "ast"
     },
     {
@@ -4559,7 +4559,7 @@
       "label": "A Escala CCO não tem rota de manutenção, de propósito",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1273",
+      "source_location": "L1282",
       "_origin": "ast"
     },
     {
@@ -4567,7 +4567,7 @@
       "label": "⚠️ POST de fora do navegador chega ao `doPost`, ao contrário do que estava escrito aqui",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1277",
+      "source_location": "L1286",
       "_origin": "ast"
     },
     {
@@ -4575,7 +4575,7 @@
       "label": "Backend das Horas INVA sob git, desde 2026-08-03",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1281",
+      "source_location": "L1290",
       "_origin": "ast"
     },
     {
@@ -4583,7 +4583,7 @@
       "label": "Onboarding de colaborador: três repositórios, não um, desde 2026-08-12",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1287",
+      "source_location": "L1296",
       "_origin": "ast"
     },
     {
@@ -4591,7 +4591,7 @@
       "label": "Checklist de onboarding (rodar uma vez por colaborador novo)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1305",
+      "source_location": "L1314",
       "_origin": "ast"
     },
     {
@@ -4599,7 +4599,7 @@
       "label": "Captura de tela das páginas (tools/), desde 2026-07-27",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1319",
+      "source_location": "L1328",
       "_origin": "ast"
     },
     {
@@ -4607,7 +4607,7 @@
       "label": "Cadastro de venda: campos obrigatórios e cidade por estado, desde 2026-08-03",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1335",
+      "source_location": "L1344",
       "_origin": "ast"
     },
     {
@@ -4615,7 +4615,7 @@
       "label": "Todos os campos obrigatórios, com modal de pendências",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1339",
+      "source_location": "L1348",
       "_origin": "ast"
     },
     {
@@ -4623,7 +4623,7 @@
       "label": "Cidade virou dropdown dependente do estado",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1355",
+      "source_location": "L1364",
       "_origin": "ast"
     },
     {
@@ -4631,7 +4631,7 @@
       "label": "CPF obrigatório, desde 2026-08-06",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1366",
+      "source_location": "L1375",
       "_origin": "ast"
     },
     {
@@ -4639,7 +4639,7 @@
       "label": "Fechamento de Horas / Cotistas: aeronave vendida sai por competência, desde 2026-08-13",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1383",
+      "source_location": "L1392",
       "_origin": "ast"
     },
     {
@@ -4647,7 +4647,7 @@
       "label": "Cadastro de venda: autocompletar cliente repetido, desde 2026-08-26",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1400",
+      "source_location": "L1409",
       "_origin": "ast"
     },
     {
@@ -4655,7 +4655,7 @@
       "label": "Fechamento de Horas / Instrutores, desde 2026-09-03",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1414",
+      "source_location": "L1423",
       "_origin": "ast"
     },
     {
@@ -4663,7 +4663,7 @@
       "label": "Paridade de arredondamento com o CAVOK",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1433",
+      "source_location": "L1442",
       "_origin": "ast"
     },
     {
@@ -4671,7 +4671,7 @@
       "label": "Nome do instrutor: apelido do CAVOK",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1440",
+      "source_location": "L1449",
       "_origin": "ast"
     },
     {
@@ -4679,7 +4679,7 @@
       "label": "Simulador AATD e PCATD, desde 2026-09-03",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1448",
+      "source_location": "L1457",
       "_origin": "ast"
     },
     {
@@ -4687,7 +4687,7 @@
       "label": "⚠️ A API do CAVOK NÃO traz o Tipo da etapa (VFR / IFR Real), medido em 2026-10-07",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L1457",
+      "source_location": "L1466",
       "_origin": "ast"
     },
     {
@@ -4883,11 +4883,19 @@
       "_origin": "ast"
     },
     {
+      "id": "docs_integracao_instrutores_executar_as_demais_acoes_da_pagina",
+      "label": "Executar as demais acoes da pagina",
+      "file_type": "document",
+      "source_file": "docs/integracao-instrutores.md",
+      "source_location": "L106",
+      "_origin": "ast"
+    },
+    {
       "id": "docs_integracao_instrutores_cadastrar",
       "label": "Cadastrar",
       "file_type": "document",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L106",
+      "source_location": "L174",
       "_origin": "ast"
     },
     {
@@ -4895,7 +4903,7 @@
       "label": "Editar",
       "file_type": "document",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L123",
+      "source_location": "L191",
       "_origin": "ast"
     },
     {
@@ -4903,7 +4911,7 @@
       "label": "Reenvios e falhas",
       "file_type": "document",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L158",
+      "source_location": "L226",
       "_origin": "ast"
     },
     {
@@ -4911,7 +4919,7 @@
       "label": "Exemplo no backend Node.js da VPS",
       "file_type": "document",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L185",
+      "source_location": "L256",
       "_origin": "ast"
     },
     {
@@ -4919,7 +4927,7 @@
       "label": "Testes locais",
       "file_type": "document",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L226",
+      "source_location": "L298",
       "_origin": "ast"
     },
     {
@@ -4939,11 +4947,19 @@
       "_origin": "ast"
     },
     {
+      "id": "docs_publicacao_integracao_instrutores_ampliacao_autorizada_em_13_10_2026",
+      "label": "Ampliacao autorizada em 13/10/2026",
+      "file_type": "document",
+      "source_file": "docs/publicacao-integracao-instrutores.md",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
       "id": "docs_publicacao_integracao_instrutores_publicacao_concluida_em_11_10_2026",
       "label": "Publicacao concluida em 11/10/2026",
       "file_type": "document",
       "source_file": "docs/publicacao-integracao-instrutores.md",
-      "source_location": "L3",
+      "source_location": "L17",
       "_origin": "ast"
     },
     {
@@ -4951,7 +4967,7 @@
       "label": "Ordem de publicacao",
       "file_type": "document",
       "source_file": "docs/publicacao-integracao-instrutores.md",
-      "source_location": "L23",
+      "source_location": "L37",
       "_origin": "ast"
     },
     {
@@ -4959,7 +4975,7 @@
       "label": "Rollback",
       "file_type": "document",
       "source_file": "docs/publicacao-integracao-instrutores.md",
-      "source_location": "L64",
+      "source_location": "L79",
       "_origin": "ast"
     },
     {
@@ -25607,7 +25623,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L42",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -25616,7 +25632,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L46",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -25625,7 +25641,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L60",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -25634,7 +25650,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L64",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -25643,7 +25659,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L68",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -25652,7 +25668,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L80",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -25661,7 +25677,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L86",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -25670,7 +25686,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L88",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -25679,7 +25695,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L97",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -25688,7 +25704,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L101",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
@@ -25697,7 +25713,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L106",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -25706,7 +25722,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L119",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -25715,7 +25731,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L146",
+      "source_location": "L155",
       "weight": 1.0
     },
     {
@@ -25724,7 +25740,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L161",
+      "source_location": "L170",
       "weight": 1.0
     },
     {
@@ -25733,7 +25749,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L188",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -25742,7 +25758,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L224",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -25751,7 +25767,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L235",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -25760,7 +25776,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L247",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -25769,7 +25785,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L262",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -25778,7 +25794,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L266",
+      "source_location": "L275",
       "weight": 1.0
     },
     {
@@ -25787,7 +25803,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L286",
+      "source_location": "L295",
       "weight": 1.0
     },
     {
@@ -25796,7 +25812,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L333",
+      "source_location": "L342",
       "weight": 1.0
     },
     {
@@ -25805,7 +25821,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L348",
+      "source_location": "L357",
       "weight": 1.0
     },
     {
@@ -25814,7 +25830,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L360",
+      "source_location": "L369",
       "weight": 1.0
     },
     {
@@ -25823,7 +25839,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L369",
+      "source_location": "L378",
       "weight": 1.0
     },
     {
@@ -25832,7 +25848,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L378",
+      "source_location": "L387",
       "weight": 1.0
     },
     {
@@ -25841,7 +25857,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L388",
+      "source_location": "L397",
       "weight": 1.0
     },
     {
@@ -25850,7 +25866,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L392",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -25859,7 +25875,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L418",
+      "source_location": "L427",
       "weight": 1.0
     },
     {
@@ -25868,7 +25884,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L422",
+      "source_location": "L431",
       "weight": 1.0
     },
     {
@@ -25877,7 +25893,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L428",
+      "source_location": "L437",
       "weight": 1.0
     },
     {
@@ -25886,7 +25902,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L439",
+      "source_location": "L448",
       "weight": 1.0
     },
     {
@@ -25895,7 +25911,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L445",
+      "source_location": "L454",
       "weight": 1.0
     },
     {
@@ -25904,7 +25920,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L450",
+      "source_location": "L459",
       "weight": 1.0
     },
     {
@@ -25913,7 +25929,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L454",
+      "source_location": "L463",
       "weight": 1.0
     },
     {
@@ -25922,7 +25938,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L462",
+      "source_location": "L471",
       "weight": 1.0
     },
     {
@@ -25931,7 +25947,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L472",
+      "source_location": "L481",
       "weight": 1.0
     },
     {
@@ -25940,7 +25956,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L476",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -25949,7 +25965,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L487",
+      "source_location": "L496",
       "weight": 1.0
     },
     {
@@ -25958,7 +25974,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L501",
+      "source_location": "L510",
       "weight": 1.0
     },
     {
@@ -25967,7 +25983,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L522",
+      "source_location": "L531",
       "weight": 1.0
     },
     {
@@ -25976,7 +25992,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L528",
+      "source_location": "L537",
       "weight": 1.0
     },
     {
@@ -25985,7 +26001,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L536",
+      "source_location": "L545",
       "weight": 1.0
     },
     {
@@ -25994,7 +26010,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L542",
+      "source_location": "L551",
       "weight": 1.0
     },
     {
@@ -26003,7 +26019,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L556",
+      "source_location": "L565",
       "weight": 1.0
     },
     {
@@ -26012,7 +26028,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L566",
+      "source_location": "L575",
       "weight": 1.0
     },
     {
@@ -26021,7 +26037,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L586",
+      "source_location": "L595",
       "weight": 1.0
     },
     {
@@ -26030,7 +26046,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L600",
+      "source_location": "L609",
       "weight": 1.0
     },
     {
@@ -26039,7 +26055,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L612",
+      "source_location": "L621",
       "weight": 1.0
     },
     {
@@ -26048,7 +26064,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L618",
+      "source_location": "L627",
       "weight": 1.0
     },
     {
@@ -26057,7 +26073,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L642",
+      "source_location": "L651",
       "weight": 1.0
     },
     {
@@ -26066,7 +26082,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L664",
+      "source_location": "L673",
       "weight": 1.0
     },
     {
@@ -26075,7 +26091,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L693",
+      "source_location": "L702",
       "weight": 1.0
     },
     {
@@ -26084,7 +26100,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L703",
+      "source_location": "L712",
       "weight": 1.0
     },
     {
@@ -26093,7 +26109,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L712",
+      "source_location": "L721",
       "weight": 1.0
     },
     {
@@ -26102,7 +26118,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L729",
+      "source_location": "L738",
       "weight": 1.0
     },
     {
@@ -26111,7 +26127,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L739",
+      "source_location": "L748",
       "weight": 1.0
     },
     {
@@ -26120,7 +26136,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L753",
+      "source_location": "L762",
       "weight": 1.0
     },
     {
@@ -26129,7 +26145,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L777",
+      "source_location": "L786",
       "weight": 1.0
     },
     {
@@ -26138,7 +26154,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L814",
+      "source_location": "L823",
       "weight": 1.0
     },
     {
@@ -26147,7 +26163,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L828",
+      "source_location": "L837",
       "weight": 1.0
     },
     {
@@ -26156,7 +26172,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L836",
+      "source_location": "L845",
       "weight": 1.0
     },
     {
@@ -26165,7 +26181,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L845",
+      "source_location": "L854",
       "weight": 1.0
     },
     {
@@ -26174,7 +26190,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L854",
+      "source_location": "L863",
       "weight": 1.0
     },
     {
@@ -26183,7 +26199,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L866",
+      "source_location": "L875",
       "weight": 1.0
     },
     {
@@ -26192,7 +26208,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L879",
+      "source_location": "L888",
       "weight": 1.0
     },
     {
@@ -26201,7 +26217,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L887",
+      "source_location": "L896",
       "weight": 1.0
     },
     {
@@ -26210,7 +26226,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L899",
+      "source_location": "L908",
       "weight": 1.0
     },
     {
@@ -26219,7 +26235,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L905",
+      "source_location": "L914",
       "weight": 1.0
     },
     {
@@ -26228,7 +26244,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L912",
+      "source_location": "L921",
       "weight": 1.0
     },
     {
@@ -26237,7 +26253,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L919",
+      "source_location": "L928",
       "weight": 1.0
     },
     {
@@ -26246,7 +26262,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L928",
+      "source_location": "L937",
       "weight": 1.0
     },
     {
@@ -26255,7 +26271,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L936",
+      "source_location": "L945",
       "weight": 1.0
     },
     {
@@ -26264,7 +26280,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L964",
+      "source_location": "L973",
       "weight": 1.0
     },
     {
@@ -26273,7 +26289,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L986",
+      "source_location": "L995",
       "weight": 1.0
     },
     {
@@ -26282,7 +26298,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1015",
+      "source_location": "L1024",
       "weight": 1.0
     },
     {
@@ -26291,7 +26307,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1028",
+      "source_location": "L1037",
       "weight": 1.0
     },
     {
@@ -26300,7 +26316,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1050",
+      "source_location": "L1059",
       "weight": 1.0
     },
     {
@@ -26309,7 +26325,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1067",
+      "source_location": "L1076",
       "weight": 1.0
     },
     {
@@ -26318,7 +26334,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1077",
+      "source_location": "L1086",
       "weight": 1.0
     },
     {
@@ -26327,7 +26343,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1088",
+      "source_location": "L1097",
       "weight": 1.0
     },
     {
@@ -26336,7 +26352,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1099",
+      "source_location": "L1108",
       "weight": 1.0
     },
     {
@@ -26345,7 +26361,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1116",
+      "source_location": "L1125",
       "weight": 1.0
     },
     {
@@ -26354,7 +26370,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1124",
+      "source_location": "L1133",
       "weight": 1.0
     },
     {
@@ -26363,7 +26379,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1133",
+      "source_location": "L1142",
       "weight": 1.0
     },
     {
@@ -26372,7 +26388,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1142",
+      "source_location": "L1151",
       "weight": 1.0
     },
     {
@@ -26381,7 +26397,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1159",
+      "source_location": "L1168",
       "weight": 1.0
     },
     {
@@ -26390,7 +26406,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1171",
+      "source_location": "L1180",
       "weight": 1.0
     },
     {
@@ -26399,7 +26415,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1186",
+      "source_location": "L1195",
       "weight": 1.0
     },
     {
@@ -26408,7 +26424,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1196",
+      "source_location": "L1205",
       "weight": 1.0
     },
     {
@@ -26417,7 +26433,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1207",
+      "source_location": "L1216",
       "weight": 1.0
     },
     {
@@ -26426,7 +26442,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1216",
+      "source_location": "L1225",
       "weight": 1.0
     },
     {
@@ -26435,7 +26451,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1220",
+      "source_location": "L1229",
       "weight": 1.0
     },
     {
@@ -26444,7 +26460,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1242",
+      "source_location": "L1251",
       "weight": 1.0
     },
     {
@@ -26453,7 +26469,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1262",
+      "source_location": "L1271",
       "weight": 1.0
     },
     {
@@ -26462,7 +26478,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1273",
+      "source_location": "L1282",
       "weight": 1.0
     },
     {
@@ -26471,7 +26487,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1277",
+      "source_location": "L1286",
       "weight": 1.0
     },
     {
@@ -26480,7 +26496,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1281",
+      "source_location": "L1290",
       "weight": 1.0
     },
     {
@@ -26489,7 +26505,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1287",
+      "source_location": "L1296",
       "weight": 1.0
     },
     {
@@ -26498,7 +26514,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1305",
+      "source_location": "L1314",
       "weight": 1.0
     },
     {
@@ -26507,7 +26523,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1319",
+      "source_location": "L1328",
       "weight": 1.0
     },
     {
@@ -26516,7 +26532,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1321",
+      "source_location": "L1330",
       "weight": 1.0
     },
     {
@@ -26525,7 +26541,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1335",
+      "source_location": "L1344",
       "weight": 1.0
     },
     {
@@ -26534,7 +26550,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1339",
+      "source_location": "L1348",
       "weight": 1.0
     },
     {
@@ -26543,7 +26559,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1355",
+      "source_location": "L1364",
       "weight": 1.0
     },
     {
@@ -26552,7 +26568,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1366",
+      "source_location": "L1375",
       "weight": 1.0
     },
     {
@@ -26561,7 +26577,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1383",
+      "source_location": "L1392",
       "weight": 1.0
     },
     {
@@ -26570,7 +26586,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1400",
+      "source_location": "L1409",
       "weight": 1.0
     },
     {
@@ -26579,7 +26595,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1414",
+      "source_location": "L1423",
       "weight": 1.0
     },
     {
@@ -26588,7 +26604,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1433",
+      "source_location": "L1442",
       "weight": 1.0
     },
     {
@@ -26597,7 +26613,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1440",
+      "source_location": "L1449",
       "weight": 1.0
     },
     {
@@ -26606,7 +26622,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1448",
+      "source_location": "L1457",
       "weight": 1.0
     },
     {
@@ -26615,7 +26631,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L1457",
+      "source_location": "L1466",
       "weight": 1.0
     },
     {
@@ -26845,7 +26861,7 @@
     },
     {
       "source": "docs_integracao_instrutores_integracao_da_pagina_instrutores_api_v1",
-      "target": "docs_integracao_instrutores_cadastrar",
+      "target": "docs_integracao_instrutores_executar_as_demais_acoes_da_pagina",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/integracao-instrutores.md",
@@ -26854,11 +26870,20 @@
     },
     {
       "source": "docs_integracao_instrutores_integracao_da_pagina_instrutores_api_v1",
+      "target": "docs_integracao_instrutores_cadastrar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/integracao-instrutores.md",
+      "source_location": "L174",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_integracao_instrutores_integracao_da_pagina_instrutores_api_v1",
       "target": "docs_integracao_instrutores_editar",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L123",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -26867,7 +26892,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L158",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -26876,7 +26901,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L185",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -26885,7 +26910,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/integracao-instrutores.md",
-      "source_location": "L226",
+      "source_location": "L298",
       "weight": 1.0
     },
     {
@@ -26899,7 +26924,7 @@
     },
     {
       "source": "docs_publicacao_integracao_instrutores_ativacao_da_api_de_instrutores",
-      "target": "docs_publicacao_integracao_instrutores_publicacao_concluida_em_11_10_2026",
+      "target": "docs_publicacao_integracao_instrutores_ampliacao_autorizada_em_13_10_2026",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/publicacao-integracao-instrutores.md",
@@ -26908,11 +26933,20 @@
     },
     {
       "source": "docs_publicacao_integracao_instrutores_ativacao_da_api_de_instrutores",
+      "target": "docs_publicacao_integracao_instrutores_publicacao_concluida_em_11_10_2026",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/publicacao-integracao-instrutores.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_publicacao_integracao_instrutores_ativacao_da_api_de_instrutores",
       "target": "docs_publicacao_integracao_instrutores_ordem_de_publicacao",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/publicacao-integracao-instrutores.md",
-      "source_location": "L23",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -26921,7 +26955,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/publicacao-integracao-instrutores.md",
-      "source_location": "L64",
+      "source_location": "L79",
       "weight": 1.0
     },
     {

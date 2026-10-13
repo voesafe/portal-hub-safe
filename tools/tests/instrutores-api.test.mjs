@@ -250,3 +250,95 @@ test('frontend envia sessao Hub nas consultas e gravacoes, sem credencial do par
   assert.equal(JSON.parse(req.opts.body).token, 'token-hub');
   assert.equal(JSON.parse(req.opts.body).chave, undefined);
 });
+
+test('perfil exclusivo de Operacoes aceita autorizar-inva e preserva os outros bloqueios', () => {
+  const usuario = { perfil: 'escala_minions', permissoesEfetivas: ['horas_inva.cadastrar_instrutor', 'horas_inva.sincronizar_cavok'] };
+  const ctx = vm.createContext({ Date, PropertiesService: { getScriptProperties: () => ({ getProperty: k => k === 'SAFE_SESSION_teste' ? JSON.stringify(usuario) : null }) } });
+  for (const f of ['Auth.gs', 'InvaIntegracao.gs', 'Code.gs']) vm.runInContext(fs.readFileSync(path.join(raiz, 'apps-script', f), 'utf8'), ctx);
+  ctx.sessaoInvalidaPorPolitica_ = () => false;
+  ctx.normalizarPerfil = p => p;
+  ctx.valorBooleano = v => v === true;
+  ctx.exigirSessao = () => usuario;
+  ctx.usuarioTemPermissao = (u, p) => u.permissoesEfetivas.includes(p);
+  ctx.jsonSuccess = data => ({ ok: true, data });
+  ctx.jsonError = error => ({ ok: false, error: String(error) });
+  const post = acao => ctx.doPost({ postData: { contents: JSON.stringify({ action: 'autorizar-inva', token: 'teste', dados: { acao } }) } });
+  assert.equal(post('set_instructor_labels').ok, true);
+  assert.equal(post('sync_cavok').ok, true);
+  assert.equal(post('manutencao').ok, false);
+  usuario.permissoesEfetivas = [];
+  assert.equal(post('set_instructor_labels').ok, false);
+  assert.throws(() => ctx.validarAcaoPerfilExclusivo_('teste', 'usuarios'));
+});
+
+test('API completa executa handlers de voo e solo, com recibos e fronteira do modulo', () => {
+  const a = ambiente(); a.context.instalarIntegracaoInstrutores();
+  const executar = (acao, dados, requestId = crypto.randomUUID(), autor = 'Fields teste') => a.api({ operacao: 'executar', acao, dados, requestId, autor });
+  assert.equal(executar('set_instructor_labels', {}).code, 'OPERACAO_PROIBIDA');
+  a.props.set('INVA_PARCEIRO_ACESSO_COMPLETO', 'true');
+  assert.equal(a.api({ operacao: 'listar' }).data.meta.acessoCompleto, true);
+  const n = a.writes();
+  for (const acao of ['manutencao', 'limparTesteIntegracaoInstrutores', 'toString', '__proto__', 'usuarios']) assert.equal(executar(acao, {}).code, 'OPERACAO_PROIBIDA');
+  assert.equal(executar('set_instructor_labels', { instrutorId: a.listar()[0].id }).code, 'DADOS_INVALIDOS');
+  assert.equal(executar('set_instructor_base', { instrutorId: a.listar()[0].id }).code, 'DADOS_INVALIDOS');
+  assert.equal(executar('set_instructor_active', { instrutorId: a.listar()[0].id, inativo: 'false' }).code, 'DADOS_INVALIDOS');
+  assert.equal(executar('set_instructor_labels_solo', { instrutorId: a.listar()[0].id, etiquetas: [] }).code, 'DADOS_INVALIDOS');
+  assert.equal(a.writes(), n);
+  for (const modalidade of ['voo', 'solo']) {
+    const s = modalidade === 'solo' ? '_solo' : '';
+    const inst = a.listar().find(i => i.modalidade === modalidade && !i.inativo);
+    const id = crypto.randomUUID();
+    const p = { instrutorId: inst.id, etiquetas: [] };
+    assert.equal(executar('set_instructor_labels'+s, p, id).status, 'success');
+    assert.equal(executar('set_instructor_labels'+s, p, id).repetida, true);
+    assert.equal(executar('set_instructor_labels'+s, { ...p, etiquetas: ['outro'] }, id).code, 'REQUEST_ID_REUTILIZADO');
+    assert.deepEqual(a.listar().find(i => i.id === inst.id).etiquetas, []);
+    assert.equal(executar('set_instructor_active'+s, { instrutorId: inst.id, inativo: true, motivo: 'Teste' }).status, 'success');
+    assert.equal(a.listar().find(i => i.id === inst.id).inativo, true);
+    assert.equal(executar('set_instructor_active'+s, { instrutorId: inst.id, inativo: false }).status, 'success');
+    assert.equal(executar('set_instructor_base'+s, { instrutorId: inst.id, base: 'CPQ' }).status, 'success');
+    assert.equal(executar('set_instructor_order'+s, { base: 'CPQ', nomes: [inst.nome] }).status, 'success');
+    const comentarioReq = crypto.randomUUID();
+    const comment = { instrutorId: inst.id, texto: 'Comentario de teste' };
+    assert.equal(executar('add_comment'+s, comment, comentarioReq).status, 'success');
+    assert.equal(executar('add_comment'+s, comment, comentarioReq).repetida, true);
+    const comentarios = a.listar().find(i => i.id === inst.id).comentarios;
+    assert.equal(comentarios.filter(c => c.texto === comment.texto).length, 1);
+    const c = comentarios.find(c => c.texto === comment.texto);
+    assert.equal(executar('delete_comment'+s, { id: c.id }, crypto.randomUUID(), 'Outra pessoa').status, 'error');
+    assert.equal(executar('delete_comment'+s, { id: c.id }).status, 'success');
+    const labelNome = 'Etiqueta teste '+modalidade;
+    assert.equal(executar('save_label'+s, { nome: labelNome, cor: 'azul' }).status, 'success');
+    const meta = a.api({ operacao: 'listar' }).data.meta;
+    const label = (s ? meta.etiquetasSolo : meta.etiquetas).find(l => l.nome === labelNome);
+    assert.ok(label);
+    assert.equal(executar('save_label'+s, { id: label.id, nome: labelNome+' editada', cor: 'verde' }).status, 'success');
+    assert.equal(executar('delete_label'+s, { id: label.id }).status, 'success');
+    assert.equal(executar('add_instructor'+s, { nome: 'Completo '+modalidade, base: 'SJK', etiquetas: [] }).status, 'success');
+  }
+  a.props.set('LIBERACAO_OPR_SENHA', 'senha-teste');
+  const inst = a.listar().find(i => i.modalidade === 'voo');
+  assert.equal(executar('set_instructor_release', { instrutorId: inst.id, liberado: false, senha: 'errada' }).status, 'error');
+  assert.equal(executar('set_instructor_release', { instrutorId: inst.id, liberado: false, senha: 'senha-teste' }).status, 'success');
+  assert.equal(a.listar().find(i => i.id === inst.id).liberadoOpr, false);
+  let sync = 0;
+  a.context.reconciliarVoosInva = () => { sync++; return a.context.createJsonResponse({ status: 'success', data: { sincronizado: true } }); };
+  const syncId = crypto.randomUUID();
+  assert.equal(executar('sync_cavok', {}, syncId).status, 'success');
+  assert.equal(executar('sync_cavok', {}, syncId).repetida, true);
+  assert.equal(sync, 1);
+  const log = JSON.stringify(a.abas.get('INTEGRACAO_INSTRUTORES_REQUESTS').rows);
+  assert.equal(log.includes(chave), false);
+  assert.equal(log.includes('senha-teste'), false);
+});
+
+test('API completa nunca repete uma mutacao interrompida depois de reservar o pedido', () => {
+  const a = ambiente(); a.context.instalarIntegracaoInstrutores(); a.props.set('INVA_PARCEIRO_ACESSO_COMPLETO', 'true');
+  let calls = 0;
+  a.context.handleAddComment = () => { calls++; throw new Error('Interrupcao simulada'); };
+  const p = { operacao: 'executar', acao: 'add_comment', requestId: 'interrompida_01', dados: { instrutorId: a.listar()[0].id, texto: 'Teste' } };
+  assert.equal(a.api(p).code, 'ERRO_INTERNO');
+  assert.equal(a.api(p).code, 'RESULTADO_INDETERMINADO');
+  assert.equal(calls, 1);
+  assert.equal(a.api({ operacao: 'cadastrar', requestId: p.requestId, dados: { modalidade: 'solo', nome: 'Outro', base: 'SJK' } }).code, 'REQUEST_ID_REUTILIZADO');
+});

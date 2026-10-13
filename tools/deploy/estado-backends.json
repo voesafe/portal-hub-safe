@@ -1,10 +1,10 @@
 {
   "hub": {
-    "empurradoEm": "2026-10-11T15:43:48.391Z",
+    "empurradoEm": "2026-10-13T17:06:48.736Z",
     "arquivos": {
       "AccessControl": "784cd3818f83f02ee49bdc836d4306aff2a97631b7471bc4d23f6dfd35ae072a",
       "Aniversarios": "9721b0115a82953c3c53e6b94e589c9fe64a2cd051cf3dc43936bce43e0406b5",
-      "Auth": "b21dfe81dd626a70108db4e343b57fe3d0ebe546fc48773af9315e0ac05db56c",
+      "Auth": "547d629946a88acab2fd08e88af6455ff889dae146df8045454b1b9af3d09f81",
       "Bases": "36c91fd3e23db399e1ffdc7d850b60590e33f7d04d896a81b897893797a68045",
       "CadastroAlunos": "392a945c48ad76f1a121d695e0b825f6efdc2c0dd2dd0d551859b1d1268a7735",
       "Cavok": "0f2137626c21f253c0b57021b17b357b8dfb9ac8dff849f6d041977542df9dd9",
@@ -17,9 +17,9 @@
       "FechamentoHoras": "ce8a7914d8b31303d77cf8a3b5fb2f954d31a6fbb5428b2a586c1f21686c2732",
       "FechamentoHorasInstrutores": "cea5947fae2c09e8cc82a4da7651b856264136e4df10646a9a48cde78a1fba54",
       "HeroAsset": "3b6e842f16696ad7d3fa1f5dcae0b4f5adb83edbb1bd23f8233e32ccb669c78f",
-      "InvaIntegracao": "0a205dd7b4268c636a3f9771a7f197ac2164e0eaa1caa55de340218447870d56",
+      "InvaIntegracao": "8626764173ae73469ab053f176437ea17beec82a6705ce9e322fddd7925126f5",
       "LogoAsset": "ac07c315050a31c9d28355cddb4a51bda4dbacc817c7fa474f80956a992aa1ab",
-      "Manutencao": "77f23ac72f6de91655f2e5438fd7426a2bb736e5a84cddb407481423c21c936d",
+      "Manutencao": "5d7465a086a9a7e7f669445e4544bc9db48bf95439c592aa4d049586b4b01004",
       "Marketing": "013de4ffd41f695459cd26d34e84fd6a691fefc2dd1b02ad13a2c3da23c7879a",
       "Migracao": "b11dd2d27b8b76d76d144bdee96a5b4c58d93b63892aadbf91ebe6d8d49f9479",
       "Newzenler": "3ece52263d4ac5cc29a925b56b48d9c03bb2f98e923c1839d1f49b9f6e52a220",
@@ -32,10 +32,10 @@
     }
   },
   "inva": {
-    "empurradoEm": "2026-10-11T15:45:27.205Z",
+    "empurradoEm": "2026-10-13T17:07:05.815Z",
     "arquivos": {
       "Código": "f110cdfd77b870e09e6b5465224be2628a19593b6605359bfe17a9be794ffbd7",
-      "IntegracaoInstrutores": "55f5ad6371c8b73ff4bde4f1da471e9d906cd00f82be435f2f5397650e361496",
+      "IntegracaoInstrutores": "6a48ff3021d3f96eb306f3fa1ae8d8f019a7b691c3cbc3eec0ce9e9e667b9b81",
       "appsscript": "4e5a3ad66bd6aaa5911307cf78b515cc304b2f1cdc90c18e58c119a64b4adda7"
     }
   }

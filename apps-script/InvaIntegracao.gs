@@ -1,5 +1,5 @@
 // Autoriza as rotas legadas de escrita de Instrutores pela sessao do Hub.
-// A credencial do parceiro so vale na API restrita do backend INVA.
+// A credencial do parceiro so vale na API da pagina Instrutores do INVA.
 function autorizarEscritaInva(token, acao) {
   var sincronias = ['sync_cavok', 'sync_cavok_dia'];
   var cadastros = [
@@ -16,4 +16,26 @@ function autorizarEscritaInva(token, acao) {
   var usuario = exigirSessao(token);
   if (!usuarioTemPermissao(usuario, permissao)) throw new Error('Sem permissao para alterar instrutores.');
   return { autorizado: true };
+}
+
+// Diagnostico administrativo somente leitura, sem emitir ou alterar sessoes.
+function diagnosticarAcessoInstrutores(userId) {
+  var sheet = getSheet(SHEETS.USUARIOS);
+  var ids = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+  var linha = -1;
+  ids.forEach(function (r, i) { if (String(r[0]) === String(userId)) linha = i + 2; });
+  if (linha < 0) throw new Error('Usuario nao encontrado.');
+  var perfilAtivo = sheet.getRange(linha, 6, 1, 2).getValues()[0];
+  var sessao = { perfil: perfilAtivo[0], superadmin: false };
+  var efetivas = calcularPermissoesEfetivasUsuario_(userId, false);
+  var rotaPermitida = true;
+  try { validarAcaoExclusivaDaSessao_(sessao, 'autorizar-inva'); }
+  catch (e) { rotaPermitida = false; }
+  return {
+    ativo: valorBooleano(perfilAtivo[1]), perfil: sessao.perfil,
+    rotaPermitida: rotaPermitida,
+    visualizar: efetivas.indexOf('horas_inva.visualizar') >= 0,
+    editar: efetivas.indexOf('horas_inva.cadastrar_instrutor') >= 0,
+    sincronizar: efetivas.indexOf('horas_inva.sincronizar_cavok') >= 0
+  };
 }

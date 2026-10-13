@@ -268,6 +268,11 @@ function validarAcaoPerfilExclusivo_(token, action) {
     return;
   }
 
+  validarAcaoExclusivaDaSessao_(sessao, action);
+}
+
+function validarAcaoExclusivaDaSessao_(sessao, action) {
+
   // ⚠️ Esta lista é FECHADA, e por isso já barrou duas entregas por esquecimento:
   // `salvar-avatar` (2026-07-28) e `notams` (2026-07-28). O padrão da falha é
   // sempre o mesmo e é traiçoeiro: a permissão está no cargo, então o item
@@ -289,7 +294,8 @@ function validarAcaoPerfilExclusivo_(token, action) {
   // guarda própria por permissão.
   var acoesPorPerfilExclusivo = {
     controle_gastos_visualizacao: ['controle-gastos'],
-    escala_minions: [],
+    // A rota valida a sessao e a permissao efetiva de cada acao de Instrutores.
+    escala_minions: ['autorizar-inva'],
     instrutor_inva: ['disponibilidade-inva', 'disponibilidade-inva-salvar', 'disponibilidade-inva-excluir']
   };
   var perfil = normalizarPerfil(sessao.perfil);
