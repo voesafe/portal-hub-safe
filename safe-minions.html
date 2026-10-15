@@ -399,46 +399,77 @@ function analisarPC(rows) {
 }
 
 // ─── ANÁLISE INVA ─────────────────────────────────────────────
-// Conta o duplo comando (instrução) somente APÓS o último voo de
-// cheque, identificado por "CHEQUE", "RECHEQUE" ou "EXAMINADOR" na observação.
+// Conta o duplo comando (instrução) a partir do PRIMEIRO voo do
+// treinamento de INVA, inclusive, até o fim do extrato. Decisão de
+// 2026-10-15: o critério antigo (após o último cheque) quebrava quando a
+// avaliação final do próprio curso era lançada como "CHEQUE SAFE DE
+// TREINAMENTO PARA CONCESSÃO DE HABILITAÇÃO INVA": ela virava o corte e
+// zerava todo o treinamento feito antes dela.
+
+// Voo do treinamento de INVA: a observação cita INVA junto de concessão,
+// habilitação ou treinamento, ou o nome por extenso da habilitação. "INVA"
+// sozinho não basta: há lançamento antigo como "PS-14 INVA GABRIEL ALUNA
+// SOFIA", que só cita o instrutor.
+function ehVooTreinamentoINVA(observacao) {
+  const obs = normalizarTextoComparacao(observacao);
+  if (/INSTRUTOR DE VOO DE AVIAO/.test(obs)) return true;
+  return /\bINVA\b/.test(obs) && /\b(?:CONCESSAO|HABILITACAO|TREINAMENTO)\b/.test(obs);
+}
+
 function analisarINVA(rows) {
   const parseDataBR = s => {
     const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(String(s || '').trim());
     return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null;
   };
 
-  // "Para cheque" indica avaliação ou endosso preparatório, não o cheque realizado.
-  // Último voo de cheque = linha mais recente com "CHEQUE" efetivo na observação.
-  let cheque = null; // { data, dataObj, observacao }
+  // Critério principal: primeiro voo do treinamento de INVA.
+  let corte = null; // { criterio, data, dataObj, observacao }
   rows.forEach(r => {
-    const obs = normalizarTextoComparacao(r.observacao);
-    // Cheque efetivo: "CHEQUE", "RECHEQUE" ou voo com examinador ("VOO CQ ... EXAMINADOR").
-    if (!/\b(?:RE)?CHEQUE\b|\bEXAMINADOR\b/.test(obs) || /\bPARA\s+(?:O\s+)?CHEQUE\b/.test(obs)) return;
+    if (!ehVooTreinamentoINVA(r.observacao)) return;
     const dt = parseDataBR(r.data);
     if (!dt) return;
-    if (!cheque || dt > cheque.dataObj) cheque = { data: r.data, dataObj: dt, observacao: r.observacao };
+    if (!corte || dt < corte.dataObj) corte = { criterio: 'treinamento', data: r.data, dataObj: dt, observacao: r.observacao };
   });
 
-  // Duplo comando (instrução) estritamente APÓS a data do cheque
-  const apos = rows.filter(r => {
-    if (r.funcao !== 'PI') return false;
+  // Reserva, só quando nenhum voo do treinamento é reconhecido: último
+  // cheque efetivo, ignorando o cheque do próprio curso de INVA e o
+  // "para cheque", que é preparatório.
+  if (!corte) {
+    rows.forEach(r => {
+      const obs = normalizarTextoComparacao(r.observacao);
+      if (!/\b(?:RE)?CHEQUE\b|\bEXAMINADOR\b/.test(obs) || /\bPARA\s+(?:O\s+)?CHEQUE\b/.test(obs)) return;
+      if (ehVooTreinamentoINVA(r.observacao)) return;
+      const dt = parseDataBR(r.data);
+      if (!dt) return;
+      if (!corte || dt > corte.dataObj) corte = { criterio: 'cheque', data: r.data, dataObj: dt, observacao: r.observacao };
+    });
+  }
+
+  // Treinamento: a partir do primeiro voo, inclusive. Cheque: estritamente após.
+  const contados = rows.filter(r => {
+    if (r.funcao !== 'PI' || !corte) return false;
     const dt = parseDataBR(r.data);
-    return cheque && dt && dt > cheque.dataObj;
+    if (!dt) return false;
+    return corte.criterio === 'treinamento' ? dt >= corte.dataObj : dt > corte.dataObj;
   });
 
-  const totalDC    = sum(apos, r => r.diurno + r.noturno);
+  const totalDC    = sum(contados, r => r.diurno + r.noturno);
   const totalGeral = sum(rows, r => r.diurno + r.noturno);
 
+  const nomeMinimo = corte && corte.criterio === 'cheque'
+    ? 'Duplo comando após o último cheque'
+    : 'Duplo comando no treinamento de INVA';
+
   const minimos = [
-    { nome: 'Duplo comando após o último cheque', atual: totalDC, min: 1800, unit: 'h', full: true }, // 30h
+    { nome: nomeMinimo, atual: totalDC, min: 1800, unit: 'h', full: true }, // 30h
   ];
 
   return {
     tipo: 'INVA',
     label: 'Instrutor de Voo de Avião',
     minimos,
-    cheque,
-    totais: { totalGeral, totalDC, voosApos: apos.length }
+    corte,
+    totais: { totalGeral, totalDC, voosApos: contados.length }
   };
 }
 
@@ -590,11 +621,12 @@ function renderizarResultado(analise, ativos, todos) {
       <div class="resumo-item"><span class="val">${ativos.length}</span><span class="label">Registros</span></div>
     `;
   } else if (analise.tipo === 'INVA') {
+    const porCheque = analise.corte && analise.corte.criterio === 'cheque';
     resumoItems = `
       <div class="resumo-item"><span class="val">${fmt(t.totalGeral)}</span><span class="label">Total Horas</span></div>
-      <div class="resumo-item"><span class="val">${fmt(t.totalDC)}</span><span class="label">DC após cheque</span></div>
+      <div class="resumo-item"><span class="val">${fmt(t.totalDC)}</span><span class="label">${porCheque ? 'DC após cheque' : 'DC no treinamento'}</span></div>
       <div class="resumo-item"><span class="val">${fmt(1800)}</span><span class="label">Mínimo Exigido</span></div>
-      <div class="resumo-item"><span class="val">${t.voosApos != null ? t.voosApos : ativos.length}</span><span class="label">Voos após cheque</span></div>
+      <div class="resumo-item"><span class="val">${t.voosApos != null ? t.voosApos : ativos.length}</span><span class="label">${porCheque ? 'Voos após cheque' : 'Voos no treinamento'}</span></div>
     `;
   } else {
     resumoItems = `
@@ -697,18 +729,26 @@ function renderizarResultado(analise, ativos, todos) {
   // Nota de auditoria do corte (apenas INVA)
   let chequeInfo = '';
   if (analise.tipo === 'INVA') {
-    if (analise.cheque) {
+    const corte = analise.corte;
+    if (corte && corte.criterio === 'treinamento') {
       chequeInfo = `
         <div class="inva-cheque-info">
-          <div class="ici-titulo">✂️ Corte: último voo de cheque em <strong>${escapeHtml(analise.cheque.data)}</strong></div>
-          <div class="ici-obs">${escapeHtml(analise.cheque.observacao)}</div>
-          <div class="ici-nota">Contabilizando duplo comando (instrução) apenas <strong>após</strong> esta data.</div>
+          <div class="ici-titulo">✂️ Início do treinamento de INVA em <strong>${escapeHtml(corte.data)}</strong></div>
+          <div class="ici-obs">${escapeHtml(corte.observacao)}</div>
+          <div class="ici-nota">Contabilizando duplo comando (instrução) <strong>a partir</strong> desta data, inclusive.</div>
+        </div>`;
+    } else if (corte) {
+      chequeInfo = `
+        <div class="inva-cheque-info inva-cheque-alerta">
+          <div class="ici-titulo">⚠️ Nenhum voo do treinamento de INVA identificado. Corte pelo último cheque, em <strong>${escapeHtml(corte.data)}</strong></div>
+          <div class="ici-obs">${escapeHtml(corte.observacao)}</div>
+          <div class="ici-nota">Contabilizando duplo comando (instrução) apenas <strong>após</strong> esta data. Confira se as observações do treinamento citam a habilitação de INVA.</div>
         </div>`;
     } else {
       chequeInfo = `
         <div class="inva-cheque-info inva-cheque-alerta">
-          <div class="ici-titulo">⚠️ Nenhum voo de cheque encontrado no extrato</div>
-          <div class="ici-nota">Não foi possível determinar o corte. Verifique se a observação do cheque contém "CHEQUE", "RECHEQUE" ou "EXAMINADOR".</div>
+          <div class="ici-titulo">⚠️ Não foi possível determinar o início do treinamento de INVA</div>
+          <div class="ici-nota">Nenhum voo do extrato cita o treinamento para concessão da habilitação de INVA, nem há voo de cheque anterior. Confira as observações da CIV.</div>
         </div>`;
     }
   }
